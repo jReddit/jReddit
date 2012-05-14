@@ -1,17 +1,13 @@
 package org.omer.api.submissions;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.omer.api.Thing;
 import org.omer.api.user.User;
+import org.omer.api.utils.Utils;
 
 /**
  * This class represents a vote on a link submission on reddit.
@@ -25,6 +21,9 @@ public class Submission extends Thing {
 	private User user;
 
 	public Submission(User user, String fullName) {
+		if (fullName.startsWith("t3_"))
+			fullName = fullName.replaceFirst("t3_", "");
+
 		this.user = user;
 		this.fullName = "t3_" + fullName;
 	}
@@ -41,7 +40,9 @@ public class Submission extends Thing {
 	 *             If JSON parsing fails
 	 */
 	public void comment(String text) throws IOException, ParseException {
-		JSONObject object = commentResponse(text);
+		JSONObject object = Utils.postAndGetJSON("thing_id=" + fullName + "&text="
+				+ text + "&uh=" + user.getModhash(), new URL(
+				"http://www.reddit.com/api/comment"), user.getCookie());
 
 		if (object.toJSONString().contains(".error.USER_REQUIRED"))
 			throw new InvalidCookieException("Cookie not present");
@@ -108,59 +109,8 @@ public class Submission extends Thing {
 	}
 
 	private JSONObject voteResponse(int dir) throws IOException, ParseException {
-		String apiParams = "id=" + fullName + "&dir=" + dir + "&uh="
-				+ user.getModhash();
-		URL voteURL = new URL("http://www.reddit.com/api/vote");
-		HttpURLConnection connection = (HttpURLConnection) voteURL
-				.openConnection();
-		connection.setDoOutput(true);
-		connection.setRequestMethod("POST");
-		connection.setUseCaches(false);
-		connection.setRequestProperty("Content-Type",
-				"application/x-www-form-urlencoded; charset=UTF-8");
-		connection.setRequestProperty("Content-Length",
-				String.valueOf(apiParams.length()));
-		connection.setRequestProperty("cookie",
-				"reddit_session=" + user.getCookie());
-		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-		wr.writeBytes(apiParams);
-		wr.flush();
-		wr.close();
-
-		JSONParser parser = new JSONParser();
-		Object object = parser.parse(new BufferedReader(new InputStreamReader(
-				connection.getInputStream())).readLine());
-		JSONObject jsonObject = (JSONObject) object;
-
-		return jsonObject;
-	}
-
-	private JSONObject commentResponse(String text) throws IOException,
-			ParseException {
-		String apiParams = "thing_id=" + fullName + "&text=" + text + "&uh="
-				+ user.getModhash();
-		URL voteURL = new URL("http://www.reddit.com/api/comment");
-		HttpURLConnection connection = (HttpURLConnection) voteURL
-				.openConnection();
-		connection.setDoOutput(true);
-		connection.setRequestMethod("POST");
-		connection.setUseCaches(false);
-		connection.setRequestProperty("Content-Type",
-				"application/x-www-form-urlencoded; charset=UTF-8");
-		connection.setRequestProperty("Content-Length",
-				String.valueOf(apiParams.length()));
-		connection.setRequestProperty("cookie",
-				"reddit_session=" + user.getCookie());
-		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-		wr.writeBytes(apiParams);
-		wr.flush();
-		wr.close();
-
-		JSONParser parser = new JSONParser();
-		Object object = parser.parse(new BufferedReader(new InputStreamReader(
-				connection.getInputStream())).readLine());
-		JSONObject jsonObject = (JSONObject) object;
-
-		return jsonObject;
+		return Utils.postAndGetJSON(
+				"id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
+				new URL("http://www.reddit.com/api/vote"), user.getCookie());
 	}
 }
