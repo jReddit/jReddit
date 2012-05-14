@@ -30,6 +30,17 @@ public class Link extends Thing {
 		this.fullName = "t3_" + fullName;
 	}
 
+	/**
+	 * This function comments on this submission saying the comment specified in
+	 * <code>text</code> (CAN INCLUDE MARKDOWN)
+	 * 
+	 * @param text
+	 *            The text to comment
+	 * @throws IOException
+	 *             If connection fails
+	 * @throws ParseException
+	 *             If JSON parsing fails
+	 */
 	public void comment(String text) throws IOException, ParseException {
 		JSONObject object = commentResponse(text);
 
