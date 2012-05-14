@@ -1,4 +1,4 @@
-package org.omer.api;
+package org.jreddit.api;
 
 /**
  * This class represents a reddit "thing"

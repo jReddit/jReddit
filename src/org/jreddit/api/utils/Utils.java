@@ -1,4 +1,4 @@
-package org.omer.api.utils;
+package org.jreddit.api.utils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -17,6 +17,9 @@ import org.json.simple.parser.ParseException;
  * @author <a href="https://www.github.com/OmerE">Omer Elnour</a>
  */
 public class Utils {
+	// Edit this!
+	public static final String userAgent = "Omer's Reddit API Java Wrapper";
+
 	/**
 	 * This function is here because I do this same request a hundred times
 	 * throughout jReddit and I wanted to inline the function somehow.
@@ -24,21 +27,39 @@ public class Utils {
 	 * It basically submits a POST request and returns a JSON object that
 	 * corresponds to it.
 	 */
-	public static JSONObject postAndGetJSON(String apiParams, URL url,
-			String cookie) throws IOException, ParseException {
+	public static JSONObject post(String apiParams, URL url, String cookie)
+			throws IOException, ParseException {
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setDoOutput(true);
-		connection.setRequestMethod("POST");
 		connection.setUseCaches(false);
+		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type",
 				"application/x-www-form-urlencoded; charset=UTF-8");
 		connection.setRequestProperty("Content-Length",
 				String.valueOf(apiParams.length()));
 		connection.setRequestProperty("cookie", "reddit_session=" + cookie);
+		connection.setRequestProperty("User-Agent", userAgent);
 		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 		wr.writeBytes(apiParams);
 		wr.flush();
 		wr.close();
+
+		JSONParser parser = new JSONParser();
+		Object object = parser.parse(new BufferedReader(new InputStreamReader(
+				connection.getInputStream())).readLine());
+		JSONObject jsonObject = (JSONObject) object;
+
+		return jsonObject;
+	}
+
+	public static JSONObject get(String apiParams, URL url, String cookie)
+			throws IOException, ParseException {
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setDoOutput(true);
+		connection.setUseCaches(false);
+		connection.setRequestMethod("GET");
+		connection.setRequestProperty("cookie", "reddit_session=" + cookie);
+		connection.setRequestProperty("User-Agent", userAgent);
 
 		JSONParser parser = new JSONParser();
 		Object object = parser.parse(new BufferedReader(new InputStreamReader(

@@ -1,13 +1,13 @@
-package org.omer.api.user;
+package org.jreddit.api.user;
 
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
+import org.jreddit.api.Thing;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.omer.api.Thing;
 
 /**
  * This class represents a user connected to reddit.

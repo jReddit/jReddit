@@ -1,4 +1,4 @@
-package org.omer.api.submissions;
+package org.jreddit.api.submissions;
 
 import java.io.IOException;
 
