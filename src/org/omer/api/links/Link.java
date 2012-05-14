@@ -18,13 +18,13 @@ import org.omer.api.user.User;
  * 
  * @author <a href="https://www.github.com/OmerE">Omer Elnour</a>
  */
-public class Vote extends Thing {
+public class Link extends Thing {
 	/**
 	 * This is the user that will vote on a submission.
 	 */
 	private User user;
 
-	public Vote(User user, String fullName) {
+	public Link(User user, String fullName) {
 		this.user = user;
 		this.fullName = "t3_" + fullName;
 	}
@@ -38,7 +38,7 @@ public class Vote extends Thing {
 	 *             If JSON parsing failed
 	 */
 	public void upVote() throws IOException, ParseException {
-		JSONObject object = response(1);
+		JSONObject object = voteResponse(1);
 		if (!(object.toJSONString().length() > 2))
 			System.out.println("Successful upboat!");
 		else
@@ -55,7 +55,7 @@ public class Vote extends Thing {
 	 *             If JSON parsing failed
 	 */
 	public void rescind() throws IOException, ParseException {
-		JSONObject object = response(0);
+		JSONObject object = voteResponse(0);
 		if (!(object.toJSONString().length() > 2))
 			System.out.println("Successful rescind!");
 		else
@@ -71,7 +71,7 @@ public class Vote extends Thing {
 	 *             If JSON parsing failed
 	 */
 	public void downVote() throws IOException, ParseException {
-		JSONObject object = response(-1);
+		JSONObject object = voteResponse(-1);
 		if (!(object.toJSONString().length() > 2))
 			System.out.println("Successful downboat!");
 		else
@@ -86,7 +86,7 @@ public class Vote extends Thing {
 		return fullName;
 	}
 
-	private JSONObject response(int dir) throws IOException, ParseException {
+	private JSONObject voteResponse(int dir) throws IOException, ParseException {
 		String apiParams = "id=" + fullName + "&dir=" + dir + "&uh="
 				+ user.getModhash();
 		URL voteURL = new URL("http://www.reddit.com/api/vote");
