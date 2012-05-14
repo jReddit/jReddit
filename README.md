@@ -7,7 +7,7 @@ So far, jReddit can login with a user, retrieve user information, and vote on su
 I plan to implement every feature documented [here](http://www.reddit.com/dev/api).
 ##Examples
 
-Upvote a submission and comment
+Upvote a submission and comment on it
 
     import org.omer.api.links.Link;
     import org.omer.api.user.User;
