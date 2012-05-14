@@ -9,7 +9,7 @@ I plan to implement every feature documented [here](http://www.reddit.com/dev/ap
 
 Upvote a submission and comment on it
 
-    import org.omer.api.links.Link;
+    import org.omer.api.submissions.Submission;
     import org.omer.api.user.User;
 
     public final class Example {
@@ -17,8 +17,8 @@ Upvote a submission and comment on it
 		    User user = new User("username", "password");
 		    user.connect();
 
-		    Link link = new Link(user, "tki9d");
-		    link.upVote();
-		    link.comment("This is a cool submission.");
+		    Submission submission = new Submission(user, "tki9d");
+		    submission.upVote();
+		    submission.comment("This is a cool submission.");
 	    }
     }
