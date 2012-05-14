@@ -1,4 +1,4 @@
-package org.omer.api.links;
+package org.omer.api.submissions;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -10,7 +10,6 @@ import java.net.URL;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.omer.api.InvalidCookieException;
 import org.omer.api.Thing;
 import org.omer.api.user.User;
 
@@ -19,13 +18,13 @@ import org.omer.api.user.User;
  * 
  * @author <a href="https://www.github.com/OmerE">Omer Elnour</a>
  */
-public class Link extends Thing {
+public class Submission extends Thing {
 	/**
 	 * This is the user that will vote on a submission.
 	 */
 	private User user;
 
-	public Link(User user, String fullName) {
+	public Submission(User user, String fullName) {
 		this.user = user;
 		this.fullName = "t3_" + fullName;
 	}

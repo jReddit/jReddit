@@ -1,4 +1,4 @@
-package org.omer.api;
+package org.omer.api.submissions;
 
 import java.io.IOException;
 
