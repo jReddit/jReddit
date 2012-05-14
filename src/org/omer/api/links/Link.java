@@ -10,6 +10,7 @@ import java.net.URL;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.omer.api.InvalidCookieException;
 import org.omer.api.Thing;
 import org.omer.api.user.User;
 
@@ -27,6 +28,16 @@ public class Link extends Thing {
 	public Link(User user, String fullName) {
 		this.user = user;
 		this.fullName = "t3_" + fullName;
+	}
+
+	public void comment(String text) throws IOException, ParseException {
+		JSONObject object = commentResponse(text);
+
+		if (object.toJSONString().contains(".error.USER_REQUIRED"))
+			throw new InvalidCookieException("Cookie not present");
+		else
+			System.out.println("Commented on thread id " + fullName
+					+ " saying: \"" + text + "\"");
 	}
 
 	/**
@@ -90,6 +101,35 @@ public class Link extends Thing {
 		String apiParams = "id=" + fullName + "&dir=" + dir + "&uh="
 				+ user.getModhash();
 		URL voteURL = new URL("http://www.reddit.com/api/vote");
+		HttpURLConnection connection = (HttpURLConnection) voteURL
+				.openConnection();
+		connection.setDoOutput(true);
+		connection.setRequestMethod("POST");
+		connection.setUseCaches(false);
+		connection.setRequestProperty("Content-Type",
+				"application/x-www-form-urlencoded; charset=UTF-8");
+		connection.setRequestProperty("Content-Length",
+				String.valueOf(apiParams.length()));
+		connection.setRequestProperty("cookie",
+				"reddit_session=" + user.getCookie());
+		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+		wr.writeBytes(apiParams);
+		wr.flush();
+		wr.close();
+
+		JSONParser parser = new JSONParser();
+		Object object = parser.parse(new BufferedReader(new InputStreamReader(
+				connection.getInputStream())).readLine());
+		JSONObject jsonObject = (JSONObject) object;
+
+		return jsonObject;
+	}
+
+	private JSONObject commentResponse(String text) throws IOException,
+			ParseException {
+		String apiParams = "thing_id=" + fullName + "&text=" + text + "&uh="
+				+ user.getModhash();
+		URL voteURL = new URL("http://www.reddit.com/api/comment");
 		HttpURLConnection connection = (HttpURLConnection) voteURL
 				.openConnection();
 		connection.setDoOutput(true);
