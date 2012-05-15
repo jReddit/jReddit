@@ -167,6 +167,19 @@ public class Submission extends Thing {
 	}
 
 	/**
+	 * This function returns true if this submission is a self-post
+	 * 
+	 * @return This submission is a self post
+	 * @throws IOException
+	 *             If connection fails
+	 * @throws ParseException
+	 *             If JSON parsing fails
+	 */
+	public boolean isSelfPost() throws IOException, ParseException {
+		return Boolean.parseBoolean(info(url).get("is_self").toString());
+	}
+
+	/**
 	 * This function returns the number of comments in this sumbission.
 	 * 
 	 * @return The number of comments in this submission
