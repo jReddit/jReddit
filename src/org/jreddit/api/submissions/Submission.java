@@ -176,6 +176,9 @@ public class Submission extends Thing {
 	 *             If JSON parsing fails
 	 */
 	public boolean isSelfPost() throws IOException, ParseException {
+		if (url == null)
+			throw new IOException("URL needs to be present");
+
 		return Boolean.parseBoolean(info(url).get("is_self").toString());
 	}
 
