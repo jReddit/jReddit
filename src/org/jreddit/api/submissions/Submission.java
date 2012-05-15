@@ -86,6 +86,22 @@ public class Submission extends Thing {
 	}
 
 	/**
+	 * This function returns the title of this submission.
+	 * 
+	 * @return The title
+	 * @throws IOException
+	 *             If connection fails
+	 * @throws ParseException
+	 *             If JSON parsing fails
+	 */
+	public String getTitle() throws IOException, ParseException {
+		if (url == null)
+			throw new IOException("URL needs to be present");
+
+		return info(url).get("title").toString();
+	}
+
+	/**
 	 * This function returns the name of the subreddit that this submission was
 	 * submitted to.
 	 * 
@@ -286,5 +302,16 @@ public class Submission extends Thing {
 		obj = (JSONObject) array.get(0);
 		obj = (JSONObject) obj.get("data");
 		return (JSONObject) obj;
+	}
+
+	@Override
+	public String toString() {
+		try {
+			return "(" + getScore() + ") " + getTitle();
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+
+		return null;
 	}
 }
