@@ -1,4 +1,4 @@
-package org.jreddit.api;
+package com.omrlnr.jreddit;
 
 /**
  * This class represents a reddit "thing"

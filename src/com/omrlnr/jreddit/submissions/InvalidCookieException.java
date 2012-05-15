@@ -1,4 +1,4 @@
-package org.jreddit.api.submissions;
+package com.omrlnr.jreddit.submissions;
 
 import java.io.IOException;
 

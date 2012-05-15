@@ -1,13 +1,14 @@
-package org.jreddit.api.user;
+package com.omrlnr.jreddit.user;
 
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
-import org.jreddit.api.Thing;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import com.omrlnr.jreddit.Thing;
 
 /**
  * This class represents a user connected to reddit.

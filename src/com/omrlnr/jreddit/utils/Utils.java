@@ -1,4 +1,4 @@
-package org.jreddit.api.utils;
+package com.omrlnr.jreddit.utils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
