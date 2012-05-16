@@ -56,9 +56,7 @@ public class User extends Thing {
 	 */
 	public void submitLink(String title, String link, String subreddit)
 			throws IOException, ParseException {
-		JSONObject object = Utils.post("title=" + title + "&url=" + link
-				+ "&sr=" + subreddit + "&kind=link&uh=" + getModhash(),
-				new URL("http://www.reddit.com/api/submit"), getCookie());
+		JSONObject object = submit(title, link, false, subreddit);
 		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
 			System.err.println("Please login first.");
 		} else if (object.toJSONString().contains(
@@ -69,8 +67,8 @@ public class User extends Thing {
 			System.err.println("That link has already been submitted.");
 		} else {
 			System.out.println("Link submitted to "
-					+ ((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(16))
-							.get(3)).get(0));
+					+ ((JSONArray) ((JSONArray) ((JSONArray) object
+							.get("jquery")).get(16)).get(3)).get(0));
 		}
 	}
 
@@ -90,9 +88,7 @@ public class User extends Thing {
 	 */
 	public void submitSelfPost(String title, String text, String subreddit)
 			throws IOException, ParseException {
-		JSONObject object = Utils.post("title=" + title + "&text=" + text
-				+ "&sr=" + subreddit + "&kind=self&uh=" + getModhash(),
-				new URL("http://www.reddit.com/api/submit"), getCookie());
+		JSONObject object = submit(title, text, true, subreddit);
 		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
 			System.err.println("Please login first.");
 		} else if (object.toJSONString().contains(
@@ -301,5 +297,31 @@ public class User extends Thing {
 		JSONObject jsonObject = Utils.get("", new URL(
 				"http://www.reddit.com/api/me.json"), getCookie());
 		return (JSONObject) jsonObject.get("data");
+	}
+
+	/**
+	 * This function submits a link or self post.
+	 * 
+	 * @param title
+	 *            The title of the submission
+	 * @param linkOrText
+	 *            The link of the submission or text
+	 * @param selfPost
+	 *            If this submission is a self post
+	 * @param subreddit
+	 *            Which subreddit to submit this to
+	 * @return A JSONObject
+	 * @throws IOException
+	 *             If connection fails
+	 * @throws ParseException
+	 *             If JSON parsing fails
+	 */
+	private JSONObject submit(String title, String linkOrText,
+			boolean selfPost, String subreddit) throws IOException,
+			ParseException {
+		return Utils.post("title=" + title + "&" + (selfPost ? "text" : "url")
+				+ "=" + linkOrText + "&sr=" + subreddit + "&kind="
+				+ (selfPost ? "link" : "self") + "&uh=" + getModhash(),
+				new URL("http://www.reddit.com/api/submit"), getCookie());
 	}
 }
