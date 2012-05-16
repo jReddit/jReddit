@@ -14,11 +14,11 @@ import org.json.simple.parser.ParseException;
 /**
  * This class contains (or will contain) various utilities for jReddit.
  * 
- * @author <a href="https://www.github.com/OmerE">Omer Elnour</a>
+ * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Utils {
 	// Edit this!
-	public static final String userAgent = "Omer's Reddit API Java Wrapper";
+	private static String userAgent = "Omer's Reddit API Java Wrapper";
 
 	/**
 	 * This function is here because I do this same request a hundred times
@@ -52,6 +52,10 @@ public class Utils {
 		return jsonObject;
 	}
 
+	/**
+	 * This function submits a GET request and returns a JSON object that
+	 * corresponds to it.
+	 */
 	public static JSONObject get(String apiParams, URL url, String cookie)
 			throws IOException, ParseException {
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -67,5 +71,13 @@ public class Utils {
 		JSONObject jsonObject = (JSONObject) object;
 
 		return jsonObject;
+	}
+
+	public static String getUserAgent() {
+		return userAgent;
+	}
+
+	public static void setUserAgent(String agent) {
+		userAgent = agent;
 	}
 }

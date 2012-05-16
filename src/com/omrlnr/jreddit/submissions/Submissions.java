@@ -14,7 +14,7 @@ import com.omrlnr.jreddit.utils.Utils;
 /**
  * This class offers some submission utilties.
  * 
- * @author <a href="https://www.github.com/OmerE">Omer Elnour</a>
+ * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Submissions {
 	public static final int HOT = 0, NEW = 1;

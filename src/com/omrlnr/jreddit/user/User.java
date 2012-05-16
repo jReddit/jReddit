@@ -5,15 +5,15 @@ import java.net.*;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.omrlnr.jreddit.Thing;
+import com.omrlnr.jreddit.utils.Utils;
 
 /**
  * This class represents a user connected to reddit.
  * 
- * @author <a href="https://www.github.com/OmerE">Omer Elnour</a>
+ * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class User extends Thing {
 	private String username, password;
@@ -208,28 +208,9 @@ public class User extends Thing {
 	private ArrayList<String> hashCookiePair(String username, String password)
 			throws IOException, ParseException {
 		ArrayList<String> values = new ArrayList<String>();
-
-		String apiParams = "api_type=json&user=" + username + "&passwd="
-				+ password;
-		URL loginURL = new URL("http://www.reddit.com/api/login/" + username);
-		HttpURLConnection connection = (HttpURLConnection) loginURL
-				.openConnection();
-		connection.setDoOutput(true);
-		connection.setRequestMethod("POST");
-		connection.setUseCaches(false);
-		connection.setRequestProperty("Content-Type",
-				"application/x-www-form-urlencoded; charset=UTF-8");
-		connection.setRequestProperty("Content-Length",
-				String.valueOf(apiParams.length()));
-		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-		wr.writeBytes(apiParams);
-		wr.flush();
-		wr.close();
-
-		JSONParser parser = new JSONParser();
-		Object object = parser.parse(new BufferedReader(new InputStreamReader(
-				connection.getInputStream())).readLine());
-		JSONObject jsonObject = (JSONObject) object;
+		JSONObject jsonObject = Utils.post("api_type=json&user=" + username
+				+ "&passwd=" + password, new URL(
+				"http://www.reddit.com/api/login/" + username), getCookie());
 		JSONObject valuePair = (JSONObject) ((JSONObject) jsonObject
 				.get("json")).get("data");
 
@@ -252,20 +233,8 @@ public class User extends Thing {
 			Runtime.getRuntime().exit(-1);
 		}
 
-		URL infoURL = new URL("http://www.reddit.com/api/me.json");
-		HttpURLConnection connection = (HttpURLConnection) infoURL
-				.openConnection();
-		connection.setDoOutput(true);
-		connection.setRequestMethod("GET");
-		connection.setUseCaches(false);
-		connection
-				.setRequestProperty("cookie", "reddit_session=" + getCookie());
-
-		JSONParser parser = new JSONParser();
-		Object object = parser.parse(new BufferedReader(new InputStreamReader(
-				connection.getInputStream())).readLine());
-		JSONObject jsonObject = (JSONObject) object;
-
+		JSONObject jsonObject = Utils.get("", new URL(
+				"http://www.reddit.com/api/me.json"), getCookie());
 		return (JSONObject) jsonObject.get("data");
 	}
 }

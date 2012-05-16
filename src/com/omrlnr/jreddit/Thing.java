@@ -4,7 +4,7 @@ package com.omrlnr.jreddit;
  * This class represents a reddit "thing"
  * @see <a href="https://github.com/reddit/reddit/wiki/API">Reddit API Reference</a>
  *
- * @author <a href="https://www.github.com/OmerE">Omer Elnour</a>
+ * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public abstract class Thing {
 	/**

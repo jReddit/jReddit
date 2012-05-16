@@ -1,14 +1,10 @@
 package com.omrlnr.jreddit.submissions;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.omrlnr.jreddit.Thing;
@@ -18,7 +14,7 @@ import com.omrlnr.jreddit.utils.Utils;
 /**
  * This class represents a vote on a link submission on reddit.
  * 
- * @author <a href="https://www.github.com/OmerE">Omer Elnour</a>
+ * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Submission extends Thing {
 	/**
@@ -283,17 +279,7 @@ public class Submission extends Thing {
 
 	private JSONObject info(URL url) throws IOException, ParseException {
 		url = new URL(url.toString() + "/info.json");
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setDoOutput(true);
-		connection.setUseCaches(false);
-		connection.setRequestMethod("GET");
-		connection.setRequestProperty("cookie",
-				"reddit_session=" + user.getCookie());
-		connection.setRequestProperty("User-Agent", Utils.userAgent);
-
-		JSONParser parser = new JSONParser();
-		Object object = parser.parse(new BufferedReader(new InputStreamReader(
-				connection.getInputStream())).readLine());
+		Object object = Utils.get("", url, user.getCookie());
 
 		// THERE HAS TO BE A BETTER WAY TO DO THIS!!!
 		JSONArray array = (JSONArray) object;
@@ -313,6 +299,6 @@ public class Submission extends Thing {
 			exception.printStackTrace();
 		}
 
-		return null;
+		return super.toString();
 	}
 }
