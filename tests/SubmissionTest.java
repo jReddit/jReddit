@@ -26,10 +26,10 @@ public class SubmissionTest {
 		}
 
 		assertNotSame(
-				"The submission's ID/can't be empty, how will reddit identify the submission?",
+				"The submission's ID/full name can't be empty, how will reddit identify the submission?",
 				first.fullName, "");
 		assertNotNull(
-				"The submission's ID/can't be null, how will reddit identify the submission?",
+				"The submission's ID/full name can't be null, how will reddit identify the submission?",
 				first.fullName);
 	}
 }
