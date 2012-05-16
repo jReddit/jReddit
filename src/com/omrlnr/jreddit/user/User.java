@@ -1,9 +1,10 @@
 package com.omrlnr.jreddit.user;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -40,6 +41,74 @@ public class User extends Thing {
 	}
 
 	/**
+	 * This function submits a link to the specified subreddit.
+	 * 
+	 * @param title
+	 *            The title of the submission
+	 * @param link
+	 *            The link to the submission
+	 * @param subreddit
+	 *            The subreddit to submit to
+	 * @throws IOException
+	 *             If connection fails
+	 * @throws ParseException
+	 *             If JSON Parsing fails
+	 */
+	public void submitLink(String title, String link, String subreddit)
+			throws IOException, ParseException {
+		JSONObject object = Utils.post("title=" + title + "&url=" + link
+				+ "&sr=" + subreddit + "&kind=link&uh=" + getModhash(),
+				new URL("http://www.reddit.com/api/submit"), getCookie());
+		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+			System.err.println("Please login first.");
+		} else if (object.toJSONString().contains(
+				".error.RATELIMIT.field-ratelimit")) {
+			System.err.println("You are doing that too much.");
+		} else if (object.toJSONString().contains(
+				".error.ALREADY_SUB.field-url")) {
+			System.err.println("That link has already been submitted.");
+		} else {
+			System.out.println("Link submitted to "
+					+ ((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(16))
+							.get(3)).get(0));
+		}
+	}
+
+	/**
+	 * This function submits a self post to the specified subreddit.
+	 * 
+	 * @param title
+	 *            The title of the submission
+	 * @param text
+	 *            The text of the submission
+	 * @param subreddit
+	 *            The subreddit to submit to
+	 * @throws IOException
+	 *             If connection fails
+	 * @throws ParseException
+	 *             If JSON Parsing fails
+	 */
+	public void submitSelfPost(String title, String text, String subreddit)
+			throws IOException, ParseException {
+		JSONObject object = Utils.post("title=" + title + "&text=" + text
+				+ "&sr=" + subreddit + "&kind=self&uh=" + getModhash(),
+				new URL("http://www.reddit.com/api/submit"), getCookie());
+		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+			System.err.println("Please login first.");
+		} else if (object.toJSONString().contains(
+				".error.RATELIMIT.field-ratelimit")) {
+			System.err.println("You are doing that too much.");
+		} else if (object.toJSONString().contains(
+				".error.ALREADY_SUB.field-url")) {
+			System.err.println("That link has already been submitted.");
+		} else {
+			System.out.println("Self post submitted to "
+					+ ((JSONArray) ((JSONArray) ((JSONArray) object
+							.get("jquery")).get(10)).get(3)).get(0));
+		}
+	}
+
+	/**
 	 * This functions returns true if this user has unread mail.
 	 * 
 	 * @return This user has mail or not
@@ -63,8 +132,7 @@ public class User extends Thing {
 	 * @throws ParseException
 	 *             If JSON parsing fails
 	 */
-	public double created() throws NumberFormatException, IOException,
-			ParseException {
+	public double created() throws IOException, ParseException {
 		return Double.parseDouble(info().get("created").toString());
 	}
 
@@ -80,8 +148,7 @@ public class User extends Thing {
 	 * @throws ParseException
 	 *             If JSON parsing fails
 	 */
-	public double createdUTC() throws NumberFormatException, IOException,
-			ParseException {
+	public double createdUTC() throws IOException, ParseException {
 		return Double.parseDouble(info().get("created_utc").toString());
 	}
 
@@ -98,8 +165,7 @@ public class User extends Thing {
 	 * @throws ParseException
 	 *             If JSON parsing fails
 	 */
-	public int linkKarma() throws NumberFormatException, IOException,
-			ParseException {
+	public int linkKarma() throws IOException, ParseException {
 		return Integer.parseInt(info().get("link_karma").toString());
 	}
 
@@ -116,8 +182,7 @@ public class User extends Thing {
 	 * @throws ParseException
 	 *             If JSON parsing fails
 	 */
-	public int commentKarma() throws NumberFormatException, IOException,
-			ParseException {
+	public int commentKarma() throws IOException, ParseException {
 		return Integer.parseInt(info().get("comment_karma").toString());
 	}
 

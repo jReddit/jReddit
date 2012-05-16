@@ -2,7 +2,7 @@
 ##What is jReddit?
 jReddit is a wrapper for the Reddit API written in Java. It is a work in progress.
 ##What can it do?
-So far, jReddit can login with a user, retrieve user information, and vote/comment on submissions.
+So far, jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, among other things.
 ##What's next for jReddit?
 I plan to implement every feature documented [here](http://www.reddit.com/dev/api).
 ##Dependencies
@@ -27,8 +27,6 @@ Upvote a submission and comment on it
 
 Upvote every submission on the frontpage of a subreddit
 
-    package org.jreddit.api;
-
     import org.jreddit.api.submissions.Submission;
     import org.jreddit.api.submissions.Submissions;
     import org.jreddit.api.user.User;
@@ -46,8 +44,6 @@ Upvote every submission on the frontpage of a subreddit
     }
 
 Print some information about this user and a certain submission
-
-	package org.jreddit.api;
 	
 	import org.jreddit.api.submissions.Submission;
 	import org.jreddit.api.submissions.Submissions;
@@ -72,5 +68,23 @@ Print some information about this user and a certain submission
 			System.out.println(submission.upVotes());
 			System.out.println(submission.getAuthor());
 			System.out.println(submission.getScore());
+		}
+	}
+
+Submit a link and self post
+
+	import com.omrlnr.jreddit.user.User;
+	
+	public final class Test {
+		public static void main(String[] args) throws Exception {
+			User user = new User("username", "password");
+			user.connect();
+	
+			user.submitLink(
+					"Oracle V Google judge is a programmer!",
+					"http://www.i-programmer.info/news/193-android/4224-oracle-v-google-judge-is-a-programmer.html",
+					"programming");
+			user.submitSelfPost("What's the difference between a duck?",
+					"One of its legs are both the same!", "funny");
 		}
 	}
