@@ -271,6 +271,10 @@ public class Submission extends Thing {
 		return fullName;
 	}
 
+	public URL getURL() {
+		return url;
+	}
+
 	private JSONObject voteResponse(int dir) throws IOException, ParseException {
 		return Utils.post(
 				"id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),

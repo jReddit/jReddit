@@ -11,8 +11,8 @@ I plan to implement every feature documented [here](http://www.reddit.com/dev/ap
 
 Upvote a submission and comment on it
 
-    import org.omer.api.submissions.Submission;
-    import org.omer.api.user.User;
+    import com.omrlnr.jreddit.submissions.Submission;
+    import com.omrlnr.jreddit.user.User;
 
     public final class Example {
 	    public static void main(String[] args) throws Exception {
@@ -27,9 +27,9 @@ Upvote a submission and comment on it
 
 Upvote every submission on the frontpage of a subreddit
 
-    import org.jreddit.api.submissions.Submission;
-    import org.jreddit.api.submissions.Submissions;
-    import org.jreddit.api.user.User;
+    import com.omrlnr.jreddit.submissions.Submission;
+    import com.omrlnr.jreddit.submissions.Submissions;
+    import com.omrlnr.jreddit.user.User;
 
     public final class Test {
 	    public static void main(String[] args) throws Exception {
@@ -45,9 +45,9 @@ Upvote every submission on the frontpage of a subreddit
 
 Print some information about this user and a certain submission
 	
-	import org.jreddit.api.submissions.Submission;
-	import org.jreddit.api.submissions.Submissions;
-	import org.jreddit.api.user.User;
+	import com.omrlnr.jreddit.submissions.Submission;
+	import com.omrlnr.jreddit.submissions.Submissions;
+	import com.omrlnr.jreddit.user.User;
 	
 	public final class Test {
 		public static void main(String[] args) throws Exception {
