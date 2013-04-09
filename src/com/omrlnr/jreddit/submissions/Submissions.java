@@ -13,61 +13,61 @@ import com.omrlnr.jreddit.utils.Utils;
 
 /**
  * This class offers some submission utilties.
- * 
+ *
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Submissions {
-	public static final int HOT = 0, NEW = 1;
-	public static final int FRONTPAGE = 0;
+    public enum Popularity {
+        HOT, NEW
+    }
 
-	/**
-	 * This function returns a linked list containing the submissions on a given
-	 * subreddit and page. (in progress)
-	 * 
-	 * @param redditName
-	 *            The subreddit's name
-	 * @param type
-	 *            HOT or NEW and some others to come
-	 * @param page
-	 *            TODO this
-	 * @param user
-	 *            The user
-	 * @return The linked list containing submissions
-	 * @throws IOException
-	 *             If connection fails
-	 * @throws ParseException
-	 *             If JSON parsing fails
-	 */
-	public static LinkedList<Submission> getSubmissions(String redditName,
-			int type, int page, User user) throws IOException, ParseException {
-		LinkedList<Submission> submissions = new LinkedList<Submission>();
-		URL url;
-		String urlString = "http://www.reddit.com/r/" + redditName;
+    public enum Page {
+        FRONTPAGE
+    }
 
-		switch (type) {
-		case NEW:
-			urlString += "/new";
-			break;
-		}
+    /**
+     * This function returns a linked list containing the submissions on a given
+     * subreddit and page. (in progress)
+     *
+     * @param redditName The subreddit's name
+     * @param type       HOT or NEW and some others to come
+     * @param frontpage       TODO this
+     * @param user       The user
+     * @return The linked list containing submissions
+     * @throws IOException    If connection fails
+     * @throws ParseException If JSON parsing fails
+     */
+    public static LinkedList<Submission> getSubmissions(String redditName,
+                                                        Popularity type, Page frontpage, User user) throws IOException, ParseException {
+        LinkedList<Submission> submissions = new LinkedList<Submission>();
+        URL url;
+        String urlString = "http://www.reddit.com/r/" + redditName;
 
-		/**
-		 * TODO Implement Pages
-		 */
+        switch (type) {
+            case NEW:
+                urlString += "/new";
+                break;
+        }
 
-		urlString += ".json";
-		url = new URL(urlString);
+        /**
+         * TODO Implement Pages
+         */
 
-		JSONObject object = Utils.get("", url, user.getCookie());
-		JSONArray array = (JSONArray) ((JSONObject) object.get("data"))
-				.get("children");
-		JSONObject data;
-		for (int i = 0; i < array.size(); i++) {
-			data = (JSONObject) array.get(i);
-			data = ((JSONObject) ((JSONObject) data).get("data"));
-			submissions.add(new Submission(user, data.get("id").toString(),
-					new URL("http://www.reddit.com" + (data.get("permalink").toString()))));
-		}
+        urlString += ".json";
+        url = new URL(urlString);
 
-		return submissions;
-	}
+        Object obj = Utils.get("", url, user.getCookie());
+        JSONObject object = (JSONObject) obj;
+        JSONArray array = (JSONArray) ((JSONObject) object.get("data"))
+                .get("children");
+        JSONObject data;
+        for (int i = 0; i < array.size(); i++) {
+            data = (JSONObject) array.get(i);
+            data = ((JSONObject) ((JSONObject) data).get("data"));
+            submissions.add(new Submission(user, data.get("id").toString(),
+                    new URL("http://www.reddit.com" + (data.get("permalink").toString()))));
+        }
+
+        return submissions;
+    }
 }
