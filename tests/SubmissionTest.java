@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import com.omrlnr.jreddit.submissions.Submission;
 import com.omrlnr.jreddit.submissions.Submissions;
+import com.omrlnr.jreddit.submissions.Submissions.Page;
+import com.omrlnr.jreddit.submissions.Submissions.Popularity;
 import com.omrlnr.jreddit.user.User;
 
 public class SubmissionTest {
@@ -18,8 +20,8 @@ public class SubmissionTest {
 			User user = new User("test_subject_666", "beef");
 			user.connect();
 
-			frontpage = Submissions.getSubmissions("all", Submissions.HOT,
-					Submissions.FRONTPAGE, user);
+			frontpage = Submissions.getSubmissions("all", Popularity.HOT,
+					Page.FRONTPAGE, user);
 			first = frontpage.get(0);
 		} catch (Exception exception) {
 			exception.printStackTrace();
