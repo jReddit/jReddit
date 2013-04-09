@@ -1,5 +1,7 @@
 import com.omrlnr.jreddit.submissions.Submission;
 import com.omrlnr.jreddit.submissions.Submissions;
+import com.omrlnr.jreddit.submissions.Submissions.Page;
+import com.omrlnr.jreddit.submissions.Submissions.Popularity;
 import com.omrlnr.jreddit.user.User;
 
 import com.omrlnr.jreddit.utils.Utils;
@@ -16,13 +18,13 @@ public final class GenerousBot {
 
 		Utils.setUserAgent("Generous-Bot");
 
-		User user = new User("username", "password");
+		User user = new User("user", "password");
 		user.connect();
 
 		for (int i = 0; i < subreddits.length; i++) {
 			for (Submission submission : Submissions
-					.getSubmissions(subreddits[i], Submissions.NEW,
-							Submissions.FRONTPAGE, user)) {
+					.getSubmissions(subreddits[i], Popularity.NEW,
+							Page.FRONTPAGE, user)) {
 				submission.upVote();
 			}
 		}
