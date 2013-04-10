@@ -47,6 +47,8 @@ public class Submissions {
             case NEW:
                 urlString += "/new";
                 break;
+		default:
+			break;
         }
 
         /**
