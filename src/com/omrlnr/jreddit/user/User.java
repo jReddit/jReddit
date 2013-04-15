@@ -1,6 +1,7 @@
 package com.omrlnr.jreddit.user;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -10,6 +11,7 @@ import org.json.simple.parser.ParseException;
 
 import com.omrlnr.jreddit.Thing;
 import com.omrlnr.jreddit.submissions.Submission;
+import com.omrlnr.jreddit.subreddit.Subreddit;
 import com.omrlnr.jreddit.utils.Utils;
 
 import java.util.List;
@@ -590,5 +592,46 @@ public class User extends Thing {
 	 */
 	private static String toString(Object obj) {
 		return (obj == null ? null : obj.toString());
+	}
+
+	/**
+	 * Returns a list of Subreddits to which the user is subscribed.
+	 * 
+	 * @author Karan Goel
+	 */
+	public List<Subreddit> getSubscribed() {
+		List<Subreddit> subscibed = new ArrayList<Subreddit>(1000);
+		JSONObject object = null;
+		try {
+			object = (JSONObject) Utils.get("", 
+					new URL("http://www.reddit.com/subreddits/mine/subscriber.json"), cookie);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		JSONObject rawData = (JSONObject) object.get("data");
+		JSONArray subreddits = (JSONArray) rawData.get("children");
+
+		for (int i = 0; i < subreddits.size(); i++) {
+			JSONObject obj = (JSONObject) subreddits.get(i);
+			obj = (JSONObject) obj.get("data");
+			Subreddit sub = new Subreddit();
+			sub.setCreated(obj.get("created").toString());
+			sub.setCreatedUTC(obj.get("created_utc").toString());
+			sub.setDescription(obj.get("description").toString());
+			sub.setDisplayName(obj.get("display_name").toString());
+			sub.setId(obj.get("id").toString());
+			sub.setName(obj.get("display_name").toString());
+			sub.setNsfw(Boolean.parseBoolean(obj.get("over18").toString()));
+			sub.setSubscribers(Integer.parseInt(obj.get("subscribers").toString()));
+			sub.setTitle(obj.get("title").toString());
+			sub.setUrl(obj.get("url").toString());
+			subscibed.add(sub);
+		}
+		return subscibed;
 	}
 }

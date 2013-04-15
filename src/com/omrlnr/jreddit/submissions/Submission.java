@@ -307,7 +307,7 @@ public class Submission extends Thing {
         JSONObject object = voteResponse(-1);
         if (!(object.toJSONString().length() > 2))
             // Will return "{}"
-            System.out.println("Successful downboat!");
+            System.out.println("Successful downvote!");
         else
             System.out.println(object.toJSONString());
     }

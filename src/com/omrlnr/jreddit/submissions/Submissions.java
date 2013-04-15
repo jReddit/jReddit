@@ -12,7 +12,7 @@ import com.omrlnr.jreddit.user.User;
 import com.omrlnr.jreddit.utils.Utils;
 
 /**
- * This class offers some submission utilties.
+ * This class offers some submission utilities.
  *
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
@@ -38,7 +38,7 @@ public class Submissions {
      * @throws ParseException If JSON parsing fails
      */
     public static LinkedList<Submission> getSubmissions(String redditName,
-                                                        Popularity type, Page frontpage, User user) throws IOException, ParseException {
+                       Popularity type, Page frontpage, User user) throws IOException, ParseException {
         LinkedList<Submission> submissions = new LinkedList<Submission>();
         URL url;
         String urlString = "http://www.reddit.com/r/" + redditName;
