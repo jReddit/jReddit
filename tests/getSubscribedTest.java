@@ -9,7 +9,7 @@ public class getSubscribedTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		User user = new User("", ""); // Add your username and password
+		User user = new User("jReddittest", "jReddittest"); // Add your username and password
 		try {
 			user.connect();
 		} catch (Exception exception) {

@@ -28,7 +28,28 @@ public class Messages {
 					"http://www.reddit.com/message/unread.json"), 
 					user.getCookie());
 			JSONObject data = (JSONObject) object.get("data");
-			unread = buildList((JSONArray) data.get("children"));
+			unread = buildList((JSONArray) data.get("children"), -1);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return unread;
+	}
+	
+	/**
+	 * Returns the specified number of messages in user's inbox.
+	 * Return all messages if maxMessages = -1.
+	 * @author Karan Goel
+	 */
+	public List<Message> inbox(User user, int maxMessages) {
+		List<Message> unread = null;
+
+		try {
+			JSONObject object = (JSONObject) Utils.get("", new URL(
+					"http://www.reddit.com/message/inbox.json"), 
+					user.getCookie());
+			JSONObject data = (JSONObject) object.get("data");
+			unread = buildList((JSONArray) data.get("children"), maxMessages);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -40,12 +61,15 @@ public class Messages {
 	 * Builds a list of Messages from the passed array of children.
 	 * @author Karan Goel
 	 */
-	private static List<Message> buildList(JSONArray children) {
+	private static List<Message> buildList(JSONArray children, int maxMessages) {
 		List<Message> messages = new ArrayList<Message>(10000);
 		JSONObject obj;
 		Message m;
 
-		for (int i = 0; i < children.size(); i++) {
+		if (maxMessages < 0 || maxMessages > children.size()) {
+			maxMessages = children.size();
+		}
+		for (int i = 0; i < maxMessages; i++) {
 			obj = (JSONObject) children.get(i);
 			obj = (JSONObject) obj.get("data");
 			m = new Message();
