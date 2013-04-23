@@ -3,9 +3,11 @@ package com.omrlnr.jreddit.utils;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -60,7 +62,7 @@ public class Utils {
     public static Object get(String apiParams, URL url, String cookie)
             throws IOException, ParseException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
+        //connection.setDoOutput(true);
         connection.setUseCaches(false);
         connection.setRequestMethod("GET");
         // Don't pass cookie if it is null
@@ -68,19 +70,31 @@ public class Utils {
             connection.setRequestProperty("cookie", "reddit_session=" + cookie);
         }
         connection.setRequestProperty("User-Agent", userAgent);
+        
+        
+        // Debugging stuff
+        // @author Karan Goel
+        InputStream is = null;
+		Scanner s = null;
+		String response = null;
+		try {
+			if (connection.getResponseCode() != 200) {
+				s = new Scanner(connection.getErrorStream());
+			} else {
+				is = connection.getInputStream();
+				s = new Scanner(is);
+			}
+			s.useDelimiter("\\Z");
+			response = s.next();
+			System.out.println("\nResponse: " + response + "\n\n");
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		// Debugging stuff
+		
 
         JSONParser parser = new JSONParser();
-        return parser.parse(new BufferedReader(new InputStreamReader(
-                connection.getInputStream())).readLine());
-//		JSONObject jsonObject = null;
-//		try {
-//			jsonObject = (JSONObject) object;
-//		} catch (ClassCastException e) {
-//			JSONArray jsonArray = (JSONArray) object;
-//
-//			jsonObject = (JSONObject) jsonArray.get(0);
-//		}
-//		return jsonObject;
+        return parser.parse(response);
     }
 
     /**

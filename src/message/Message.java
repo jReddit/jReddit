@@ -13,9 +13,6 @@ public class Message extends Thing {
 	// The body of the message
 	private String body;
 
-	// The title of the message
-	private String title;
-
 	// If the message was a comment or not
 	private boolean was_comment;
 
@@ -29,7 +26,7 @@ public class Message extends Thing {
 	private String createdUTC;
 	
 	// The subreddit where this message was posted
-	private Subreddit subreddit;
+	private String subreddit;
 	
 	// The content of the message
 	private String context;
@@ -56,23 +53,6 @@ public class Message extends Thing {
 	 */
 	public void setBody(String body) {
 		this.body = body;
-	}
-
-	/**
-	 * @return the title
-	 * @author Karan Goel
-	 */
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-	 * Sets the title
-	 * @param title to set
-	 * @author Karan Goel
-	 */
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	/**
@@ -147,7 +127,7 @@ public class Message extends Thing {
 	 * @return the subreddit
 	 * @author Karan Goel
 	 */
-	public Subreddit getSubreddit() {
+	public String getSubreddit() {
 		return subreddit;
 	}
 
@@ -156,7 +136,7 @@ public class Message extends Thing {
 	 * @param subreddit to set
 	 * @author Karan Goel
 	 */
-	public void setSubreddit(Subreddit subreddit) {
+	public void setSubreddit(String subreddit) {
 		this.subreddit = subreddit;
 	}
 
@@ -164,7 +144,7 @@ public class Message extends Thing {
 	 * @return the content
 	 * @author Karan Goel
 	 */
-	public String getContent() {
+	public String getContext() {
 		return context;
 	}
 
@@ -173,8 +153,8 @@ public class Message extends Thing {
 	 * @param content to set
 	 * @author Karan Goel
 	 */
-	public void setContent(String content) {
-		this.context = content;
+	public void setContext(String context) {
+		this.context = context;
 	}
 
 	/**
