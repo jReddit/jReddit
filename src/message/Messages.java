@@ -21,19 +21,7 @@ public class Messages {
 	 * @author Karan Goel
 	 */
 	public List<Message> unread(User user) {
-		List<Message> unread = null;
-
-		try {
-			JSONObject object = (JSONObject) Utils.get("", new URL(
-					"http://www.reddit.com/message/unread.json"), 
-					user.getCookie());
-			JSONObject data = (JSONObject) object.get("data");
-			unread = buildList((JSONArray) data.get("children"), -1);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return unread;
+		return createList(user, -1, "unread");
 	}
 	
 	/**
@@ -42,19 +30,31 @@ public class Messages {
 	 * @author Karan Goel
 	 */
 	public List<Message> inbox(User user, int maxMessages) {
-		List<Message> unread = null;
+		return createList(user, maxMessages, "inbox");
+	}
+	
+	/**
+	 * Builds a list of Messages based on passed parameters.
+	 * @param user
+	 * @param maxMessages
+	 * @param method
+	 * @return list of messages based on passed method
+	 * @author Karan Goel
+	 */
+	public List<Message> createList(User user, int maxMessages, String method) {
+		List<Message> messages = null;
 
 		try {
 			JSONObject object = (JSONObject) Utils.get("", new URL(
-					"http://www.reddit.com/message/inbox.json"), 
+					"http://www.reddit.com/message/" + method + ".json"), 
 					user.getCookie());
 			JSONObject data = (JSONObject) object.get("data");
-			unread = buildList((JSONArray) data.get("children"), maxMessages);
+			messages = buildList((JSONArray) data.get("children"), maxMessages);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return unread;
+		return messages;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Messages {
 			m.setCreated(obj.get("created").toString());
 			m.setCreatedUTC(obj.get("created_utc").toString());
 			m.setSubject(obj.get("subject").toString());
-			//m.setSubreddit(obj.get("subreddit").toString());
+			//TODO: m.setSubreddit(obj.get("subreddit").toString());
 			m.setContext(obj.get("context").toString());
 			m.setId(obj.get("id").toString());
 			m.setSubject(obj.get("subject").toString());
