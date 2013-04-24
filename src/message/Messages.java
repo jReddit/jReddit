@@ -17,7 +17,7 @@ import com.omrlnr.jreddit.utils.Utils;
 public class Messages {
 
 	/**
-	 * Returns the unread messages in user's inbox.
+	 * Returns all unread messages in user's inbox.
 	 * @author Karan Goel
 	 */
 	public List<Message> unread(User user) {
@@ -31,6 +31,16 @@ public class Messages {
 	 */
 	public List<Message> inbox(User user, int maxMessages) {
 		return createList(user, maxMessages, "inbox");
+	}
+	
+	/**
+	 * Returns the sent messages for a user.
+	 * @param user
+	 * @param maxMessages
+	 * @return List of sent messages
+	 */
+	public List<Message> sent(User user, int maxMessages) {
+		return createList(user, maxMessages, "sent");
 	}
 	
 	/**
