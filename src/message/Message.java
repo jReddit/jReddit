@@ -1,33 +1,37 @@
 package message;
 
-import com.omrlnr.jreddit.Thing;
-import com.omrlnr.jreddit.subreddit.Subreddit;
-
 /**
  * Encapsulates the private messages
  * @author Karan Goel
  *
  */
-public class Message extends Thing {
+public class Message {
+	
+	/**
+	 * "t4" = message
+	 */
 
 	// The body of the message
 	private String body;
 
 	// If the message was a comment or not
 	private boolean was_comment;
-
-	// Name of the author of the message
-	private String author;
-
+	
+	private String name;
+	
 	// Timestamp of when the message was created
 	private String created;
+	
+	private String dest;
+	
+	// Name of the author of the message
+	private String author;
 
 	// UTC timestamp of when the message was created
 	private String createdUTC;
 	
-	// The subreddit where this message was posted
-	private String subreddit;
-	
+	private String body_html;
+		
 	// The content of the message
 	private String context;
 	
@@ -61,6 +65,14 @@ public class Message extends Thing {
 	 */
 	public boolean isWas_comment() {
 		return was_comment;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -106,6 +118,14 @@ public class Message extends Thing {
 		this.created = created;
 	}
 
+	public String getDest() {
+		return dest;
+	}
+
+	public void setDest(String dest) {
+		this.dest = dest;
+	}
+
 	/**
 	 * @return the created UTC timestamp
 	 * @author Karan Goel
@@ -123,21 +143,12 @@ public class Message extends Thing {
 		this.createdUTC = createdUTC;
 	}
 
-	/**
-	 * @return the subreddit
-	 * @author Karan Goel
-	 */
-	public String getSubreddit() {
-		return subreddit;
+	public String getBody_html() {
+		return body_html;
 	}
 
-	/**
-	 * Sets the subreddit
-	 * @param subreddit to set
-	 * @author Karan Goel
-	 */
-	public void setSubreddit(String subreddit) {
-		this.subreddit = subreddit;
+	public void setBody_html(String body_html) {
+		this.body_html = body_html;
 	}
 
 	/**

@@ -1,11 +1,14 @@
 package message;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import com.omrlnr.jreddit.user.User;
 import com.omrlnr.jreddit.utils.Utils;
@@ -23,7 +26,7 @@ public class Messages {
 	public List<Message> unread(User user) {
 		return createList(user, -1, "unread");
 	}
-	
+
 	/**
 	 * Returns the specified number of messages in user's inbox.
 	 * Return all messages if maxMessages = -1.
@@ -32,7 +35,7 @@ public class Messages {
 	public List<Message> inbox(User user, int maxMessages) {
 		return createList(user, maxMessages, "inbox");
 	}
-	
+
 	/**
 	 * Returns the sent messages for a user.
 	 * @param user
@@ -42,7 +45,7 @@ public class Messages {
 	public List<Message> sent(User user, int maxMessages) {
 		return createList(user, maxMessages, "sent");
 	}
-	
+
 	/**
 	 * Builds a list of Messages based on passed parameters.
 	 * @param user
@@ -51,6 +54,7 @@ public class Messages {
 	 * @return list of messages based on passed method
 	 * @author Karan Goel
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Message> createList(User user, int maxMessages, String method) {
 		List<Message> messages = null;
 
@@ -59,7 +63,7 @@ public class Messages {
 					"http://www.reddit.com/message/" + method + ".json"), 
 					user.getCookie());
 			JSONObject data = (JSONObject) object.get("data");
-			messages = buildList((JSONArray) data.get("children"), maxMessages);
+			messages = (List) buildList((JSONArray) data.get("children"), maxMessages);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,31 +75,92 @@ public class Messages {
 	 * Builds a list of Messages from the passed array of children.
 	 * @author Karan Goel
 	 */
-	private static List<Message> buildList(JSONArray children, int maxMessages) {
-		List<Message> messages = new ArrayList<Message>(10000);
+	private static List<Object> buildList(JSONArray children, int maxMessages) {
+		List<Object> messages = new ArrayList<Object>(10000);
 		JSONObject obj;
-		Message m;
 
 		if (maxMessages < 0 || maxMessages > children.size()) {
 			maxMessages = children.size();
 		}
 		for (int i = 0; i < maxMessages; i++) {
 			obj = (JSONObject) children.get(i);
-			obj = (JSONObject) obj.get("data");
-			m = new Message();
-			m.setBody(obj.get("body").toString());
-			m.setWas_comment(Boolean.valueOf(obj.get("was_comment").toString()));
-			m.setAuthor(obj.get("author").toString());
-			m.setCreated(obj.get("created").toString());
-			m.setCreatedUTC(obj.get("created_utc").toString());
-			m.setSubject(obj.get("subject").toString());
-			//TODO: m.setSubreddit(obj.get("subreddit").toString());
-			m.setContext(obj.get("context").toString());
-			m.setId(obj.get("id").toString());
-			m.setSubject(obj.get("subject").toString());
-			messages.add(m);
+			if (obj.get("kind").toString().startsWith("t4")) { // It's a message
+				obj = (JSONObject) obj.get("data");
+				Message m = new Message();
+				m.setBody(obj.get("body").toString());
+				m.setWas_comment(Boolean.valueOf(obj.get("was_comment").toString()));
+				m.setName(obj.get("name").toString());
+				m.setAuthor(obj.get("author").toString());
+				m.setCreated(obj.get("created").toString());
+				m.setDest(obj.get("dest").toString());
+				m.setAuthor(obj.get("author").toString());
+				m.setCreatedUTC(obj.get("created_utc").toString());
+				m.setBody_html(obj.get("body_html").toString());
+				m.setSubject(obj.get("subject").toString());
+				m.setContext(obj.get("context").toString());
+				m.setId(obj.get("id").toString());
+				m.setSubject(obj.get("subject").toString());
+				messages.add(m);
+			} else { // It's a comment/reply to a post
+				obj = (JSONObject) obj.get("data");
+				Comment m = new Comment();
+				m.setBody(obj.get("body").toString());
+				m.setLink_title(obj.get("link_title").toString());
+				m.setWas_comment(Boolean.valueOf(obj.get("was_comment").toString()));
+				m.setName(obj.get("name").toString());
+				m.setAuthor(obj.get("author").toString());
+				m.setCreated(obj.get("created").toString());
+				m.setDest(obj.get("dest").toString());
+				m.setAuthor(obj.get("author").toString());
+				m.setCreatedUTC(obj.get("created_utc").toString());
+				m.setBody_html(obj.get("body_html").toString());
+				m.setSubject(obj.get("subject").toString());
+				m.setSubreddit(obj.get("subreddit").toString());
+				m.setContext(obj.get("context").toString());
+				m.setId(obj.get("id").toString());
+				m.setSubject(obj.get("subject").toString());
+				messages.add(m);
+			}
 		}
 		return messages;
 	}
+
+	/**
+	 * Composes a messages based on passed text and send it to 
+	 * the passed user name.
+	 * @param text
+	 */
+	public void compose(User user, String to, String subject, String text, String iden, 
+			String captcha) {
+		JSONObject object = null;
+		try {
+			object = Utils.post("captcha=" + captcha + "&iden=" +iden + 
+					"&subject=" + subject + "&text=" + text + "&to=" + to + 
+					"&uh=" + user.getModhash(),
+					new URL("http://www.reddit.com/api/compose"), user.getCookie());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		// TODO: read captcha
+		//System.out.println(object.toString()); // DEBUG response
+
+		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+			System.err.println("Please login first.");
+		} else if (object.toJSONString().contains(
+				".error.RATELIMIT.field-ratelimit")) {
+			System.err.println("You are doing that too much.");
+		} else if (object.toJSONString().contains(
+				".error.BAD_CAPTCHA.field-captcha")) {
+			System.err.println("Invalid captcha submitted.");
+		} else {
+			System.out.println(((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(14)).get(3)).get(0));
+		}
+	}
+
 
 }
