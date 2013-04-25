@@ -1,3 +1,5 @@
+Note: Not the latest README. -Karan
+
 #jReddit
 ##What is jReddit?
 jReddit is a wrapper for the Reddit API written in Java. It is a work in progress.
