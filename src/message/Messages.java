@@ -128,6 +128,8 @@ public class Messages {
 	/**
 	 * Composes a messages based on passed text and send it to 
 	 * the passed user name.
+	 * Make sure you call Captcha.new_captcha to generate a captcha
+	 * and pass it's iden and solution.
 	 * @param text
 	 */
 	public void compose(User user, String to, String subject, String text, String iden, 
@@ -145,8 +147,7 @@ public class Messages {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
-		// TODO: read captcha
+		
 		//System.out.println(object.toString()); // DEBUG response
 
 		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
