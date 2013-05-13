@@ -38,9 +38,33 @@ public class Submission extends Thing {
     private int downVotes;
     private int score;
 
+    /** 
+     * An empty Submission
+     */
     public Submission() {
     }
-
+    
+    /** A Submission that is loaded from a JSONObject
+     * 
+     * @author Evin Ugur
+     * @param obj The JSONObject to load Submission data from
+     * @throws Exception The JSONObject is somehow bad
+     */
+    public Submission(JSONObject obj){
+    	try{
+    		setAuthor(Utils.toString(obj.get("author")));
+			setTitle(Utils.toString(obj.get("title")));
+			setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
+			setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
+			setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
+			setName(Utils.toString(obj.get("name")));
+			setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
+			setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
+			setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
+    	}
+    	catch(Exception e){e.printStackTrace();}
+    }
+    
     public Submission(User user, String fullName) {
 //		this(user, fullName, url);
     }

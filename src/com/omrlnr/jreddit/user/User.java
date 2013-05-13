@@ -146,7 +146,7 @@ public class User extends Thing {
 	 */
 	public int linkKarma() throws IOException, ParseException {
 		// Return the link link karma
-		return Integer.parseInt(toString(info().get("link_karma")));
+		return Integer.parseInt(Utils.toString(info().get("link_karma")));
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class User extends Thing {
 	 */
 	public int commentKarma() throws IOException, ParseException {
 		// Return comment karma
-		return Integer.parseInt(toString(info().get("comment_karma")));
+		return Integer.parseInt(Utils.toString(info().get("comment_karma")));
 	}
 
 	/**
@@ -341,13 +341,13 @@ public class User extends Thing {
 			JSONObject data = (JSONObject) object.get("data");
 
 			// Init account info wrapper
-			info = new UserInfo(Integer.parseInt(toString(data.get("comment_karma"))),
-					Integer.parseInt(toString(data.get("link_karma"))),
-					Float.parseFloat(toString(data.get("created_utc"))),
-					Boolean.parseBoolean(toString(data.get("is_gold"))),
-					Boolean.parseBoolean(toString(data.get("is_mod"))),
-					Boolean.parseBoolean(toString(data.get("has_mail"))),
-					Boolean.parseBoolean(toString(data.get("has_mod_mail"))));
+			info = new UserInfo(Integer.parseInt(Utils.toString(data.get("comment_karma"))),
+					Integer.parseInt(Utils.toString(data.get("link_karma"))),
+					Float.parseFloat(Utils.toString(data.get("created_utc"))),
+					Boolean.parseBoolean(Utils.toString(data.get("is_gold"))),
+					Boolean.parseBoolean(Utils.toString(data.get("is_mod"))),
+					Boolean.parseBoolean(Utils.toString(data.get("has_mail"))),
+					Boolean.parseBoolean(Utils.toString(data.get("has_mod_mail"))));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -382,10 +382,10 @@ public class User extends Thing {
 				obj = (JSONObject) obj.get("data");
 
 				// Create a new comment
-				c = new Comment(toString(obj.get("body")), toString(obj.get("edited")),
-						toString(obj.get("created_utc")), toString(obj.get("replies")),
-						Integer.parseInt(toString(obj.get("ups"))),
-						Integer.parseInt(toString(obj.get("downs"))));
+				c = new Comment(Utils.toString(obj.get("body")), Utils.toString(obj.get("edited")),
+						Utils.toString(obj.get("created_utc")), Utils.toString(obj.get("replies")),
+						Integer.parseInt(Utils.toString(obj.get("ups"))),
+						Integer.parseInt(Utils.toString(obj.get("downs"))));
 
 				// Add it to the submissions list
 				comments.add(c);
@@ -427,15 +427,15 @@ public class User extends Thing {
 
 				// Create a new submission
 				s = new Submission();
-				s.setAuthor(toString(obj.get("author")));
-				s.setTitle(toString(obj.get("title")));
-				s.setNSFW(Boolean.parseBoolean(toString(obj.get("over_18"))));
-				s.setCreatedUTC(Long.parseLong(toString(obj.get("created_utc"))));
-				s.setDownVotes(Integer.parseInt(toString(obj.get("downs"))));
-				s.setName(toString(obj.get("name")));
-				s.setScore(Integer.parseInt(toString(obj.get("score"))));
-				s.setUpVotes(Integer.parseInt(toString(obj.get("ups"))));
-				s.setCommentCount(Integer.parseInt(toString(obj.get("num_comments"))));
+				s.setAuthor(Utils.toString(obj.get("author")));
+				s.setTitle(Utils.toString(obj.get("title")));
+				s.setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
+				s.setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
+				s.setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
+				s.setName(Utils.toString(obj.get("name")));
+				s.setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
+				s.setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
+				s.setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
 				// Add it to the submissions list
 				submissions.add(s);
 			}
@@ -472,15 +472,15 @@ public class User extends Thing {
 
 				// Create a new comment
 				s = new Submission();
-				s.setAuthor(toString(obj.get("author")));
-				s.setTitle(toString(obj.get("title")));
-				s.setNSFW(Boolean.parseBoolean(toString(obj.get("over_18"))));
-				s.setCreatedUTC(Long.parseLong(toString(obj.get("created_utc"))));
-				s.setDownVotes(Integer.parseInt(toString(obj.get("downs"))));
-				s.setName(toString(obj.get("name")));
-				s.setScore(Integer.parseInt(toString(obj.get("score"))));
-				s.setUpVotes(Integer.parseInt(toString(obj.get("ups"))));
-				s.setCommentCount(Integer.parseInt(toString(obj.get("num_comments"))));
+				s.setAuthor(Utils.toString(obj.get("author")));
+				s.setTitle(Utils.toString(obj.get("title")));
+				s.setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
+				s.setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
+				s.setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
+				s.setName(Utils.toString(obj.get("name")));
+				s.setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
+				s.setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
+				s.setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
 				// Add it to the submissions list
 				liked.add(s);
 			}
@@ -517,15 +517,15 @@ public class User extends Thing {
 
 				// Create a new comment
 				s = new Submission();
-				s.setAuthor(toString(obj.get("author")));
-				s.setTitle(toString(obj.get("title")));
-				s.setNSFW(Boolean.parseBoolean(toString(obj.get("over_18"))));
-				s.setCreatedUTC(Long.parseLong(toString(obj.get("created_utc"))));
-				s.setDownVotes(Integer.parseInt(toString(obj.get("downs"))));
-				s.setName(toString(obj.get("name")));
-				s.setScore(Integer.parseInt(toString(obj.get("score"))));
-				s.setUpVotes(Integer.parseInt(toString(obj.get("ups"))));
-				s.setCommentCount(Integer.parseInt(toString(obj.get("num_comments"))));
+				s.setAuthor(Utils.toString(obj.get("author")));
+				s.setTitle(Utils.toString(obj.get("title")));
+				s.setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
+				s.setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
+				s.setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
+				s.setName(Utils.toString(obj.get("name")));
+				s.setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
+				s.setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
+				s.setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
 				// Add it to the submissions list
 				hidden.add(s);
 			}
@@ -562,15 +562,15 @@ public class User extends Thing {
 
 				// Create a new comment
 				s = new Submission();
-				s.setAuthor(toString(obj.get("author")));
-				s.setTitle(toString(obj.get("title")));
-				s.setNSFW(Boolean.parseBoolean(toString(obj.get("over_18"))));
-				s.setCreatedUTC(Long.parseLong(toString(obj.get("created_utc"))));
-				s.setDownVotes(Integer.parseInt(toString(obj.get("downs"))));
-				s.setName(toString(obj.get("name")));
-				s.setScore(Integer.parseInt(toString(obj.get("score"))));
-				s.setUpVotes(Integer.parseInt(toString(obj.get("ups"))));
-				s.setCommentCount(Integer.parseInt(toString(obj.get("num_comments"))));
+				s.setAuthor(Utils.toString(obj.get("author")));
+				s.setTitle(Utils.toString(obj.get("title")));
+				s.setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
+				s.setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
+				s.setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
+				s.setName(Utils.toString(obj.get("name")));
+				s.setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
+				s.setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
+				s.setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
 				// Add it to the submissions list
 				disliked.add(s);
 			}
@@ -582,17 +582,6 @@ public class User extends Thing {
 		return disliked;
 	}
 
-	/**
-	 * Safely converts an object into string (used because sometimes
-	 * JSONObject's get() method returns null).
-	 *
-	 * @param obj The object to convert.
-	 * @return The string.
-	 * @author Benjamin Jakobus
-	 */
-	private static String toString(Object obj) {
-		return (obj == null ? null : obj.toString());
-	}
 
 	/**
 	 * Returns a list of Subreddits to which the user is subscribed.

@@ -116,4 +116,18 @@ public class Utils {
     public static void setUserAgent(String agent) {
         userAgent = agent;
     }
+
+
+	/**
+	 * Safely converts an object into string (used because sometimes
+	 * JSONObject's get() method returns null).
+	 *
+	 * @param obj The object to convert.
+	 * @return The string.
+	 * @author Benjamin Jakobus
+	 */
+	public static String toString(Object obj) {
+		return (obj == null ? null : obj.toString());
+	}
+    
 }
