@@ -55,7 +55,7 @@ public class Submission extends Thing {
     		setAuthor(Utils.toString(obj.get("author")));
 			setTitle(Utils.toString(obj.get("title")));
 			setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
-			setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
+			setCreatedUTC(Double.parseDouble(Utils.toString(obj.get("created_utc"))));
 			setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
 			setName(Utils.toString(obj.get("name")));
 			setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
