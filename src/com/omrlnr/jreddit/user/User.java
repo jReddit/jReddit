@@ -538,6 +538,32 @@ public class User extends Thing {
 	}
 
 	/**
+	 * Returns a list of Submissions that the user saved
+	 * @return List of saved links
+	 * @author Evin Ugur
+	 */
+	
+	public List<Submission> saved(){
+		List<Submission> saved = new ArrayList<Submission>(500);
+		try{
+			JSONObject object = (JSONObject) Utils.get(new URL(userAddress() + "/saved.json"), cookie);
+			JSONObject data = (JSONObject) object.get("data");
+			JSONArray children = (JSONArray) data.get("children");
+			
+			JSONObject obj;
+			for(int i = 0; i < children.size(); i++){
+				obj = (JSONObject) children.get(i);
+				obj = (JSONObject) obj.get("data");
+				saved.add(new Submission(obj));
+			}
+		}
+		catch (Exception e) {e.printStackTrace();}
+		return saved;
+	}
+	
+	
+	
+	/**
 	 * Returns a list of submissions that this user disliked.
 	 *
 	 * @return List of disliked links.
@@ -623,4 +649,10 @@ public class User extends Thing {
 		}
 		return subscibed;
 	}
+	/**
+	 * @author Evin Ugur
+	 * @return the user's user page without a trailing slash
+	 */
+	public String userAddress(){return "http://reddit.com/user/" + username;}
+	
 }
