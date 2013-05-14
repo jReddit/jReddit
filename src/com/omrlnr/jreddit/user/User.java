@@ -424,20 +424,8 @@ public class User extends Thing {
 				// Get the object containing the comment
 				obj = (JSONObject) children.get(i);
 				obj = (JSONObject) obj.get("data");
-
-				// Create a new submission
-				s = new Submission();
-				s.setAuthor(Utils.toString(obj.get("author")));
-				s.setTitle(Utils.toString(obj.get("title")));
-				s.setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
-				s.setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
-				s.setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
-				s.setName(Utils.toString(obj.get("name")));
-				s.setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
-				s.setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
-				s.setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
-				// Add it to the submissions list
-				submissions.add(s);
+				//add a new Submission to the list
+				submissions.add(new Submission(obj));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -453,43 +441,8 @@ public class User extends Thing {
 	 * @return List of disliked links.
 	 * @author Benjamin Jakobus
 	 */
-	public List<Submission> liked() {
-		// List of submissions made by this user
-		List<Submission> liked = new ArrayList<Submission>(500);
-		try {
-			// Send GET request to get the account overview
-			JSONObject object = (JSONObject) Utils.get("", new URL(
-					"http://www.reddit.com/user/" + username + "/liked.json"), cookie);
-			JSONObject data = (JSONObject) object.get("data");
-			JSONArray children = (JSONArray) data.get("children");
-
-			JSONObject obj;
-			Submission s;
-			for (int i = 0; i < children.size(); i++) {
-				// Get the object containing the comment
-				obj = (JSONObject) children.get(i);
-				obj = (JSONObject) obj.get("data");
-
-				// Create a new comment
-				s = new Submission();
-				s.setAuthor(Utils.toString(obj.get("author")));
-				s.setTitle(Utils.toString(obj.get("title")));
-				s.setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
-				s.setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
-				s.setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
-				s.setName(Utils.toString(obj.get("name")));
-				s.setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
-				s.setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
-				s.setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
-				// Add it to the submissions list
-				liked.add(s);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// Return the submissions
-		return liked;
+	public List<Submission> getLikedSubmissions() {
+		return getUserSubmissions("liked");
 	}
 
 	/**
@@ -498,43 +451,8 @@ public class User extends Thing {
 	 * @return List of disliked links.
 	 * @author Benjamin Jakobus
 	 */
-	public List<Submission> hidden() {
-		// List of submissions made by this user
-		List<Submission> hidden = new ArrayList<Submission>(500);
-		try {
-			// Send GET request to get the account overview
-			JSONObject object = (JSONObject) Utils.get("", new URL(
-					"http://www.reddit.com/user/" + username + "/hidden.json"), cookie);
-			JSONObject data = (JSONObject) object.get("data");
-			JSONArray children = (JSONArray) data.get("children");
-
-			JSONObject obj;
-			Submission s;
-			for (int i = 0; i < children.size(); i++) {
-				// Get the object containing the comment
-				obj = (JSONObject) children.get(i);
-				obj = (JSONObject) obj.get("data");
-
-				// Create a new comment
-				s = new Submission();
-				s.setAuthor(Utils.toString(obj.get("author")));
-				s.setTitle(Utils.toString(obj.get("title")));
-				s.setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
-				s.setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
-				s.setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
-				s.setName(Utils.toString(obj.get("name")));
-				s.setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
-				s.setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
-				s.setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
-				// Add it to the submissions list
-				hidden.add(s);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// Return the submissions
-		return hidden;
+	public List<Submission> getHiddenSubmissions() {
+		return getUserSubmissions("hidden");
 	}
 
 	/**
@@ -543,24 +461,18 @@ public class User extends Thing {
 	 * @author Evin Ugur
 	 */
 	
-	public List<Submission> saved(){
-		List<Submission> saved = new ArrayList<Submission>(500);
-		try{
-			JSONObject object = (JSONObject) Utils.get(new URL(userAddress() + "/saved.json"), cookie);
-			JSONObject data = (JSONObject) object.get("data");
-			JSONArray children = (JSONArray) data.get("children");
-			
-			JSONObject obj;
-			for(int i = 0; i < children.size(); i++){
-				obj = (JSONObject) children.get(i);
-				obj = (JSONObject) obj.get("data");
-				saved.add(new Submission(obj));
-			}
-		}
-		catch (Exception e) {e.printStackTrace();}
-		return saved;
+	public List<Submission> getSavedSubmissions(){
+		return getUserSubmissions("saved");
 	}
 	
+	/**
+	 * Reutns a list of Submissions that the user submitted
+	 * @return List of submitted Sumissions
+	 * @author Evin Ugur
+	 */
+	public List<Submission> getSubmissions(){
+		return getUserSubmissions("submitted");
+	}
 	
 	
 	/**
@@ -569,46 +481,56 @@ public class User extends Thing {
 	 * @return List of disliked links.
 	 * @author Benjamin Jakobus
 	 */
-	public List<Submission> disliked() {
-		// List of submissions made by this user
-		List<Submission> disliked = new ArrayList<Submission>(500);
-		try {
-			// Send GET request to get the account overview
-			JSONObject object = (JSONObject) Utils.get("", new URL(
-					"http://www.reddit.com/user/" + username + "/disliked.json"), cookie);
+	public List<Submission> getDislikedSubmissions() {
+		return getUserSubmissions("disliked");
+	}
+	/**
+	 * private function used to get submissions that a user intereacts with on Reddit
+	 * @author Evin Ugur
+	 * @param where place of Submission - see http://www.reddit.com/dev/api#GET_user_{username}_{where}
+	 * @return Submissions from the specified location, null if the location is invalid
+	 */
+	
+	public List<Submission> getUserOverview(){
+		return getUserSubmissions("overview");
+	}
+	
+	private List<Submission> getUserSubmissions(String where){
+		//valid arguments for where the Submission can come from
+		final String[] LOCATIONS = {
+				//TODO: not all of these JSONs return something that can be processed purely into a Submission class, until those are taken care of, I commented them out
+				/*"overview",*/ "submitted", /*"comments",*/ "liked", "disliked", "hidden", "saved"
+		};
+		//check to see if we have a valid location
+		boolean valid = false;
+		for(int i = 0; i < LOCATIONS.length; i++){
+			valid = where.equals(LOCATIONS[i]);
+			if(valid) break;
+			
+		}
+		if(!valid){
+			System.err.println(where + " is an invalid location");
+			return null;
+		}
+		
+		//if we got this far, the location is valid
+		List<Submission> submissions = new ArrayList<Submission>(500);
+		try{
+			JSONObject object = (JSONObject) Utils.get(new URL(userAddress() + "/" + where + ".json"), cookie);
 			JSONObject data = (JSONObject) object.get("data");
 			JSONArray children = (JSONArray) data.get("children");
-
+			
 			JSONObject obj;
-			Submission s;
-			for (int i = 0; i < children.size(); i++) {
-				// Get the object containing the comment
+			for(int i = 0; i < children.size(); i++){
 				obj = (JSONObject) children.get(i);
 				obj = (JSONObject) obj.get("data");
-
-				// Create a new comment
-				s = new Submission();
-				s.setAuthor(Utils.toString(obj.get("author")));
-				s.setTitle(Utils.toString(obj.get("title")));
-				s.setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
-				s.setCreatedUTC(Long.parseLong(Utils.toString(obj.get("created_utc"))));
-				s.setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
-				s.setName(Utils.toString(obj.get("name")));
-				s.setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
-				s.setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
-				s.setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
-				// Add it to the submissions list
-				disliked.add(s);
+				submissions.add(new Submission(obj));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
-		// Return the submissions
-		return disliked;
+		catch (Exception e) {e.printStackTrace();}
+		return submissions;
 	}
-
-
+	
 	/**
 	 * Returns a list of Subreddits to which the user is subscribed.
 	 * 
