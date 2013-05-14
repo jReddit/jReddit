@@ -484,16 +484,17 @@ public class User extends Thing {
 	public List<Submission> getDislikedSubmissions() {
 		return getUserSubmissions("disliked");
 	}
+	
+	public List<Submission> getUserOverview(){
+		return getUserSubmissions("overview");
+	}
+	
 	/**
 	 * private function used to get submissions that a user intereacts with on Reddit
 	 * @author Evin Ugur
 	 * @param where place of Submission - see http://www.reddit.com/dev/api#GET_user_{username}_{where}
 	 * @return Submissions from the specified location, null if the location is invalid
 	 */
-	
-	public List<Submission> getUserOverview(){
-		return getUserSubmissions("overview");
-	}
 	
 	private List<Submission> getUserSubmissions(String where){
 		//valid arguments for where the Submission can come from
