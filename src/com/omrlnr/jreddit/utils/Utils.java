@@ -58,6 +58,20 @@ public class Utils {
     /**
      * This function submits a GET request and returns a JSON object that
      * corresponds to it.
+     * @param URL URL
+     * @param cookie cookie
+     */
+    public static Object get(URL url, String cookie) throws IOException, ParseException{
+    	return get("", url, cookie);
+    }
+    
+    /**
+     * This function submits a GET request and returns a JSON object that
+     * corresponds to it.
+     * 
+     * @param apiParams HTTP arguments
+     * @param URL URL
+     * @param cookie cookie
      */
     public static Object get(String apiParams, URL url, String cookie)
             throws IOException, ParseException {
