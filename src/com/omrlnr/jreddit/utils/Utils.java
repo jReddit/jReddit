@@ -13,6 +13,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.omrlnr.jreddit.Sort;
+
 /**
  * This class contains (or will contain) various utilities for jReddit.
  *
@@ -142,6 +144,25 @@ public class Utils {
 	 */
 	public static String toString(Object obj) {
 		return (obj == null ? null : obj.toString());
+	}
+	/**
+	 * Function that converts the Sort enum to a String
+	 * @param sort The Sort enum to be a String
+	 * @return A String representation of the Sort enum
+	 */
+	public static String sortToString(Sort sort){
+		String s = "hot";
+		switch(sort){
+			case t_confidence: s = "confidence"; break;
+			case t_hot: s = "hot"; break;
+			case t_controversial: s = "controversial"; break;
+			case t_new: s = "new"; break;
+			case t_old: s = "old"; break;
+			case t_random: s = "random"; break;
+			case t_top: s = "top"; break;
+			default: s = "hot"; break;
+		}
+		return s;
 	}
     
 }
