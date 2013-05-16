@@ -9,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import com.omrlnr.jreddit.Sort;
 import com.omrlnr.jreddit.Thing;
 import com.omrlnr.jreddit.submissions.Submission;
 import com.omrlnr.jreddit.subreddit.Subreddit;
@@ -436,67 +437,113 @@ public class User extends Thing {
 	}
 
 	/**
-	 * Returns a list of submissions that this user disliked.
-	 *
-	 * @return List of disliked links.
+	 * Returns a list of submissions that this user liked.
+	 * @return List of liked links with default sorting.
 	 * @author Benjamin Jakobus
 	 */
 	public List<Submission> getLikedSubmissions() {
-		return getUserSubmissions("liked");
+		return getLikedSubmissions(Sort.t_hot);
 	}
-
 	/**
-	 * Returns a list of submissions that this user chose to hide.
+	 * Returns a list of submissions that this user liked with a Reddit sort
+	 * @param sort Which sort you'd like to apply
+	 * @return List of liked submissions with a Reddit sort
+	 * @author Evin Ugur
+	 */
+	public List<Submission> getLikedSubmissions(Sort sort){
+		return getUserSubmissions("liked", sort);
+	}
+	/**
+	 * Returns a list of submissions that this user chose to hide. with the default sorting
 	 *
 	 * @return List of disliked links.
 	 * @author Benjamin Jakobus
 	 */
 	public List<Submission> getHiddenSubmissions() {
-		return getUserSubmissions("hidden");
+		return getHiddenSubmissions(Sort.t_hot);
+	}
+	
+	/**
+	 * Returns a list of Submissions that this user chose to hide with a specified sorting
+	 * @param sort Which sort you'd like to apply
+	 * @return List of hidden Submissions with a Reddit sort
+	 * @author Evin Ugur
+	 */
+	
+	public List<Submission> getHiddenSubmissions(Sort sort){
+		return getUserSubmissions("hidden", sort);
 	}
 
 	/**
-	 * Returns a list of Submissions that the user saved
+	 * Returns a list of Submissions that the user saved with the default sort
 	 * @return List of saved links
 	 * @author Evin Ugur
 	 */
 	
 	public List<Submission> getSavedSubmissions(){
-		return getUserSubmissions("saved");
+		return getSavedSubmissions(Sort.t_hot);
 	}
 	
 	/**
-	 * Reutns a list of Submissions that the user submitted
-	 * @return List of submitted Sumissions
+	 * Returns a list of Submissions that the user saved with a specified sorting
+	 * @param sort Which sort you'd like to apply
+	 * @return List of saved links with a Reddit sort
+	 * @author Evin Ugur
+	 */
+	
+	public List<Submission> getSavedSubmissions(Sort sort){
+		return getUserSubmissions("saved", sort);
+	}
+	
+	/**
+	 * Returns a list of Submissions that the user submitted with the default Reddit sort
+	 * @return List of submitted Submissions
 	 * @author Evin Ugur
 	 */
 	public List<Submission> getSubmissions(){
-		return getUserSubmissions("submitted");
+		return getSubmissions(Sort.t_hot);
 	}
 	
+	/**
+	 * Returns a list of Submissions that the user submitted with a specified Reddit sort
+	 * @return List of submitted Submissions with a specified Reddit sort
+	 */
+	public List<Submission> getSubmissions(Sort sort){
+		return getUserSubmissions("submitted", sort);
+	}
 	
 	/**
-	 * Returns a list of submissions that this user disliked.
+	 * Returns a list of submissions that this user disliked with the default Reddit sort
 	 *
 	 * @return List of disliked links.
 	 * @author Benjamin Jakobus
 	 */
 	public List<Submission> getDislikedSubmissions() {
-		return getUserSubmissions("disliked");
-	}
-	
-	public List<Submission> getUserOverview(){
-		return getUserSubmissions("overview");
+		return getDislikedSubmissions(Sort.t_hot);
 	}
 	
 	/**
-	 * private function used to get submissions that a user intereacts with on Reddit
+	 * Returns a list of Submissions that this user disliked with a specified Reddit sort
+	 * @param sort Which sort you'd like to apply
+	 * @return List of disliked sorts with a specified sort
+	 */
+	
+	public List<Submission> getDislikedSubmissions(Sort sort){
+		return getUserSubmissions("disliked", sort);
+	}
+	
+	public List<Submission> getUserOverview(){
+		return getUserSubmissions("overview", Sort.t_hot);
+	}
+	
+	/**
+	 * private function used to get submissions that a user interacts with on Reddit
 	 * @author Evin Ugur
 	 * @param where place of Submission - see http://www.reddit.com/dev/api#GET_user_{username}_{where}
 	 * @return Submissions from the specified location, null if the location is invalid
 	 */
 	
-	private List<Submission> getUserSubmissions(String where){
+	private List<Submission> getUserSubmissions(String where, Sort sort){
 		//valid arguments for where the Submission can come from
 		final String[] LOCATIONS = {
 				//TODO: not all of these JSONs return something that can be processed purely into a Submission class, until those are taken care of, I commented them out
@@ -517,7 +564,8 @@ public class User extends Thing {
 		//if we got this far, the location is valid
 		List<Submission> submissions = new ArrayList<Submission>(500);
 		try{
-			JSONObject object = (JSONObject) Utils.get(new URL(userAddress() + "/" + where + ".json"), cookie);
+			JSONObject object = (JSONObject) Utils.get(new URL(userAddress() + "/"
+									+ where + ".json?" + Utils.sortToString(sort)), cookie);
 			JSONObject data = (JSONObject) object.get("data");
 			JSONArray children = (JSONArray) data.get("children");
 			
