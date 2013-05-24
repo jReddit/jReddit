@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.omrlnr.jreddit.CommentSort;
 import com.omrlnr.jreddit.Sort;
 
 /**
@@ -161,6 +162,22 @@ public class Utils {
 			case t_random: s = "random"; break;
 			case t_top: s = "top"; break;
 			default: s = "hot"; break;
+		}
+		return s;
+	}
+	/**
+	 * Function that converts the CommentSort enum to a String
+	 * @param commentSort The CommentSort enum to be a String
+	 * @return A String representation of the CommentSort enum
+	 */
+	public static String commentSortToString(CommentSort commentSort){
+		String s = "new";
+		switch(commentSort){
+		case t_hot: s = "hot"; break;
+		case t_new: s = "new"; break;
+		case t_top: s = "top"; break;
+		case t_controversial: s = "controversial"; break;
+		default: break;
 		}
 		return s;
 	}

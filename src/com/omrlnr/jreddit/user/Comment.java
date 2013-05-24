@@ -84,7 +84,22 @@ public class Comment {
     public String getReplies() {
         return replies;
     }
-
+    /**
+     * Returns the amount of upvotes to the comment
+     * @return the amount of upvotes to this comment
+     * @author Evin Ugur
+     */
+    public int getUpvotes(){
+    	return upvotes;
+    }
+    /**
+     * Returns the amount of downvotes to the comment
+     * @return the amount of downvotes to the comment
+     * @author Evin Ugur
+     */
+    public int getDownvotes(){
+    	return downvotes;
+    }
     /**
      * Sets the comment.
      *

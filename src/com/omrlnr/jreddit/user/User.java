@@ -9,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import com.omrlnr.jreddit.CommentSort;
 import com.omrlnr.jreddit.Sort;
 import com.omrlnr.jreddit.Thing;
 import com.omrlnr.jreddit.submissions.Submission;
@@ -357,6 +358,10 @@ public class User extends Thing {
 		return info;
 	}
 
+	
+	public static List<Comment> comments(String username) {
+		return comments(username, CommentSort.t_new);
+	}
 	/**
 	 * Returns a list of submissions made by this user.
 	 *
@@ -365,38 +370,38 @@ public class User extends Thing {
 	 * @return <code>List</code> of top 500 comments made by this user.
 	 * @author Benjamin Jakobus
 	 */
-	public static List<Comment> comments(String username) {
+	public static List<Comment> comments(String username, CommentSort commentSort){
 		// List of submissions made by this user
-		List<Comment> comments = new ArrayList<Comment>(500);
-		try {
-			// Send GET request to get the account overview
-			JSONObject object = (JSONObject) Utils.get("", new URL(
-					"http://www.reddit.com/user/" + username + "/comments.json"), null);
-			JSONObject data = (JSONObject) object.get("data");
-			JSONArray children = (JSONArray) data.get("children");
+				List<Comment> comments = new ArrayList<Comment>(500);
+				try {
+					// Send GET request to get the account overview
+					JSONObject object = (JSONObject) Utils.get("", new URL(
+							"http://www.reddit.com/user/" + username + "/comments.json?"
+							+ Utils.commentSortToString(commentSort)), null);
+					JSONObject data = (JSONObject) object.get("data");
+					JSONArray children = (JSONArray) data.get("children");
 
-			JSONObject obj;
-			Comment c;
-			for (int i = 0; i < children.size(); i++) {
-				// Get the object containing the comment
-				obj = (JSONObject) children.get(i);
-				obj = (JSONObject) obj.get("data");
+					JSONObject obj;
+					Comment c;
+					for (int i = 0; i < children.size(); i++) {
+						// Get the object containing the comment
+						obj = (JSONObject) children.get(i);
+						obj = (JSONObject) obj.get("data");
 
-				// Create a new comment
-				c = new Comment(Utils.toString(obj.get("body")), Utils.toString(obj.get("edited")),
-						Utils.toString(obj.get("created_utc")), Utils.toString(obj.get("replies")),
-						Integer.parseInt(Utils.toString(obj.get("ups"))),
-						Integer.parseInt(Utils.toString(obj.get("downs"))));
+						// Create a new comment
+						c = new Comment(Utils.toString(obj.get("body")), Utils.toString(obj.get("edited")),
+								Utils.toString(obj.get("created_utc")), Utils.toString(obj.get("replies")),
+								Integer.parseInt(Utils.toString(obj.get("ups"))),
+								Integer.parseInt(Utils.toString(obj.get("downs"))));
 
-				// Add it to the submissions list
-				comments.add(c);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// Return the submissions
-		return comments;
+						// Add it to the submissions list
+						comments.add(c);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				// Return the submissions
+				return comments;
 	}
 
 	/**
@@ -605,17 +610,13 @@ public class User extends Thing {
 		for (int i = 0; i < subreddits.size(); i++) {
 			JSONObject obj = (JSONObject) subreddits.get(i);
 			obj = (JSONObject) obj.get("data");
-			Subreddit sub = new Subreddit();
-			sub.setCreated(obj.get("created").toString());
-			sub.setCreatedUTC(obj.get("created_utc").toString());
-			sub.setDescription(obj.get("description").toString());
-			sub.setDisplayName(obj.get("display_name").toString());
-			sub.setId(obj.get("id").toString());
-			sub.setName(obj.get("display_name").toString());
-			sub.setNsfw(Boolean.parseBoolean(obj.get("over18").toString()));
-			sub.setSubscribers(Integer.parseInt(obj.get("subscribers").toString()));
-			sub.setTitle(obj.get("title").toString());
-			sub.setUrl(obj.get("url").toString());
+			Subreddit sub = new Subreddit(obj.get("display_name").toString(),
+					obj.get("display_name").toString(), obj.get("title").toString(), 
+					obj.get("url").toString(), obj.get("created").toString(),
+					obj.get("created_utc").toString(),
+					Boolean.parseBoolean(obj.get("over18").toString()),
+					Integer.parseInt(obj.get("subscribers").toString()),
+					obj.get("id").toString(), obj.get("description").toString());
 			subscibed.add(sub);
 		}
 		return subscibed;
@@ -625,5 +626,6 @@ public class User extends Thing {
 	 * @return the user's user page without a trailing slash
 	 */
 	public String userAddress(){return "http://reddit.com/user/" + username;}
+	public URL userAddressURL() throws MalformedURLException {return new URL(userAddress());}
 	
 }

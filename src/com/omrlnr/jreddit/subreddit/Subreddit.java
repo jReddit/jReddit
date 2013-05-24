@@ -40,6 +40,59 @@ public class Subreddit {
     // Description detailing the subreddit
     private String description;
 
+    
+    /**Constructs a Subreddit with empty values - probably not what you want
+     * 
+     */
+    public Subreddit(){}
+    /** Constructs a SubReddit with supplied values
+     * 
+     * @param displayName
+     * @param name
+     * @param title
+     * @param url
+     * @param created
+     * @param createdUTC
+     * @param nsfw
+     * @param subscribers
+     * @param id
+     * @param description
+     */
+    public Subreddit(String displayName, String name, String title, String url,
+    		String created, String createdUTC, boolean nsfw, int subscribers,
+    		String id, String description){
+    	this.displayName = displayName;
+    	this.name = name;
+    	this.title = title;
+    	this.url = url;
+    	this.created = created;
+    	this.createdUTC = createdUTC;
+    	this.nsfw = nsfw;
+    	this.subscribers = subscribers;
+    	this.id = id;
+    	this.description = description;
+    }
+    /** 
+     * Constructs a SubReddit with all supplied values except createdUTC is passed as a double
+     * because everywhere else in the API we treat it like a double.
+     * @param displayName
+     * @param name
+     * @param title
+     * @param url
+     * @param created
+     * @param createdUTC
+     * @param nsfw
+     * @param subscribers
+     * @param id
+     * @param description
+     */
+    public Subreddit(String displayName, String name, String title, String url,
+    		String created, double createdUTC, boolean nsfw, int subscribers,
+    		String id, String description){
+    	this(displayName, name, title, url, created, ("" + createdUTC), nsfw,
+    			subscribers, id, description);
+    }
+    
     /**
      * Sets the timestamp of when the subreddit was created.
      *
