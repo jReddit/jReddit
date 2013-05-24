@@ -1,6 +1,6 @@
 package com.omrlnr.jreddit;
 /**
- * Enum to represent sorts on Reddit. You see these on a page that lists Submissions.
+ * Enum to represent submission sorts on Reddit. You see these on a page that lists Submissions.
  * @author Evin Ugur
  */
 public enum Sort {
