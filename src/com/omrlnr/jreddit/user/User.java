@@ -605,17 +605,13 @@ public class User extends Thing {
 		for (int i = 0; i < subreddits.size(); i++) {
 			JSONObject obj = (JSONObject) subreddits.get(i);
 			obj = (JSONObject) obj.get("data");
-			Subreddit sub = new Subreddit();
-			sub.setCreated(obj.get("created").toString());
-			sub.setCreatedUTC(obj.get("created_utc").toString());
-			sub.setDescription(obj.get("description").toString());
-			sub.setDisplayName(obj.get("display_name").toString());
-			sub.setId(obj.get("id").toString());
-			sub.setName(obj.get("display_name").toString());
-			sub.setNsfw(Boolean.parseBoolean(obj.get("over18").toString()));
-			sub.setSubscribers(Integer.parseInt(obj.get("subscribers").toString()));
-			sub.setTitle(obj.get("title").toString());
-			sub.setUrl(obj.get("url").toString());
+			Subreddit sub = new Subreddit(obj.get("display_name").toString(),
+					obj.get("display_name").toString(), obj.get("title").toString(), 
+					obj.get("url").toString(), obj.get("created").toString(),
+					obj.get("created_utc").toString(),
+					Boolean.parseBoolean(obj.get("over18").toString()),
+					Integer.parseInt(obj.get("subscribers").toString()),
+					obj.get("id").toString(), obj.get("description").toString());
 			subscibed.add(sub);
 		}
 		return subscibed;
@@ -625,5 +621,6 @@ public class User extends Thing {
 	 * @return the user's user page without a trailing slash
 	 */
 	public String userAddress(){return "http://reddit.com/user/" + username;}
+	public URL userAddressURL() throws MalformedURLException {return new URL(userAddress());}
 	
 }
