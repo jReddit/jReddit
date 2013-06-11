@@ -39,7 +39,8 @@
         <mkdir dir="deps" />
         <get 
             src="http://json-simple.googlecode.com/files/json-simple-1.1.1.jar"
-            dest="deps"/>
+            dest="deps" 
+            usetimestamp="true" />
     </target>
 
     <!-- 
