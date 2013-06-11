@@ -1,29 +1,3 @@
-# jReddit (forked from hormigas/jReddit)
-
-## What is jReddit?
-
-    jReddit is a wrapper for the Reddit API written in Java. 
-    It is a work in progress.
-
-## What can it do?
-
-    So far, jReddit can login with a user, retrieve user information, 
-    submit new links, and vote/comment on submissions, among other things.
-
-## What's next for jReddit?
-
-    The original prject (hormigas/jReddit) wants to implement every feature 
-    documented [here](http://www.reddit.com/dev/api).
-    
-    This fork is to improve on the original object model
-    and add functionality.
-
-## Dependencies
-
-[JSON-simple](http://code.google.com/p/json-simple/)
-
-## Examples
-
 import com.omrlnr.jreddit.submissions.Submission;
 import com.omrlnr.jreddit.submissions.Submissions;
 import com.omrlnr.jreddit.user.User;
@@ -45,7 +19,7 @@ public class SubmissionLister {
         String password     = args[1];
         String subreddit    = args[2];
 
-        Utils.setUserAgent("SampleB0t");
+        Utils.setUserAgent("Sample Java API user agent v0.01");
 
         User user = new User(username, password);
         user.connect();
@@ -62,5 +36,3 @@ public class SubmissionLister {
     }
 
 }
-
-

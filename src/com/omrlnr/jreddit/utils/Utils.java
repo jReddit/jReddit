@@ -7,77 +7,160 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.util.Iterator;
+import java.util.HashMap;
+import java.util.ArrayList;
+
+import java.lang.Thread;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+
+
 /**
  * This class contains (or will contain) various utilities for jReddit.
  * 
- * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Utils {
-	// Edit this!
-	private static String userAgent = "Omer's Reddit API Java Wrapper";
 
-	/**
-	 * This function is here because I do this same request a hundred times
-	 * throughout jReddit and I wanted to inline the function somehow.
-	 * 
-	 * It basically submits a POST request and returns a JSON object that
-	 * corresponds to it.
-	 */
-	public static JSONObject post(String apiParams, URL url, String cookie)
-			throws IOException, ParseException {
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setDoOutput(true);
-		connection.setUseCaches(false);
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("Content-Type",
-				"application/x-www-form-urlencoded; charset=UTF-8");
-		connection.setRequestProperty("Content-Length",
-				String.valueOf(apiParams.length()));
-		connection.setRequestProperty("cookie", "reddit_session=" + cookie);
-		connection.setRequestProperty("User-Agent", userAgent);
-		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-		wr.writeBytes(apiParams);
-		wr.flush();
-		wr.close();
+    private static int SLEEP_TIME = 2000;
 
-		JSONParser parser = new JSONParser();
-		Object object = parser.parse(new BufferedReader(new InputStreamReader(
-				connection.getInputStream())).readLine());
-		JSONObject jsonObject = (JSONObject) object;
+    private static String userAgent = "Fixing Reddit API Java Wrapper";
 
-		return jsonObject;
-	}
+    /**
+     * This function is here because I do this same request a hundred times
+     * throughout jReddit and I wanted to inline the function somehow.
+     * 
+     * It basically submits a POST request and returns a JSON object that
+     * corresponds to it.
+     */
+    public static JSONObject post(String apiParams, URL url, String cookie)
+            throws IOException, ParseException {
 
-	/**
-	 * This function submits a GET request and returns a JSON object that
-	 * corresponds to it.
-	 */
-	public static JSONObject get(String apiParams, URL url, String cookie)
-			throws IOException, ParseException {
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setDoOutput(true);
-		connection.setUseCaches(false);
-		connection.setRequestMethod("GET");
-		connection.setRequestProperty("cookie", "reddit_session=" + cookie);
-		connection.setRequestProperty("User-Agent", userAgent);
+        //
+        // Adhere to API rules....
+        // (Make this configurable)
+        //        
+        try {
+            Thread.sleep(SLEEP_TIME);
+        } catch(InterruptedException ie) {
+            ie.printStackTrace();
+            return null;
+        }
 
-		JSONParser parser = new JSONParser();
-		Object object = parser.parse(new BufferedReader(new InputStreamReader(
-				connection.getInputStream())).readLine());
-		JSONObject jsonObject = (JSONObject) object;
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setUseCaches(false);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded; charset=UTF-8");
+        connection.setRequestProperty("Content-Length",
+                String.valueOf(apiParams.length()));
+        connection.setRequestProperty("cookie", "reddit_session=" + cookie);
+        connection.setRequestProperty("User-Agent", userAgent);
+        DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+        wr.writeBytes(apiParams);
+        wr.flush();
+        wr.close();
 
-		return jsonObject;
-	}
+        JSONParser parser = new JSONParser();
+        Object object = parser.parse(new BufferedReader(new InputStreamReader(
+                connection.getInputStream())).readLine());
+        JSONObject jsonObject = (JSONObject) object;
 
-	public static String getUserAgent() {
-		return userAgent;
-	}
+        return jsonObject;
+    }
 
-	public static void setUserAgent(String agent) {
-		userAgent = agent;
-	}
+    /**
+     * This function submits a GET request and returns a JSON object that
+     * corresponds to it.
+     */
+    public static JSONObject get(String apiParams, URL url, String cookie)
+            throws IOException, ParseException {
+
+        //
+        // Adhere to API rules....
+        // (Make this configurable)
+        //        
+        try {
+            Thread.sleep(SLEEP_TIME);
+        } catch(InterruptedException ie) {
+            ie.printStackTrace();
+            return null;
+        }
+
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setUseCaches(false);
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("cookie", "reddit_session=" + cookie);
+        connection.setRequestProperty("User-Agent", userAgent);
+
+        JSONParser parser = new JSONParser();
+        Object object = parser.parse(new BufferedReader(new InputStreamReader(
+                connection.getInputStream())).readLine());
+        JSONObject jsonObject = (JSONObject) object;
+
+        return jsonObject;
+    }
+
+    public static String getUserAgent() {
+        return userAgent;
+    }
+
+    public static void setUserAgent(String agent) {
+        userAgent = agent;
+    }
+
+    /**
+     *
+     * Get a somewhat more human readable version of the JSON string.
+     *
+     */
+    public static String getJSONDebugString(Object obj, String indent) {
+
+        String ret = "";
+
+        //
+        // Handle hashtable
+        //
+        if(obj instanceof HashMap) {
+            ret += indent + "{\n";
+            HashMap hash = (HashMap)obj;
+            Iterator it = hash.keySet().iterator();
+            while(it.hasNext()) {
+                String key = (String)it.next();
+                ret += indent + key + ": ";
+                Object val = hash.get(key);
+                ret += indent + getJSONDebugString(val, indent + "    ");
+            }
+            ret += indent + "}\n";
+            return ret;
+        }
+
+        //
+        // Handle array
+        //
+        if(obj instanceof ArrayList) {
+            ret += indent + "[\n";
+            ArrayList list = (ArrayList)obj;
+            for(int i = 0; i < list.size(); i++) {
+                Object val = list.get(i); 
+                ret += indent + getJSONDebugString(val, indent + "    ");
+            }
+            ret += indent + "]\n";
+            return ret;
+        }
+
+        //
+        // No hashtable or array so this should be a primitive...
+        //
+        return ((obj == null) ? "null" : obj.toString()) + "\n";
+
+    }
+
+
 }
