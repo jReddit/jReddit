@@ -1,0 +1,54 @@
+<project>
+
+    <path id="deps-classpath">
+        <fileset dir="deps">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <!--
+      -
+      - Clean target. Clean up build and start from scratch.
+      -
+      -->
+    <target name="clean">
+        <delete dir="deps" />
+        <delete dir="build" />
+        <delete dir="dist" />
+    </target>
+
+    <!-- 
+      -
+      - Dependencies target. Download dependencies. 
+      -
+      -->
+    <target name="deps">
+        <mkdir dir="deps" />
+        <get 
+            src="http://json-simple.googlecode.com/files/json-simple-1.1.1.jar"
+            dest="deps"/>
+    </target>
+
+    <!-- 
+      -
+      - Compilation target. Compile classes in this project.
+      -
+      -->
+    <target name="compile">
+        <mkdir dir="build/classes" />
+        <javac srcdir="src" destdir="build/classes" >
+            <classpath refid="deps-classpath"/>
+        </javac>
+    </target>
+
+    <!-- 
+      -
+      - Jar (or dist) target. Create the jar/distribution.
+      -
+      -->
+    <target name="jar">
+        <mkdir dir="dist" />
+        <jar destfile="dist/jreddit.jar" basedir="build/classes" />
+    </target>
+
+</project>
