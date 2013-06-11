@@ -23,7 +23,10 @@ public final class GenerousBot {
 			for (Submission submission : Submissions
 					.getSubmissions(subreddits[i], Submissions.NEW,
 							Submissions.FRONTPAGE, user)) {
-				submission.upVote();
+                // 
+                // TODO fix this
+                //
+				// submission.upVote();
 			}
 		}
 	}
