@@ -7,32 +7,37 @@ import com.omrlnr.jreddit.utils.Utils;
 
 /**
  *
- * This class represents a reddit Submission or "Article"
+ * This class represents a reddit comment
  * 
  */
-public class Submission {
+public class Comment {
 
     private JSONObject _jsonObject;
 
-    public Submission(JSONObject jsonObj) {
+    public Comment(JSONObject jsonObj) {
         _jsonObject = jsonObj;
     }
 
     public String toString() {
-        return  "Submission: " + getTitle()     + "\n" +
+
+        return "Comment: " + getBody() + "\n";
+
+        /*
+        return  "Comment: " + "\n" +
                     "   score: " + getScore()   + "\n" +
                     "   up: " + getUpVotes()    + "\n" +
                     "   down: " + getDownVotes() + "\n" +
                     "   author: " + getAuthor() + "\n" +
                     "   id: " + getId()         + "\n" +
                     "   fullname: " + getFullname();
+        */
 
         // return _jsonObject.toString();
         // return Utils.getJSONDebugString(_jsonObject, "");
     }
 
-    public String getUrl() { 
-        return (String)((JSONObject)_jsonObject.get("data")).get("url");
+    public String getBody() { 
+        return (String)((JSONObject)_jsonObject.get("data")).get("body");
     }
 
     public long getUpVotes() { 

@@ -18,7 +18,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 
-
 /**
  * This class contains (or will contain) various utilities for jReddit.
  * 
@@ -27,7 +26,8 @@ public class Utils {
 
     private static int SLEEP_TIME = 2000;
 
-    private static String userAgent = "Fixing Reddit API Java Wrapper";
+    private static final String USER_AGENT = 
+                                    "Sample Java API user agent v0.01";
 
     /**
      * This function is here because I do this same request a hundred times
@@ -59,7 +59,7 @@ public class Utils {
         connection.setRequestProperty("Content-Length",
                 String.valueOf(apiParams.length()));
         connection.setRequestProperty("cookie", "reddit_session=" + cookie);
-        connection.setRequestProperty("User-Agent", userAgent);
+        connection.setRequestProperty("User-Agent", USER_AGENT);
         DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
         wr.writeBytes(apiParams);
         wr.flush();
@@ -74,11 +74,19 @@ public class Utils {
     }
 
     /**
+     * This function submits a GET request and returns a JSON object response
+     */
+    public static Object get(URL url, String cookie)
+                                throws IOException, ParseException {
+        return get("", url, cookie);
+    }
+
+    /**
      * This function submits a GET request and returns a JSON object that
      * corresponds to it.
      */
-    public static JSONObject get(String apiParams, URL url, String cookie)
-            throws IOException, ParseException {
+    public static Object get(String apiParams, URL url, String cookie)
+                                throws IOException, ParseException {
 
         //
         // Adhere to API rules....
@@ -97,22 +105,16 @@ public class Utils {
         connection.setUseCaches(false);
         connection.setRequestMethod("GET");
         connection.setRequestProperty("cookie", "reddit_session=" + cookie);
-        connection.setRequestProperty("User-Agent", userAgent);
+        connection.setRequestProperty("User-Agent", USER_AGENT);
 
         JSONParser parser = new JSONParser();
         Object object = parser.parse(new BufferedReader(new InputStreamReader(
                 connection.getInputStream())).readLine());
-        JSONObject jsonObject = (JSONObject) object;
 
-        return jsonObject;
-    }
+        // JSONObject jsonObject = (JSONObject) object;
+        // return jsonObject;
 
-    public static String getUserAgent() {
-        return userAgent;
-    }
-
-    public static void setUserAgent(String agent) {
-        userAgent = agent;
+        return object;
     }
 
     /**

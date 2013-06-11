@@ -12,7 +12,7 @@
 
 ## What's next for jReddit?
 
-    The original prject (hormigas/jReddit) wants to implement every feature 
+    The original project (hormigas/jReddit) wants to implement every feature 
     documented [here](http://www.reddit.com/dev/api).
     
     This fork is to improve on the original object model

@@ -67,7 +67,7 @@ public class Submissions {
         urlString += ".json";
         url = new URL(urlString);
 
-        JSONObject object = Utils.get("", url, user.getCookie());
+        JSONObject object = (JSONObject)Utils.get("", url, user.getCookie());
         JSONObject data = (JSONObject)object.get("data");
         JSONArray array = (JSONArray)data.get("children");
 

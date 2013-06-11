@@ -14,8 +14,6 @@ public final class GenerousBot {
 		String[] subreddits = { "programming", "funny", "wtf", "java",
 				"todayilearned", "redditdev" };
 
-		Utils.setUserAgent("Generous-Bot");
-
 		User user = new User("username", "password");
 		user.connect();
 
