@@ -1,10 +1,12 @@
-<project>
+<project default="all" >
 
     <path id="deps-classpath">
         <fileset dir="deps">
             <include name="*.jar"/>
         </fileset>
     </path>
+
+    <target name="all" depends="clean,deps,compile,jar" />
 
     <!--
       -
