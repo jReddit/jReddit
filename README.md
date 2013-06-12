@@ -28,7 +28,7 @@
 
     See ant targets in build.xml for additional targets.
 
-## Building and Runing Examples
+## Building and Running Examples
 
     Compile
     $ ant examples
