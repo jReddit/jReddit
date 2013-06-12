@@ -1,13 +1,14 @@
-package com.omrlnr.jreddit.submissions;
+package com.omrlnr.jreddit;
 
 import org.json.simple.JSONObject;
 
-import com.omrlnr.jreddit.Fullname;
 import com.omrlnr.jreddit.utils.Utils;
 
 /**
  *
  * This class represents a reddit comment
+ *
+ * @author <a href="https://github.com/jasonsimpson">Jason Simpson</a>
  * 
  */
 public class Comment {
@@ -29,7 +30,6 @@ public class Comment {
                     "   down: " + getDownVotes() + "\n" +
                     "   author: " + getAuthor() + "\n" +
                     "   id: " + getId()         + "\n" +
-                    "   fullname: " + getFullname();
         */
 
         // return _jsonObject.toString();
@@ -62,16 +62,6 @@ public class Comment {
 
     public String getTitle() { 
         return (String)((JSONObject)_jsonObject.get("data")).get("title");
-    }
-
-
-    /**
-     *
-     * Get the Fullname of this Submission (aka Link or Articale)
-     *
-     */
-    public Fullname getFullname() {
-        return new Fullname(Fullname.TYPE_LINK, getId() );
     }
 
 

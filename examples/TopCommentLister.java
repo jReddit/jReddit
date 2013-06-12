@@ -1,8 +1,8 @@
-import com.omrlnr.jreddit.submissions.Comment;
-import com.omrlnr.jreddit.submissions.Comments;
-import com.omrlnr.jreddit.submissions.Submission;
-import com.omrlnr.jreddit.submissions.Submissions;
-import com.omrlnr.jreddit.user.User;
+import com.omrlnr.jreddit.Comment;
+import com.omrlnr.jreddit.Comments;
+import com.omrlnr.jreddit.Submission;
+import com.omrlnr.jreddit.Submissions;
+import com.omrlnr.jreddit.User;
 
 import com.omrlnr.jreddit.utils.Utils;
 

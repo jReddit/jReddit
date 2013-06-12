@@ -22,6 +22,23 @@
 
 [JSON-simple](http://code.google.com/p/json-simple/)
 
+## Building (everything)
+    
+    $ ant all
+
+    See ant targets in build.xml for additional targets.
+
+## Building and Runing Examples
+
+    Compile
+    $ ant examples
+
+    Running usage:
+    $ examples/runExample.sh <classname> <user> <pass> <subreddit> 
+
+    E.g.
+    $ examples/runExample.sh TopCommentLister joesmith secret123 pics
+
 ## Examples
 
     import com.omrlnr.jreddit.submissions.Submission;

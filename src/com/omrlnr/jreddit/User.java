@@ -1,4 +1,4 @@
-package com.omrlnr.jreddit.user;
+package com.omrlnr.jreddit;
 
 import java.io.IOException;
 import java.net.URL;
@@ -8,15 +8,17 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import com.omrlnr.jreddit.Thing;
 import com.omrlnr.jreddit.utils.Utils;
 
 /**
- * This class represents a user connected to reddit.
+ * This class represents a reddit user.
  * 
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
+ * @author <a hred="https://github.com/jasonsimpson">Jason Simpson</a>
+ *
  */
-public class User extends Thing {
+public class User {
+
 	private String username, password;
 	private String modhash, cookie;
 
@@ -288,10 +290,11 @@ public class User extends Thing {
 	 * @return JSON data containing info about the user
 	 */
 	private JSONObject info() throws IOException, ParseException {
+
 		if (cookie == null || modhash == null) {
-			System.err
-					.printf("Please invoke the \"connect\" function before attempting to call any other API functions.");
-			Runtime.getRuntime().exit(-1);
+			throw new IOException("User not connected. " +
+                "Please invoke the \"connect\" method before attempting " +
+                "to call any other User API functions.");
 		}
 
 		JSONObject jsonObject = 

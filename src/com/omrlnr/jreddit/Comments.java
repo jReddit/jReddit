@@ -1,4 +1,4 @@
-package com.omrlnr.jreddit.submissions;
+package com.omrlnr.jreddit;
 
 import java.io.IOException;
 import java.net.URL;
@@ -9,14 +9,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import com.omrlnr.jreddit.Fullname;
-import com.omrlnr.jreddit.user.User;
+import com.omrlnr.jreddit.User;
 import com.omrlnr.jreddit.utils.Utils;
 
 /**
- * This class represents a comment
+ * This class contains methods for handling reddit comments.
  * 
- * @author Jason Simpson
+ * @author <a href="https://github.com/jasonsimpson">Jason Simpson</a>
  *
  */
 public class Comments {
@@ -24,7 +23,7 @@ public class Comments {
     /**
      * This function returns a list of comments
      * 
-     * @param linkFullname      The fullname of the link/article/submission
+     * @param articleId         The id of the link/article/submission
      * @param user              The user
      *
      * @return A list containing Comments

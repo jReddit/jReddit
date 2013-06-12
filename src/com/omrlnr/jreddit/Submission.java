@@ -1,8 +1,7 @@
-package com.omrlnr.jreddit.submissions;
+package com.omrlnr.jreddit;
 
 import org.json.simple.JSONObject;
 
-import com.omrlnr.jreddit.Fullname;
 import com.omrlnr.jreddit.utils.Utils;
 
 /**
@@ -24,8 +23,7 @@ public class Submission {
                     "   up: " + getUpVotes()    + "\n" +
                     "   down: " + getDownVotes() + "\n" +
                     "   author: " + getAuthor() + "\n" +
-                    "   id: " + getId()         + "\n" +
-                    "   fullname: " + getFullname();
+                    "   id: " + getId() ;
 
         // return _jsonObject.toString();
         // return Utils.getJSONDebugString(_jsonObject, "");
@@ -57,16 +55,6 @@ public class Submission {
 
     public String getTitle() { 
         return (String)((JSONObject)_jsonObject.get("data")).get("title");
-    }
-
-
-    /**
-     *
-     * Get the Fullname of this Submission (aka Link or Articale)
-     *
-     */
-    public Fullname getFullname() {
-        return new Fullname(Fullname.TYPE_LINK, getId() );
     }
 
 

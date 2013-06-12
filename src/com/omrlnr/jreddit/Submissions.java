@@ -1,4 +1,4 @@
-package com.omrlnr.jreddit.submissions;
+package com.omrlnr.jreddit;
 
 import java.io.IOException;
 import java.net.URL;
@@ -9,7 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import com.omrlnr.jreddit.user.User;
+import com.omrlnr.jreddit.User;
 import com.omrlnr.jreddit.utils.Utils;
 
 /**
