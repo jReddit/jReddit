@@ -16,6 +16,7 @@ import com.omrlnr.jreddit.utils.Utils;
  * This class offers some submission utilties.
  * 
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
+ * @author <a href="https://github.com/jasonsimpson">Jason Simpson</a>
  *
  */
 public class Submissions {
@@ -67,9 +68,19 @@ public class Submissions {
         urlString += ".json";
         url = new URL(urlString);
 
-        JSONObject object = (JSONObject)Utils.get("", url, user.getCookie());
+        JSONObject object = (JSONObject)Utils.get(url, user.getCookie());
         JSONObject data = (JSONObject)object.get("data");
+        
+        String before = (String)data.get("before");
+        String after = (String)data.get("after");
         JSONArray array = (JSONArray)data.get("children");
+
+        //
+        // TODO a good way to do apging through the API...
+        // Might have to just expose this to the caller, ug. 
+        //
+        // System.out.println("Before  " + before);
+        // System.out.println("After   " + after);
 
         for (int i = 0; i < array.size(); i++) {
             JSONObject jsonData = (JSONObject)array.get(i);

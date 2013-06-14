@@ -1,8 +1,12 @@
 package com.omrlnr.jreddit;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 import com.omrlnr.jreddit.utils.Utils;
+
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
@@ -11,68 +15,73 @@ import com.omrlnr.jreddit.utils.Utils;
  * @author <a href="https://github.com/jasonsimpson">Jason Simpson</a>
  * 
  */
-public class Comment {
-
-    private JSONObject _jsonObject;
+public class Comment extends Thing {
 
     public Comment(JSONObject jsonObj) {
-        _jsonObject = jsonObj;
+        super(jsonObj);
     }
 
     public String toString() {
+        return toString("");
+    }
 
-        return "Comment: " + getBody() + "\n";
+    public String toString(String indent) {
+        String thing = super.toString(indent);
+        return thing + 
+            indent + "   Comment:    "   + getBody()     + "\n" +
+            indent + "       author: "   + getAuthor()   + "\n" +
+            // indent + "       score: "    + getScore()    + "\n" +
+            indent + "       up: "       + getUpVotes()  + "\n" +
+            indent + "       down: "     + getDownVotes() + "\n";
+            // indent + Utils.getJSONDebugString(_data, indent);
 
-        /*
-        return  "Comment: " + "\n" +
-                    "   score: " + getScore()   + "\n" +
-                    "   up: " + getUpVotes()    + "\n" +
-                    "   down: " + getDownVotes() + "\n" +
-                    "   author: " + getAuthor() + "\n" +
-                    "   id: " + getId()         + "\n" +
-        */
-
-        // return _jsonObject.toString();
-        // return Utils.getJSONDebugString(_jsonObject, "");
     }
 
     public String getBody() { 
-        return (String)((JSONObject)_jsonObject.get("data")).get("body");
+        return (String)((JSONObject)_data.get("data")).get("body");
     }
 
     public long getUpVotes() { 
-        return (Long)((JSONObject)_jsonObject.get("data")).get("ups");
+        return (Long)((JSONObject)_data.get("data")).get("ups");
     }
 
     public long getDownVotes() { 
-        return (Long)((JSONObject)_jsonObject.get("data")).get("downs");
+        return (Long)((JSONObject)_data.get("data")).get("downs");
     }
 
     public long getScore() { 
-        return (Long)((JSONObject)_jsonObject.get("data")).get("score");
-    }
-
-    public String getId() { 
-        return (String)((JSONObject)_jsonObject.get("data")).get("id");
+        return (Long)((JSONObject)_data.get("data")).get("score");
     }
 
     public String getAuthor() { 
-        return (String)((JSONObject)_jsonObject.get("data")).get("author");
+        return (String)((JSONObject)_data.get("data")).get("author");
     }
-
-    public String getTitle() { 
-        return (String)((JSONObject)_jsonObject.get("data")).get("title");
-    }
-
 
     /**
-     * This class should provide convenience methods for 
-     * obtaining Submission related data. But if the underlying
-     * json data changes or we do not provide the caller with
-     * the required methods, they can obtain all underlying data using
-     * this method.
+     * Get the replies to this comment.
      */
-    public JSONObject getJSONObject() { return _jsonObject; }
+    public List<Comment> getReplies() {
+        List<Comment> ret = new ArrayList();
+       
+        
+        JSONObject data = (JSONObject)_data.get("data");
+        JSONObject replies = (JSONObject)data.get("replies");
+        JSONObject replyData = (JSONObject)replies.get("data");
+        JSONArray children = (JSONArray)replyData.get("children");
 
+        for (int i = 0; i < children.size(); i++) {
+            JSONObject jsonData = (JSONObject)children.get(i);
+            Comment comment = new Comment(jsonData);
+
+            //
+            // TODO handle this pagination somehow. ???
+            //
+            if(!comment.getKind().equals("more")) {
+                ret.add(new Comment(jsonData));
+            }
+        }
+
+        return ret;
+    }
 
 }

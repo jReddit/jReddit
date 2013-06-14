@@ -122,6 +122,15 @@ public class Utils {
      * Get a somewhat more human readable version of the JSON string.
      *
      */
+    public static String getJSONDebugString(Object obj) {
+        return getJSONDebugString(obj, "");
+    }
+
+    /**
+     *
+     * Get a somewhat more human readable version of the JSON string.
+     *
+     */
     public static String getJSONDebugString(Object obj, String indent) {
 
         String ret = "";

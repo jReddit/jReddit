@@ -31,6 +31,8 @@ public class SubmissionLister {
         for(Submission submission: submissions) {
             System.out.println(submission);
         }
+
+        System.out.println("Total submissions: " + submissions.size());
     }
 
 }
