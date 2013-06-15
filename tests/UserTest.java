@@ -1,8 +1,8 @@
 import static org.junit.Assert.*;
+import im.goel.jreddit.user.User;
 
 import org.junit.Test;
 
-import com.omrlnr.jreddit.user.User;
 
 public class UserTest {
 	@Test

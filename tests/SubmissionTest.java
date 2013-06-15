@@ -1,14 +1,15 @@
 import static org.junit.Assert.*;
 
+import im.goel.jreddit.submissions.Submission;
+import im.goel.jreddit.submissions.Submissions;
+import im.goel.jreddit.submissions.Submissions.Page;
+import im.goel.jreddit.submissions.Submissions.Popularity;
+import im.goel.jreddit.user.User;
+
 import java.util.LinkedList;
 
 import org.junit.Test;
 
-import com.omrlnr.jreddit.submissions.Submission;
-import com.omrlnr.jreddit.submissions.Submissions;
-import com.omrlnr.jreddit.submissions.Submissions.Page;
-import com.omrlnr.jreddit.submissions.Submissions.Popularity;
-import com.omrlnr.jreddit.user.User;
 
 public class SubmissionTest {
 	@Test

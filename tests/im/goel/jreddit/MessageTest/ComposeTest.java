@@ -1,7 +1,7 @@
 package im.goel.jreddit.MessageTest;
-import message.Messages;
+import im.goel.jreddit.message.Messages;
+import im.goel.jreddit.user.User;
 
-import com.omrlnr.jreddit.user.User;
 
 
 public class ComposeTest {

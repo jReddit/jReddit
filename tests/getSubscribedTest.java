@@ -1,5 +1,6 @@
-import com.omrlnr.jreddit.subreddit.Subreddit;
-import com.omrlnr.jreddit.user.User;
+import im.goel.jreddit.subreddit.Subreddit;
+import im.goel.jreddit.user.User;
+
 
 
 public class getSubscribedTest {

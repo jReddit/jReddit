@@ -1,10 +1,11 @@
 package im.goel.jreddit.MessageTest;
+import im.goel.jreddit.message.Message;
+import im.goel.jreddit.message.Messages;
+import im.goel.jreddit.user.User;
+
 import java.util.List;
 
-import message.Message;
-import message.Messages;
 
-import com.omrlnr.jreddit.user.User;
 
 
 public class SentMessageTest {

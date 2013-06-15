@@ -1,10 +1,11 @@
-import com.omrlnr.jreddit.submissions.Submission;
-import com.omrlnr.jreddit.submissions.Submissions;
-import com.omrlnr.jreddit.submissions.Submissions.Page;
-import com.omrlnr.jreddit.submissions.Submissions.Popularity;
-import com.omrlnr.jreddit.user.User;
+import im.goel.jreddit.submissions.Submission;
+import im.goel.jreddit.submissions.Submissions;
+import im.goel.jreddit.submissions.Submissions.Page;
+import im.goel.jreddit.submissions.Submissions.Popularity;
+import im.goel.jreddit.user.User;
+import im.goel.jreddit.utils.Utils;
 
-import com.omrlnr.jreddit.utils.Utils;
+
 
 /**
  * A simple bot that upvotes every new submission in a list of subreddits.

@@ -1,6 +1,8 @@
-import com.omrlnr.jreddit.submissions.Submission;
-import com.omrlnr.jreddit.user.User;
-import com.omrlnr.jreddit.utils.Utils;
+
+import im.goel.jreddit.submissions.Submission;
+import im.goel.jreddit.user.User;
+import im.goel.jreddit.utils.Utils;
+
 import java.util.List;
 
 /**
