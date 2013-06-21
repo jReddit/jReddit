@@ -4,7 +4,7 @@
 jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour.
 
 ##What can it do?
-jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, among other things.
+jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, send and receive messages and notifications among other things.
 
 ##What's next for jReddit?
 I plan to implement every feature documented [here](http://www.reddit.com/dev/api). Most of them already have been implemented.
@@ -23,27 +23,11 @@ See LICENCE.txt for more info.
 [JSON-simple](http://code.google.com/p/json-simple/)
 ##Examples
 
-Upvote a submission and comment on it
-
-    import com.omrlnr.jreddit.submissions.Submission;
-    import com.omrlnr.jreddit.user.User;
-
-    public final class Example {
-	    public static void main(String[] args) throws Exception {
-		    User user = new User("username", "password");
-		    user.connect();
-
-		    Submission submission = new Submission(user, "tki9d");
-		    submission.upVote();
-		    submission.comment("This is a cool submission.");
-	    }
-    }
-
 Upvote every submission on the frontpage of a subreddit
 
-    import com.omrlnr.jreddit.submissions.Submission;
-    import com.omrlnr.jreddit.submissions.Submissions;
-    import com.omrlnr.jreddit.user.User;
+    import im.goel.jreddit.submissions.Submission;
+    import im.goel.jreddit.submissions.Submissions;
+    import im.goel.jreddit.user.User;
 
     public final class Test {
 	    public static void main(String[] args) throws Exception {
@@ -57,37 +41,9 @@ Upvote every submission on the frontpage of a subreddit
 	    }
     }
 
-Print some information about this user and a certain submission
-	
-	import com.omrlnr.jreddit.submissions.Submission;
-	import com.omrlnr.jreddit.submissions.Submissions;
-	import com.omrlnr.jreddit.user.User;
-	
-	public final class Test {
-		public static void main(String[] args) throws Exception {
-			User user = new User("username", "password");
-			user.connect();
-	
-			System.out.println(user.commentKarma());
-			System.out.println(user.linkKarma());
-			System.out.println(user.hasMail());
-			System.out.println(user.isGold());
-			System.out.println(user.getModhash());
-	
-			Submission submission = Submissions.getSubmissions("programming",
-					Submissions.HOT, Submissions.FRONTPAGE, user).get(0);
-	
-			System.out.println(submission.commentCount());
-			System.out.println(submission.downVotes());
-			System.out.println(submission.upVotes());
-			System.out.println(submission.getAuthor());
-			System.out.println(submission.getScore());
-		}
-	}
-
 Submit a link and self post
 
-	import com.omrlnr.jreddit.user.User;
+	import im.goel.jreddit.user.User;
 	
 	public final class Test {
 		public static void main(String[] args) throws Exception {
@@ -103,56 +59,10 @@ Submit a link and self post
 		}
 	}
 	
-List the subreddits that make up the default front page of reddit
-
-	import com.omrlnr.jreddit.submissions.Submission;
-	import com.omrlnr.jreddit.user.User;
-	import com.omrlnr.jreddit.subreddit.Subreddit;
-	import com.omrlnr.jreddit.subreddit.Subreddits;
-	
-	/**
-	 * @author Benjamin Jakobus
-	 */
-	public final class Test {
-		public static void main(String[] args) throws Exception {
-			User user = new User("username", "password");
-			user.connect();
-		
-			List<Subreddit> subreddits = Subreddits.list(user, "popular");
-			// Alternativly use: Subreddits.listDefault(user);
-			
-			for (Subreddit sr : subreddits) {
-				System.out.println(sr.getUrl() + " " + sr.getTitle());
-			}
-		
-		}
-	}
-
-List all comments made by user called USERNAME_OF_OTHER_USER
-
-	import com.omrlnr.jreddit.user.Comment;
-	import com.omrlnr.jreddit.user.User;
-	
-	/**
-	 * @author Benjamin Jakobus
-	 */
-	public final class Test {
-		public static void main(String[] args) throws Exception {
-			User user = new User("username", "password");
-        		user.connect();
-
-        		List<Comment> comments = User.comments("USERNAME_OF_OTHER_USER");
-		
-			for (Comment c : comments) {
-				System.out.println(c.getComment());
-			}
-		}
-	}
-	
 List all submissions made by user called USERNAME_OF_OTHER_USER
 
-	import com.omrlnr.jreddit.submissions.Submission;
-	import com.omrlnr.jreddit.user.User;
+	import im.goel.jreddit.submissions.Submission;
+	import im.goel.jreddit.user.User;
 	
 	/**
 	 * @author Benjamin Jakobus
@@ -171,3 +81,28 @@ List all submissions made by user called USERNAME_OF_OTHER_USER
 		}
 	}
 
+Send a message to another user
+
+	import im.goel.jreddit.message.Messages;
+	import im.goel.jreddit.user.User;
+
+
+	public class ComposeTest {
+
+		/**
+		 * @author Karan Goel
+		 */
+		public static void main(String[] args) {
+			User user = null;
+			username_of_recipient = "other_user";
+			try {
+				user = new User("username", "password"); // Add your username and password
+				user.connect();
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
+			
+			new Messages().compose(user, username_of_recipient, "this is the title", "the message", "", "");
+		}
+
+	}
