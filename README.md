@@ -1,12 +1,14 @@
-Note: Not the latest README. -Karan
-
 #jReddit
+
 ##What is jReddit?
-jReddit is a wrapper for the Reddit API written in Java. It is a work in progress.
+jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour.
+
 ##What can it do?
-So far, jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, among other things.
+jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, among other things.
+
 ##What's next for jReddit?
-I plan to implement every feature documented [here](http://www.reddit.com/dev/api).
+I plan to implement every feature documented [here](http://www.reddit.com/dev/api). Most of them already have been implemented.
+
 ##What licence is jReddit released under?
 You are permitted to use, copy, modify, and distribute the Software and its documentation, with or without modification, for any purpose, provided that the following conditions are met:
 
