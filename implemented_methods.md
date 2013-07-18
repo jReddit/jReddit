@@ -2,7 +2,7 @@
 
 The purpose of this document is to provide listing and short documentation of API methods implemented in jReddit
 
-### account
+## account
 #### POST /api/login
 Usage:
 
@@ -21,15 +21,17 @@ Usage:
 
     //assuming user is a connected User instance:
     user.submitLink("Github","http://www.github.com","technology");
-To be implemented:
+
+#### To be implemented:
 
 * POST /api/clear_sessions
 * POST /api/delete_user
 * POST /api/register
 * POST /api/update
 
-### apps
-To be implemented:
+## apps
+
+#### To be implemented:
 
 * POST /api/adddeveloper
 * POST /api/deleteapp
@@ -38,7 +40,7 @@ To be implemented:
 * POST /api/setappicon
 * POST /api/updateapp
 
-### captcha
+## captcha
 #### POST /api/new_captcha
 #### GET /captcha/iden
 Usage:
@@ -47,12 +49,13 @@ Usage:
     Captcha c = new Captcha();
     String iden = c.new_captcha(user);
 
-To be implemented:
+#### To be implemented:
 
 * GET /api/needs_captcha.json
 
-### flair
-To be implemented:
+## flair
+
+#### To be implemented:
 
 * POST /api/clearflairtemplates
 * POST /api/deleteflair
@@ -65,7 +68,7 @@ To be implemented:
 * POST /api/selectflair
 * POST /api/setflairenabled
 
-### links & comments
+## links & comments
 #### POST /api/comment
 Example usage:
 
@@ -78,7 +81,8 @@ Example usage:
     //Assuming subm is a valid, initialized Submission instance:
     subm.upVote();
     subm.downVote();
-To be implemented:
+
+#### To be implemented:
 
 * POST /api/del
 * POST /api/editusertext
@@ -92,8 +96,9 @@ To be implemented:
 * POST /api/unmarknsfw
 * POST /api/unsave
 
-### listings
-To be implemented:
+## listings
+
+#### To be implemented:
 
 * GET /comments/article
 * GET /controversial
@@ -102,7 +107,7 @@ To be implemented:
 * GET /random
 * GET /top
 
-### private messages
+## private messages
 #### POST /api/compose
 Example usage:
 
@@ -129,14 +134,15 @@ Example usage:
     //assuming user is a connected User instance:
     List<Message> unread = new Messages().unread(user);
 
-To be implemented:
+#### To be implemented:
 
 * POST /api/block
 * POST /api/read_message
 * POST /api/unread_message
 
 ###moderation
-To be implemented:
+
+#### To be implemented:
 
 * POST /api/approve
 * POST /api/distinguish
@@ -149,11 +155,12 @@ To be implemented:
 * GET /stylesheet
 
 ###search
-To be implemented:
+
+#### To be implemented:
 
 * GET /search
 
-### subreddits
+## subreddits
 #### GET /subreddits/popular
 Example usage:
 
@@ -173,7 +180,7 @@ Example usage:
     //assuming user is a connected User instance:
     user.getSubscribed()
 
-To be implemented:
+#### To be implemented:
 
 * POST /api/accept_moderator\_invite
 * POST /api/delete_sr\_header
@@ -189,7 +196,7 @@ To be implemented:
 * GET /subreddits/new
 * GET /subreddits/search
 
-### users
+## users
 #### GET /user/username/disliked
 Example usage:
 
@@ -232,7 +239,7 @@ Example usage:
     //assuming user is an initialized User instance:
     List<Submission> saved = user.getSavedSubmissions();
 
-To be implemented:
+#### To be implemented:
 
 * POST /api/friend
 * POST /api/setpermissions
@@ -240,8 +247,9 @@ To be implemented:
 * GET /api/username_available.json
 * GET /user/username/overview
 
-###wiki
-To be implemented:
+## wiki
+
+#### To be implemented:
 
 * POST /api/wiki/alloweditor/add
 * POST /api/wiki/alloweditor/del
