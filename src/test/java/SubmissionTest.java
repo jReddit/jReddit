@@ -1,5 +1,5 @@
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import im.goel.jreddit.submissions.Submission;
 import im.goel.jreddit.submissions.Submissions;
 import im.goel.jreddit.submissions.Submissions.Page;
@@ -10,8 +10,8 @@ import java.util.LinkedList;
 
 import org.junit.Test;
 
-
 public class SubmissionTest {
+
 	@Test
 	public void test() {
 		LinkedList<Submission> frontpage = null;
@@ -35,4 +35,5 @@ public class SubmissionTest {
 				"The submission's ID/full name can't be null, how will reddit identify the submission?",
 				first.fullName);
 	}
+	
 }
