@@ -96,8 +96,6 @@ Example usage:
 * POST /api/editusertext
 * POST /api/hide
 * GET /api/info
-* POST /api/marknsfw
-* POST /api/unmarknsfw
 * POST /api/morechildren
 * POST /api/report
 * POST /api/save
