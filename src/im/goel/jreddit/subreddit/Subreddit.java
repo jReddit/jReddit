@@ -99,7 +99,12 @@ public class Subreddit {
     	this(displayName, name, title, url, created, ("" + createdUTC), nsfw,
     			subscribers, id, description);
     }
-    
+    /** 
+     * Constructs a SubReddit from a subreddit name in the form of a string eg. "funny", also requires a user to be supplied for hidden subreddits
+     * Uses the util get method to retrieve a JSON object and converts this to be stored in the subreddit variables
+     * @param name
+     * @param user
+     */
     public Subreddit(String name, User user){
     	URL url;
 		try {

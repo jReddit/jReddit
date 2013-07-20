@@ -1,6 +1,9 @@
 package im.goel.jreddit.submissions;
 
+import im.goel.jreddit.subreddit.Subreddit;
 import im.goel.jreddit.user.User;
+import im.goel.jreddit.utils.SortOption;
+import im.goel.jreddit.utils.TimeOption;
 import im.goel.jreddit.utils.Utils;
 
 import java.io.IOException;
@@ -18,14 +21,6 @@ import org.json.simple.parser.ParseException;
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Submissions {
-    public enum Popularity {
-        HOT, NEW
-    }
-
-    public enum Page {
-        FRONTPAGE
-    }
-
     /**
      * This function returns a linked list containing the submissions on a given
      * subreddit and page. (in progress)
@@ -38,39 +33,46 @@ public class Submissions {
      * @throws IOException    If connection fails
      * @throws ParseException If JSON parsing fails
      */
-    public static LinkedList<Submission> getSubmissions(String redditName,
-                       Popularity type, Page frontpage, User user) throws IOException, ParseException {
-        LinkedList<Submission> submissions = new LinkedList<Submission>();
+	public static LinkedList<Submission> getSubmissions(Subreddit sub, SortOption sort, TimeOption time, int limit, User user) throws IOException, ParseException {
+    	
+		LinkedList<Submission> submissions = new LinkedList<Submission>();
         URL url;
-        String urlString = "http://www.reddit.com/r/" + redditName;
+		String after = "";
+		int j = 0;
+		while (j < limit){
+			String afterString = "";
+			if (j!=0){
+				afterString = "&after="+after;
+			}
+			try{
+				String urlString = "http://www.reddit.com"+sub.getUrl()+"/"+sort.toString().toLowerCase()+".json?t="+time.toString().toLowerCase()+"&limit=1"+afterString;
+				
+				url = new URL(urlString);
+				Object obj = Utils.get("", url, user.getCookie());
+		        JSONObject object = (JSONObject) obj;
+		        
+		        
+		        JSONObject data = (JSONObject) object.get("data");
+		        after = (String) data.get("after");
+		        JSONArray children = (JSONArray) data.get("children");
+		        
+		        if (!children.isEmpty()){
+		        	JSONObject value = (JSONObject) ((JSONObject) children.get(0)).get("data");
+		        	submissions.add(new Submission(value, user));
+		        	//System.out.println(value.get("title"));
+		        }else{
+		        	j = limit +1;
+		        }
+		        
+	            //submissions.add(new Submission(user, data.get("id").toString(),
+	                    //new URL("http://www.reddit.com" + (data.get("permalink").toString()))));
 
-        switch (type) {
-            case NEW:
-                urlString += "/new";
-                break;
-		default:
-			break;
-        }
 
-        /**
-         * TODO Implement Pages
-         */
-
-        urlString += ".json";
-        url = new URL(urlString);
-
-        Object obj = Utils.get("", url, user.getCookie());
-        JSONObject object = (JSONObject) obj;
-        JSONArray array = (JSONArray) ((JSONObject) object.get("data"))
-                .get("children");
-        JSONObject data;
-        for (int i = 0; i < array.size(); i++) {
-            data = (JSONObject) array.get(i);
-            data = ((JSONObject) ((JSONObject) data).get("data"));
-            submissions.add(new Submission(user, data.get("id").toString(),
-                    new URL("http://www.reddit.com" + (data.get("permalink").toString()))));
-        }
-
-        return submissions;
+			}catch (Exception e){
+			   e.printStackTrace();
+			}
+			j++;
+		}
+		return submissions;
     }
 }
