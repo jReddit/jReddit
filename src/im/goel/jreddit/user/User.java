@@ -2,7 +2,6 @@ package im.goel.jreddit.user;
 
 import im.goel.jreddit.CommentSort;
 import im.goel.jreddit.Sort;
-import im.goel.jreddit.Thing;
 import im.goel.jreddit.submissions.Submission;
 import im.goel.jreddit.subreddit.Subreddit;
 import im.goel.jreddit.utils.Utils;
@@ -24,7 +23,7 @@ import java.util.List;
  *
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
-public class User extends Thing {
+public class User {
 
 	private String username, password;
 	private String modhash, cookie;
@@ -413,7 +412,7 @@ public class User extends Thing {
 	 * @return <code>List</code> of submissions made by this user.
 	 * @author Benjamin Jakobus
 	 */
-	public static List<Submission> submissions(String username) {
+	public List<Submission> submissions(String username) {
 		// List of submissions made by this user
 		List<Submission> submissions = new ArrayList<Submission>(500);
 		try {
@@ -430,7 +429,7 @@ public class User extends Thing {
 				obj = (JSONObject) children.get(i);
 				obj = (JSONObject) obj.get("data");
 				//add a new Submission to the list
-				submissions.add(new Submission(obj));
+				submissions.add(new Submission(obj, this));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -577,7 +576,7 @@ public class User extends Thing {
 			for(int i = 0; i < children.size(); i++){
 				obj = (JSONObject) children.get(i);
 				obj = (JSONObject) obj.get("data");
-				submissions.add(new Submission(obj));
+				submissions.add(new Submission(obj, this));
 			}
 		}
 		catch (Exception e) {e.printStackTrace();}

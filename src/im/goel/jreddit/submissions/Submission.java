@@ -1,7 +1,7 @@
 package im.goel.jreddit.submissions;
 
 import im.goel.jreddit.InvalidCookieException;
-import im.goel.jreddit.Thing;
+import im.goel.jreddit.subreddit.Subreddit;
 import im.goel.jreddit.user.User;
 import im.goel.jreddit.utils.Utils;
 
@@ -18,7 +18,7 @@ import org.json.simple.parser.ParseException;
  *
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
-public class Submission extends Thing {
+public class Submission {
     /**
      * This is the user that will vote on a submission.
      */
@@ -27,17 +27,28 @@ public class Submission extends Thing {
      * The path to this submission
      */
     private URL url;
-
-    private double createdUTC;
-    private String author;
+    
+    private String domain;
+    private Subreddit subreddit;
+    private String selftext;
+    private String id;
     private String title;
-    private boolean nsfw;
-    private String name;
-    private int commentCount;
-    private String subreddit;
-    private int upVotes;
-    private int downVotes;
     private int score;
+    private Boolean nsfw;
+    private String thumbnail;
+    private Boolean edited;
+    private int downs;
+    private int ups;
+    private Boolean saved;
+    private Boolean is_self;
+    private String permalink;
+    private String name;
+    private Double created;
+    private String link_url;
+    private String author;
+    private Double created_utc;
+    private int num_comments;
+    
 
     /** 
      * An empty Submission
@@ -51,17 +62,30 @@ public class Submission extends Thing {
      * @param obj The JSONObject to load Submission data from
      * @throws Exception The JSONObject is somehow bad
      */
-    public Submission(JSONObject obj){
+    public Submission(JSONObject obj, User user){
     	try{
+    		setDomain(Utils.toString(obj.get("domain")));
+    		setSubreddit(new Subreddit(Utils.toString(obj.get("subreddit")), user));
+    		setSelftext(Utils.toString(obj.get("selftext")));
+    		setId(Utils.toString(obj.get("id")));
+    		setTitle(Utils.toString(obj.get("title")));
+    		setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
+    		setNsfw(Boolean.valueOf(Utils.toString(obj.get("over_18"))));
+    		setThumbnail(Utils.toString(obj.get("thumbnail")));
+    		setEdited(Boolean.valueOf(Utils.toString(obj.get("edited"))));
+    		setDowns(Integer.parseInt(Utils.toString(obj.get("downs"))));
+    		setUps(Integer.parseInt(Utils.toString(obj.get("ups"))));
+    		setSaved(Boolean.valueOf(Utils.toString(obj.get("saved"))));
+    		setIs_self(Boolean.valueOf(Utils.toString(obj.get("is_self"))));
+    		setPermalink(Utils.toString(obj.get("permalink")));
+    		setName(Utils.toString(obj.get("name")));
+    		setCreated(Double.parseDouble(Utils.toString(obj.get("created"))));
+    		setLink_url(Utils.toString(obj.get("url")));
     		setAuthor(Utils.toString(obj.get("author")));
-			setTitle(Utils.toString(obj.get("title")));
-			setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
-			setCreatedUTC(Double.parseDouble(Utils.toString(obj.get("created_utc"))));
-			setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
-			setName(Utils.toString(obj.get("name")));
-			setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
-			setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
-			setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
+    		setCreated_utc(Double.parseDouble(Utils.toString(obj.get("created_utc"))));
+    		setNum_comments(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
+    		
+    		url = new URL("http://reddit.com"+getPermalink());
     	}
     	catch(Exception e){e.printStackTrace();}
     }
@@ -70,57 +94,13 @@ public class Submission extends Thing {
 //		this(user, fullName, url);
     }
 
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public void setCreatedUTC(double createdUTC) {
-        this.createdUTC = createdUTC;
-    }
-
-    public void setDownVotes(int downVotes) {
-        this.downVotes = downVotes;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCommentCount(int commentCount) {
-        this.commentCount = commentCount;
-    }
-
-    public void setNSFW(boolean nsfw) {
-        this.nsfw = nsfw;
-    }
-
-    public void setSubreddit(String subreddit) {
-        this.subreddit = subreddit;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setUpVotes(int upVotes) {
-        this.upVotes = upVotes;
-    }
-
-    public void setUrl(URL url) {
-        this.url = url;
-    }
-
     public Submission(User user, String fullName, URL url) {
         if (fullName.startsWith("t3_"))
             fullName = fullName.replaceFirst("t3_", "");
 
         this.user = user;
-        this.fullName = "t3_" + fullName;
-        this.url = url;
+        this.name = "t3_" + fullName;
+        this.setUrl(url);
     }
 
     /**
@@ -132,163 +112,15 @@ public class Submission extends Thing {
      * @throws ParseException If JSON parsing fails
      */
     public void comment(String text) throws IOException, ParseException {
-        JSONObject object = Utils.post("thing_id=" + fullName + "&text=" + text
+        JSONObject object = Utils.post("thing_id=" + name + "&text=" + text
                 + "&uh=" + user.getModhash(), new URL(
                 "http://www.reddit.com/api/comment"), user.getCookie());
 
         if (object.toJSONString().contains(".error.USER_REQUIRED"))
             throw new InvalidCookieException("Cookie not present");
         else
-            System.out.println("Commented on thread id " + fullName
+            System.out.println("Commented on thread id " + name
                     + " saying: \"" + text + "\"");
-    }
-
-    /**
-     * This function returns the name of the author of this submission.
-     *
-     * @return The author's name
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public String getAuthor() throws IOException, ParseException {
-        if (author != null) {
-            return author;
-        }
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return info(url).get("author").toString();
-    }
-
-    /**
-     * This function returns the title of this submission.
-     *
-     * @return The title
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public String getTitle() throws IOException, ParseException {
-        if (title != null) {
-            return title;
-        }
-
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return info(url).get("title").toString();
-    }
-
-    /**
-     * This function returns the name of the subreddit that this submission was
-     * submitted to.
-     *
-     * @return The name of the subreddit that this submission was submitted to
-     * @throws IOException    If the connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public String getSubreddit() throws IOException, ParseException {
-        if (subreddit != null) {
-            return subreddit;
-        }
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return info(url).get("subreddit").toString();
-    }
-
-    /**
-     * This function returns the score of this sumbission (issues a new GET request
-     * to Reddit.com).
-     *
-     * @return The score of this submission
-     * @throws IOException    If the connection fails
-     * @throws ParseException If the JSON parsing fails
-     */
-    public int score() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return Integer.parseInt(info(url).get("score").toString());
-    }
-
-    /**
-     * This function returns the score of this sumbission (does not issue a new GET request
-     * to Reddit.com but instead returns the private member).
-     *
-     * @return The score of this submission
-     */
-    public int getScore() {
-        return score;
-    }
-
-
-    /**
-     * This function returns the number of upvotes of this sumbission.
-     *
-     * @return The number of upvotes of this submission
-     * @throws IOException    If the connection fails
-     * @throws ParseException If the JSON parsing fails
-     */
-    public int upVotes() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return Integer.parseInt(info(url).get("ups").toString());
-    }
-
-    /**
-     * This function returns the number of downvotes of this sumbission.
-     *
-     * @return The number of downvotes of this submission
-     * @throws IOException    If the connection fails
-     * @throws ParseException If the JSON parsing fails
-     */
-    public int downVotes() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return Integer.parseInt(info(url).get("downs").toString());
-    }
-
-    /**
-     * This function returns true if this submission is marked as NSFW (18+)
-     *
-     * @return This submission is NSFW
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public boolean isNSFW() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return Boolean.parseBoolean(info(url).get("over_18").toString());
-    }
-
-    /**
-     * This function returns true if this submission is a self-post
-     *
-     * @return This submission is a self post
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public boolean isSelfPost() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return Boolean.parseBoolean(info(url).get("is_self").toString());
-    }
-
-    /**
-     * This function returns the number of comments in this sumbission.
-     *
-     * @return The number of comments in this submission
-     * @throws IOException    If the connection fails
-     * @throws ParseException If the JSON parsing fails
-     */
-    public int commentCount() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-        return Integer.parseInt(info(url).get("num_comments").toString());
     }
 
     /**
@@ -337,21 +169,11 @@ public class Submission extends Thing {
             System.out.println(object.toJSONString());
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public URL getURL() {
-        return url;
-    }
+    
 
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
         return Utils.post(
-                "id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
+                "id=" + name + "&dir=" + dir + "&uh=" + user.getModhash(),
                 new URL("http://www.reddit.com/api/vote"), user.getCookie());
     }
 
@@ -368,23 +190,329 @@ public class Submission extends Thing {
         return (JSONObject) obj;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public double getCreatedUTC() throws IOException, ParseException {
-        createdUTC = Double.parseDouble(info(url).get("created_utc").toString());
-        return createdUTC;
-    }
-
     @Override
     public String toString() {
         try {
-            return "(" + score() + ") " + getTitle();
+            return "(" + score + ") " + getTitle();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
 
         return super.toString();
     }
+
+	/**
+	 * @return the url
+	 */
+	public URL getUrl() {
+		return url;
+	}
+
+	/**
+	 * Sets the url
+	 * @param url the url to set
+	 */
+	public void setUrl(URL url) {
+		this.url = url;
+	}
+
+	/**
+	 * @return the domain
+	 */
+	public String getDomain() {
+		return domain;
+	}
+
+	/**
+	 * Sets the domain
+	 * @param domain the domain to set
+	 */
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	/**
+	 * @return the subreddit
+	 */
+	public Subreddit getSubreddit() {
+		return subreddit;
+	}
+
+	/**
+	 * Sets the subreddit
+	 * @param subreddit the subreddit to set
+	 */
+	public void setSubreddit(Subreddit subreddit) {
+		this.subreddit = subreddit;
+	}
+
+	/**
+	 * @return the selftext
+	 */
+	public String getSelftext() {
+		return selftext;
+	}
+
+	/**
+	 * Sets the selftext
+	 * @param selftext the selftext to set
+	 */
+	public void setSelftext(String selftext) {
+		this.selftext = selftext;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the id
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * Sets the title
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	/**
+	 * @return the score
+	 */
+	public int getScore() {
+		return score;
+	}
+
+	/**
+	 * Sets the score
+	 * @param score the score to set
+	 */
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	/**
+	 * @return the nsfw
+	 */
+	public Boolean getNsfw() {
+		return nsfw;
+	}
+
+	/**
+	 * Sets the nsfw
+	 * @param nsfw the nsfw to set
+	 */
+	public void setNsfw(Boolean nsfw) {
+		this.nsfw = nsfw;
+	}
+
+	/**
+	 * @return the thumbnail
+	 */
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	/**
+	 * Sets the thumbnail
+	 * @param thumbnail the thumbnail to set
+	 */
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	/**
+	 * @return the edited
+	 */
+	public Boolean getEdited() {
+		return edited;
+	}
+
+	/**
+	 * Sets the edited
+	 * @param edited the edited to set
+	 */
+	public void setEdited(Boolean edited) {
+		this.edited = edited;
+	}
+
+	/**
+	 * @return the downs
+	 */
+	public int getDowns() {
+		return downs;
+	}
+
+	/**
+	 * Sets the downs
+	 * @param downs the downs to set
+	 */
+	public void setDowns(int downs) {
+		this.downs = downs;
+	}
+
+	/**
+	 * @return the ups
+	 */
+	public int getUps() {
+		return ups;
+	}
+
+	/**
+	 * Sets the ups
+	 * @param ups the ups to set
+	 */
+	public void setUps(int ups) {
+		this.ups = ups;
+	}
+
+	/**
+	 * @return the saved
+	 */
+	public Boolean getSaved() {
+		return saved;
+	}
+
+	/**
+	 * Sets the saved
+	 * @param saved the saved to set
+	 */
+	public void setSaved(Boolean saved) {
+		this.saved = saved;
+	}
+
+	/**
+	 * @return the is_self
+	 */
+	public Boolean getIs_self() {
+		return is_self;
+	}
+
+	/**
+	 * Sets the is_self
+	 * @param is_self the is_self to set
+	 */
+	public void setIs_self(Boolean is_self) {
+		this.is_self = is_self;
+	}
+
+	/**
+	 * @return the permalink
+	 */
+	public String getPermalink() {
+		return permalink;
+	}
+
+	/**
+	 * Sets the permalink
+	 * @param permalink the permalink to set
+	 */
+	public void setPermalink(String permalink) {
+		this.permalink = permalink;
+	}
+	
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets the name
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the created
+	 */
+	public Double getCreated() {
+		return created;
+	}
+
+	/**
+	 * Sets the created
+	 * @param created the created to set
+	 */
+	public void setCreated(Double created) {
+		this.created = created;
+	}
+
+	/**
+	 * @return the link_url
+	 */
+	public String getLink_url() {
+		return link_url;
+	}
+
+	/**
+	 * Sets the link_url
+	 * @param link_url the link_url to set
+	 */
+	public void setLink_url(String link_url) {
+		this.link_url = link_url;
+	}
+
+	/**
+	 * @return the author
+	 */
+	public String getAuthor() {
+		return author;
+	}
+
+	/**
+	 * Sets the author
+	 * @param author the author to set
+	 */
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	/**
+	 * @return the created_utc
+	 */
+	public Double getCreated_utc() {
+		return created_utc;
+	}
+
+	/**
+	 * Sets the created_utc
+	 * @param created_utc the created_utc to set
+	 */
+	public void setCreated_utc(Double created_utc) {
+		this.created_utc = created_utc;
+	}
+
+	/**
+	 * @return the num_comments
+	 */
+	public int getNum_comments() {
+		return num_comments;
+	}
+
+	/**
+	 * Sets the num_comments
+	 * @param num_comments the num_comments to set
+	 */
+	public void setNum_comments(int num_comments) {
+		this.num_comments = num_comments;
+	}
 }

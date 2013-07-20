@@ -1,8 +1,8 @@
 import im.goel.jreddit.submissions.Submission;
 import im.goel.jreddit.submissions.Submissions;
-import im.goel.jreddit.submissions.Submissions.Page;
-import im.goel.jreddit.submissions.Submissions.Popularity;
 import im.goel.jreddit.user.User;
+import im.goel.jreddit.utils.SortOption;
+import im.goel.jreddit.utils.TimeOption;
 import im.goel.jreddit.utils.Utils;
 
 
@@ -22,10 +22,10 @@ public final class GenerousBot {
 		User user = new User("user", "password");
 		user.connect();
 
+		//For each of the subreddits listed above, upvote the first 20 posts in new
 		for (int i = 0; i < subreddits.length; i++) {
 			for (Submission submission : Submissions
-					.getSubmissions(subreddits[i], Popularity.NEW,
-							Page.FRONTPAGE, user)) {
+					.getSubmissions(subreddits[i], SortOption.NEW, TimeOption.WEEK, 20, user)) { //time option does nothing in this case, but will work with TOP etc.
 				submission.upVote();
 			}
 		}
