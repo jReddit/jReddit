@@ -1,5 +1,16 @@
 package im.goel.jreddit.subreddit;
 
+import im.goel.jreddit.user.User;
+import im.goel.jreddit.utils.Utils;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
 /**
  * Encapsulates a subreddit.
  *
@@ -87,6 +98,58 @@ public class Subreddit {
     		String id, String description){
     	this(displayName, name, title, url, created, ("" + createdUTC), nsfw,
     			subscribers, id, description);
+    }
+    
+    public Subreddit(String name, User user){
+    	URL url;
+		try {
+			url = new URL("http://www.reddit.com/r/"+name+"/about.json");
+			Object obj = Utils.get("", url, user.getCookie());
+	        JSONObject object = (JSONObject) obj;
+	        JSONObject data = (JSONObject) object.get("data");
+	        
+	        this.displayName = data.get("display_name").toString();
+	        //System.out.println(this.displayName);
+	    	this.name = data.get("name").toString();
+	    	this.title = data.get("title").toString();
+	    	this.url = data.get("url").toString();
+	    	this.created = data.get("created").toString();
+	    	this.createdUTC = data.get("created_utc").toString();
+	    	this.nsfw = (boolean) data.get("over18");
+	    	this.subscribers = Integer.parseInt(data.get("subscribers").toString());
+	    	this.id = data.get("id").toString();
+	    	this.description = data.get("description").toString();
+	        
+	        
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
+    }
+    
+    public void print(){
+    	System.out.println("\n-----------------------");
+    	System.out.println("Subreddit: "+this.url);
+    	System.out.println("-----------------------");
+    	System.out.println("Display Name: "+this.displayName);
+    	System.out.println("Name: "+this.name);
+    	System.out.println("Title: "+this.title);
+    	System.out.println("URL: "+this.url);
+    	System.out.println("Created: "+this.created);
+    	System.out.println("Created UTC: "+this.createdUTC);
+    	System.out.println("NSFW: "+this.nsfw);
+    	System.out.println("Subscribers: "+this.subscribers);
+    	System.out.println("ID: "+this.id);
+    	System.out.println("Description: "+this.description);
+    	System.out.println("-----------------------");
     }
     
     /**
