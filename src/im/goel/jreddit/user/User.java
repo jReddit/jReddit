@@ -309,7 +309,7 @@ public class User extends Thing {
 			ParseException {
 		return Utils.post("title=" + title + "&" + (selfPost ? "text" : "url")
 				+ "=" + linkOrText + "&sr=" + subreddit + "&kind="
-				+ (selfPost ? "link" : "self") + "&uh=" + getModhash(),
+				+ (selfPost ? "self" : "link") + "&uh=" + getModhash(),
 				new URL("http://www.reddit.com/api/submit"), getCookie());
 	}
 
