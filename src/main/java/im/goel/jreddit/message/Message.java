@@ -136,7 +136,7 @@ public class Message {
 
 	/**
 	 * Sets the created UTC timestamp
-	 * @param created to set
+	 * @param createdUTC to set
 	 * @author Karan Goel
 	 */
 	public void setCreatedUTC(String createdUTC) {
@@ -161,7 +161,7 @@ public class Message {
 
 	/**
 	 * Sets the content
-	 * @param content to set
+	 * @param context to set
 	 * @author Karan Goel
 	 */
 	public void setContext(String context) {
