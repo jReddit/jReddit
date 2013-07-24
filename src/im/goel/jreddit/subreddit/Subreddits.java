@@ -65,6 +65,31 @@ public class Subreddits {
         return subreddits;
     }
 
+    /**
+     * @param user User who wishes to access the subreddit.
+     * @param subName Name of the subreddit that needs to be accessed.
+     * @return Subreddit with the name subName
+     * @author ThatBox
+     */
+    public static Subreddit getSubredditFromName(User user, String subName) {
+        List<Subreddit> subreddits = null;
+        try {
+            JSONObject object = (JSONObject) Utils.get("", new URL(
+                    "http://www.reddit.com/reddits/.json"), user.getCookie());
+            JSONObject data = (JSONObject) object.get("data");
+
+            subreddits = initList((JSONArray) data.get("children"));
+
+            for(Subreddit sub : subreddits) {
+                if(sub.getDisplayName().equalsIgnoreCase(subName))
+                    return sub;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * Creates a list of subreddits by interpreting the given <code>JSONArray</code>.
