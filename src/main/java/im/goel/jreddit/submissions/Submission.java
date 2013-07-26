@@ -31,7 +31,7 @@ public class Submission extends Thing {
     private double createdUTC;
     private String author;
     private String title;
-    private boolean nsfw;
+    private Boolean nsfw;
     private String name;
     private int commentCount;
     private String subreddit;
@@ -62,6 +62,7 @@ public class Submission extends Thing {
 			setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
 			setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
 			setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
+            setUrl(new URL(Utils.toString(obj.get("url"))));
     	}
     	catch(Exception e){e.printStackTrace();}
     }
@@ -258,10 +259,26 @@ public class Submission extends Thing {
      * @throws ParseException If JSON parsing fails
      */
     public boolean isNSFW() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
+        if (this.nsfw == null) {
+            if (url == null)
+                throw new IOException("URL needs to be present");
 
-        return Boolean.parseBoolean(info(url).get("over_18").toString());
+            return Boolean.parseBoolean(info(url).get("over_18").toString());
+        } else {
+            return this.nsfw.booleanValue();
+        }
+    }
+
+    public void markNSFW() throws IOException, ParseException {
+        Utils.post(
+            "id=" + fullName + "&uh=" + user.getModhash(),
+            new URL("http://www.reddit.com/api/marknsfw"), user.getCookie());
+    }
+
+    public void unmarkNSFW() throws IOException, ParseException {
+        Utils.post(
+            "id=" + fullName + "&uh=" + user.getModhash(),
+            new URL("http://www.reddit.com/api/unmarknsfw"), user.getCookie());
     }
 
     /**

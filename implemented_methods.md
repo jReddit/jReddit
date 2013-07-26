@@ -82,18 +82,25 @@ Example usage:
     subm.upVote();
     subm.downVote();
 
+#### POST /api/marknsfw
+#### POST /api/unmarknsfw
+Example usage:
+
+    //Assuming subm is a valid, initialized Submission instance:
+    subm.markNSFW();
+    subm.unmarkNSFW();
+
 #### To be implemented:
 
 * POST /api/del
 * POST /api/editusertext
 * POST /api/hide
 * GET /api/info
-* POST /api/marknsfw
 * POST /api/morechildren
 * POST /api/report
 * POST /api/save
 * POST /api/unhide
-* POST /api/unmarknsfw
+
 * POST /api/unsave
 
 ## listings
