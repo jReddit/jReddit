@@ -265,7 +265,7 @@ public class User extends Thing {
 		ArrayList<String> values = new ArrayList<String>();
 		JSONObject jsonObject = Utils.post("api_type=json&user=" + username
 				+ "&passwd=" + password, new URL(
-						"http://www.reddit.com/api/login/" + username), getCookie());
+						"https://ssl.reddit.com/api/login/" + username), getCookie());
 		JSONObject valuePair = (JSONObject) ((JSONObject) jsonObject.get("json")).get("data");
 
 		values.add(valuePair.get("modhash").toString());
