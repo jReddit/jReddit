@@ -1,10 +1,8 @@
 import static org.junit.Assert.*;
 import im.goel.jreddit.user.User;
 
-import org.json.simple.parser.ParseException;
 import org.junit.Test;
 
-import java.io.IOException;
 
 
 public class UserTest {
