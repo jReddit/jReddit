@@ -103,7 +103,10 @@ public class Utils {
 				s = new Scanner(is);
 			}
 			s.useDelimiter("\\Z");
-			response = s.next();
+			response = "";
+			while (s.hasNext()) {
+				response += s.next();
+			}
 			System.out.println("\nResponse: " + response + "\n\n");
 			s.close();
 		} catch (IOException e2) {
