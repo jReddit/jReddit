@@ -596,10 +596,6 @@ public class User extends Thing {
 			object = (JSONObject) Utils.get(new URL("http://www.reddit.com/subreddits/mine/subscriber.json"), cookie);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
 		}
 		
 		JSONObject rawData = (JSONObject) object.get("data");

@@ -381,8 +381,7 @@ public class Submission extends Thing {
         obj = (JSONObject) obj.get("data");
         array = (JSONArray) obj.get("children");
         obj = (JSONObject) array.get(0);
-        obj = (JSONObject) obj.get("data");
-        return (JSONObject) obj;
+        return (JSONObject) obj.get("data");
     }
 
     public String getName() {

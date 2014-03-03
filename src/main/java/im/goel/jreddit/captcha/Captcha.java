@@ -2,18 +2,15 @@ package im.goel.jreddit.captcha;
 
 import im.goel.jreddit.user.User;
 import im.goel.jreddit.utils.Utils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.imageio.ImageIO;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
 /**
  * This class corresponds to the reddit's captcha class.
@@ -32,13 +29,8 @@ public class Captcha {
 	public String new_captcha(User user) {
 		JSONObject obj = null;
 		try {
-			obj = Utils.post("", new URL("http://www.reddit.com/api/new_captcha"),
-					user.getCookie());
+			obj = Utils.post("", new URL("http://www.reddit.com/api/new_captcha"), user.getCookie());
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
@@ -80,10 +72,8 @@ public class Captcha {
 
         try {
             needsCaptcha = (Boolean) Utils.get(new URL("http://www.reddit.com/api/needs_captcha.json"), user.getCookie());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            System.out.println("Error verifying if the user needs a captcha. The URL is invalid");
         }
 
         return needsCaptcha;

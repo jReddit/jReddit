@@ -15,7 +15,8 @@ import java.util.Scanner;
 /**
  * This class contains (or will contain) various utilities for jReddit.
  *
- * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
+ * @author Omer Elnour
+ * @author Raul Rene Lepsa
  */
 public class Utils {
 
@@ -29,28 +30,34 @@ public class Utils {
      * @param cookie    authentication for the User
      * @return JSONObject response for the POST
      */
-    public static JSONObject post(String apiParams, URL url, String cookie)
-            throws IOException, ParseException {
+    public static JSONObject post(String apiParams, URL url, String cookie) {
 
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setUseCaches(false);
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type",
-                "application/x-www-form-urlencoded; charset=UTF-8");
-        connection.setRequestProperty("Content-Length",
-                String.valueOf(apiParams.length()));
-        connection.setRequestProperty("cookie", "reddit_session=" + cookie);
-        connection.setRequestProperty("User-Agent", userAgent);
-        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-        outputStream.writeBytes(apiParams);
-        outputStream.flush();
-        outputStream.close();
+        Object response = null;
 
-        JSONParser parser = new JSONParser();
-        Object object = parser.parse(new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine());
-        
-        return (JSONObject) object;
+        try {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setUseCaches(false);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            connection.setRequestProperty("Content-Length", String.valueOf(apiParams.length()));
+            connection.setRequestProperty("cookie", "reddit_session=" + cookie);
+            connection.setRequestProperty("User-Agent", userAgent);
+
+            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            outputStream.writeBytes(apiParams);
+            outputStream.flush();
+            outputStream.close();
+
+            JSONParser parser = new JSONParser();
+            response = parser.parse(new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine());
+        } catch (IOException e) {
+            System.out.println("Error making POST request to URL: " + url);
+        } catch (ParseException e) {
+            System.out.println("Error parsing response from POST request for URL: " + url);
+        }
+
+        return (JSONObject) response;
     }
 
     /**
@@ -60,24 +67,25 @@ public class Utils {
      * @param cookie authentication for the User
      * @return JSON object that corresponds to the request
      */
-    public static Object get(URL url, String cookie)
-            throws IOException, ParseException {
+    public static Object get(URL url, String cookie) {
 
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setUseCaches(false);
-        connection.setRequestMethod("GET");
-        // Don't pass cookie if it is null
-        if (cookie != null) {
-            connection.setRequestProperty("cookie", "reddit_session=" + cookie);
-        }
-        connection.setRequestProperty("User-Agent", userAgent);
+        Object object = null;
 
-
-        // Debugging stuff
-        InputStream is;
-        Scanner scanner;
-        String response = null;
         try {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setUseCaches(false);
+            connection.setRequestMethod("GET");
+            // Don't pass cookie if it is null
+            if (cookie != null) {
+                connection.setRequestProperty("cookie", "reddit_session=" + cookie);
+            }
+            connection.setRequestProperty("User-Agent", userAgent);
+
+
+            // Debugging stuff
+            InputStream is;
+            Scanner scanner;
+            String response;
             if (connection.getResponseCode() != 200) {
                 scanner = new Scanner(connection.getErrorStream());
             } else {
@@ -91,14 +99,18 @@ public class Utils {
             }
             System.out.println("\nResponse: " + response + "\n\n");
             scanner.close();
-        } catch (IOException io) {
-            io.printStackTrace();
+            // Debugging stuff
+
+
+            JSONParser parser = new JSONParser();
+            object = parser.parse(response);
+        } catch (IOException e) {
+            System.out.println("Error making GET request to URL: " + url);
+        } catch (ParseException e) {
+            System.out.println("Error parsing response from GET request for URL: " + url);
         }
-        // Debugging stuff
 
-
-        JSONParser parser = new JSONParser();
-        return parser.parse(response);
+        return object;
     }
 
     /**
