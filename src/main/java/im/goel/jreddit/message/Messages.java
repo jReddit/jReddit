@@ -60,7 +60,7 @@ public class Messages {
 		List<Message> messages = null;
 
 		try {
-			JSONObject object = (JSONObject) Utils.get("", new URL(
+			JSONObject object = (JSONObject) Utils.get(new URL(
 					"http://www.reddit.com/message/" + method + ".json"), 
 					user.getCookie());
 			JSONObject data = (JSONObject) object.get("data");

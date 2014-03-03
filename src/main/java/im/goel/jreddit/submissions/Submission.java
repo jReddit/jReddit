@@ -374,7 +374,7 @@ public class Submission extends Thing {
 
     private JSONObject info(URL url) throws IOException, ParseException {
         url = new URL(url.toString() + "/info.json");
-        Object object = Utils.get("", url, user.getCookie());
+        Object object = Utils.get(url, user.getCookie());
 
         JSONArray array = (JSONArray) object;
         JSONObject obj = (JSONObject) array.get(0);
