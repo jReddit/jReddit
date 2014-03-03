@@ -129,7 +129,7 @@ public class Messages {
 	/**
 	 * Composes a messages based on passed text and send it to 
 	 * the passed user name.
-	 * Make sure you call Captcha.new_captcha to generate a im.goel.jreddit.captcha
+	 * Make sure you call Captcha.newCaptcha to generate a im.goel.jreddit.captcha
 	 * and pass it's iden and solution.
 	 * @param text
 	 */

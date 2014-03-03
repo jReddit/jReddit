@@ -20,42 +20,35 @@ import java.net.URL;
  */
 public class Captcha {
 
+    private static final String IMAGE_FORMAT = "png";
+    private static final String IMAGE_PATH = "captcha." + IMAGE_FORMAT;
+
     /**
      * Generates and saves a new reddit captcha in the working directory
      * @param user user to get captcha for
      *
      * @return the iden of the generated captcha as a String
      */
-	public String new_captcha(User user) {
-		JSONObject obj = null;
-		try {
-			obj = Utils.post("", new URL("http://www.reddit.com/api/new_captcha"), user.getCookie());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-
-		// Get the im.goel.jreddit.captcha iden
-		String iden = (String) ((JSONArray) ((JSONArray) ((JSONArray) obj.get("jquery")).get(11)).get(3)).get(0);
-		System.out.println(iden);
-
-		URL url = null;
-		try {
-			url = new URL("http://www.reddit.com/captcha/" + iden + ".png");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-
-		RenderedImage captcha = null;
-		try {
-			captcha = ImageIO.read(url);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public String newCaptcha(User user) {
+		String iden = null;
 
 		try {
-			ImageIO.write(captcha, "png", new File("captcha.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
+            // Get the captcha iden
+			JSONObject obj = Utils.post("", new URL("http://www.reddit.com/api/new_captcha"), user.getCookie());
+            iden = (String) ((JSONArray) ((JSONArray) ((JSONArray) obj.get("jquery")).get(11)).get(3)).get(0);
+            System.out.println("Received CAPTCHA iden: " + iden);
+
+            // Get the corresponding captcha image
+            URL url = new URL("http://www.reddit.com/captcha/" + iden + ".png");
+            RenderedImage captcha = ImageIO.read(url);
+
+            // Write the file to disk
+            ImageIO.write(captcha, IMAGE_FORMAT, new File(IMAGE_PATH));
+
+        } catch (MalformedURLException e) {
+            System.out.println("Invalid URL for retrieving captcha");
+        } catch (IOException e) {
+            System.out.println("Error reading captcha file");
 		}
 
 		return iden;
