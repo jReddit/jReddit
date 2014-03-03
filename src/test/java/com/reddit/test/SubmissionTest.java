@@ -1,3 +1,5 @@
+package com.reddit.test;
+
 import static org.junit.Assert.*;
 
 import im.goel.jreddit.submissions.Submission;

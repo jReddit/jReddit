@@ -1,3 +1,5 @@
+package com.reddit.test;
+
 import im.goel.jreddit.subreddit.Subreddit;
 import im.goel.jreddit.user.User;
 
