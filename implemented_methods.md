@@ -41,17 +41,21 @@ Usage:
 * POST /api/updateapp
 
 ## captcha
-#### POST /api/new_captcha
 #### GET /captcha/iden
+#### POST /api/new_captcha
 Usage:
 
-    //assuming user is a connected User instance:
-    Captcha c = new Captcha();
-    String iden = c.new_captcha(user);
+    // assuming a user is a connected to a User instance
+    Captcha captcha = new Captcha();
+    String iden = captcha.new_captcha(user);
 
-#### To be implemented:
+#### GET /api/needs_captcha.json
+Usage:
 
-* GET /api/needs_captcha.json
+    // assuming a user is connected to a User instance
+    Captcha captcha = new Captcha();
+    boolean needsCaptcha = captcha.needsCaptcha(user);
+
 
 ## flair
 
