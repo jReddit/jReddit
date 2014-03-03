@@ -28,7 +28,7 @@ public class Subreddits {
         // List of subreddits
         List<Subreddit> subreddits = null;
         try {
-            JSONObject object = (JSONObject) Utils.get("", new URL(
+            JSONObject object = (JSONObject) Utils.get(new URL(
                     "http://www.reddit.com/reddits.json"), user.getCookie());
             JSONObject data = (JSONObject) object.get("data");
 
@@ -53,7 +53,7 @@ public class Subreddits {
         // List of subreddits
         List<Subreddit> subreddits = null;
         try {
-            JSONObject object = (JSONObject) Utils.get("", new URL(
+            JSONObject object = (JSONObject) Utils.get(new URL(
                     "http://www.reddit.com/reddits/" + param + ".json"), user.getCookie());
             JSONObject data = (JSONObject) object.get("data");
 
@@ -74,7 +74,7 @@ public class Subreddits {
     public static Subreddit getSubredditFromName(User user, String subName) {
         List<Subreddit> subreddits = null;
         try {
-            JSONObject object = (JSONObject) Utils.get("", new URL(
+            JSONObject object = (JSONObject) Utils.get(new URL(
                     "http://www.reddit.com/reddits/.json"), user.getCookie());
             JSONObject data = (JSONObject) object.get("data");
 

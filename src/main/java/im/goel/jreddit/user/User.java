@@ -287,7 +287,7 @@ public class User extends Thing {
 			Runtime.getRuntime().exit(-1);
 		}
 
-		Object obj = Utils.get("", new URL(
+		Object obj = Utils.get(new URL(
 				"http://www.reddit.com/api/me.json"), getCookie());
 		JSONObject jsonObject = (JSONObject) obj;
 		return (JSONObject) jsonObject.get("data");
@@ -339,7 +339,7 @@ public class User extends Thing {
 		UserInfo info = null;
 		try {
 			// Send GET request to get the account overview
-			JSONObject object = (JSONObject) Utils.get("", new URL(
+			JSONObject object = (JSONObject) Utils.get(new URL(
 					"http://www.reddit.com/user/" + username + "/about.json"), null);
 			JSONObject data = (JSONObject) object.get("data");
 
@@ -376,7 +376,7 @@ public class User extends Thing {
 				List<Comment> comments = new ArrayList<Comment>(500);
 				try {
 					// Send GET request to get the account overview
-					JSONObject object = (JSONObject) Utils.get("", new URL(
+					JSONObject object = (JSONObject) Utils.get(new URL(
 							"http://www.reddit.com/user/" + username + "/comments.json?"
 							+ Utils.commentSortToString(commentSort)), null);
 					JSONObject data = (JSONObject) object.get("data");
@@ -418,7 +418,7 @@ public class User extends Thing {
 		List<Submission> submissions = new ArrayList<Submission>(500);
 		try {
 			// Send GET request to get the account overview
-			JSONObject object = (JSONObject) Utils.get("", new URL(
+			JSONObject object = (JSONObject) Utils.get(new URL(
 					"http://www.reddit.com/user/" + username + "/submitted.json"), null);
 			JSONObject data = (JSONObject) object.get("data");
 			JSONArray children = (JSONArray) data.get("children");
@@ -593,13 +593,8 @@ public class User extends Thing {
 		List<Subreddit> subscibed = new ArrayList<Subreddit>(1000);
 		JSONObject object = null;
 		try {
-			object = (JSONObject) Utils.get("", 
-					new URL("http://www.reddit.com/subreddits/mine/subscriber.json"), cookie);
+			object = (JSONObject) Utils.get(new URL("http://www.reddit.com/subreddits/mine/subscriber.json"), cookie);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		

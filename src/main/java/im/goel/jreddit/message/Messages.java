@@ -60,7 +60,7 @@ public class Messages {
 		List<Message> messages = null;
 
 		try {
-			JSONObject object = (JSONObject) Utils.get("", new URL(
+			JSONObject object = (JSONObject) Utils.get(new URL(
 					"http://www.reddit.com/message/" + method + ".json"), 
 					user.getCookie());
 			JSONObject data = (JSONObject) object.get("data");
@@ -129,27 +129,23 @@ public class Messages {
 	/**
 	 * Composes a messages based on passed text and send it to 
 	 * the passed user name.
-	 * Make sure you call Captcha.new_captcha to generate a im.goel.jreddit.captcha
+	 * Make sure you call Captcha.newCaptcha to generate a im.goel.jreddit.captcha
 	 * and pass it's iden and solution.
 	 * @param text
 	 */
 	public void compose(User user, String to, String subject, String text, String iden, 
 			String captcha) {
 		JSONObject object = null;
-		try {
+
+        try {
 			object = Utils.post("im.goel.jreddit.captcha=" + captcha + "&iden=" +iden + 
 					"&subject=" + subject + "&text=" + text + "&to=" + to + 
 					"&uh=" + user.getModhash(),
 					new URL("http://www.reddit.com/api/compose"), user.getCookie());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
 		}
-		
-		//System.out.println(object.toString()); // DEBUG response
+
 
 		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
 			System.err.println("Please login first.");
