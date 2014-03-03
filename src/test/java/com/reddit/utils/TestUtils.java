@@ -1,4 +1,4 @@
-package com.reddit.test;
+package com.reddit.utils;
 
 import im.goel.jreddit.user.User;
 

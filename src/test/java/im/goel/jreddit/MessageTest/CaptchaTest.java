@@ -1,6 +1,6 @@
 package im.goel.jreddit.MessageTest;
 
-import com.reddit.test.TestUtils;
+import com.reddit.utils.TestUtils;
 import im.goel.jreddit.captcha.Captcha;
 import im.goel.jreddit.user.User;
 import org.junit.Test;
@@ -8,7 +8,12 @@ import org.junit.Test;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
-
+/**
+ * Class for testing the Captcha methods
+ *
+ * @author Karan Goel
+ * @author Raul Rene Lepsa
+ */
 public class CaptchaTest {
 
     private static Captcha captcha = new Captcha();
