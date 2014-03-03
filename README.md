@@ -1,7 +1,10 @@
-# jReddit
+jReddit
+=====
+
+[![Build Status](https://travis-ci.org/karan/jReddit.png?branch=karan)](https://travis-ci.org/karan/jReddit)
 
 ### What is jReddit?
-jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour.
+jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour. Taken over for further development and maintainence by [Karan Goel](http://www.goel.im).
 
 ### What can it do?
 jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, send and receive messages and notifications among other things.
