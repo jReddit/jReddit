@@ -172,18 +172,20 @@ Example usage:
 * GET /search
 
 ## subreddits
+#### GET /subreddits/new
+Example usage:
+
+    List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.NEW);
+
 #### GET /subreddits/popular
 Example usage:
 
-    //assuming user is a connected User instance:
-    List<Subreddit> subreddits = Subreddits.list(user,"popular");
-
+    List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.POPULAR);
 
 #### GET /subreddits/banned
 Example usage:
 
-    //assuming user is a connected User instance:
-    List<Subreddit> subreddits = Subreddits.list(user,"banned");
+       List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.BANNED);
 
 #### GET /subreddits/mine/subscriber.json
 Example usage:
@@ -204,7 +206,6 @@ Example usage:
 * GET /r/subreddit/about.json
 * GET /subreddits/mine/contributor
 * GET /subreddits/mine/moderator
-* GET /subreddits/new
 * GET /subreddits/search
 
 ## users
