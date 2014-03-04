@@ -3,40 +3,37 @@ package im.goel.jreddit.subreddit;
 
 import im.goel.jreddit.user.User;
 import im.goel.jreddit.utils.Utils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 /**
- * Lists all subreddits.
+ * Class to deal with Subreddits
  *
  * @author Benjamin Jakobus
+ * @author Raul Rene Lepsa
  */
 public class Subreddits {
 
     /**
      * Returns the subreddits that make up the default front page of reddit.
-     *
-     * @param user The user account with which to connect.
-     * @author Benjamin Jakobus
      */
-    public static List<Subreddit> listDefault(User user) {
-        // List of subreddits
+    public List<Subreddit> listDefault() {
         List<Subreddit> subreddits = null;
+
         try {
-            JSONObject object = (JSONObject) Utils.get(new URL(
-                    "http://www.reddit.com/reddits.json"), user.getCookie());
+            JSONObject object = (JSONObject) Utils.get(new URL("http://www.reddit.com/reddits.json"), null);
             JSONObject data = (JSONObject) object.get("data");
 
             subreddits = initList((JSONArray) data.get("children"));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error retrieving subreddits");
         }
+
         return subreddits;
     }
 
@@ -47,7 +44,6 @@ public class Subreddits {
      * @param param Should be <code>popular</code> (for listing popular subreddits),
      *              <code>banned</code> (for listing banned subreddits),
      *              <code>new</code> (for listing new subreddits)
-     * @author Benjamin Jakobus
      */
     public static List<Subreddit> list(User user, String param) {
         // List of subreddits
@@ -66,28 +62,24 @@ public class Subreddits {
     }
 
     /**
-     * @param user User who wishes to access the subreddit.
-     * @param subName Name of the subreddit that needs to be accessed.
-     * @return Subreddit with the name subName
-     * @author ThatBox
+     * Get a Subreddit by its name
+     *
+     * @param subredditName    name of the subreddit to retrieve
+     * @return Subreddit object representing the desired subreddit, or NULL if it does not exist
      */
-    public static Subreddit getSubredditFromName(User user, String subName) {
-        List<Subreddit> subreddits = null;
+    public Subreddit getSubredditByName(String subredditName) {
+
         try {
-            JSONObject object = (JSONObject) Utils.get(new URL(
-                    "http://www.reddit.com/reddits/.json"), user.getCookie());
-            JSONObject data = (JSONObject) object.get("data");
-
-            subreddits = initList((JSONArray) data.get("children"));
-
-            for(Subreddit sub : subreddits) {
-                if(sub.getDisplayName().equalsIgnoreCase(subName))
+            for (Subreddit sub : listDefault()) {
+                if (sub.getDisplayName().equalsIgnoreCase(subredditName)) {
                     return sub;
+                }
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error retrieving subreddit: " + subredditName);
         }
+
         return null;
     }
 
@@ -96,7 +88,6 @@ public class Subreddits {
      *
      * @param children Array containing child nodes that form the list of subreddits.
      * @return A <code>List</code> of subreddits.
-     * @author Benjamin Jakobus
      */
     private static List<Subreddit> initList(JSONArray children) {
         // List of subreddits
