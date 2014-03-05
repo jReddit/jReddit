@@ -361,24 +361,24 @@ public class User extends Thing {
 
 	
 	public static List<Comment> comments(String username) {
-		return comments(username, CommentSort.t_new);
+		return comments(username, CommentSort.NEW);
 	}
+
 	/**
 	 * Returns a list of submissions made by this user.
 	 *
 	 * @param username The username of the user whose comments you want
 	 *                 to retrieve.
 	 * @return <code>List</code> of top 500 comments made by this user.
-	 * @author Benjamin Jakobus
 	 */
 	public static List<Comment> comments(String username, CommentSort commentSort){
 		// List of submissions made by this user
 				List<Comment> comments = new ArrayList<Comment>(500);
 				try {
 					// Send GET request to get the account overview
-					JSONObject object = (JSONObject) Utils.get(new URL(
-							"http://www.reddit.com/user/" + username + "/comments.json?"
-							+ Utils.commentSortToString(commentSort)), null);
+					JSONObject object = (JSONObject) Utils.get(
+                            new URL("http://www.reddit.com/user/" + username + "/comments.json?" + commentSort.getValue()),
+                            null);
 					JSONObject data = (JSONObject) object.get("data");
 					JSONArray children = (JSONArray) data.get("children");
 
@@ -446,7 +446,7 @@ public class User extends Thing {
 	 * @author Benjamin Jakobus
 	 */
 	public List<Submission> getLikedSubmissions() {
-		return getLikedSubmissions(Sort.t_hot);
+		return getLikedSubmissions(Sort.HOT);
 	}
 	/**
 	 * Returns a list of submissions that this user liked with a Reddit sort
@@ -464,7 +464,7 @@ public class User extends Thing {
 	 * @author Benjamin Jakobus
 	 */
 	public List<Submission> getHiddenSubmissions() {
-		return getHiddenSubmissions(Sort.t_hot);
+		return getHiddenSubmissions(Sort.HOT);
 	}
 	
 	/**
@@ -485,7 +485,7 @@ public class User extends Thing {
 	 */
 	
 	public List<Submission> getSavedSubmissions(){
-		return getSavedSubmissions(Sort.t_hot);
+		return getSavedSubmissions(Sort.HOT);
 	}
 	
 	/**
@@ -505,7 +505,7 @@ public class User extends Thing {
 	 * @author Evin Ugur
 	 */
 	public List<Submission> getSubmissions(){
-		return getSubmissions(Sort.t_hot);
+		return getSubmissions(Sort.HOT);
 	}
 	
 	/**
@@ -523,7 +523,7 @@ public class User extends Thing {
 	 * @author Benjamin Jakobus
 	 */
 	public List<Submission> getDislikedSubmissions() {
-		return getDislikedSubmissions(Sort.t_hot);
+		return getDislikedSubmissions(Sort.HOT);
 	}
 	
 	/**
@@ -537,12 +537,11 @@ public class User extends Thing {
 	}
 	
 	public List<Submission> getUserOverview(){
-		return getUserSubmissions("overview", Sort.t_hot);
+		return getUserSubmissions("overview", Sort.HOT);
 	}
 	
 	/**
 	 * private function used to get submissions that a user interacts with on Reddit
-	 * @author Evin Ugur
 	 * @param where place of Submission - see http://www.reddit.com/dev/api#GET_user_{username}_{where}
 	 * @return Submissions from the specified location, null if the location is invalid
 	 */
@@ -568,8 +567,7 @@ public class User extends Thing {
 		//if we got this far, the location is valid
 		List<Submission> submissions = new ArrayList<Submission>(500);
 		try{
-			JSONObject object = (JSONObject) Utils.get(new URL(userAddress() + "/"
-									+ where + ".json?" + Utils.sortToString(sort)), cookie);
+			JSONObject object = (JSONObject) Utils.get(new URL(userAddress() + "/" + where + ".json?" + sort.getValue()), cookie);
 			JSONObject data = (JSONObject) object.get("data");
 			JSONArray children = (JSONArray) data.get("children");
 			
