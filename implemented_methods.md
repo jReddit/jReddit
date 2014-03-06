@@ -131,19 +131,19 @@ Example usage:
 Example usage:
 
     //assuming user is a connected User instance:
-    List<Message> inbox = new Messages().inbox(user, 10);
+    List<Message> inbox = new Messages().inbox(user, 10, MessageType.INBOX);
 
 #### GET /message/sent
 Example usage:
 
     //assuming user is a connected User instance:
-    List<Message> sent = new Messages().sent(user, 10);
+    List<Message> sent = new Messages().sent(user, 10, MessageType.SENT);
 
 #### GET /message/unread
 Example usage:
 
     //assuming user is a connected User instance:
-    List<Message> unread = new Messages().unread(user);
+    List<Message> unread = new Messages().unread(user, Messages.ALL_MESSAGES, MessageType.UNREAD);
 
 #### To be implemented:
 
