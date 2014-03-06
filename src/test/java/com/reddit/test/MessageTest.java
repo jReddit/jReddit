@@ -9,8 +9,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 /**
  * Class for testing Message-related methods
@@ -60,5 +59,19 @@ public class MessageTest {
         for (Message m : sent) {
             System.out.println(m.getSubject() + " by " + m.getAuthor());
         }
+    }
+
+    @Test
+    public void testCompose() {
+        /*
+        These default values will, of course, not work.
+        In order to test that the composition indeed works, one has to generate a new Captcha and try with the identification
+        and letters from the captcha image respectively. This combination cannot be stored as it is valid only once.
+        */
+        String captcha_iden = "";
+        String captcha_value = "";
+
+        assertFalse(messages.compose(user, "jReddittest", "Test Subject", "Test Body", captcha_iden, captcha_value));
+
     }
 }
