@@ -1,7 +1,7 @@
 package com.reddit.test;
 
 import com.reddit.utils.TestUtils;
-import im.goel.jreddit.message.Message;
+import com.reddit.dev.api.jreddit.message.Message;
 import im.goel.jreddit.message.MessageType;
 import im.goel.jreddit.message.Messages;
 import im.goel.jreddit.user.User;
