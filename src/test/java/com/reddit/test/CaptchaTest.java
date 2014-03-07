@@ -1,4 +1,4 @@
-package im.goel.jreddit.MessageTest;
+package com.reddit.test;
 
 import com.reddit.utils.TestUtils;
 import im.goel.jreddit.captcha.Captcha;

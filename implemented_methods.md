@@ -123,27 +123,25 @@ Example usage:
 Example usage:
 
     //assuming user is a connected User instance:
-    new Messages().compose(user, "some_user", "Some subject", "Some message", 
-                           "some captcha iden(see above)", 
-                           "some captcha solution");
+    new Messages().compose(user, "recipient_user", "Subject", "Message body", "captcha_iden", "captcha_solution");
 
 #### GET /message/inbox
 Example usage:
 
     //assuming user is a connected User instance:
-    List<Message> inbox = new Messages().inbox(user, 10);
+    List<Message> inbox = new Messages().inbox(user, 10, MessageType.INBOX);
 
 #### GET /message/sent
 Example usage:
 
     //assuming user is a connected User instance:
-    List<Message> sent = new Messages().sent(user, 10);
+    List<Message> sent = new Messages().sent(user, 10, MessageType.SENT);
 
 #### GET /message/unread
 Example usage:
 
     //assuming user is a connected User instance:
-    List<Message> unread = new Messages().unread(user);
+    List<Message> unread = new Messages().unread(user, Messages.ALL_MESSAGES, MessageType.UNREAD);
 
 #### To be implemented:
 
