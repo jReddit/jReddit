@@ -1,126 +1,116 @@
 package im.goel.jreddit.subreddit;
 
 
-import im.goel.jreddit.user.User;
 import im.goel.jreddit.utils.Utils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 /**
- * Lists all subreddits.
+ * Class to deal with Subreddits
  *
  * @author Benjamin Jakobus
+ * @author Raul Rene Lepsa
  */
 public class Subreddits {
 
     /**
      * Returns the subreddits that make up the default front page of reddit.
-     *
-     * @param user The user account with which to connect.
-     * @author Benjamin Jakobus
      */
-    public static List<Subreddit> listDefault(User user) {
-        // List of subreddits
+    public List<Subreddit> listDefault() {
         List<Subreddit> subreddits = null;
+
         try {
-            JSONObject object = (JSONObject) Utils.get("", new URL(
-                    "http://www.reddit.com/reddits.json"), user.getCookie());
+            JSONObject object = (JSONObject) Utils.get(new URL("http://www.reddit.com/subreddits.json"), null);
             JSONObject data = (JSONObject) object.get("data");
 
-            subreddits = initList((JSONArray) data.get("children"));
+            subreddits = constructList((JSONArray) data.get("children"));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error retrieving subreddits");
         }
+
         return subreddits;
     }
 
     /**
-     * Returns the subreddits that match the given parameter.
+     * Get a list of Subreddits of a certain SubredditType
      *
-     * @param user  The user account with which to connect.
-     * @param param Should be <code>popular</code> (for listing popular subreddits),
-     *              <code>banned</code> (for listing banned subreddits),
-     *              <code>new</code> (for listing new subreddits)
-     * @author Benjamin Jakobus
+     * @param subredditType SubredditType (POPULAR, NEW, BANNED)
+     * @return list of Subreddits of that type, null if none are found
      */
-    public static List<Subreddit> list(User user, String param) {
-        // List of subreddits
+    public List<Subreddit> getSubreddits(SubredditType subredditType) {
+
         List<Subreddit> subreddits = null;
+
         try {
-            JSONObject object = (JSONObject) Utils.get("", new URL(
-                    "http://www.reddit.com/reddits/" + param + ".json"), user.getCookie());
+            JSONObject object = (JSONObject) Utils.get(
+                    new URL("http://www.reddit.com/subreddits/" + subredditType.getValue() + ".json"), null);
             JSONObject data = (JSONObject) object.get("data");
 
-            subreddits = initList((JSONArray) data.get("children"));
+            subreddits = constructList((JSONArray) data.get("children"));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error retrieving subreddits of type: " + subredditType.getValue());
         }
+
         return subreddits;
     }
 
     /**
-     * @param user User who wishes to access the subreddit.
-     * @param subName Name of the subreddit that needs to be accessed.
-     * @return Subreddit with the name subName
-     * @author ThatBox
+     * Get a Subreddit by its name
+     *
+     * @param subredditName name of the subreddit to retrieve
+     * @return Subreddit object representing the desired subreddit, or NULL if it does not exist
      */
-    public static Subreddit getSubredditFromName(User user, String subName) {
-        List<Subreddit> subreddits = null;
+    public Subreddit getSubredditByName(String subredditName) {
+
         try {
-            JSONObject object = (JSONObject) Utils.get("", new URL(
-                    "http://www.reddit.com/reddits/.json"), user.getCookie());
-            JSONObject data = (JSONObject) object.get("data");
-
-            subreddits = initList((JSONArray) data.get("children"));
-
-            for(Subreddit sub : subreddits) {
-                if(sub.getDisplayName().equalsIgnoreCase(subName))
+            for (Subreddit sub : listDefault()) {
+                if (sub.getDisplayName().equalsIgnoreCase(subredditName)) {
                     return sub;
+                }
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error retrieving subreddit: " + subredditName);
         }
+
         return null;
     }
 
     /**
-     * Creates a list of subreddits by interpreting the given <code>JSONArray</code>.
+     * Creates a list of subreddits by interpreting a given <code>JSONArray</code> of subreddits.
      *
-     * @param children Array containing child nodes that form the list of subreddits.
-     * @return A <code>List</code> of subreddits.
-     * @author Benjamin Jakobus
+     * @param subredditJsonArray Array containing child nodes that form the list of subreddits.
+     * @return A <code>List</code> of Subreddit objects
      */
-    private static List<Subreddit> initList(JSONArray children) {
-        // List of subreddits
-        List<Subreddit> subreddits = new ArrayList<Subreddit>(10000);
-        JSONObject obj;
-        Subreddit r;
+    private static List<Subreddit> constructList(JSONArray subredditJsonArray) {
+        List<Subreddit> subreddits = new ArrayList<Subreddit>();
+        JSONObject subredditJsonObject;
+        Subreddit subreddit;
 
-        // Iterate through the available subreddits
-        for (int i = 0; i < children.size(); i++) {
-            obj = (JSONObject) children.get(i);
-            obj = (JSONObject) obj.get("data");
-            r = new Subreddit();
-            r.setCreated(obj.get("created").toString());
-            r.setCreatedUTC(obj.get("created_utc").toString());
-            r.setDescription(obj.get("description").toString());
-            r.setDisplayName(obj.get("display_name").toString());
-            r.setId(obj.get("id").toString());
-            r.setName(obj.get("display_name").toString());
-            r.setNsfw(Boolean.parseBoolean(obj.get("over18").toString()));
-            r.setSubscribers(Integer.parseInt(obj.get("subscribers").toString()));
-            r.setTitle(obj.get("title").toString());
-            r.setUrl(obj.get("url").toString());
-            subreddits.add(r);
+        for (Object object : subredditJsonArray) {
+            subredditJsonObject = (JSONObject) object;
+            subredditJsonObject = (JSONObject) subredditJsonObject.get("data");
+
+            subreddit = new Subreddit();
+            subreddit.setCreated(subredditJsonObject.get("created").toString());
+            subreddit.setCreatedUTC(subredditJsonObject.get("created_utc").toString());
+            subreddit.setDescription(subredditJsonObject.get("description").toString());
+            subreddit.setDisplayName(subredditJsonObject.get("display_name").toString());
+            subreddit.setId(subredditJsonObject.get("id").toString());
+            subreddit.setName(subredditJsonObject.get("display_name").toString());
+            subreddit.setNsfw(Boolean.parseBoolean(subredditJsonObject.get("over18").toString()));
+            subreddit.setSubscribers(Integer.parseInt(subredditJsonObject.get("subscribers").toString()));
+            subreddit.setTitle(subredditJsonObject.get("title").toString());
+            subreddit.setUrl(subredditJsonObject.get("url").toString());
+            subreddits.add(subreddit);
         }
+
         return subreddits;
     }
 }

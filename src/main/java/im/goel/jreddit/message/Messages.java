@@ -1,168 +1,170 @@
 package im.goel.jreddit.message;
 
+import com.reddit.dev.api.jreddit.message.Message;
+import com.reddit.dev.api.jreddit.message.MessageMapper;
+import com.reddit.dev.api.jreddit.utils.TypePrefix;
 import im.goel.jreddit.user.User;
 import im.goel.jreddit.utils.Utils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
-
 
 /**
- * @author Karan Goel
+ * Messaging functionality
  *
+ * @author Karan Goel
+ * @author Raul Rene Lepsa
  */
 public class Messages {
 
-	/**
-	 * Returns all unread messages in user's inbox.
-	 * @author Karan Goel
-	 */
-	public List<Message> unread(User user) {
-		return createList(user, -1, "unread");
-	}
+    public static final int ALL_MESSAGES = -1;
 
-	/**
-	 * Returns the specified number of messages in user's inbox.
-	 * Return all messages if maxMessages = -1.
-	 * @author Karan Goel
-	 */
-	public List<Message> inbox(User user, int maxMessages) {
-		return createList(user, maxMessages, "inbox");
-	}
+    /**
+     * Get the list of messages of a certain type for a user
+     *
+     * @param user        Reddit user for which to check the inbox
+     * @param maxMessages number of messages to fetch. If it is set to <code>ALL_MESSAGES</code>, it will bring all messages
+     * @param messageType <code>MessageType</code> instance, that determines the type of the message
+     * @return list of messages based on passed method
+     */
+    @SuppressWarnings("unchecked")
+    public List<Message> getMessages(User user, int maxMessages, MessageType messageType) {
 
-	/**
-	 * Returns the sent messages for a user.
-	 * @param user
-	 * @param maxMessages
-	 * @return List of sent messages
-	 */
-	public List<Message> sent(User user, int maxMessages) {
-		return createList(user, maxMessages, "sent");
-	}
+        List<Message> messages = null;
 
-	/**
-	 * Builds a list of Messages based on passed parameters.
-	 * @param user
-	 * @param maxMessages
-	 * @param method
-	 * @return list of messages based on passed method
-	 * @author Karan Goel
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Message> createList(User user, int maxMessages, String method) {
-		List<Message> messages = null;
+        try {
+            JSONObject object = (JSONObject) Utils.get(new URL(
+                    "http://www.reddit.com/message/" + messageType.getValue() + ".json"),
+                    user.getCookie());
+            JSONObject data = (JSONObject) object.get("data");
+            messages = buildList((JSONArray) data.get("children"), maxMessages);
 
-		try {
-			JSONObject object = (JSONObject) Utils.get("", new URL(
-					"http://www.reddit.com/message/" + method + ".json"), 
-					user.getCookie());
-			JSONObject data = (JSONObject) object.get("data");
-			messages = (List) buildList((JSONArray) data.get("children"), maxMessages);
+        } catch (Exception e) {
+            System.err.println("Error retrieving messages of type " + messageType);
+        }
+        return messages;
+    }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return messages;
-	}
+    /**
+     * Compose and send a message. Requires an authenticated user and a Captcha challenge.
+     * A new captcha can be generated using the <code>newCaptcha()</code> method of the <code>Captcha</code> class.
+     *
+     * @param user       Reddit user for which to check the inbox
+     * @param to         recipient of the message (has to be an existing user)
+     * @param subject    Subject of the message (no longer than 100 characters)
+     * @param text       body of the message
+     * @param iden       identifier of the Captcha challenge
+     * @param captchaTry The user's response to the Captcha challenge
+     * @return true if the message was sent successfully, false otherwise
+     */
+    public boolean compose(User user, String to, String subject, String text, String iden, String captchaTry) {
 
-	/**
-	 * Builds a list of Messages from the passed array of children.
-	 * @author Karan Goel
-	 */
-	private static List<Object> buildList(JSONArray children, int maxMessages) {
-		List<Object> messages = new ArrayList<Object>(10000);
-		JSONObject obj;
+        if (subject.length() > 100) {
+            System.err.println("Subject cannot have more than 100 characters");
+            return false;
+        }
 
-		if (maxMessages < 0 || maxMessages > children.size()) {
-			maxMessages = children.size();
-		}
-		for (int i = 0; i < maxMessages; i++) {
-			obj = (JSONObject) children.get(i);
-			if (obj.get("kind").toString().startsWith("t4")) { // It's a message
-				obj = (JSONObject) obj.get("data");
-				Message m = new Message();
-				m.setBody(obj.get("body").toString());
-				m.setWas_comment(Boolean.valueOf(obj.get("was_comment").toString()));
-				m.setName(obj.get("name").toString());
-				m.setAuthor(obj.get("author").toString());
-				m.setCreated(obj.get("created").toString());
-				m.setDest(obj.get("dest").toString());
-				m.setAuthor(obj.get("author").toString());
-				m.setCreatedUTC(obj.get("created_utc").toString());
-				m.setBody_html(obj.get("body_html").toString());
-				m.setSubject(obj.get("subject").toString());
-				m.setContext(obj.get("context").toString());
-				m.setId(obj.get("id").toString());
-				m.setSubject(obj.get("subject").toString());
-				messages.add(m);
-			} else { // It's a comment/reply to a post
-				obj = (JSONObject) obj.get("data");
-				Comment m = new Comment();
-				m.setBody(obj.get("body").toString());
-				m.setLink_title(obj.get("link_title").toString());
-				m.setWas_comment(Boolean.valueOf(obj.get("was_comment").toString()));
-				m.setName(obj.get("name").toString());
-				m.setAuthor(obj.get("author").toString());
-				m.setCreated(obj.get("created").toString());
-				m.setDest(obj.get("dest").toString());
-				m.setAuthor(obj.get("author").toString());
-				m.setCreatedUTC(obj.get("created_utc").toString());
-				m.setBody_html(obj.get("body_html").toString());
-				m.setSubject(obj.get("subject").toString());
-				m.setSubreddit(obj.get("subreddit").toString());
-				m.setContext(obj.get("context").toString());
-				m.setId(obj.get("id").toString());
-				m.setSubject(obj.get("subject").toString());
-				messages.add(m);
-			}
-		}
-		return messages;
-	}
+        try {
+            JSONObject object = Utils.post("captcha=" + captchaTry + "&iden=" + iden +
+                    "&subject=" + subject + "&text=" + text + "&to=" + to +
+                    "&uh=" + user.getModhash(),
+                    new URL("http://www.reddit.com/api/compose"), user.getCookie());
 
-	/**
-	 * Composes a messages based on passed text and send it to 
-	 * the passed user name.
-	 * Make sure you call Captcha.new_captcha to generate a im.goel.jreddit.captcha
-	 * and pass it's iden and solution.
-	 * @param text
-	 */
-	public void compose(User user, String to, String subject, String text, String iden, 
-			String captcha) {
-		JSONObject object = null;
-		try {
-			object = Utils.post("im.goel.jreddit.captcha=" + captcha + "&iden=" +iden + 
-					"&subject=" + subject + "&text=" + text + "&to=" + to + 
-					"&uh=" + user.getModhash(),
-					new URL("http://www.reddit.com/api/compose"), user.getCookie());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		//System.out.println(object.toString()); // DEBUG response
+            if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+                System.err.println("Please login first.");
+            } else if (object.toJSONString().contains(".error.RATELIMIT.field-ratelimit")) {
+                System.err.println("You are doing that too much.");
+            } else if (object.toJSONString().contains(".error.BAD_CAPTCHA.field-captcha")) {
+                System.err.println("Invalid captcha submitted.");
+            } else {
+                System.out.println(((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(14)).get(3)).get(0));   // prints a message confirming delivery
+                return true;
+            }
 
-		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-			System.err.println("Please login first.");
-		} else if (object.toJSONString().contains(
-				".error.RATELIMIT.field-ratelimit")) {
-			System.err.println("You are doing that too much.");
-		} else if (object.toJSONString().contains(
-				".error.BAD_CAPTCHA.field-im.goel.jreddit.captcha")) {
-			System.err.println("Invalid im.goel.jreddit.captcha submitted.");
-		} else {
-			System.out.println(((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(14)).get(3)).get(0));
-		}
-	}
+        } catch (MalformedURLException e) {
+            System.err.println("Error sending message to " + to);
+        }
 
+        return false;
+    }
+
+    /**
+     * Mark a message as read
+     *
+     * @param fullName Full name of the <code>Message</code> to mark as read. The full name is a combination of the
+     *                 <code>TypePrefix</code> and ID of the message
+     * @param user     Reddit user that reads the message
+     */
+    public void readMessage(String fullName, User user) {
+        try {
+            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), new URL("http://www.reddit.com/api/read_message"), user.getCookie());
+        } catch (Exception e) {
+            System.err.println("Error reading message: " + fullName);
+        }
+    }
+
+    /**
+     * Mark a message as unread
+     *
+     * @param fullName Full name of the <code>Message</code> to mark as unread. The full name is a combination of the
+     *                 <code>TypePrefix</code> and ID of the message
+     * @param user     Reddit user that marks the message as unread
+     */
+    public void unreadMessage(String fullName, User user) {
+        try {
+            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), new URL("http://www.reddit.com/api/read_message"), user.getCookie());
+        } catch (Exception e) {
+            System.err.println("Error marking message: " + fullName + " as unread");
+        }
+    }
+
+    /**
+     * Builds a list of Messages from the passed array of children.
+     */
+    private List<Message> buildList(JSONArray children, int maxMessages) {
+        List<Message> messages = new ArrayList<Message>();
+        JSONObject obj;
+
+        if (maxMessages < 0 || maxMessages > children.size()) {
+            maxMessages = children.size();
+        }
+        for (int i = 0; i < maxMessages; i++) {
+            obj = (JSONObject) children.get(i);
+
+            // If the kind of the object is a MESSAGE
+            if (obj.get("kind").toString().startsWith(TypePrefix.MESSAGE.getValue())) {
+                obj = (JSONObject) obj.get("data");
+                messages.add(MessageMapper.mapMessage(obj));
+
+                // Else it is a comment
+            } else {
+                obj = (JSONObject) obj.get("data");
+                Comment m = new Comment();
+                m.setBody(obj.get("body").toString());
+                m.setLink_title(obj.get("link_title").toString());
+                m.setComment(Boolean.valueOf(obj.get("was_comment").toString()));
+                m.setFullName(obj.get("name").toString());
+                m.setAuthor(obj.get("author").toString());
+                m.setCreated(obj.get("created").toString());
+                m.setRecipient(obj.get("dest").toString());
+                m.setAuthor(obj.get("author").toString());
+                m.setCreatedUTC(obj.get("created_utc").toString());
+                m.setBodyHtml(obj.get("body_html").toString());
+                m.setSubject(obj.get("subject").toString());
+                m.setSubreddit(obj.get("subreddit").toString());
+                m.setContext(obj.get("context").toString());
+                m.setId(obj.get("id").toString());
+                m.setSubject(obj.get("subject").toString());
+                messages.add(m);
+            }
+        }
+
+        return messages;
+    }
 
 }

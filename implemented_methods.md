@@ -19,7 +19,7 @@ Usage:
 #### POST /api/submit
 Usage:
 
-    //assuming user is a connected User instance:
+    // Assuming user is a connected User instance:
     user.submitLink("Github","http://www.github.com","technology");
 
 #### To be implemented:
@@ -41,17 +41,21 @@ Usage:
 * POST /api/updateapp
 
 ## captcha
-#### POST /api/new_captcha
 #### GET /captcha/iden
+#### POST /api/new_captcha
 Usage:
 
-    //assuming user is a connected User instance:
-    Captcha c = new Captcha();
-    String iden = c.new_captcha(user);
+    // assuming a user is a connected to a User instance
+    Captcha captcha = new Captcha();
+    String iden = captcha.newCaptcha(user);
 
-#### To be implemented:
+#### GET /api/needs_captcha.json
+Usage:
 
-* GET /api/needs_captcha.json
+    // assuming a user is connected to a User instance
+    Captcha captcha = new Captcha();
+    boolean needsCaptcha = captcha.needsCaptcha(user);
+
 
 ## flair
 
@@ -72,13 +76,13 @@ Usage:
 #### POST /api/comment
 Example usage:
 
-    //Assuming subm is a valid, initialized Submission instance:
+    // Assuming subm is a valid, initialized Submission instance:
     subm.comment("Some comment");
 
 #### POST /api/vote
 Example usage:
 
-    //Assuming subm is a valid, initialized Submission instance:
+    // Assuming subm is a valid, initialized Submission instance:
     subm.upVote();
     subm.downVote();
 
@@ -86,7 +90,7 @@ Example usage:
 #### POST /api/unmarknsfw
 Example usage:
 
-    //Assuming subm is a valid, initialized Submission instance:
+    // Assuming subm is a valid, initialized Submission instance:
     subm.markNSFW();
     subm.unmarkNSFW();
 
@@ -118,34 +122,42 @@ Example usage:
 #### POST /api/compose
 Example usage:
 
-    //assuming user is a connected User instance:
-    new Messages().compose(user, "some_user", "Some subject", "Some message", 
-                           "some captcha iden(see above)", 
-                           "some captcha solution");
+    // Assuming user is a connected User instance:
+    new Messages().compose(user, "recipient_user", "Subject", "Message body", "captcha_iden", "captcha_solution");
 
 #### GET /message/inbox
 Example usage:
 
-    //assuming user is a connected User instance:
-    List<Message> inbox = new Messages().inbox(user, 10);
+    // Assuming user is a connected User instance:
+    List<Message> inbox = new Messages().getMessages(user, 10, MessageType.INBOX);
 
 #### GET /message/sent
 Example usage:
 
-    //assuming user is a connected User instance:
-    List<Message> sent = new Messages().sent(user, 10);
+    // Assuming user is a connected User instance:
+    List<Message> sent = new Messages().getMessages(user, 10, MessageType.SENT);
 
 #### GET /message/unread
 Example usage:
 
-    //assuming user is a connected User instance:
-    List<Message> unread = new Messages().unread(user);
+    // Assuming user is a connected User instance:
+    List<Message> unread = new Messages().getMessages(user, Messages.ALL_MESSAGES, MessageType.UNREAD);
 
+#### POST /api/read_message
+Example usage:
+    
+    // Assuming user is a connected User instance and we have a message instance of the Message class
+    new Messages().readMessage(message.getFullName(), user);
+
+#### POST /api/unread_message
+Example usage:
+
+    // Assuming user is a connected User instance and we have a message instance of the Message class
+    new Messages().unreadMessage(message.getFullName(), user);
+    
 #### To be implemented:
 
 * POST /api/block
-* POST /api/read_message
-* POST /api/unread_message
 
 ###moderation
 
@@ -168,23 +180,25 @@ Example usage:
 * GET /search
 
 ## subreddits
+#### GET /subreddits/new
+Example usage:
+
+    List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.NEW);
+
 #### GET /subreddits/popular
 Example usage:
 
-    //assuming user is a connected User instance:
-    List<Subreddit> subreddits = Subreddits.list(user,"popular");
-
+    List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.POPULAR);
 
 #### GET /subreddits/banned
 Example usage:
 
-    //assuming user is a connected User instance:
-    List<Subreddit> subreddits = Subreddits.list(user,"banned");
+       List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.BANNED);
 
 #### GET /subreddits/mine/subscriber.json
 Example usage:
 
-    //assuming user is a connected User instance:
+    // Assuming user is a connected User instance:
     user.getSubscribed()
 
 #### To be implemented:
@@ -200,33 +214,32 @@ Example usage:
 * GET /r/subreddit/about.json
 * GET /subreddits/mine/contributor
 * GET /subreddits/mine/moderator
-* GET /subreddits/new
 * GET /subreddits/search
 
 ## users
 #### GET /user/username/disliked
 Example usage:
 
-    //assuming user is a connected User instance:
+    // Assuming user is a connected User instance:
     List<Submission> sm = user.getDislikedSubmissions();
 
 #### GET /user/username/hidden
 Example usage:
 
-    //assuming user is a connected User instance:
+    // Assuming user is a connected User instance:
     List<Submission> sm = user.getHiddenSubmissions();
 
 #### GET /user/username/liked
 Example usage:
 
-    //assuming user is a connected User instance:
+    // Assuming user is a connected User instance:
     List<Submission> sm = user.getLikedSubmissions();
 
 
 #### GET user/username/submitted
 Example usage:
 
-    //assuming user is a connected User instance:
+    // Assuming user is a connected User instance:
     List<Submission> sm = user.getSubmissions();
 
 
@@ -243,7 +256,7 @@ Example usage:
 #### GET /user/username/saved
 Example usage:
 
-    //assuming user is an initialized User instance:
+    // Assuming user is an initialized User instance:
     List<Submission> saved = user.getSavedSubmissions();
 
 #### To be implemented:

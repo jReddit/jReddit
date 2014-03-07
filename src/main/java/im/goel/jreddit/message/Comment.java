@@ -1,5 +1,7 @@
 package im.goel.jreddit.message;
 
+import com.reddit.dev.api.jreddit.message.Message;
+
 public class Comment extends Message {
 
 	/**
