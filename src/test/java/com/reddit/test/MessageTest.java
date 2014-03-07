@@ -62,6 +62,24 @@ public class MessageTest {
     }
 
     @Test
+    public void readMessages() {
+        List<Message> inbox = messages.getMessages(user, 3, MessageType.INBOX);
+
+        for (Message message: inbox) {
+            messages.readMessage(message.getFullName(), user);
+        }
+    }
+
+    @Test
+    public void unreadMessages() {
+        List<Message> inbox = messages.getMessages(user, 3, MessageType.INBOX);
+
+        for (Message message: inbox) {
+            messages.unreadMessage(message.getFullName(), user);
+        }
+    }
+
+    @Test
     public void testCompose() {
         /*
         These default values will, of course, not work.

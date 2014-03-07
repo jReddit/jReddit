@@ -2,7 +2,7 @@ package com.reddit.dev.api.jreddit.message;
 
 /**
  * Encapsulates the private messages.
- * Corresponds to the <code>TypePrefixes.MESSAGES</code>, which is has the value t4 for the Reddit API
+ * Corresponds to the <code>TypePrefix.MESSAGES</code>, which is has the value t4 for the Reddit API
  *
  * @author Karan Goel
  * @author Raul Rene Lepsa
@@ -11,6 +11,9 @@ public class Message {
 
     // The ID of this message
     private String id;
+
+    // Name  - a combination of the Message Type (t4) and the ID of the message
+    private String fullName;
 
     // Name of the author of the message
     private String author;
@@ -26,9 +29,6 @@ public class Message {
 
 	// If the message was a comment or not
 	private boolean isComment;
-
-    // Name  - a combination of the Message Type (t4) and the ID of the message
-	private String name;
 	
 	// Timestamp of when the message was created
 	private String created;
@@ -90,12 +90,12 @@ public class Message {
         this.isComment = isComment;
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getCreated() {

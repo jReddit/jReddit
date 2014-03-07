@@ -52,9 +52,9 @@ public class Utils {
             JSONParser parser = new JSONParser();
             response = parser.parse(new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine());
         } catch (IOException e) {
-            System.out.println("Error making POST request to URL: " + url);
+            System.err.println("Error making POST request to URL: " + url);
         } catch (ParseException e) {
-            System.out.println("Error parsing response from POST request for URL: " + url);
+            System.err.println("Error parsing response from POST request for URL: " + url);
         }
 
         return (JSONObject) response;
@@ -105,9 +105,9 @@ public class Utils {
             object = parser.parse(response);
 
         } catch (IOException e) {
-            System.out.println("Error making GET request to URL: " + url);
+            System.err.println("Error making GET request to URL: " + url);
         } catch (ParseException e) {
-            System.out.println("Error parsing response from GET request for URL: " + url);
+            System.err.println("Error parsing response from GET request for URL: " + url);
         }
 
         return object;

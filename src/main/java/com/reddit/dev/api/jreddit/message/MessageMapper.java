@@ -22,7 +22,7 @@ public class MessageMapper {
             message = new Message();
             message.setBody(jsonObject.get("body").toString());
             message.setComment(Boolean.valueOf(jsonObject.get("was_comment").toString()));
-            message.setName(jsonObject.get("name").toString());
+            message.setFullName(jsonObject.get("name").toString());
             message.setAuthor(jsonObject.get("author").toString());
             message.setCreated(jsonObject.get("created").toString());
             message.setRecipient(jsonObject.get("dest").toString());
