@@ -97,13 +97,13 @@ public class Utils {
             while (scanner.hasNext()) {
                 response += scanner.next();
             }
-            System.out.println("\nResponse: " + response + "\n\n");
             scanner.close();
             // Debugging stuff
 
 
             JSONParser parser = new JSONParser();
             object = parser.parse(response);
+
         } catch (IOException e) {
             System.out.println("Error making GET request to URL: " + url);
         } catch (ParseException e) {
