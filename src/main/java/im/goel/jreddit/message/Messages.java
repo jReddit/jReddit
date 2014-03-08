@@ -1,5 +1,8 @@
 package im.goel.jreddit.message;
 
+import com.reddit.dev.api.jreddit.message.Message;
+import com.reddit.dev.api.jreddit.message.MessageMapper;
+import com.reddit.dev.api.jreddit.utils.TypePrefix;
 import im.goel.jreddit.user.User;
 import im.goel.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
@@ -39,7 +42,7 @@ public class Messages {
                     "http://www.reddit.com/message/" + messageType.getValue() + ".json"),
                     user.getCookie());
             JSONObject data = (JSONObject) object.get("data");
-            messages = (List) buildList((JSONArray) data.get("children"), maxMessages);
+            messages = buildList((JSONArray) data.get("children"), maxMessages);
 
         } catch (Exception e) {
             System.err.println("Error retrieving messages of type " + messageType);
@@ -91,10 +94,40 @@ public class Messages {
     }
 
     /**
+     * Mark a message as read
+     *
+     * @param fullName Full name of the <code>Message</code> to mark as read. The full name is a combination of the
+     *                 <code>TypePrefix</code> and ID of the message
+     * @param user     Reddit user that reads the message
+     */
+    public void readMessage(String fullName, User user) {
+        try {
+            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), new URL("http://www.reddit.com/api/read_message"), user.getCookie());
+        } catch (Exception e) {
+            System.err.println("Error reading message: " + fullName);
+        }
+    }
+
+    /**
+     * Mark a message as unread
+     *
+     * @param fullName Full name of the <code>Message</code> to mark as unread. The full name is a combination of the
+     *                 <code>TypePrefix</code> and ID of the message
+     * @param user     Reddit user that marks the message as unread
+     */
+    public void unreadMessage(String fullName, User user) {
+        try {
+            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), new URL("http://www.reddit.com/api/read_message"), user.getCookie());
+        } catch (Exception e) {
+            System.err.println("Error marking message: " + fullName + " as unread");
+        }
+    }
+
+    /**
      * Builds a list of Messages from the passed array of children.
      */
-    private static List<Object> buildList(JSONArray children, int maxMessages) {
-        List<Object> messages = new ArrayList<Object>();
+    private List<Message> buildList(JSONArray children, int maxMessages) {
+        List<Message> messages = new ArrayList<Message>();
         JSONObject obj;
 
         if (maxMessages < 0 || maxMessages > children.size()) {
@@ -102,36 +135,26 @@ public class Messages {
         }
         for (int i = 0; i < maxMessages; i++) {
             obj = (JSONObject) children.get(i);
-            if (obj.get("kind").toString().startsWith("t4")) { // It's a message
+
+            // If the kind of the object is a MESSAGE
+            if (obj.get("kind").toString().startsWith(TypePrefix.MESSAGE.getValue())) {
                 obj = (JSONObject) obj.get("data");
-                Message m = new Message();
-                m.setBody(obj.get("body").toString());
-                m.setWas_comment(Boolean.valueOf(obj.get("was_comment").toString()));
-                m.setName(obj.get("name").toString());
-                m.setAuthor(obj.get("author").toString());
-                m.setCreated(obj.get("created").toString());
-                m.setDest(obj.get("dest").toString());
-                m.setAuthor(obj.get("author").toString());
-                m.setCreatedUTC(obj.get("created_utc").toString());
-                m.setBody_html(obj.get("body_html").toString());
-                m.setSubject(obj.get("subject").toString());
-                m.setContext(obj.get("context").toString());
-                m.setId(obj.get("id").toString());
-                m.setSubject(obj.get("subject").toString());
-                messages.add(m);
-            } else { // It's a comment/reply to a post
+                messages.add(MessageMapper.mapMessage(obj));
+
+                // Else it is a comment
+            } else {
                 obj = (JSONObject) obj.get("data");
                 Comment m = new Comment();
                 m.setBody(obj.get("body").toString());
                 m.setLink_title(obj.get("link_title").toString());
-                m.setWas_comment(Boolean.valueOf(obj.get("was_comment").toString()));
-                m.setName(obj.get("name").toString());
+                m.setComment(Boolean.valueOf(obj.get("was_comment").toString()));
+                m.setFullName(obj.get("name").toString());
                 m.setAuthor(obj.get("author").toString());
                 m.setCreated(obj.get("created").toString());
-                m.setDest(obj.get("dest").toString());
+                m.setRecipient(obj.get("dest").toString());
                 m.setAuthor(obj.get("author").toString());
                 m.setCreatedUTC(obj.get("created_utc").toString());
-                m.setBody_html(obj.get("body_html").toString());
+                m.setBodyHtml(obj.get("body_html").toString());
                 m.setSubject(obj.get("subject").toString());
                 m.setSubreddit(obj.get("subreddit").toString());
                 m.setContext(obj.get("context").toString());

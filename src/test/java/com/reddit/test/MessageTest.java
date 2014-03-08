@@ -1,7 +1,7 @@
 package com.reddit.test;
 
 import com.reddit.utils.TestUtils;
-import im.goel.jreddit.message.Message;
+import com.reddit.dev.api.jreddit.message.Message;
 import im.goel.jreddit.message.MessageType;
 import im.goel.jreddit.message.Messages;
 import im.goel.jreddit.user.User;
@@ -58,6 +58,24 @@ public class MessageTest {
         System.out.println("--- Printing sent messages ---");
         for (Message m : sent) {
             System.out.println(m.getSubject() + " by " + m.getAuthor());
+        }
+    }
+
+    @Test
+    public void readMessages() {
+        List<Message> inbox = messages.getMessages(user, 3, MessageType.INBOX);
+
+        for (Message message: inbox) {
+            messages.readMessage(message.getFullName(), user);
+        }
+    }
+
+    @Test
+    public void unreadMessages() {
+        List<Message> inbox = messages.getMessages(user, 3, MessageType.INBOX);
+
+        for (Message message: inbox) {
+            messages.unreadMessage(message.getFullName(), user);
         }
     }
 
