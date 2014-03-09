@@ -8,8 +8,6 @@ import im.goel.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +36,7 @@ public class Messages {
         List<Message> messages = null;
 
         try {
-            JSONObject object = (JSONObject) Utils.get(new URL(
-                    "http://www.reddit.com/message/" + messageType.getValue() + ".json"),
-                    user.getCookie());
+            JSONObject object = (JSONObject) Utils.get("/message/" + messageType.getValue() + ".json", user.getCookie());
             JSONObject data = (JSONObject) object.get("data");
             messages = buildList((JSONArray) data.get("children"), maxMessages);
 
@@ -73,7 +69,7 @@ public class Messages {
             JSONObject object = Utils.post("captcha=" + captchaTry + "&iden=" + iden +
                     "&subject=" + subject + "&text=" + text + "&to=" + to +
                     "&uh=" + user.getModhash(),
-                    new URL("http://www.reddit.com/api/compose"), user.getCookie());
+                    "/api/compose", user.getCookie());
 
             if (object.toJSONString().contains(".error.USER_REQUIRED")) {
                 System.err.println("Please login first.");
@@ -86,7 +82,7 @@ public class Messages {
                 return true;
             }
 
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             System.err.println("Error sending message to " + to);
         }
 
@@ -102,7 +98,7 @@ public class Messages {
      */
     public void readMessage(String fullName, User user) {
         try {
-            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), new URL("http://www.reddit.com/api/read_message"), user.getCookie());
+            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), "/api/read_message", user.getCookie());
         } catch (Exception e) {
             System.err.println("Error reading message: " + fullName);
         }
@@ -117,7 +113,7 @@ public class Messages {
      */
     public void unreadMessage(String fullName, User user) {
         try {
-            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), new URL("http://www.reddit.com/api/read_message"), user.getCookie());
+            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), "/api/read_message", user.getCookie());
         } catch (Exception e) {
             System.err.println("Error marking message: " + fullName + " as unread");
         }

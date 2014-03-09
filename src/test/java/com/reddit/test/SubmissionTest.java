@@ -48,9 +48,10 @@ public class SubmissionTest {
         User user = TestUtils.createAndConnectUser();
 
         try {
-            if (user.getSubmissions().size() > 0) {
+            List<Submission> submissions = user.getSubmissions();
+            if (submissions.size() > 0) {
                 // Get a submission - the first one
-                Submission initialSubmission = user.getSubmissions().get(0);
+                Submission initialSubmission = submissions.get(0);
 
                 if (initialSubmission.isNSFW()) {
                     System.out.println("Unmarking NSFW");

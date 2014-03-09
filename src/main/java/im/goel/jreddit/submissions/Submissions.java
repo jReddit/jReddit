@@ -2,14 +2,12 @@ package im.goel.jreddit.submissions;
 
 import im.goel.jreddit.user.User;
 import im.goel.jreddit.utils.Utils;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.LinkedList;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
+import java.util.LinkedList;
 
 
 /**
@@ -40,9 +38,9 @@ public class Submissions {
      */
     public static LinkedList<Submission> getSubmissions(String redditName,
                        Popularity type, Page frontpage, User user) throws IOException, ParseException {
+
         LinkedList<Submission> submissions = new LinkedList<Submission>();
-        URL url;
-        String urlString = "http://www.reddit.com/r/" + redditName;
+        String urlString = "/r/" + redditName;
 
         switch (type) {
             case NEW:
@@ -52,23 +50,18 @@ public class Submissions {
 			break;
         }
 
-        /**
-         * TODO Implement Pages
-         */
+        //TODO Implement Pages
 
         urlString += ".json";
-        url = new URL(urlString);
 
-        Object obj = Utils.get(url, user.getCookie());
-        JSONObject object = (JSONObject) obj;
-        JSONArray array = (JSONArray) ((JSONObject) object.get("data"))
-                .get("children");
+        JSONObject object = (JSONObject) Utils.get(urlString, user.getCookie());
+        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
+
         JSONObject data;
         for (int i = 0; i < array.size(); i++) {
             data = (JSONObject) array.get(i);
-            data = ((JSONObject) ((JSONObject) data).get("data"));
-            submissions.add(new Submission(user, data.get("id").toString(),
-                    new URL("http://www.reddit.com" + (data.get("permalink").toString()))));
+            data = ((JSONObject) data.get("data"));
+            submissions.add(new Submission(user, data.get("id").toString(), (data.get("permalink").toString())));
         }
 
         return submissions;
