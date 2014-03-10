@@ -4,13 +4,11 @@ import im.goel.jreddit.InvalidCookieException;
 import im.goel.jreddit.Thing;
 import im.goel.jreddit.user.User;
 import im.goel.jreddit.utils.Utils;
-
-import java.io.IOException;
-import java.net.URL;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
 
 
 /**
@@ -19,59 +17,55 @@ import org.json.simple.parser.ParseException;
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Submission extends Thing {
-    /**
-     * This is the user that will vote on a submission.
-     */
+
+    /* This is the user that will vote on a submission. */
     private User user;
-    /**
-     * The path to this submission
-     */
-    private URL url;
+
+    /* The path to this submission */
+    private String url;
 
     private double createdUTC;
     private String author;
     private String title;
     private Boolean nsfw;
     private String name;
-    private int commentCount;
+    private long commentCount;
     private String subreddit;
-    private int upVotes;
-    private int downVotes;
-    private int score;
+    private long upVotes;
+    private long downVotes;
+    private long score;
 
-    /** 
-     * An empty Submission
-     */
     public Submission() {
     }
-    
-    /** A Submission that is loaded from a JSONObject
-     * 
-     * @author Evin Ugur
+
+    /**
+     * Create a Submission from a JSONObject
+     *
      * @param obj The JSONObject to load Submission data from
-     * @throws Exception The JSONObject is somehow bad
      */
-    public Submission(JSONObject obj){
-    	try{
-    		setAuthor(Utils.toString(obj.get("author")));
-			setTitle(Utils.toString(obj.get("title")));
-			setNSFW(Boolean.parseBoolean(Utils.toString(obj.get("over_18"))));
-			setCreatedUTC(Double.parseDouble(Utils.toString(obj.get("created_utc"))));
-			setDownVotes(Integer.parseInt(Utils.toString(obj.get("downs"))));
-			setName(Utils.toString(obj.get("name")));
-			setScore(Integer.parseInt(Utils.toString(obj.get("score"))));
-			setUpVotes(Integer.parseInt(Utils.toString(obj.get("ups"))));
-			setCommentCount(Integer.parseInt(Utils.toString(obj.get("num_comments"))));
-            setUrl(new URL(Utils.toString(obj.get("url"))));
-    	}
-    	catch(Exception e){e.printStackTrace();}
-    }
-    
-    public Submission(User user, String fullName) {
-//		this(user, fullName, url);
+    public Submission(JSONObject obj) {
+
+        try {
+            setAuthor((String) obj.get("author"));
+            setTitle((String) obj.get("title"));
+            setNSFW((Boolean) obj.get("over_18"));
+            setCreatedUTC((Double) obj.get("created_utc"));
+            setDownVotes((Long) obj.get("downs"));
+            setName((String) obj.get("name"));
+            setScore((Long) obj.get("score"));
+            setUpVotes((Long) obj.get("ups"));
+            setCommentCount((Long) obj.get("num_comments"));
+            setUrl((String) obj.get("url"));
+        } catch (Exception e) {
+            System.err.println("Error creating Submission");
+        }
     }
 
-    public void setScore(Integer score) {
+    public void setUpVotes(long upVotes) {
+        this.upVotes = upVotes;
+    }
+
+    public void setScore(long score) {
         this.score = score;
     }
 
@@ -83,7 +77,7 @@ public class Submission extends Thing {
         this.createdUTC = createdUTC;
     }
 
-    public void setDownVotes(int downVotes) {
+    public void setDownVotes(long downVotes) {
         this.downVotes = downVotes;
     }
 
@@ -91,7 +85,7 @@ public class Submission extends Thing {
         this.name = name;
     }
 
-    public void setCommentCount(int commentCount) {
+    public void setCommentCount(long commentCount) {
         this.commentCount = commentCount;
     }
 
@@ -107,15 +101,12 @@ public class Submission extends Thing {
         this.title = title;
     }
 
-    public void setUpVotes(int upVotes) {
-        this.upVotes = upVotes;
-    }
-
-    public void setUrl(URL url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 
-    public Submission(User user, String fullName, URL url) {
+    public Submission(User user, String fullName, String url) {
+        // TODO: Refactor this to use TypePrefix enum
         if (fullName.startsWith("t3_"))
             fullName = fullName.replaceFirst("t3_", "");
 
@@ -134,8 +125,7 @@ public class Submission extends Thing {
      */
     public void comment(String text) throws IOException, ParseException {
         JSONObject object = Utils.post("thing_id=" + fullName + "&text=" + text
-                + "&uh=" + user.getModhash(), new URL(
-                "http://www.reddit.com/api/comment"), user.getCookie());
+                + "&uh=" + user.getModhash(), "/api/comment", user.getCookie());
 
         if (object.toJSONString().contains(".error.USER_REQUIRED"))
             throw new InvalidCookieException("Cookie not present");
@@ -213,17 +203,6 @@ public class Submission extends Thing {
     }
 
     /**
-     * This function returns the score of this sumbission (does not issue a new GET request
-     * to Reddit.com but instead returns the private member).
-     *
-     * @return The score of this submission
-     */
-    public int getScore() {
-        return score;
-    }
-
-
-    /**
      * This function returns the number of upvotes of this sumbission.
      *
      * @return The number of upvotes of this submission
@@ -265,20 +244,20 @@ public class Submission extends Thing {
 
             return Boolean.parseBoolean(info(url).get("over_18").toString());
         } else {
-            return this.nsfw.booleanValue();
+            return this.nsfw;
         }
     }
 
     public void markNSFW() throws IOException, ParseException {
         Utils.post(
-            "id=" + fullName + "&uh=" + user.getModhash(),
-            new URL("http://www.reddit.com/api/marknsfw"), user.getCookie());
+                "id=" + fullName + "&uh=" + user.getModhash(),
+                "/api/marknsfw", user.getCookie());
     }
 
     public void unmarkNSFW() throws IOException, ParseException {
         Utils.post(
-            "id=" + fullName + "&uh=" + user.getModhash(),
-            new URL("http://www.reddit.com/api/unmarknsfw"), user.getCookie());
+                "id=" + fullName + "&uh=" + user.getModhash(),
+                "/api/unmarknsfw", user.getCookie());
     }
 
     /**
@@ -362,19 +341,19 @@ public class Submission extends Thing {
         return fullName;
     }
 
-    public URL getURL() {
+    public String getURL() {
         return url;
     }
 
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
         return Utils.post(
                 "id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
-                new URL("http://www.reddit.com/api/vote"), user.getCookie());
+                "/api/vote", user.getCookie());
     }
 
-    private JSONObject info(URL url) throws IOException, ParseException {
-        url = new URL(url.toString() + "/info.json");
-        Object object = Utils.get(url, user.getCookie());
+    private JSONObject info(String urlPath) throws IOException, ParseException {
+        urlPath += "/info.json";
+        Object object = Utils.get(urlPath, user.getCookie());
 
         JSONArray array = (JSONArray) object;
         JSONObject obj = (JSONObject) array.get(0);
@@ -393,14 +372,14 @@ public class Submission extends Thing {
         return createdUTC;
     }
 
-    @Override
-    public String toString() {
-        try {
-            return "(" + score() + ") " + getTitle();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
-        return super.toString();
-    }
+//    @Override
+//    public String toString() {
+//        try {
+//            return "(" + score() + ") " + getTitle();
+//        } catch (Exception exception) {
+//            exception.printStackTrace();
+//        }
+//
+//        return super.toString();
+//    }
 }

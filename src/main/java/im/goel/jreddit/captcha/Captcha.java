@@ -25,21 +25,21 @@ public class Captcha {
 
     /**
      * Generates and saves a new reddit captcha in the working directory
-     * @param user user to get captcha for
      *
+     * @param user user to get captcha for
      * @return the iden of the generated captcha as a String
      */
-	public String newCaptcha(User user) {
-		String iden = null;
+    public String newCaptcha(User user) {
+        String iden = null;
 
-		try {
+        try {
             // Get the captcha iden
-			JSONObject obj = Utils.post("", new URL("http://www.reddit.com/api/new_captcha"), user.getCookie());
+            JSONObject obj = Utils.post("", "/api/new_captcha", user.getCookie());
             iden = (String) ((JSONArray) ((JSONArray) ((JSONArray) obj.get("jquery")).get(11)).get(3)).get(0);
             System.out.println("Received CAPTCHA iden: " + iden);
 
             // Get the corresponding captcha image
-            URL url = new URL("http://www.reddit.com/captcha/" + iden + ".png");
+            URL url = new URL(Utils.REDDIT_BASE_URL + "/captcha/" + iden + ".png");
             RenderedImage captcha = ImageIO.read(url);
 
             // Write the file to disk
@@ -49,24 +49,24 @@ public class Captcha {
             System.out.println("Invalid URL for retrieving captcha");
         } catch (IOException e) {
             System.out.println("Error reading captcha file");
-		}
+        }
 
-		return iden;
-	}
+        return iden;
+    }
 
     /**
      * Check whether user needs CAPTCHAs for API methods that define the "captcha" and "iden" parameters.
-     * @param user user to do the check for
      *
+     * @param user user to do the check for
      * @return true if CAPTCHAs are needed, false otherwise
      */
     public boolean needsCaptcha(User user) {
         boolean needsCaptcha = false;
 
         try {
-            needsCaptcha = (Boolean) Utils.get(new URL("http://www.reddit.com/api/needs_captcha.json"), user.getCookie());
-        } catch (MalformedURLException e) {
-            System.out.println("Error verifying if the user needs a captcha. The URL is invalid");
+            needsCaptcha = (Boolean) Utils.get("/api/needs_captcha.json", user.getCookie());
+        } catch (Exception e) {
+            System.err.println("Error verifying if the user needs a captcha");
         }
 
         return needsCaptcha;

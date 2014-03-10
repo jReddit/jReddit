@@ -1,13 +1,12 @@
 package im.goel.jreddit.utils;
 
-import im.goel.jreddit.CommentSort;
-import im.goel.jreddit.Sort;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -22,56 +21,21 @@ public class Utils {
 
     private static String userAgent = "Omer's Reddit API Java Wrapper";
 
-    /**
-     * Function that submits a POST request and returns a JSON object that corresponds to it.
-     *
-     * @param apiParams parameters to put on the request
-     * @param url       URL to POST to
-     * @param cookie    authentication for the User
-     * @return JSONObject response for the POST
-     */
-    public static JSONObject post(String apiParams, URL url, String cookie) {
-
-        Object response = null;
-
-        try {
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setUseCaches(false);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            connection.setRequestProperty("Content-Length", String.valueOf(apiParams.length()));
-            connection.setRequestProperty("cookie", "reddit_session=" + cookie);
-            connection.setRequestProperty("User-Agent", userAgent);
-
-            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.writeBytes(apiParams);
-            outputStream.flush();
-            outputStream.close();
-
-            JSONParser parser = new JSONParser();
-            response = parser.parse(new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine());
-        } catch (IOException e) {
-            System.err.println("Error making POST request to URL: " + url);
-        } catch (ParseException e) {
-            System.err.println("Error parsing response from POST request for URL: " + url);
-        }
-
-        return (JSONObject) response;
-    }
+    public static final String REDDIT_BASE_URL = "http://www.reddit.com";
 
     /**
-     * Function that makes a GET request and returns a
+     * Function that makes a GET request and returns a JSON object
      *
-     * @param url    URL for the GET request
-     * @param cookie authentication for the User
-     * @return JSON object that corresponds to the request
+     * @param urlPath Path on Reddit to POST to
+     * @param cookie  authentication for the User
+     * @return Object that corresponds to the request
      */
-    public static Object get(URL url, String cookie) {
+    public static Object get(String urlPath, String cookie) {
 
         Object object = null;
 
         try {
+            URL url = new URL(REDDIT_BASE_URL + urlPath);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setUseCaches(false);
             connection.setRequestMethod("GET");
@@ -105,13 +69,53 @@ public class Utils {
             object = parser.parse(response);
 
         } catch (IOException e) {
-            System.err.println("Error making GET request to URL: " + url);
+            System.err.println("Error making GET request to URL path: " + urlPath);
         } catch (ParseException e) {
-            System.err.println("Error parsing response from GET request for URL: " + url);
+            System.err.println("Error parsing response from GET request for URL path: " + urlPath);
         }
 
         return object;
     }
+
+    /**
+     * Private function that submits a POST request and returns a JSON object that corresponds to it.
+     *
+     * @param urlPath   Path on Reddit to POST to
+     * @param apiParams parameters to put on the request
+     * @param cookie    authentication for the User
+     * @return JSONObject response for the POST
+     */
+    public static JSONObject post(String apiParams, String urlPath, String cookie) {
+
+        Object response = null;
+
+        try {
+            URL url = new URL(REDDIT_BASE_URL + urlPath);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setUseCaches(false);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            connection.setRequestProperty("Content-Length", String.valueOf(apiParams.length()));
+            connection.setRequestProperty("cookie", "reddit_session=" + cookie);
+            connection.setRequestProperty("User-Agent", userAgent);
+
+            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            outputStream.writeBytes(apiParams);
+            outputStream.flush();
+            outputStream.close();
+
+            JSONParser parser = new JSONParser();
+            response = parser.parse(new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine());
+        } catch (IOException e) {
+            System.err.println("Error making POST request to URL path: " + urlPath);
+        } catch (ParseException e) {
+            System.err.println("Error parsing response from POST request for URL path: " + urlPath);
+        }
+
+        return (JSONObject) response;
+    }
+
 
     /**
      * Sets the user agent string.
@@ -133,5 +137,4 @@ public class Utils {
     public static String toString(Object obj) {
         return (obj == null ? null : obj.toString());
     }
-
 }

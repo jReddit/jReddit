@@ -5,7 +5,6 @@ import im.goel.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class Subreddits {
         List<Subreddit> subreddits = null;
 
         try {
-            JSONObject object = (JSONObject) Utils.get(new URL("http://www.reddit.com/subreddits.json"), null);
+            JSONObject object = (JSONObject) Utils.get("/subreddits.json", null);
             JSONObject data = (JSONObject) object.get("data");
 
             subreddits = constructList((JSONArray) data.get("children"));
@@ -47,8 +46,7 @@ public class Subreddits {
         List<Subreddit> subreddits = null;
 
         try {
-            JSONObject object = (JSONObject) Utils.get(
-                    new URL("http://www.reddit.com/subreddits/" + subredditType.getValue() + ".json"), null);
+            JSONObject object = (JSONObject) Utils.get("/subreddits/" + subredditType.getValue() + ".json", null);
             JSONObject data = (JSONObject) object.get("data");
 
             subreddits = constructList((JSONArray) data.get("children"));
