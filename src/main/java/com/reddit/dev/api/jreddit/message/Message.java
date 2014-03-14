@@ -4,7 +4,9 @@ package com.reddit.dev.api.jreddit.message;
  * Encapsulates the private messages.
  * Corresponds to the <code>TypePrefix.MESSAGES</code>, which is has the value t4 for the Reddit API
  *
- * test
+ * 
+ * added test2
+ * 
  * @author Karan Goel
  * @author Raul Rene Lepsa
  */
