@@ -6,6 +6,7 @@ import com.github.jreddit.submissions.Submissions;
 import com.github.jreddit.submissions.Submissions.Page;
 import com.github.jreddit.submissions.Submissions.Popularity;
 import com.github.jreddit.user.User;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -22,13 +23,12 @@ import static org.junit.Assert.assertNotSame;
  * @author Raul Rene Lepsa
  */
 public class SubmissionTest {
+
+    private static User user = TestUtils.createAndConnectUser();
+
 	@Test
 	public void test() {
-
 		try {
-			User user = new User("test_subject_666", "beef");
-			user.connect();
-
 			List<Submission> frontPage = Submissions.getSubmissions("all", Popularity.HOT, Page.FRONTPAGE, user);
 			Submission first = frontPage.get(0);
 
@@ -45,7 +45,6 @@ public class SubmissionTest {
 
     @Test
     public void testMarkUnmarkNSFW() {
-        User user = TestUtils.createAndConnectUser();
 
         try {
             List<Submission> submissions = user.getSubmissions();
@@ -56,7 +55,8 @@ public class SubmissionTest {
                 if (initialSubmission.isNSFW()) {
                     System.out.println("Unmarking NSFW");
 
-                    new Submission(user, initialSubmission.getName(), initialSubmission.getURL()).unmarkNSFW();
+                    initialSubmission.setUser(user);
+                    initialSubmission.unmarkNSFW();
                     List<Submission> submissionList = user.getSubmissions();
 
                     for (Submission submission: submissionList) {
@@ -69,7 +69,9 @@ public class SubmissionTest {
                 } else {
                     System.out.println("Marking NSFW");
 
-                    new Submission(user, initialSubmission.getName(), initialSubmission.getURL()).markNSFW();
+                    initialSubmission.setUser(user);
+                    initialSubmission.markNSFW();
+
                     List<Submission> submissionList = user.getSubmissions();
                     for (Submission submission: submissionList) {
                         if (submission.getURL().equals(initialSubmission.getURL())) {

@@ -28,7 +28,6 @@ public class Submission extends Thing {
     private String author;
     private String title;
     private Boolean nsfw;
-    private String name;
     private long commentCount;
     private String subreddit;
     private long upVotes;
@@ -51,7 +50,7 @@ public class Submission extends Thing {
             setNSFW((Boolean) obj.get("over_18"));
             setCreatedUTC((Double) obj.get("created_utc"));
             setDownVotes((Long) obj.get("downs"));
-            setName((String) obj.get("name"));
+            setFullName((String) obj.get("name"));
             setScore((Long) obj.get("score"));
             setUpVotes((Long) obj.get("ups"));
             setCommentCount((Long) obj.get("num_comments"));
@@ -81,10 +80,6 @@ public class Submission extends Thing {
         this.downVotes = downVotes;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setCommentCount(long commentCount) {
         this.commentCount = commentCount;
     }
@@ -103,6 +98,26 @@ public class Submission extends Thing {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getURL() {
+        return url;
     }
 
     public Submission(User user, String fullName, String url) {
@@ -333,18 +348,6 @@ public class Submission extends Thing {
             System.out.println(object.toJSONString());
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getURL() {
-        return url;
-    }
-
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
         return Utils.post(
                 "id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
@@ -361,10 +364,6 @@ public class Submission extends Thing {
         array = (JSONArray) obj.get("children");
         obj = (JSONObject) array.get(0);
         return (JSONObject) obj.get("data");
-    }
-
-    public String getName() {
-        return name;
     }
 
     public double getCreatedUTC() throws IOException, ParseException {
