@@ -4,3 +4,5 @@ bin/
 .classpath
 .idea/
 *.iml
+captcha.png
+json-simple-1.1.1.jar
