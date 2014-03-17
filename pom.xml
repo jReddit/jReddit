@@ -4,23 +4,52 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>im.goel.jreddit</groupId>
-    <artifactId>jReddit</artifactId>
-    <version>1.0</version>
+    <groupId>com.github.jreddit</groupId>
+    <artifactId>jreddit</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>jReddit</name>
+    <description>jReddit is a wrapper for the Reddit API written in Java.</description>
+    <url>https://github.com/karan/jReddit</url>
+
+    <issueManagement>
+        <url>https://github.com/karan/jReddit/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/karan/jReddit</url>
+        <connection>scm:git:git://github.com/karan/jReddit.git</connection>
+        <developerConnection>scm:git:git@github.com:karan/jReddit.git</developerConnection>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- dependencies versions -->
+        <com.googlecode.jsonsimple.version>1.1.1</com.googlecode.jsonsimple.version>
+        <junit.version>4.8.1</junit.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
+            <version>${com.googlecode.jsonsimple.version}</version>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
-
     </dependencies>
-    
+
 </project>
