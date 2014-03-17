@@ -2,9 +2,12 @@ package com.reddit.test;
 
 import com.reddit.utils.TestUtils;
 import com.reddit.dev.api.jreddit.message.Message;
+
 import im.goel.jreddit.message.MessageType;
 import im.goel.jreddit.message.Messages;
 import im.goel.jreddit.user.User;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
@@ -17,9 +20,19 @@ import static junit.framework.Assert.*;
  * @author Raul Rene Lepsa
  */
 public class MessageTest {
-
-    private static User user = TestUtils.createAndConnectUser();
-    private static Messages messages = new Messages();
+	
+	private static User user;
+	private static Messages messages;
+	
+	@BeforeClass
+	public static void initUser() {
+		try {
+			user = TestUtils.createAndConnectUser();
+			messages = new Messages();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     @Test
     public void testUnread() {
