@@ -372,14 +372,15 @@ public class Submission extends Thing {
         return createdUTC;
     }
 
-//    @Override
-//    public String toString() {
-//        try {
-//            return "(" + score() + ") " + getTitle();
-//        } catch (Exception exception) {
-//            exception.printStackTrace();
-//        }
-//
-//        return super.toString();
-//    }
+    // toString used for debugging
+    @Override
+    public String toString() {
+    	try {
+    		return "(" + score() + ") " + getTitle();
+    	} catch (Exception exception) {
+    		exception.printStackTrace();
+    	}
+
+    	return super.toString();
+    }
 }

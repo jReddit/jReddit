@@ -1,11 +1,14 @@
 package com.reddit.test;
 
 import com.reddit.utils.TestUtils;
+
 import im.goel.jreddit.submissions.Submission;
 import im.goel.jreddit.submissions.Submissions;
 import im.goel.jreddit.submissions.Submissions.Page;
 import im.goel.jreddit.submissions.Submissions.Popularity;
 import im.goel.jreddit.user.User;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -26,11 +29,12 @@ public class SubmissionTest {
 	public void test() {
 
 		try {
-			User user = new User("test_subject_666", "beef");
+			User user = new User("testdummy0", "ugk4life"); //if you're reading this - use your own test account
 			user.connect();
 
 			List<Submission> frontPage = Submissions.getSubmissions("all", Popularity.HOT, Page.FRONTPAGE, user);
 			Submission first = frontPage.get(0);
+			System.out.println(first.toString());
 
             assertNotSame(
                     "The submission's ID/full name can't be empty, how will reddit identify the submission?",
@@ -43,7 +47,7 @@ public class SubmissionTest {
 		}
 	}
 
-    @Test
+    @Ignore
     public void testMarkUnmarkNSFW() {
         User user = TestUtils.createAndConnectUser();
 
