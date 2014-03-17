@@ -1,9 +1,9 @@
-import im.goel.jreddit.submissions.Submission;
-import im.goel.jreddit.submissions.Submissions;
-import im.goel.jreddit.submissions.Submissions.Page;
-import im.goel.jreddit.submissions.Submissions.Popularity;
-import im.goel.jreddit.user.User;
-import im.goel.jreddit.utils.Utils;
+import com.github.jreddit.submissions.Submission;
+import com.github.jreddit.submissions.Submissions;
+import com.github.jreddit.submissions.Submissions.Page;
+import com.github.jreddit.submissions.Submissions.Popularity;
+import com.github.jreddit.user.User;
+import com.github.jreddit.utils.Utils;
 
 
 
