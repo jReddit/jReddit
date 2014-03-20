@@ -1,7 +1,7 @@
 jReddit
 =====
 
-[![Build Status](https://travis-ci.org/karan/jReddit.png?branch=karan)](https://travis-ci.org/karan/jReddit)
+[![Build Status](https://travis-ci.org/karan/jReddit.png?branch=master)](https://travis-ci.org/karan/jReddit)
 
 ### What is jReddit?
 jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour. Taken over for further development and maintainence by [Karan Goel](http://www.goel.im).

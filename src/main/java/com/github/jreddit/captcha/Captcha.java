@@ -1,6 +1,7 @@
 package com.github.jreddit.captcha;
 
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,10 +14,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * This class corresponds to the reddit's captcha class.
+ * This class corresponds to the Reddit's captcha class.
  *
  * @author Karan Goel
  * @author Raul Rene Lepsa
+ * @author Andrei Sfat
  */
 public class Captcha {
 
@@ -34,12 +36,12 @@ public class Captcha {
 
         try {
             // Get the captcha iden
-            JSONObject obj = Utils.post("", "/api/new_captcha", user.getCookie());
+            JSONObject obj = Utils.post("", ApiEndpointUtils.CAPTCHA_NEW, user.getCookie());
             iden = (String) ((JSONArray) ((JSONArray) ((JSONArray) obj.get("jquery")).get(11)).get(3)).get(0);
             System.out.println("Received CAPTCHA iden: " + iden);
 
             // Get the corresponding captcha image
-            URL url = new URL(Utils.REDDIT_BASE_URL + "/captcha/" + iden + ".png");
+            URL url = new URL(ApiEndpointUtils.REDDIT_BASE_URL + "/captcha/" + iden + ".png");
             RenderedImage captcha = ImageIO.read(url);
 
             // Write the file to disk
@@ -64,7 +66,7 @@ public class Captcha {
         boolean needsCaptcha = false;
 
         try {
-            needsCaptcha = (Boolean) Utils.get("/api/needs_captcha.json", user.getCookie());
+            needsCaptcha = (Boolean) Utils.get(ApiEndpointUtils.CAPTCHA_NEEDS, user.getCookie());
         } catch (Exception e) {
             System.err.println("Error verifying if the user needs a captcha");
         }

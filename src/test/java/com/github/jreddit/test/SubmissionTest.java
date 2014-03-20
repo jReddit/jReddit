@@ -6,12 +6,13 @@ import com.github.jreddit.submissions.Submissions;
 import com.github.jreddit.submissions.Submissions.Page;
 import com.github.jreddit.submissions.Submissions.Popularity;
 import com.github.jreddit.user.User;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 
@@ -23,8 +24,17 @@ import static org.junit.Assert.assertNotSame;
  */
 public class SubmissionTest {
 
-    private static User user = TestUtils.createAndConnectUser();
+    private static User user;
 
+    @BeforeClass
+    public static void initUser() {
+    	try {
+    		user = TestUtils.createAndConnectUser();
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
 	@Test
 	public void test() {
 		try {

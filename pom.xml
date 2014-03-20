@@ -69,6 +69,9 @@
         <junit.version>4.8.1</junit.version>
         <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
+        <nexus.staging.maven.plugin.version>1.6</nexus.staging.maven.plugin.version>
+        <maven.release.plugin.version>2.1</maven.release.plugin.version>
+        <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
     </properties>
 
     <profiles>
@@ -85,7 +88,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>${maven.gpg.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -107,7 +110,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.1</version>
+                    <version>${maven.release.plugin.version}</version>
                     <configuration>
                         <mavenExecutorId>forked-path</mavenExecutorId>
                         <useReleaseProfile>false</useReleaseProfile>
@@ -149,6 +152,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus.staging.maven.plugin.version}</version>
                 <extensions>true</extensions>
                 <inherited>false</inherited>
                 <configuration>
