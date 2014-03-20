@@ -3,6 +3,7 @@ package com.github.jreddit.submissions;
 import com.github.jreddit.InvalidCookieException;
 import com.github.jreddit.Thing;
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -12,9 +13,10 @@ import java.io.IOException;
 
 
 /**
- * This class represents a vote on a link submission on reddit.
+ * This class represents a vote on a link submission on Reddit.
  *
- * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
+ * @author Omer Elnour
+ * @author Andrei Sfat
  */
 public class Submission extends Thing {
 
@@ -140,7 +142,7 @@ public class Submission extends Thing {
      */
     public void comment(String text) throws IOException, ParseException {
         JSONObject object = Utils.post("thing_id=" + fullName + "&text=" + text
-                + "&uh=" + user.getModhash(), "/api/comment", user.getCookie());
+                + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie());
 
         if (object.toJSONString().contains(".error.USER_REQUIRED"))
             throw new InvalidCookieException("Cookie not present");
@@ -266,13 +268,13 @@ public class Submission extends Thing {
     public void markNSFW() throws IOException, ParseException {
         Utils.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
-                "/api/marknsfw", user.getCookie());
+                ApiEndpointUtils.SUBMISSION_MARK_AS_NSFW, user.getCookie());
     }
 
     public void unmarkNSFW() throws IOException, ParseException {
         Utils.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
-                "/api/unmarknsfw", user.getCookie());
+                ApiEndpointUtils.SUBMISSION_UNMARK_AS_NSFW, user.getCookie());
     }
 
     /**
@@ -351,7 +353,7 @@ public class Submission extends Thing {
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
         return Utils.post(
                 "id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
-                "/api/vote", user.getCookie());
+                ApiEndpointUtils.SUBMISSION_VOTE, user.getCookie());
     }
 
     private JSONObject info(String urlPath) throws IOException, ParseException {

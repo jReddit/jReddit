@@ -1,6 +1,7 @@
 package com.github.jreddit.subreddit;
 
 
+import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,6 +14,7 @@ import java.util.List;
  *
  * @author Benjamin Jakobus
  * @author Raul Rene Lepsa
+ * @author Andrei Sfat
  */
 public class Subreddits {
 
@@ -23,7 +25,7 @@ public class Subreddits {
         List<Subreddit> subreddits = null;
 
         try {
-            JSONObject object = (JSONObject) Utils.get("/subreddits.json", null);
+            JSONObject object = (JSONObject) Utils.get(ApiEndpointUtils.SUBREDDITS, null);
             JSONObject data = (JSONObject) object.get("data");
 
             subreddits = constructList((JSONArray) data.get("children"));
@@ -46,7 +48,8 @@ public class Subreddits {
         List<Subreddit> subreddits = null;
 
         try {
-            JSONObject object = (JSONObject) Utils.get("/subreddits/" + subredditType.getValue() + ".json", null);
+            JSONObject object =
+                    (JSONObject) Utils.get(String.format(ApiEndpointUtils.SUBREDDITS_GET, subredditType.getValue()), null);
             JSONObject data = (JSONObject) object.get("data");
 
             subreddits = constructList((JSONArray) data.get("children"));
