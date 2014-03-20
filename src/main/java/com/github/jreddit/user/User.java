@@ -5,6 +5,7 @@ import com.github.jreddit.Sort;
 import com.github.jreddit.Thing;
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.subreddit.Subreddit;
+import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,9 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents a user connected to reddit.
+ * This class represents a user connected to Reddit.
  *
- * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
+ * @author Omer Elnour
+ * @author Karan Goel
+ * @author Benjamin Jakobus
+ * @author Evin Ugur
+ * @author Andrei Sfat
  */
 public class User extends Thing {
 
@@ -238,7 +243,7 @@ public class User extends Thing {
             throws IOException, ParseException {
         ArrayList<String> values = new ArrayList<String>();
         JSONObject jsonObject = Utils.post("api_type=json&user=" + username
-                + "&passwd=" + password, "/api/login/" + username, getCookie());
+                + "&passwd=" + password, String.format(ApiEndpointUtils.USER_LOGIN, username), getCookie());
         JSONObject valuePair = (JSONObject) ((JSONObject) jsonObject.get("json")).get("data");
 
         values.add(valuePair.get("modhash").toString());
@@ -260,7 +265,7 @@ public class User extends Thing {
             Runtime.getRuntime().exit(-1);
         }
 
-        JSONObject jsonObject = (JSONObject) Utils.get("/api/me.json", getCookie());
+        JSONObject jsonObject = (JSONObject) Utils.get(ApiEndpointUtils.USER_INFO, getCookie());
         return (JSONObject) jsonObject.get("data");
     }
 
@@ -279,7 +284,7 @@ public class User extends Thing {
         return Utils.post("title=" + title + "&" + (selfPost ? "text" : "url")
                 + "=" + linkOrText + "&sr=" + subreddit + "&kind="
                 + (selfPost ? "self" : "link") + "&uh=" + getModhash(),
-                "/api/submit", getCookie());
+                ApiEndpointUtils.USER_SUBMIT, getCookie());
     }
 
     /**
@@ -305,7 +310,7 @@ public class User extends Thing {
 
         try {
             // Send GET request to get the account overview
-            JSONObject object = (JSONObject) Utils.get("user/" + username + "/about.json", null);
+            JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null);
             JSONObject data = (JSONObject) object.get("data");
 
             // Init account info wrapper
@@ -341,17 +346,17 @@ public class User extends Thing {
         List<Comment> comments = new ArrayList<Comment>(500);
         try {
             // Send GET request to get the account overview
-            JSONObject object = (JSONObject) Utils.get(
-                    "/user/" + username + "/comments.json?" + commentSort.getValue(),
-                    null);
+            JSONObject object =
+                    (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_COMMENTS,
+                            username, commentSort.getValue()), null);
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
             JSONObject obj;
             Comment c;
-            for (int i = 0; i < children.size(); i++) {
+            for (Object aChildren : children) {
                 // Get the object containing the comment
-                obj = (JSONObject) children.get(i);
+                obj = (JSONObject) aChildren;
                 obj = (JSONObject) obj.get("data");
 
                 // Create a new comment
@@ -382,15 +387,15 @@ public class User extends Thing {
         List<Submission> submissions = new ArrayList<Submission>(500);
         try {
             // Send GET request to get the account overview
-            JSONObject object = (JSONObject) Utils.get("/user/" + username + "/submitted.json", null);
+            JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS, username), null);
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
             JSONObject obj;
 
-            for (int i = 0; i < children.size(); i++) {
+            for (Object aChildren : children) {
                 // Get the object containing the comment
-                obj = (JSONObject) children.get(i);
+                obj = (JSONObject) aChildren;
                 obj = (JSONObject) obj.get("data");
                 //add a new Submission to the list
                 submissions.add(new Submission(obj));
@@ -407,7 +412,6 @@ public class User extends Thing {
      * Returns a list of submissions that this user liked.
      *
      * @return List of liked links with default sorting.
-     * @author Benjamin Jakobus
      */
     public List<Submission> getLikedSubmissions() {
         return getLikedSubmissions(Sort.HOT);
@@ -418,7 +422,6 @@ public class User extends Thing {
      *
      * @param sort Which sort you'd like to apply
      * @return List of liked submissions with a Reddit sort
-     * @author Evin Ugur
      */
     public List<Submission> getLikedSubmissions(Sort sort) {
         return getUserSubmissions("liked", sort);
@@ -428,7 +431,6 @@ public class User extends Thing {
      * Returns a list of submissions that this user chose to hide. with the default sorting
      *
      * @return List of disliked links.
-     * @author Benjamin Jakobus
      */
     public List<Submission> getHiddenSubmissions() {
         return getHiddenSubmissions(Sort.HOT);
@@ -439,9 +441,7 @@ public class User extends Thing {
      *
      * @param sort Which sort you'd like to apply
      * @return List of hidden Submissions with a Reddit sort
-     * @author Evin Ugur
      */
-
     public List<Submission> getHiddenSubmissions(Sort sort) {
         return getUserSubmissions("hidden", sort);
     }
@@ -450,9 +450,7 @@ public class User extends Thing {
      * Returns a list of Submissions that the user saved with the default sort
      *
      * @return List of saved links
-     * @author Evin Ugur
      */
-
     public List<Submission> getSavedSubmissions() {
         return getSavedSubmissions(Sort.HOT);
     }
@@ -462,9 +460,7 @@ public class User extends Thing {
      *
      * @param sort Which sort you'd like to apply
      * @return List of saved links with a Reddit sort
-     * @author Evin Ugur
      */
-
     public List<Submission> getSavedSubmissions(Sort sort) {
         return getUserSubmissions("saved", sort);
     }
@@ -491,7 +487,6 @@ public class User extends Thing {
      * Returns a list of submissions that this user disliked with the default Reddit sort
      *
      * @return List of disliked links.
-     * @author Benjamin Jakobus
      */
     public List<Submission> getDislikedSubmissions() {
         return getDislikedSubmissions(Sort.HOT);
@@ -503,7 +498,6 @@ public class User extends Thing {
      * @param sort Which sort you'd like to apply
      * @return List of disliked sorts with a specified sort
      */
-
     public List<Submission> getDislikedSubmissions(Sort sort) {
         return getUserSubmissions("disliked", sort);
     }
@@ -518,7 +512,6 @@ public class User extends Thing {
      * @param where place of Submission - see http://www.reddit.com/dev/api#GET_user_{username}_{where}
      * @return Submissions from the specified location, null if the location is invalid
      */
-
     private List<Submission> getUserSubmissions(String where, Sort sort) {
         //valid arguments for where the Submission can come from
         final String[] LOCATIONS = {
@@ -527,9 +520,11 @@ public class User extends Thing {
         };
         //check to see if we have a valid location
         boolean valid = false;
-        for (int i = 0; i < LOCATIONS.length; i++) {
-            valid = where.equals(LOCATIONS[i]);
-            if (valid) break;
+        for (String LOCATION : LOCATIONS) {
+            valid = where.equals(LOCATION);
+            if (valid) {
+                break;
+            }
 
         }
         if (!valid) {
@@ -540,13 +535,15 @@ public class User extends Thing {
         //if we got this far, the location is valid
         List<Submission> submissions = new ArrayList<Submission>();
         try {
-            JSONObject object = (JSONObject) Utils.get("/user/" + username + "/" + where + ".json?" + sort.getValue(), cookie);
+            JSONObject object =
+                    (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS_INTERACTION,
+                            username, where, sort.getValue()), cookie);
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
             JSONObject obj;
-            for (int i = 0; i < children.size(); i++) {
-                obj = (JSONObject) children.get(i);
+            for (Object aChildren : children) {
+                obj = (JSONObject) aChildren;
                 obj = (JSONObject) obj.get("data");
                 submissions.add(new Submission(obj));
             }
@@ -558,18 +555,17 @@ public class User extends Thing {
 
     /**
      * Returns a list of Subreddits to which the user is subscribed.
-     *
-     * @author Karan Goel
+     * @return List of Subreddits
      */
     public List<Subreddit> getSubscribed() {
         List<Subreddit> subscibed = new ArrayList<Subreddit>(1000);
-        JSONObject object = (JSONObject) Utils.get("/subreddits/mine/subscriber.json", cookie);
+        JSONObject object = (JSONObject) Utils.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, cookie);
 
         JSONObject rawData = (JSONObject) object.get("data");
         JSONArray subreddits = (JSONArray) rawData.get("children");
 
-        for (int i = 0; i < subreddits.size(); i++) {
-            JSONObject obj = (JSONObject) subreddits.get(i);
+        for (Object subreddit : subreddits) {
+            JSONObject obj = (JSONObject) subreddit;
             obj = (JSONObject) obj.get("data");
             Subreddit sub = new Subreddit(obj.get("display_name").toString(),
                     obj.get("display_name").toString(), obj.get("title").toString(),
@@ -580,7 +576,6 @@ public class User extends Thing {
                     obj.get("id").toString(), obj.get("description").toString());
             subscibed.add(sub);
         }
-
 
         return subscibed;
     }

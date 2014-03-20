@@ -6,7 +6,6 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -16,12 +15,11 @@ import java.util.Scanner;
  *
  * @author Omer Elnour
  * @author Raul Rene Lepsa
+ * @author Andrei Sfat
  */
 public class Utils {
 
-    private static String userAgent = "Omer's Reddit API Java Wrapper";
-
-    public static final String REDDIT_BASE_URL = "http://www.reddit.com";
+    private static String DEFAULT_USER_AGENT = "Omer's Reddit API Java Wrapper";
 
     /**
      * Function that makes a GET request and returns a JSON object
@@ -35,7 +33,7 @@ public class Utils {
         Object object = null;
 
         try {
-            URL url = new URL(REDDIT_BASE_URL + urlPath);
+            URL url = new URL(ApiEndpointUtils.REDDIT_BASE_URL + urlPath);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setUseCaches(false);
             connection.setRequestMethod("GET");
@@ -43,7 +41,7 @@ public class Utils {
             if (cookie != null) {
                 connection.setRequestProperty("cookie", "reddit_session=" + cookie);
             }
-            connection.setRequestProperty("User-Agent", userAgent);
+            connection.setRequestProperty("User-Agent", DEFAULT_USER_AGENT);
 
 
             // Debugging stuff
@@ -90,7 +88,7 @@ public class Utils {
         Object response = null;
 
         try {
-            URL url = new URL(REDDIT_BASE_URL + urlPath);
+            URL url = new URL(ApiEndpointUtils.REDDIT_BASE_URL + urlPath);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setUseCaches(false);
@@ -98,7 +96,7 @@ public class Utils {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             connection.setRequestProperty("Content-Length", String.valueOf(apiParams.length()));
             connection.setRequestProperty("cookie", "reddit_session=" + cookie);
-            connection.setRequestProperty("User-Agent", userAgent);
+            connection.setRequestProperty("User-Agent", DEFAULT_USER_AGENT);
 
             DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
             outputStream.writeBytes(apiParams);
@@ -124,7 +122,7 @@ public class Utils {
      * @param agent User agent string.
      */
     public static void setUserAgent(String agent) {
-        userAgent = agent;
+        DEFAULT_USER_AGENT = agent;
     }
 
 
