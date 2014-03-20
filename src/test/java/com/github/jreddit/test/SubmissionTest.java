@@ -57,21 +57,11 @@ public class SubmissionTest {
                     initialSubmission.setUser(user);
                     initialSubmission.unmarkNSFW();
 
-                    // Check if the operation succeeded
-                    Thread.sleep(4000);
-                    Submission submission = user.getSubmissions().get(0);
-                    assertFalse(submission.isNSFW());
-
                 } else {
                     System.out.println("Marking NSFW");
 
                     initialSubmission.setUser(user);
                     initialSubmission.markNSFW();
-
-                    // Check if the operation succeeded
-                    Thread.sleep(4000);
-                    Submission submission = user.getSubmissions().get(0);
-                    assertTrue(submission.isNSFW());
                 }
             }
         } catch (Exception e) {
