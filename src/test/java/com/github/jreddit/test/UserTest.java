@@ -3,10 +3,11 @@ package com.github.jreddit.test;
 import static org.junit.Assert.*;
 
 import com.github.jreddit.utils.TestUtils;
+import com.github.jreddit.message.Messages;
 import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.user.User;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
@@ -22,9 +23,13 @@ public class UserTest {
 
     private static User user;
 
-    @Before
-    public void setUp() {
-        user = TestUtils.createAndConnectUser();
+    @BeforeClass
+    public static void initUser() {
+    	try {
+    		user = TestUtils.createAndConnectUser();
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     }
 
 	@Test
