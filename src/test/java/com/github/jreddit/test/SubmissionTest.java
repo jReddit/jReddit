@@ -7,14 +7,12 @@ import com.github.jreddit.submissions.Submissions.Page;
 import com.github.jreddit.submissions.Submissions.Popularity;
 import com.github.jreddit.user.User;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 
@@ -68,28 +66,12 @@ public class SubmissionTest {
 
                     initialSubmission.setUser(user);
                     initialSubmission.unmarkNSFW();
-                    List<Submission> submissionList = user.getSubmissions();
-
-                    for (Submission submission: submissionList) {
-                        if (submission.getURL().equals(initialSubmission.getURL())) {
-                            assertFalse(submission.isNSFW());
-                            break;
-                        }
-                    }
 
                 } else {
                     System.out.println("Marking NSFW");
 
                     initialSubmission.setUser(user);
                     initialSubmission.markNSFW();
-
-                    List<Submission> submissionList = user.getSubmissions();
-                    for (Submission submission: submissionList) {
-                        if (submission.getURL().equals(initialSubmission.getURL())) {
-                            assertTrue(submission.isNSFW());
-                            break;
-                        }
-                    }
                 }
             }
         } catch (Exception e) {
