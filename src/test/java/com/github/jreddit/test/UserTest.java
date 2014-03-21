@@ -2,8 +2,8 @@ package com.github.jreddit.test;
 
 import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.user.User;
+import com.github.jreddit.user.UserInfo;
 import com.github.jreddit.utils.TestUtils;
-import org.json.simple.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -52,7 +52,7 @@ public class UserTest {
     @Test
     public void testGetUserInformation() {
         // Test with connected user
-        JSONObject info = user.getUserInformation();
+        UserInfo info = user.getUserInformation();
         assertNotNull(info);
 
         // Test with non-existent user so that we check it fails

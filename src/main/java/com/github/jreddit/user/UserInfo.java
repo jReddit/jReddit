@@ -1,204 +1,185 @@
 package com.github.jreddit.user;
 
+import org.json.simple.JSONObject;
+
 /**
- * Encapsulates user information (which consists of comment karma, mod mail identifier,
- * created timestamp, gold member identifier, mod identifier, link karma and mail identifier).
+ * Encapsulates user information (regarding karma, emails, identifiers, statuses, created time and current modhash)
  *
- * @author Benjamin Jakobus
+ * @author Raul Rene Lepsa
  */
 public class UserInfo {
 
-    // Comment karma
-    private int commentKarma;
+    // User identifier
+    private String id;
 
-    // Whether or not the user has moderator email
-    private boolean hasModMail = false;
+    // The user's name
+    private String name;
 
-    // Whether the user is a gold member
-    private boolean isGold = false;
+    // Modhash token
+    private String modhash;
+
+    // Karma points for all the comments
+    private long commentKarma;
+
+    // Karma points for all the submitted links
+    private long linkKarma;
 
     // Whether the user is a moderator
-    private boolean isMod = false;
+    private boolean isMod;
 
-    // Link karma
-    private int linkKarma;
-
-    // UTC timestamp of creation date
-    private float createdUTC;
+    // Whether or not the user has moderator email
+    private boolean hasModMail;
 
     // Whether the account is associated with an email address
-    private boolean hasMail = false;
+    private boolean hasMail;
 
-    /**
-     * Constructor.
-     *
-     * @param commentKarma Comment karma.
-     * @param linkKarma    Link karma.
-     * @param createdUTC   Created timestamp (UTC).
-     * @param isGold       True if the user has gold membership; false if not.
-     * @param isMod        True if the user is a moderator; false if not.
-     * @param hasMail      True if the account is associated with an email address;
-     *                     false if not.
-     * @param hasModMail   True if the account has a moderator address; false if not.
-     * @author Benjamin Jakobus
-     */
-    public UserInfo(int commentKarma, int linkKarma, float createdUTC, boolean isGold,
-                    boolean isMod, boolean hasMail, boolean hasModMail) {
-        this.commentKarma = commentKarma;
-        this.linkKarma = linkKarma;
-        this.createdUTC = createdUTC;
-        this.isGold = isGold;
-        this.isMod = isMod;
-        this.hasMail = hasMail;
-        this.hasModMail = hasModMail;
+    // Indicates whether the user has verified the email address
+    private boolean hasVerifiedEmail;
+
+    // Whether the user is a gold member
+    private boolean isGold;
+
+    // Timestamp of the creation date
+    private double created;
+
+    // UTC timestamp of creation date
+    private double createdUTC;
+
+    // Indicates whether this user is friend with the current one
+    private boolean isFriend;
+
+    private boolean over18;
+
+    public UserInfo() {
+
     }
 
-    /**
-     * Sets the comment karma.
-     *
-     * @param commentKarma Comment karma.
-     * @author Benjamin Jakobus
-     */
-    public void setCommentKarma(int commentKarma) {
-        this.commentKarma = commentKarma;
+    public UserInfo(JSONObject info) {
+        setHasMail((Boolean) info.get("has_mail"));
+        setHasModMail((Boolean) info.get("has_mod_mail"));
+        setCommentKarma((Long) info.get("comment_karma"));
+        setCreatedUTC((Double) info.get("created_utc"));
+        setGold((Boolean) info.get("is_gold"));
+        setLinkKarma((Long) info.get("link_karma"));
+        setMod((Boolean) info.get("is_mod"));
+        setFriend((Boolean) info.get("is_friend"));
+        setModhash((String) info.get("modhash"));
+        setHasVerifiedEmail((Boolean) info.get("has_verified_email"));
+        setId((String) info.get("id"));
+        setOver18((Boolean) info.get("over_18"));
+        setCreated((Double) info.get("created"));
+        setName((String) info.get("name"));
     }
 
-    /**
-     * Sets the UTC timestamp of when the account was created.
-     *
-     * @param createdUTC UTC timestamp of when the account was created.
-     * @author Benjamin Jakobus
-     */
-    public void setCreatedUTC(float createdUTC) {
-        this.createdUTC = createdUTC;
+    public String getId() {
+        return id;
     }
 
-    /**
-     * Sets the flag identifying whether or not the account is associated
-     * with an email address.
-     *
-     * @param hasMail True if the account is associated with an email address;
-     *                false if not.
-     * @author Benjamin Jakobus
-     */
-    public void setHasMail(boolean hasMail) {
-        this.hasMail = hasMail;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    /**
-     * Sets the flag identifying whether or not the account is associated
-     * with a moderator email address.
-     *
-     * @param hasModMail True if the account is associated with a moderator email address;
-     *                   false if not.
-     * @author Benjamin Jakobus
-     */
-    public void setHasModMail(boolean hasModMail) {
-        this.hasModMail = hasModMail;
+    public String getName() {
+        return name;
     }
 
-    /**
-     * Sets the flag identifying whether or not the account has Gold membership.
-     *
-     * @param isGold True if the account has Gold membership;
-     *               false if not.
-     * @author Benjamin Jakobus
-     */
-    public void setIsGold(boolean isGold) {
-        this.isGold = isGold;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    /**
-     * Sets whether or not this user is a moderator.
-     *
-     * @param isMod True if the user is a moderator; false if not.
-     * @author Benjamin Jakobus
-     */
-    public void setIsMod(boolean isMod) {
-        this.isMod = isMod;
+    public String getModhash() {
+        return modhash;
     }
 
-    /**
-     * Sets the link karma.
-     *
-     * @param linkKarma The link karma.
-     * @author Benjamin Jakobus
-     */
-    public void setLinkKarma(int linkKarma) {
-        this.linkKarma = linkKarma;
+    public void setModhash(String modhash) {
+        this.modhash = modhash;
     }
 
-    /**
-     * Returns the comment karma.
-     *
-     * @return Comment karma.
-     * @author Benjamin Jakobus
-     */
-    public int getCommentKarma() {
+    public long getCommentKarma() {
         return commentKarma;
     }
 
-    /**
-     * Returns the UTC timestamp of when the account was created.
-     *
-     * @return UTC timestamp of when the account was created.
-     * @author Benjamin Jakobus
-     */
-    public float getCreatedUTC() {
-        return createdUTC;
+    public void setCommentKarma(long commentKarma) {
+        this.commentKarma = commentKarma;
     }
 
-    /**
-     * Returs the link karma.
-     *
-     * @return Link karma.
-     * @author Benjamin Jakobus
-     */
-    public int getLinkKarma() {
+    public long getLinkKarma() {
         return linkKarma;
     }
 
-    /**
-     * Returns true if the account is associated with an email address; false
-     * if not.
-     *
-     * @return True if the account is associated with an email address; false
-     * if not.
-     * @author Benjamin Jakobus
-     */
-    public boolean hasMail() {
-        return hasMail;
+    public void setLinkKarma(long linkKarma) {
+        this.linkKarma = linkKarma;
     }
 
-    /**
-     * Returns true if the account is a moderator's account; false if not.
-     *
-     * @return True if the account is a moderator's account; false if not.
-     * @author Benjamin Jakobus
-     */
     public boolean isMod() {
         return isMod;
     }
 
-    /**
-     * Returns true if the account is associated with a moderator email address;
-     * false if not.
-     *
-     * @return True if the account is associated with a moderator email address;
-     * false if not.
-     * @author Benjamin Jakobus
-     */
-    public boolean hasModMail() {
+    public void setMod(boolean isMod) {
+        this.isMod = isMod;
+    }
+
+    public boolean isHasModMail() {
         return hasModMail;
     }
 
-    /**
-     * Returns true if the account has Gold membership; false if not.
-     *
-     * @return True if the account has Gold membership; false if not.
-     * @author Benjamin Jakobus
-     */
+    public void setHasModMail(boolean hasModMail) {
+        this.hasModMail = hasModMail;
+    }
+
+    public boolean isHasMail() {
+        return hasMail;
+    }
+
+    public void setHasMail(boolean hasMail) {
+        this.hasMail = hasMail;
+    }
+
+    public boolean isHasVerifiedEmail() {
+        return hasVerifiedEmail;
+    }
+
+    public void setHasVerifiedEmail(boolean hasVerifiedEmail) {
+        this.hasVerifiedEmail = hasVerifiedEmail;
+    }
+
     public boolean isGold() {
         return isGold;
+    }
+
+    public void setGold(boolean isGold) {
+        this.isGold = isGold;
+    }
+
+    public double getCreated() {
+        return created;
+    }
+
+    public void setCreated(double created) {
+        this.created = created;
+    }
+
+    public double getCreatedUTC() {
+        return createdUTC;
+    }
+
+    public void setCreatedUTC(double createdUTC) {
+        this.createdUTC = createdUTC;
+    }
+
+    public boolean isFriend() {
+        return isFriend;
+    }
+
+    public void setFriend(boolean isFriend) {
+        this.isFriend = isFriend;
+    }
+
+    public boolean isOver18() {
+        return over18;
+    }
+
+    public void setOver18(boolean over18) {
+        this.over18 = over18;
     }
 }

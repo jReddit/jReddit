@@ -1,13 +1,10 @@
 package com.github.jreddit.message;
 
-import com.github.jreddit.message.Message;
-
 public class Comment extends Message {
 
 	/**
 	 * A comment in list of unread messages. This is different from
 	 * com.github.jreddit.user.Comment
-	 * @author Karan Goel
 	 */
 
 	private String link_title;
