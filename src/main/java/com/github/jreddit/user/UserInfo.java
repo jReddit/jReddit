@@ -28,10 +28,10 @@ public class UserInfo {
     private boolean isMod;
 
     // Whether or not the user has moderator email
-    private boolean hasModMail;
+    private Boolean hasModMail;
 
     // Whether the account is associated with an email address
-    private boolean hasMail;
+    private Boolean hasMail;
 
     // Indicates whether the user has verified the email address
     private boolean hasVerifiedEmail;
@@ -48,7 +48,8 @@ public class UserInfo {
     // Indicates whether this user is friend with the current one
     private boolean isFriend;
 
-    private boolean over18;
+    // Indicates whether the user is over 18
+    private Boolean over18;
 
     public UserInfo() {
 
@@ -119,19 +120,19 @@ public class UserInfo {
         this.isMod = isMod;
     }
 
-    public boolean isHasModMail() {
+    public Boolean getHasModMail() {
         return hasModMail;
     }
 
-    public void setHasModMail(boolean hasModMail) {
+    public void setHasModMail(Boolean hasModMail) {
         this.hasModMail = hasModMail;
     }
 
-    public boolean isHasMail() {
+    public Boolean getHasMail() {
         return hasMail;
     }
 
-    public void setHasMail(boolean hasMail) {
+    public void setHasMail(Boolean hasMail) {
         this.hasMail = hasMail;
     }
 
@@ -175,11 +176,11 @@ public class UserInfo {
         this.isFriend = isFriend;
     }
 
-    public boolean isOver18() {
+    public Boolean getOver18() {
         return over18;
     }
 
-    public void setOver18(boolean over18) {
+    public void setOver18(Boolean over18) {
         this.over18 = over18;
     }
 }

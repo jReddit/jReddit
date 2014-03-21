@@ -244,7 +244,7 @@ Example usage:
 #### GET /user/username/about.json
 Example usage:
 
-    UserInfo ui = User.about("some_username");
+    UserInfo userInfo = User.about("some_username");
 
 #### GET /user/username/comments
 Example usage:

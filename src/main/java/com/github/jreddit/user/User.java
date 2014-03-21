@@ -39,6 +39,14 @@ public class User extends Thing {
         this.password = password;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getModhash() {
         return modhash;
     }
@@ -162,21 +170,13 @@ public class User extends Thing {
      * @return UserInfo object consisting of information about the user identified by "username".
      */
     public static UserInfo about(String username) {
-        UserInfo info = null;
 
-        try {
-            // Send GET request to get the account overview
-            JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null);
-            JSONObject data = (JSONObject) object.get("data");
+        // Send GET request to get the account overview
+        JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null);
+        JSONObject data = (JSONObject) object.get("data");
 
-            // Init account info wrapper
-            info = new UserInfo(data);
-
-        } catch (Exception e) {
-            System.err.println("Error retrieving user information for " + username);
-        }
-
-        return info;
+        // Init account info wrapper
+        return data != null ? new UserInfo(data) : null;
     }
 
     /**

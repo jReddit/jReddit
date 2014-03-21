@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -59,5 +60,17 @@ public class UserTest {
         User newUser = new User("username", "password");
         info = newUser.getUserInformation();
         assertNull(info);
+    }
+
+    @Test
+    public void testAboutUser() {
+        // Get information about an existing user
+        UserInfo userInfo = User.about(user.getUsername());
+        assertNotNull(userInfo);
+        assertEquals(userInfo.getName(), user.getUsername());
+
+        // Attempt with a non-existent user
+        userInfo = User.about("1");
+        assertNull(userInfo);
     }
 }
