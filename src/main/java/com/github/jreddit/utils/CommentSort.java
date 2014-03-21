@@ -1,4 +1,4 @@
-package com.github.jreddit;
+package com.github.jreddit.utils;
 
 /**
  * Enum to represent comment sorts on Reddit. You see these on a page that lists comments.

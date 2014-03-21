@@ -1,7 +1,7 @@
 package com.github.jreddit.user;
 
-import com.github.jreddit.CommentSort;
-import com.github.jreddit.Sort;
+import com.github.jreddit.utils.CommentSort;
+import com.github.jreddit.utils.Sort;
 import com.github.jreddit.Thing;
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.subreddit.Subreddit;
