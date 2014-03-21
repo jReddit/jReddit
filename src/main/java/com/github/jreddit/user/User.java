@@ -109,7 +109,7 @@ public class User extends Thing {
      * @throws IOException    If connection fails
      */
     public boolean hasMail() throws IOException, ParseException {
-        return Boolean.parseBoolean(info().get("has_mail").toString());
+        return Boolean.parseBoolean(getUserInformation().get("has_mail").toString());
     }
 
     /**
@@ -121,7 +121,7 @@ public class User extends Thing {
      * @throws ParseException        If JSON parsing fails
      */
     public double created() throws IOException, ParseException {
-        return Double.parseDouble(info().get("created").toString());
+        return Double.parseDouble(getUserInformation().get("created").toString());
     }
 
     /**
@@ -135,7 +135,7 @@ public class User extends Thing {
      * @throws ParseException        If JSON parsing fails
      */
     public double createdUTC() throws IOException, ParseException {
-        return Double.parseDouble(info().get("created_utc").toString());
+        return Double.parseDouble(getUserInformation().get("created_utc").toString());
     }
 
     /**
@@ -149,7 +149,7 @@ public class User extends Thing {
      * @throws ParseException        If JSON parsing fails
      */
     public int linkKarma() throws IOException, ParseException {
-        return Integer.parseInt(Utils.toString(info().get("link_karma")));
+        return Integer.parseInt(Utils.toString(getUserInformation().get("link_karma")));
     }
 
     /**
@@ -164,7 +164,7 @@ public class User extends Thing {
      * @throws ParseException        If JSON parsing fails
      */
     public int commentKarma() throws IOException, ParseException {
-        return Integer.parseInt(Utils.toString(info().get("comment_karma")));
+        return Integer.parseInt(Utils.toString(getUserInformation().get("comment_karma")));
     }
 
     /**
@@ -175,7 +175,7 @@ public class User extends Thing {
      * @throws IOException    If connection fails
      */
     public boolean isGold() throws IOException, ParseException {
-        return Boolean.parseBoolean(info().get("is_gold").toString());
+        return Boolean.parseBoolean(getUserInformation().get("is_gold").toString());
     }
 
     /**
@@ -187,7 +187,7 @@ public class User extends Thing {
      * @throws IOException    If connection fails
      */
     public boolean isMod() throws IOException, ParseException {
-        return Boolean.parseBoolean(info().get("is_mod").toString());
+        return Boolean.parseBoolean(getUserInformation().get("is_mod").toString());
     }
 
     /**
@@ -199,7 +199,7 @@ public class User extends Thing {
      * @throws ParseException If JSON parsing fails
      */
     public String id() throws IOException, ParseException {
-        return info().get("id").toString();
+        return getUserInformation().get("id").toString();
     }
 
     /**
@@ -210,7 +210,7 @@ public class User extends Thing {
      * @throws IOException    If connection fails
      */
     public boolean hasModMail() throws IOException, ParseException {
-        return Boolean.parseBoolean(info().get("has_mod_mail").toString());
+        return Boolean.parseBoolean(getUserInformation().get("has_mod_mail").toString());
     }
 
     public String getUsername() {
@@ -253,16 +253,16 @@ public class User extends Thing {
     }
 
     /**
-     * This function returns a "response" (me.json) JSON data containing info
-     * about the user. <br />
+     * Get info about the currently authenticated user.
+     * Response includes a modhash, karma, and new mail status.
+     * Corresponds to the API "/me.json" method
      *
-     * @return JSON data containing info about the user
+     * @return JSON data containing info about the user, or null if the retrieval fails
      */
-    private JSONObject info() throws IOException, ParseException {
+    public JSONObject getUserInformation() {
         if (cookie == null || modhash == null) {
-            System.err.printf("Please invoke the \"connect\" function before attempting to " +
-                    "call any other API functions.");
-            Runtime.getRuntime().exit(-1);
+            System.err.printf("Please invoke the connect method in order to login the user");
+            return null;
         }
 
         JSONObject jsonObject = (JSONObject) Utils.get(ApiEndpointUtils.USER_INFO, getCookie());
