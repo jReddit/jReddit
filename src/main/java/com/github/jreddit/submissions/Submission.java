@@ -1,6 +1,6 @@
 package com.github.jreddit.submissions;
 
-import com.github.jreddit.InvalidCookieException;
+import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.Thing;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;

@@ -1,4 +1,4 @@
-package com.github.jreddit;
+package com.github.jreddit.exception;
 
 import java.io.IOException;
 

@@ -11,11 +11,9 @@ Usage:
 #### GET /api/me.json
 Usage:
 
-    //Most of this data is accessible through getters in a connected user instance
-    //Example(where user is an initialized User instance):
-    Boolean has_mail = user.hasMail();
-    int lk = user.linkKarma();
-    int ck = user.commentKarma();
+    // Assuming user is a connected User instance.
+    // In case that the User is not connected, the method will return null.
+    user.getUserInformation();
 #### POST /api/submit
 Usage:
 
@@ -246,7 +244,7 @@ Example usage:
 #### GET /user/username/about.json
 Example usage:
 
-    UserInfo ui = User.about("some_username");
+    UserInfo userInfo = User.about("some_username");
 
 #### GET /user/username/comments
 Example usage:

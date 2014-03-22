@@ -1,7 +1,7 @@
 package com.github.jreddit.user;
 
-import com.github.jreddit.CommentSort;
-import com.github.jreddit.Sort;
+import com.github.jreddit.utils.CommentSort;
+import com.github.jreddit.utils.Sort;
 import com.github.jreddit.Thing;
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.subreddit.Subreddit;
@@ -20,6 +20,7 @@ import java.util.List;
  *
  * @author Omer Elnour
  * @author Karan Goel
+ * @author Raul Rene Lepsa
  * @author Benjamin Jakobus
  * @author Evin Ugur
  * @author Andrei Sfat
@@ -29,9 +30,29 @@ public class User extends Thing {
     private String username, password;
     private String modhash, cookie;
 
+    public User() {
+
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getModhash() {
+        return modhash;
+    }
+
+    public String getCookie() {
+        return cookie;
     }
 
     /**
@@ -102,134 +123,6 @@ public class User extends Thing {
     }
 
     /**
-     * This functions returns true if this user has unread mail.
-     *
-     * @return This user has mail or not
-     * @throws ParseException If JSON parsing fails
-     * @throws IOException    If connection fails
-     */
-    public boolean hasMail() throws IOException, ParseException {
-        return Boolean.parseBoolean(info().get("has_mail").toString());
-    }
-
-    /**
-     * This function returns the Unix time that the user's account was created.
-     *
-     * @return Unix time that the user's account was created
-     * @throws NumberFormatException If the "created" property isn't a double
-     * @throws IOException           If connection fails
-     * @throws ParseException        If JSON parsing fails
-     */
-    public double created() throws IOException, ParseException {
-        return Double.parseDouble(info().get("created").toString());
-    }
-
-    /**
-     * This function returns the Unix time (in UTC/Coordinated Universal Time)
-     * that the user's account was created.
-     *
-     * @return Unix time that the user's account was created in UTC
-     * @throws NumberFormatException If the "created_utc" property isn't a
-     *                               double
-     * @throws IOException           If connection fails
-     * @throws ParseException        If JSON parsing fails
-     */
-    public double createdUTC() throws IOException, ParseException {
-        return Double.parseDouble(info().get("created_utc").toString());
-    }
-
-    /**
-     * This function returns the amount of link karma this user has. <br />
-     * Returns int because I doubt anyone has more than 2,147,483,647 link karma.
-     *
-     * @return integer representing the Link Karma
-     * @throws NumberFormatException If the "link_karma" property isn't an
-     *                               integer
-     * @throws IOException           If connection fails
-     * @throws ParseException        If JSON parsing fails
-     */
-    public int linkKarma() throws IOException, ParseException {
-        return Integer.parseInt(Utils.toString(info().get("link_karma")));
-    }
-
-    /**
-     * This function returns the amount of comment karma this user has. <br
-     * /> Returns int because I doubt anyone has more than 2,147,483,647 comment
-     * karma.
-     *
-     * @return integer representing the Comment Karma
-     * @throws NumberFormatException If the "comment_karma" property isn't an
-     *                               integer
-     * @throws IOException           If connection fails
-     * @throws ParseException        If JSON parsing fails
-     */
-    public int commentKarma() throws IOException, ParseException {
-        return Integer.parseInt(Utils.toString(info().get("comment_karma")));
-    }
-
-    /**
-     * This functions returns true if this user has a gold account.
-     *
-     * @return This user has a gold account or not
-     * @throws ParseException If JSON parsing fails
-     * @throws IOException    If connection fails
-     */
-    public boolean isGold() throws IOException, ParseException {
-        return Boolean.parseBoolean(info().get("is_gold").toString());
-    }
-
-    /**
-     * This functions returns true if this user is a reddit moderator
-     * (apparently this means a moderator of any subreddit).
-     *
-     * @return This user is a moderator or not
-     * @throws ParseException If JSON parsing fails
-     * @throws IOException    If connection fails
-     */
-    public boolean isMod() throws IOException, ParseException {
-        return Boolean.parseBoolean(info().get("is_mod").toString());
-    }
-
-    /**
-     * This function returns the user's ID. <br /> The user's ID. This is only
-     * used internally, <b>right</b>?
-     *
-     * @return This user's ID
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public String id() throws IOException, ParseException {
-        return info().get("id").toString();
-    }
-
-    /**
-     * This functions returns true if this user has unread moderator mail.
-     *
-     * @return This user has unread moderator mail or not
-     * @throws ParseException If JSON parsing fails
-     * @throws IOException    If connection fails
-     */
-    public boolean hasModMail() throws IOException, ParseException {
-        return Boolean.parseBoolean(info().get("has_mod_mail").toString());
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getModhash() {
-        return modhash;
-    }
-
-    public String getCookie() {
-        return cookie;
-    }
-
-    /**
      * This function logs in to reddit and returns an ArrayList containing a
      * modhash and cookie.
      *
@@ -253,20 +146,37 @@ public class User extends Thing {
     }
 
     /**
-     * This function returns a "response" (me.json) JSON data containing info
-     * about the user. <br />
+     * Get info about the currently authenticated user.
+     * Corresponds to the API "/me.json" method
      *
-     * @return JSON data containing info about the user
+     * @return <code>UserInfo</code>object containing the user's info, or null if the retrieval fails
      */
-    private JSONObject info() throws IOException, ParseException {
+    public UserInfo getUserInformation() {
         if (cookie == null || modhash == null) {
-            System.err.printf("Please invoke the \"connect\" function before attempting to " +
-                    "call any other API functions.");
-            Runtime.getRuntime().exit(-1);
+            System.err.printf("Please invoke the connect method in order to login the user");
+            return null;
         }
 
         JSONObject jsonObject = (JSONObject) Utils.get(ApiEndpointUtils.USER_INFO, getCookie());
-        return (JSONObject) jsonObject.get("data");
+        JSONObject info = (JSONObject) jsonObject.get("data");
+
+        return new UserInfo(info);
+    }
+
+    /**
+     * Returns misc info about the user
+     *
+     * @param username The username of the user whose account info you want to retrieve.
+     * @return UserInfo object consisting of information about the user identified by "username".
+     */
+    public static UserInfo about(String username) {
+
+        // Send GET request to get the account overview
+        JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null);
+        JSONObject data = (JSONObject) object.get("data");
+
+        // Init account info wrapper
+        return data != null ? new UserInfo(data) : null;
     }
 
     /**
@@ -287,6 +197,8 @@ public class User extends Thing {
                 ApiEndpointUtils.USER_SUBMIT, getCookie());
     }
 
+    // TODO: Move comment-related and submission-related methods from the User class
+
     /**
      * Returns a list of submissions made by this user.
      *
@@ -294,39 +206,6 @@ public class User extends Thing {
      */
     public List<Comment> comments() {
         return User.comments(username);
-    }
-
-    /**
-     * Returns misc info about the user (which consists of comment karma, mod
-     * mail identifier, created timestamp, gold member identifier, mod
-     * identifier, link karma and mail identifier).
-     *
-     * @param username The username of the user whose account info you want
-     *                 to retrieve.
-     * @return Misc info about the user.
-     */
-    public static UserInfo about(String username) {
-        UserInfo info = null;
-
-        try {
-            // Send GET request to get the account overview
-            JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null);
-            JSONObject data = (JSONObject) object.get("data");
-
-            // Init account info wrapper
-            info = new UserInfo(Integer.parseInt(Utils.toString(data.get("comment_karma"))),
-                    Integer.parseInt(Utils.toString(data.get("link_karma"))),
-                    Float.parseFloat(Utils.toString(data.get("created_utc"))),
-                    Boolean.parseBoolean(Utils.toString(data.get("is_gold"))),
-                    Boolean.parseBoolean(Utils.toString(data.get("is_mod"))),
-                    Boolean.parseBoolean(Utils.toString(data.get("has_mail"))),
-                    Boolean.parseBoolean(Utils.toString(data.get("has_mod_mail"))));
-
-        } catch (Exception e) {
-            System.err.println("Error retrieving user information for " + username);
-        }
-
-        return info;
     }
 
 
