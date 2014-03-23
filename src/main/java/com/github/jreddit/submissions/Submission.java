@@ -1,11 +1,11 @@
 package com.github.jreddit.submissions;
 
-import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.Thing;
+import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.RestClient.HttpRestClient;
 import com.github.jreddit.utils.RestClient.RestClient;
-import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class Submission extends Thing {
 
-    private RestClient restClient = new Utils();
+    private RestClient restClient = new HttpRestClient();
 
     /* This is the user that will vote on a submission. */
     private User user;

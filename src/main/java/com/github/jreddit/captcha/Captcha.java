@@ -2,8 +2,8 @@ package com.github.jreddit.captcha;
 
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.RestClient.HttpRestClient;
 import com.github.jreddit.utils.RestClient.RestClient;
-import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -25,7 +25,7 @@ public class Captcha {
 
     private static final String IMAGE_FORMAT = "png";
     private static final String IMAGE_PATH = "captcha." + IMAGE_FORMAT;
-    private RestClient restClient = new Utils();
+    private RestClient restClient = new HttpRestClient();
 
     /**
      * Generates and saves a new reddit captcha in the working directory
@@ -38,7 +38,7 @@ public class Captcha {
 
         try {
             // Get the captcha iden
-            JSONObject obj =  restClient.post("", ApiEndpointUtils.CAPTCHA_NEW, user.getCookie());
+            JSONObject obj =  restClient.post(null, ApiEndpointUtils.CAPTCHA_NEW, user.getCookie());
             iden = (String) ((JSONArray) ((JSONArray) ((JSONArray) obj.get("jquery")).get(11)).get(3)).get(0);
             System.out.println("Received CAPTCHA iden: " + iden);
 

@@ -1,10 +1,10 @@
 package com.github.jreddit.message;
 
+import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.RestClient.HttpRestClient;
 import com.github.jreddit.utils.RestClient.RestClient;
 import com.github.jreddit.utils.TypePrefix;
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -22,7 +22,7 @@ import java.util.List;
 public class Messages {
 
     public static final int ALL_MESSAGES = -1;
-    private RestClient restClient = new Utils();
+    private RestClient restClient = new HttpRestClient();
 
     /**
      * Get the list of messages of a certain type for a user

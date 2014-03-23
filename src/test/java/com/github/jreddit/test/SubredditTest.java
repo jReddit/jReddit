@@ -32,17 +32,23 @@ public class SubredditTest {
     }
 
     @Test
-    public void testGetSubreddits() {
+    public void testGetNewSubreddits() throws InterruptedException {
         List<Subreddit> newSubreddits = subreddits.getSubreddits(SubredditType.NEW);
-        List<Subreddit> bannedSubreddits = subreddits.getSubreddits(SubredditType.BANNED);
-        List<Subreddit> popularSubreddits = subreddits.getSubreddits(SubredditType.POPULAR);
-
         assertNotNull(newSubreddits);
-        assertNotNull(bannedSubreddits);
-        assertNotNull(popularSubreddits);
-
         System.out.println("Retrieved " + newSubreddits.size() + " NEW subreddits.");
-        System.out.println("Retrieved " + bannedSubreddits.size() + " BANNED subreddits.");
-        System.out.println("Retrieved " + popularSubreddits.size() + " POPULAR subreddits.");
+    }
+
+    @Test
+    public void testGetBannedSubreddits() throws InterruptedException {
+        List<Subreddit> bannedSubreddits = subreddits.getSubreddits(SubredditType.BANNED);
+        assertNotNull(bannedSubreddits);
+        System.out.println("Retrieved " + bannedSubreddits.size() + " Banned subreddits.");
+    }
+
+    @Test
+    public void testGetPopularSubreddits() throws InterruptedException {
+        List<Subreddit> popularSubreddits = subreddits.getSubreddits(SubredditType.POPULAR);
+        assertNotNull(popularSubreddits);
+        System.out.println("Retrieved " + popularSubreddits.size() + " Popular subreddits.");
     }
 }

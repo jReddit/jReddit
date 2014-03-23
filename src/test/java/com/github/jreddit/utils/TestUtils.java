@@ -9,8 +9,8 @@ import com.github.jreddit.user.User;
  */
 public class TestUtils {
 
-    public static final String TEST_USERNAME = "jReddittest";
-    public static final String TEST_PASSWORD = "jReddittest";
+    public static final String TEST_USERNAME = "hvfcjhgrtc";
+    public static final String TEST_PASSWORD = "hvfcjhgrtc";
 
     /**
      * Creates a new user with the Test Credentials

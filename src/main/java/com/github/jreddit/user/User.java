@@ -1,12 +1,13 @@
 package com.github.jreddit.user;
 
-import com.github.jreddit.utils.CommentSort;
-import com.github.jreddit.utils.Sort;
 import com.github.jreddit.Thing;
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.Utils;
+import com.github.jreddit.utils.CommentSort;
+import com.github.jreddit.utils.RestClient.HttpRestClient;
+import com.github.jreddit.utils.RestClient.RestClient;
+import com.github.jreddit.utils.Sort;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -14,6 +15,8 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github.jreddit.utils.RestClient.JsonUtils.safeJsonToString;
 
 /**
  * This class represents a user connected to Reddit.
@@ -29,6 +32,8 @@ public class User extends Thing {
 
     private String username, password;
     private String modhash, cookie;
+
+    private static RestClient restClient = new HttpRestClient();
 
     public User() {
 
@@ -135,7 +140,7 @@ public class User extends Thing {
     private ArrayList<String> hashCookiePair(String username, String password)
             throws IOException, ParseException {
         ArrayList<String> values = new ArrayList<String>();
-        JSONObject jsonObject =  new Utils().post("api_type=json&user=" + username
+        JSONObject jsonObject =  restClient.post("api_type=json&user=" + username
                 + "&passwd=" + password, String.format(ApiEndpointUtils.USER_LOGIN, username), getCookie());
         JSONObject valuePair = (JSONObject) ((JSONObject) jsonObject.get("json")).get("data");
 
@@ -157,7 +162,7 @@ public class User extends Thing {
             return null;
         }
 
-        JSONObject jsonObject = (JSONObject)  new Utils().get(ApiEndpointUtils.USER_INFO, getCookie());
+        JSONObject jsonObject = (JSONObject) restClient.get(ApiEndpointUtils.USER_INFO, getCookie());
         JSONObject info = (JSONObject) jsonObject.get("data");
 
         return new UserInfo(info);
@@ -172,7 +177,7 @@ public class User extends Thing {
     public static UserInfo about(String username) {
 
         // Send GET request to get the account overview
-        JSONObject object = (JSONObject)  new Utils().get(String.format(ApiEndpointUtils.USER_ABOUT, username), null);
+        JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null);
         JSONObject data = (JSONObject) object.get("data");
 
         // Init account info wrapper
@@ -191,7 +196,7 @@ public class User extends Thing {
      * @throws ParseException If JSON parsing fails
      */
     private JSONObject submit(String title, String linkOrText, boolean selfPost, String subreddit) throws IOException, ParseException {
-        return  new Utils().post("title=" + title + "&" + (selfPost ? "text" : "url")
+        return restClient.post("title=" + title + "&" + (selfPost ? "text" : "url")
                 + "=" + linkOrText + "&sr=" + subreddit + "&kind="
                 + (selfPost ? "self" : "link") + "&uh=" + getModhash(),
                 ApiEndpointUtils.USER_SUBMIT, getCookie());
@@ -226,8 +231,8 @@ public class User extends Thing {
         try {
             // Send GET request to get the account overview
             JSONObject object =
-                    (JSONObject)  new Utils().get(String.format(ApiEndpointUtils.USER_COMMENTS,
-                            username, commentSort.getValue()), null);
+                    (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_COMMENTS,
+                             username, commentSort.getValue()), null);
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -239,10 +244,10 @@ public class User extends Thing {
                 obj = (JSONObject) obj.get("data");
 
                 // Create a new comment
-                c = new Comment(Utils.toString(obj.get("body")), Utils.toString(obj.get("edited")),
-                        Utils.toString(obj.get("created_utc")), Utils.toString(obj.get("replies")),
-                        Integer.parseInt(Utils.toString(obj.get("ups"))),
-                        Integer.parseInt(Utils.toString(obj.get("downs"))));
+                c = new Comment(safeJsonToString(obj.get("body")), safeJsonToString(obj.get("edited")),
+                        safeJsonToString(obj.get("created_utc")), safeJsonToString(obj.get("replies")),
+                        Integer.parseInt(safeJsonToString(obj.get("ups"))),
+                        Integer.parseInt(safeJsonToString(obj.get("downs"))));
 
                 // Add it to the submissions list
                 comments.add(c);
@@ -266,7 +271,7 @@ public class User extends Thing {
         List<Submission> submissions = new ArrayList<Submission>(500);
         try {
             // Send GET request to get the account overview
-            JSONObject object = (JSONObject)  new Utils().get(String.format(ApiEndpointUtils.USER_SUBMISSIONS, username), null);
+            JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS, username), null);
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -415,8 +420,8 @@ public class User extends Thing {
         List<Submission> submissions = new ArrayList<Submission>();
         try {
             JSONObject object =
-                    (JSONObject)  new Utils().get(String.format(ApiEndpointUtils.USER_SUBMISSIONS_INTERACTION,
-                            username, where, sort.getValue()), cookie);
+                    (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS_INTERACTION,
+                             username, where, sort.getValue()), cookie);
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -438,7 +443,7 @@ public class User extends Thing {
      */
     public List<Subreddit> getSubscribed() {
         List<Subreddit> subscibed = new ArrayList<Subreddit>(1000);
-        JSONObject object = (JSONObject)  new Utils().get(ApiEndpointUtils.USER_GET_SUBSCRIBED, cookie);
+        JSONObject object = (JSONObject) restClient.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, cookie);
 
         JSONObject rawData = (JSONObject) object.get("data");
         JSONArray subreddits = (JSONArray) rawData.get("children");

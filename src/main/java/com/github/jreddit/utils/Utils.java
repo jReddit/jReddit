@@ -128,15 +128,4 @@ public class Utils implements RestClient {
     public void setUserAgent(String agent) {
         DEFAULT_USER_AGENT = agent;
     }
-
-
-    /**
-     * Safely converts an object into string (used because sometimes JSONObject's get() method returns null).
-     *
-     * @param obj The object to convert.
-     * @return The string.
-     */
-    public static String toString(Object obj) {
-        return (obj == null ? null : obj.toString());
-    }
 }

@@ -1,8 +1,8 @@
 package com.github.jreddit.submissions;
 
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.RestClient.HttpRestClient;
 import com.github.jreddit.utils.RestClient.RestClient;
-import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -42,7 +42,7 @@ public class Submissions {
 
         LinkedList<Submission> submissions = new LinkedList<Submission>();
         String urlString = "/r/" + redditName;
-        RestClient restClient = new Utils();
+        RestClient restClient = new HttpRestClient();
 
         switch (type) {
             case NEW:
