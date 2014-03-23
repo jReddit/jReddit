@@ -1,6 +1,7 @@
 package com.github.jreddit.message;
 
 import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.RestClient.RestClient;
 import com.github.jreddit.utils.TypePrefix;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.Utils;
@@ -21,6 +22,7 @@ import java.util.List;
 public class Messages {
 
     public static final int ALL_MESSAGES = -1;
+    private RestClient restClient = new Utils();
 
     /**
      * Get the list of messages of a certain type for a user
@@ -36,7 +38,7 @@ public class Messages {
         List<Message> messages = null;
 
         try {
-            JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.MESSAGE_GET, messageType.getValue()), user.getCookie());
+            JSONObject object = (JSONObject)  restClient.get(String.format(ApiEndpointUtils.MESSAGE_GET, messageType.getValue()), user.getCookie());
             JSONObject data = (JSONObject) object.get("data");
             messages = buildList((JSONArray) data.get("children"), maxMessages);
 
@@ -66,7 +68,7 @@ public class Messages {
         }
 
         try {
-            JSONObject object = Utils.post("captcha=" + captchaTry + "&iden=" + iden +
+            JSONObject object = restClient.post("captcha=" + captchaTry + "&iden=" + iden +
                     "&subject=" + subject + "&text=" + text + "&to=" + to +
                     "&uh=" + user.getModhash(),
                     ApiEndpointUtils.MESSAGE_COMPOSE, user.getCookie());
@@ -98,7 +100,7 @@ public class Messages {
      */
     public void readMessage(String fullName, User user) {
         try {
-            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), ApiEndpointUtils.MESSAGE_READ, user.getCookie());
+            restClient.post("id=" + fullName + "&uh=" + user.getModhash(), ApiEndpointUtils.MESSAGE_READ, user.getCookie());
         } catch (Exception e) {
             System.err.println("Error reading message: " + fullName);
         }
@@ -113,7 +115,7 @@ public class Messages {
      */
     public void unreadMessage(String fullName, User user) {
         try {
-            Utils.post("id=" + fullName + "&uh=" + user.getModhash(), ApiEndpointUtils.MESSAGE_READ, user.getCookie());
+            restClient.post("id=" + fullName + "&uh=" + user.getModhash(), ApiEndpointUtils.MESSAGE_READ, user.getCookie());
         } catch (Exception e) {
             System.err.println("Error marking message: " + fullName + " as unread");
         }

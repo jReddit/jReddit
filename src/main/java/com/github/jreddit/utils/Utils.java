@@ -1,5 +1,6 @@
 package com.github.jreddit.utils;
 
+import com.github.jreddit.utils.RestClient.RestClient;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -17,7 +18,7 @@ import java.util.Scanner;
  * @author Raul Rene Lepsa
  * @author Andrei Sfat
  */
-public class Utils {
+public class Utils implements RestClient {
 
     private static String DEFAULT_USER_AGENT = "Omer's Reddit API Java Wrapper";
 
@@ -28,7 +29,8 @@ public class Utils {
      * @param cookie  authentication for the User
      * @return Object that corresponds to the request
      */
-    public static Object get(String urlPath, String cookie) {
+    @Override
+    public Object get(String urlPath, String cookie) {
 
         Object object = null;
 
@@ -83,7 +85,8 @@ public class Utils {
      * @param cookie    authentication for the User
      * @return JSONObject response for the POST
      */
-    public static JSONObject post(String apiParams, String urlPath, String cookie) {
+    @Override
+    public JSONObject post(String apiParams, String urlPath, String cookie) {
 
         Object response = null;
 
@@ -121,7 +124,8 @@ public class Utils {
      *
      * @param agent User agent string.
      */
-    public static void setUserAgent(String agent) {
+    @Override
+    public void setUserAgent(String agent) {
         DEFAULT_USER_AGENT = agent;
     }
 

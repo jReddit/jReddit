@@ -1,6 +1,7 @@
 package com.github.jreddit.submissions;
 
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.RestClient.RestClient;
 import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -41,6 +42,7 @@ public class Submissions {
 
         LinkedList<Submission> submissions = new LinkedList<Submission>();
         String urlString = "/r/" + redditName;
+        RestClient restClient = new Utils();
 
         switch (type) {
             case NEW:
@@ -54,7 +56,7 @@ public class Submissions {
 
         urlString += ".json";
 
-        JSONObject object = (JSONObject) Utils.get(urlString, user.getCookie());
+        JSONObject object = (JSONObject)  restClient.get(urlString, user.getCookie());
         JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 
         JSONObject data;

@@ -4,6 +4,7 @@ import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.Thing;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.RestClient.RestClient;
 import com.github.jreddit.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,6 +20,8 @@ import java.io.IOException;
  * @author Andrei Sfat
  */
 public class Submission extends Thing {
+
+    private RestClient restClient = new Utils();
 
     /* This is the user that will vote on a submission. */
     private User user;
@@ -141,7 +144,7 @@ public class Submission extends Thing {
      * @throws ParseException If JSON parsing fails
      */
     public void comment(String text) throws IOException, ParseException {
-        JSONObject object = Utils.post("thing_id=" + fullName + "&text=" + text
+        JSONObject object = restClient.post("thing_id=" + fullName + "&text=" + text
                 + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie());
 
         if (object.toJSONString().contains(".error.USER_REQUIRED"))
@@ -266,13 +269,13 @@ public class Submission extends Thing {
     }
 
     public void markNSFW() throws IOException, ParseException {
-        Utils.post(
+        restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_MARK_AS_NSFW, user.getCookie());
     }
 
     public void unmarkNSFW() throws IOException, ParseException {
-        Utils.post(
+        restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_UNMARK_AS_NSFW, user.getCookie());
     }
@@ -351,14 +354,14 @@ public class Submission extends Thing {
     }
 
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
-        return Utils.post(
+        return  restClient.post(
                 "id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_VOTE, user.getCookie());
     }
 
     private JSONObject info(String urlPath) throws IOException, ParseException {
         urlPath += "/info.json";
-        Object object = Utils.get(urlPath, user.getCookie());
+        Object object =  restClient.get(urlPath, user.getCookie());
 
         JSONArray array = (JSONArray) object;
         JSONObject obj = (JSONObject) array.get(0);
