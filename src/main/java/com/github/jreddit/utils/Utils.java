@@ -1,11 +1,14 @@
 package com.github.jreddit.utils;
 
+import com.github.jreddit.utils.RestClient.Response;
 import com.github.jreddit.utils.RestClient.RestClient;
-import org.json.simple.JSONObject;
+import org.apache.commons.io.IOUtils;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
@@ -30,9 +33,9 @@ public class Utils implements RestClient {
      * @return Object that corresponds to the request
      */
     @Override
-    public Object get(String urlPath, String cookie) {
+    public Response get(String urlPath, String cookie) {
 
-        Object object = null;
+        Response responseObject = null;
 
         try {
             URL url = new URL(ApiEndpointUtils.REDDIT_BASE_URL + urlPath);
@@ -49,7 +52,7 @@ public class Utils implements RestClient {
             // Debugging stuff
             InputStream is;
             Scanner scanner;
-            String response;
+            String responseBody;
             if (connection.getResponseCode() != 200) {
                 scanner = new Scanner(connection.getErrorStream());
             } else {
@@ -57,16 +60,15 @@ public class Utils implements RestClient {
                 scanner = new Scanner(is);
             }
             scanner.useDelimiter("\\Z");
-            response = "";
+            responseBody = "";
             while (scanner.hasNext()) {
-                response += scanner.next();
+                responseBody += scanner.next();
             }
             scanner.close();
             // Debugging stuff
 
-
             JSONParser parser = new JSONParser();
-            object = parser.parse(response);
+            responseObject = new UtilResponse(responseBody, parser.parse(responseBody), connection.getResponseCode());
 
         } catch (IOException e) {
             System.err.println("Error making GET request to URL path: " + urlPath);
@@ -74,7 +76,7 @@ public class Utils implements RestClient {
             System.err.println("Error parsing response from GET request for URL path: " + urlPath);
         }
 
-        return object;
+        return responseObject;
     }
 
     /**
@@ -86,9 +88,9 @@ public class Utils implements RestClient {
      * @return JSONObject response for the POST
      */
     @Override
-    public JSONObject post(String apiParams, String urlPath, String cookie) {
+    public Response post(String apiParams, String urlPath, String cookie) {
 
-        Object response = null;
+        Response responseObject = null;
 
         try {
             URL url = new URL(ApiEndpointUtils.REDDIT_BASE_URL + urlPath);
@@ -107,14 +109,16 @@ public class Utils implements RestClient {
             outputStream.close();
 
             JSONParser parser = new JSONParser();
-            response = parser.parse(new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine());
+            String responseBody = IOUtils.toString(connection.getInputStream());
+            Object parsedResponse = parser.parse(responseBody);
+            responseObject = new UtilResponse(responseBody, parsedResponse, connection.getResponseCode());
         } catch (IOException e) {
             System.err.println("Error making POST request to URL path: " + urlPath);
         } catch (ParseException e) {
             System.err.println("Error parsing response from POST request for URL path: " + urlPath);
         }
 
-        return (JSONObject) response;
+        return responseObject;
     }
 
 

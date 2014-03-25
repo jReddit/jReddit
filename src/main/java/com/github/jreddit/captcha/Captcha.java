@@ -38,7 +38,7 @@ public class Captcha {
 
         try {
             // Get the captcha iden
-            JSONObject obj =  restClient.post(null, ApiEndpointUtils.CAPTCHA_NEW, user.getCookie());
+            JSONObject obj = (JSONObject) restClient.post(null, ApiEndpointUtils.CAPTCHA_NEW, user.getCookie()).getResponseObject();
             iden = (String) ((JSONArray) ((JSONArray) ((JSONArray) obj.get("jquery")).get(11)).get(3)).get(0);
             System.out.println("Received CAPTCHA iden: " + iden);
 
@@ -68,7 +68,7 @@ public class Captcha {
         boolean needsCaptcha = false;
 
         try {
-            needsCaptcha = (Boolean)  restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, user.getCookie());
+            needsCaptcha = (Boolean) restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, user.getCookie()).getResponseObject();
         } catch (Exception e) {
             System.err.println("Error verifying if the user needs a captcha");
         }

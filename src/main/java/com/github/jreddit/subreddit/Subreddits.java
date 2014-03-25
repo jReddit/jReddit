@@ -29,7 +29,7 @@ public class Subreddits {
         List<Subreddit> subreddits = null;
 
         try {
-            JSONObject object = (JSONObject)  restClient.get(ApiEndpointUtils.SUBREDDITS, null);
+            JSONObject object = (JSONObject)  restClient.get(ApiEndpointUtils.SUBREDDITS, null).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
 
             subreddits = constructList((JSONArray) data.get("children"));
@@ -53,7 +53,7 @@ public class Subreddits {
 
         try {
             JSONObject object =
-                    (JSONObject)  restClient.get(String.format(ApiEndpointUtils.SUBREDDITS_GET, subredditType.getValue()), null);
+                    (JSONObject)  restClient.get(String.format(ApiEndpointUtils.SUBREDDITS_GET, subredditType.getValue()), null).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
 
             subreddits = constructList((JSONArray) data.get("children"));

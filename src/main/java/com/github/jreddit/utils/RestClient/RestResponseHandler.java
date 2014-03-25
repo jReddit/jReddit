@@ -10,20 +10,20 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class JsonSimpleResponseHandler implements ResponseHandler<Object> {
+public class RestResponseHandler implements ResponseHandler<Response> {
 
     private JSONParser jsonParser;
 
-    public JsonSimpleResponseHandler() {
+    public RestResponseHandler() {
         this.jsonParser = new JSONParser();
     }
 
-    public JsonSimpleResponseHandler(JSONParser jsonParser) {
+    public RestResponseHandler(JSONParser jsonParser) {
         this.jsonParser = jsonParser;
     }
 
     @Override
-    public Object handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+    public Response handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
         try {
             return parse(response);
         }
@@ -33,9 +33,10 @@ public class JsonSimpleResponseHandler implements ResponseHandler<Object> {
         return null;
     }
 
-    private Object parse(HttpResponse httpResponse) throws IOException, ParseException {
+    private Response parse(HttpResponse httpResponse) throws IOException, ParseException {
         InputStream responseStream = httpResponse.getEntity().getContent();
         String content = IOUtils.toString(responseStream, "UTF-8");
-        return jsonParser.parse(content);
+        Object responseObject = jsonParser.parse(content);
+        return new RestResponse(content, responseObject, httpResponse);
     }
 }

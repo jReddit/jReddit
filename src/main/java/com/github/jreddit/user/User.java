@@ -140,8 +140,8 @@ public class User extends Thing {
     private ArrayList<String> hashCookiePair(String username, String password)
             throws IOException, ParseException {
         ArrayList<String> values = new ArrayList<String>();
-        JSONObject jsonObject =  restClient.post("api_type=json&user=" + username
-                + "&passwd=" + password, String.format(ApiEndpointUtils.USER_LOGIN, username), getCookie());
+        JSONObject jsonObject = (JSONObject) restClient.post("api_type=json&user=" + username
+                + "&passwd=" + password, String.format(ApiEndpointUtils.USER_LOGIN, username), getCookie()).getResponseObject();
         JSONObject valuePair = (JSONObject) ((JSONObject) jsonObject.get("json")).get("data");
 
         values.add(valuePair.get("modhash").toString());
@@ -162,7 +162,7 @@ public class User extends Thing {
             return null;
         }
 
-        JSONObject jsonObject = (JSONObject) restClient.get(ApiEndpointUtils.USER_INFO, getCookie());
+        JSONObject jsonObject = (JSONObject) restClient.get(ApiEndpointUtils.USER_INFO, getCookie()).getResponseObject();
         JSONObject info = (JSONObject) jsonObject.get("data");
 
         return new UserInfo(info);
@@ -177,7 +177,7 @@ public class User extends Thing {
     public static UserInfo about(String username) {
 
         // Send GET request to get the account overview
-        JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null);
+        JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null).getResponseObject();
         JSONObject data = (JSONObject) object.get("data");
 
         // Init account info wrapper
@@ -196,10 +196,10 @@ public class User extends Thing {
      * @throws ParseException If JSON parsing fails
      */
     private JSONObject submit(String title, String linkOrText, boolean selfPost, String subreddit) throws IOException, ParseException {
-        return restClient.post("title=" + title + "&" + (selfPost ? "text" : "url")
+        return (JSONObject) restClient.post("title=" + title + "&" + (selfPost ? "text" : "url")
                 + "=" + linkOrText + "&sr=" + subreddit + "&kind="
                 + (selfPost ? "self" : "link") + "&uh=" + getModhash(),
-                ApiEndpointUtils.USER_SUBMIT, getCookie());
+                ApiEndpointUtils.USER_SUBMIT, getCookie()).getResponseObject();
     }
 
     // TODO: Move comment-related and submission-related methods from the User class
@@ -232,7 +232,7 @@ public class User extends Thing {
             // Send GET request to get the account overview
             JSONObject object =
                     (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_COMMENTS,
-                             username, commentSort.getValue()), null);
+                             username, commentSort.getValue()), null).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -271,7 +271,7 @@ public class User extends Thing {
         List<Submission> submissions = new ArrayList<Submission>(500);
         try {
             // Send GET request to get the account overview
-            JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS, username), null);
+            JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS, username), null).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -421,7 +421,7 @@ public class User extends Thing {
         try {
             JSONObject object =
                     (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS_INTERACTION,
-                             username, where, sort.getValue()), cookie);
+                             username, where, sort.getValue()), cookie).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -443,7 +443,7 @@ public class User extends Thing {
      */
     public List<Subreddit> getSubscribed() {
         List<Subreddit> subscibed = new ArrayList<Subreddit>(1000);
-        JSONObject object = (JSONObject) restClient.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, cookie);
+        JSONObject object = (JSONObject) restClient.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, cookie).getResponseObject();
 
         JSONObject rawData = (JSONObject) object.get("data");
         JSONArray subreddits = (JSONArray) rawData.get("children");

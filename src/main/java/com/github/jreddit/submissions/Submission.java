@@ -144,8 +144,8 @@ public class Submission extends Thing {
      * @throws ParseException If JSON parsing fails
      */
     public void comment(String text) throws IOException, ParseException {
-        JSONObject object = restClient.post("thing_id=" + fullName + "&text=" + text
-                + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie());
+        JSONObject object = (JSONObject) restClient.post("thing_id=" + fullName + "&text=" + text
+                + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie()).getResponseObject();
 
         if (object.toJSONString().contains(".error.USER_REQUIRED"))
             throw new InvalidCookieException("Cookie not present");
@@ -354,14 +354,14 @@ public class Submission extends Thing {
     }
 
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
-        return  restClient.post(
+        return (JSONObject) restClient.post(
                 "id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
-                ApiEndpointUtils.SUBMISSION_VOTE, user.getCookie());
+                ApiEndpointUtils.SUBMISSION_VOTE, user.getCookie()).getResponseObject();
     }
 
     private JSONObject info(String urlPath) throws IOException, ParseException {
         urlPath += "/info.json";
-        Object object =  restClient.get(urlPath, user.getCookie());
+        Object object =  restClient.get(urlPath, user.getCookie()).getResponseObject();
 
         JSONArray array = (JSONArray) object;
         JSONObject obj = (JSONObject) array.get(0);

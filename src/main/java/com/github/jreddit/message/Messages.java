@@ -38,7 +38,7 @@ public class Messages {
         List<Message> messages = null;
 
         try {
-            JSONObject object = (JSONObject)  restClient.get(String.format(ApiEndpointUtils.MESSAGE_GET, messageType.getValue()), user.getCookie());
+            JSONObject object = (JSONObject)  restClient.get(String.format(ApiEndpointUtils.MESSAGE_GET, messageType.getValue()), user.getCookie()).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             messages = buildList((JSONArray) data.get("children"), maxMessages);
 
@@ -68,10 +68,10 @@ public class Messages {
         }
 
         try {
-            JSONObject object = restClient.post("captcha=" + captchaTry + "&iden=" + iden +
+            JSONObject object = (JSONObject) restClient.post("captcha=" + captchaTry + "&iden=" + iden +
                     "&subject=" + subject + "&text=" + text + "&to=" + to +
                     "&uh=" + user.getModhash(),
-                    ApiEndpointUtils.MESSAGE_COMPOSE, user.getCookie());
+                    ApiEndpointUtils.MESSAGE_COMPOSE, user.getCookie()).getResponseObject();
 
             if (object.toJSONString().contains(".error.USER_REQUIRED")) {
                 System.err.println("Please login first.");

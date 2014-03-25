@@ -56,7 +56,7 @@ public class Submissions {
 
         urlString += ".json";
 
-        JSONObject object = (JSONObject)  restClient.get(urlString, user.getCookie());
+        JSONObject object = (JSONObject)  restClient.get(urlString, user.getCookie()).getResponseObject();
         JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 
         JSONObject data;
