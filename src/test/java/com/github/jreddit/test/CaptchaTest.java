@@ -17,6 +17,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Collections;
 
+import static com.github.jreddit.testSupport.JsonHelpers.emptyJsonArray;
+import static com.github.jreddit.testSupport.JsonHelpers.jsonArrayOf;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -119,36 +121,22 @@ public class CaptchaTest {
 
     private JSONObject newCaptchaJsonResponseWith(String ident) {
         JSONObject root = new JSONObject();
-        JSONArray rootArray = jsonArrayBuilder(
-                jsonArrayBuilder(0, 1, "call", singleElementJsonArray("body")),
-                jsonArrayBuilder(1, 2, "attr", "find"),
-                jsonArrayBuilder(2, 3, "call", singleElementJsonArray(".status")),
-                jsonArrayBuilder(3, 4, "attr", "hide"),
-                jsonArrayBuilder(4, 5, "call", new JSONArray()),
-                jsonArrayBuilder(5, 6, "attr", "html"),
-                jsonArrayBuilder(6, 7, "call", singleElementJsonArray("")),
-                jsonArrayBuilder(7, 8, "attr", "end"),
-                jsonArrayBuilder(8, 9, "call", new JSONArray()),
-                jsonArrayBuilder(0, 10, "call", singleElementJsonArray("body")),
-                jsonArrayBuilder(10, 11, "attr", "captcha"),
-                jsonArrayBuilder(11, 12, "call", singleElementJsonArray(ident))
+        JSONArray rootArray = jsonArrayOf(
+                jsonArrayOf(0, 1, "call", jsonArrayOf("body")),
+                jsonArrayOf(1, 2, "attr", "find"),
+                jsonArrayOf(2, 3, "call", jsonArrayOf(".status")),
+                jsonArrayOf(3, 4, "attr", "hide"),
+                jsonArrayOf(4, 5, "call", emptyJsonArray()),
+                jsonArrayOf(5, 6, "attr", "html"),
+                jsonArrayOf(6, 7, "call", jsonArrayOf("")),
+                jsonArrayOf(7, 8, "attr", "end"),
+                jsonArrayOf(8, 9, "call", emptyJsonArray()),
+                jsonArrayOf(0, 10, "call", jsonArrayOf("body")),
+                jsonArrayOf(10, 11, "attr", "captcha"),
+                jsonArrayOf(11, 12, "call", jsonArrayOf(ident))
         );
 
         root.put("jquery", rootArray);
         return root;
-    }
-
-    private JSONArray jsonArrayBuilder(Object... args) {
-        JSONArray array = new JSONArray();
-        for (Object o : args) {
-            array.add(o);
-        }
-        return array;
-    }
-
-    private JSONArray singleElementJsonArray(String value) {
-        JSONArray firstChildsChildArray = new JSONArray();
-        firstChildsChildArray.add(value);
-        return firstChildsChildArray;
     }
 }
