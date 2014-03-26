@@ -7,8 +7,8 @@ import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.RestClient.Response;
 import com.github.jreddit.utils.RestClient.RestClient;
 import com.github.jreddit.utils.UtilResponse;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -98,101 +98,57 @@ public class CaptchaTest {
     }
 
     private Response generateBadlyFormedJson() throws ParseException {
-        JSONObject responseObject = (JSONObject) new JSONParser().parse("{\"foo\": [0, 1 ], \"bar\": [0, 1 ] }");
-        return new UtilResponse("", responseObject, 200);
+        return new UtilResponse("", fooJsonObject(), 200);
+    }
+
+    private JSONObject fooJsonObject() {
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(1);
+        jsonArray.add(2);
+
+        jsonObject.put("foo", jsonArray);
+        jsonObject.put("bar", jsonArray);
+        return jsonObject;
     }
 
     private Response generateNewCaptchaResponseWithIdent(String ident) throws ParseException {
-        JSONObject responseObject = (JSONObject) new JSONParser().parse(jsonStringWithIdent(ident));
+        JSONObject responseObject = newCaptchaJsonResponseWith(ident);
         return new UtilResponse("", responseObject, 200);
     }
 
-    private String jsonStringWithIdent(String ident) {
-        return String.format("{\n" +
-                "    \"jquery\": [\n" +
-                "        [\n" +
-                "            0,\n" +
-                "            1,\n" +
-                "            \"call\",\n" +
-                "            [\n" +
-                "                \"body\"\n" +
-                "            ]\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            1,\n" +
-                "            2,\n" +
-                "            \"attr\",\n" +
-                "            \"find\"\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            2,\n" +
-                "            3,\n" +
-                "            \"call\",\n" +
-                "            [\n" +
-                "                \".status\"\n" +
-                "            ]\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            3,\n" +
-                "            4,\n" +
-                "            \"attr\",\n" +
-                "            \"hide\"\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            4,\n" +
-                "            5,\n" +
-                "            \"call\",\n" +
-                "            []\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            5,\n" +
-                "            6,\n" +
-                "            \"attr\",\n" +
-                "            \"html\"\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            6,\n" +
-                "            7,\n" +
-                "            \"call\",\n" +
-                "            [\n" +
-                "                \"\"\n" +
-                "            ]\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            7,\n" +
-                "            8,\n" +
-                "            \"attr\",\n" +
-                "            \"end\"\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            8,\n" +
-                "            9,\n" +
-                "            \"call\",\n" +
-                "            []\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            0,\n" +
-                "            10,\n" +
-                "            \"call\",\n" +
-                "            [\n" +
-                "                \"body\"\n" +
-                "            ]\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            10,\n" +
-                "            11,\n" +
-                "            \"attr\",\n" +
-                "            \"captcha\"\n" +
-                "        ],\n" +
-                "        [\n" +
-                "            11,\n" +
-                "            12,\n" +
-                "            \"call\",\n" +
-                "            [\n" +
-                "                \"%s\"\n" +
-                "            ]\n" +
-                "        ]\n" +
-                "    ]\n" +
-                "}", ident);
+    private JSONObject newCaptchaJsonResponseWith(String ident) {
+        JSONObject root = new JSONObject();
+        JSONArray rootArray = jsonArrayBuilder(
+                jsonArrayBuilder(0, 1, "call", singleElementJsonArray("body")),
+                jsonArrayBuilder(1, 2, "attr", "find"),
+                jsonArrayBuilder(2, 3, "call", singleElementJsonArray(".status")),
+                jsonArrayBuilder(3, 4, "attr", "hide"),
+                jsonArrayBuilder(4, 5, "call", new JSONArray()),
+                jsonArrayBuilder(5, 6, "attr", "html"),
+                jsonArrayBuilder(6, 7, "call", singleElementJsonArray("")),
+                jsonArrayBuilder(7, 8, "attr", "end"),
+                jsonArrayBuilder(8, 9, "call", new JSONArray()),
+                jsonArrayBuilder(0, 10, "call", singleElementJsonArray("body")),
+                jsonArrayBuilder(10, 11, "attr", "captcha"),
+                jsonArrayBuilder(11, 12, "call", singleElementJsonArray(ident))
+        );
+
+        root.put("jquery", rootArray);
+        return root;
+    }
+
+    private JSONArray jsonArrayBuilder(Object... args) {
+        JSONArray array = new JSONArray();
+        for (Object o : args) {
+            array.add(o);
+        }
+        return array;
+    }
+
+    private JSONArray singleElementJsonArray(String value) {
+        JSONArray firstChildsChildArray = new JSONArray();
+        firstChildsChildArray.add(value);
+        return firstChildsChildArray;
     }
 }
