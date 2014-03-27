@@ -1,8 +1,8 @@
 package com.github.jreddit.submissions;
 
 import com.github.jreddit.user.User;
-import com.github.jreddit.utils.RestClient.HttpRestClient;
-import com.github.jreddit.utils.RestClient.RestClient;
+import com.github.jreddit.utils.restclient.HttpRestClient;
+import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;

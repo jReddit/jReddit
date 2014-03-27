@@ -1,7 +1,7 @@
 package com.github.jreddit.utils;
 
-import com.github.jreddit.utils.RestClient.Response;
-import com.github.jreddit.utils.RestClient.RestClient;
+import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.RestClient;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

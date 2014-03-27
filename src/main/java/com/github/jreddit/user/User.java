@@ -5,9 +5,9 @@ import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.CommentSort;
-import com.github.jreddit.utils.RestClient.HttpRestClient;
-import com.github.jreddit.utils.RestClient.RestClient;
 import com.github.jreddit.utils.Sort;
+import com.github.jreddit.utils.restclient.HttpRestClient;
+import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.jreddit.utils.RestClient.JsonUtils.safeJsonToString;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
 
 /**
  * This class represents a user connected to Reddit.

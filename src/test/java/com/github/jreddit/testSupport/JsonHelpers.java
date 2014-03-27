@@ -1,4 +1,4 @@
-package com.github.jreddit.testSupport;
+package com.github.jreddit.testsupport;
 
 import org.json.simple.JSONArray;
 

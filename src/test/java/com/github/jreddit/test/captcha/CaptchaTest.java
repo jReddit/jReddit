@@ -1,12 +1,12 @@
-package com.github.jreddit.test;
+package com.github.jreddit.test.captcha;
 
 import com.github.jreddit.captcha.Captcha;
 import com.github.jreddit.captcha.CaptchaDownloader;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.RestClient.Response;
-import com.github.jreddit.utils.RestClient.RestClient;
 import com.github.jreddit.utils.UtilResponse;
+import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -17,8 +17,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Collections;
 
-import static com.github.jreddit.testSupport.JsonHelpers.emptyJsonArray;
-import static com.github.jreddit.testSupport.JsonHelpers.jsonArrayOf;
+import static com.github.jreddit.testsupport.JsonHelpers.emptyJsonArray;
+import static com.github.jreddit.testsupport.JsonHelpers.jsonArrayOf;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;

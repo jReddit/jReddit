@@ -2,9 +2,9 @@ package com.github.jreddit.message;
 
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.RestClient.HttpRestClient;
-import com.github.jreddit.utils.RestClient.RestClient;
 import com.github.jreddit.utils.TypePrefix;
+import com.github.jreddit.utils.restclient.HttpRestClient;
+import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

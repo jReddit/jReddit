@@ -1,6 +1,6 @@
 package com.github.jreddit.utils;
 
-import com.github.jreddit.utils.RestClient.Response;
+import com.github.jreddit.utils.restclient.Response;
 
 public class UtilResponse implements Response {
 
