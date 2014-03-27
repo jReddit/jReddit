@@ -19,8 +19,11 @@ import java.util.List;
  */
 public class Subreddits {
 
-    private RestClient restClient = new HttpRestClient();
+    private RestClient restClient;
 
+    public Subreddits(RestClient restClient) {
+        this.restClient = restClient;
+    }
 
     /**
      * Returns the subreddits that make up the default front page of reddit.
