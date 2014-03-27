@@ -6,7 +6,6 @@ import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
-import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -33,13 +32,10 @@ public class User extends Thing {
     private String username, password;
     private String modhash, cookie;
 
-    private static RestClient restClient = new HttpRestClient();
+    private RestClient restClient;
 
-    public User() {
-
-    }
-
-    public User(String username, String password) {
+    public User(RestClient restClient, String username, String password) {
+        this.restClient = restClient;
         this.username = username;
         this.password = password;
     }
@@ -174,7 +170,7 @@ public class User extends Thing {
      * @param username The username of the user whose account info you want to retrieve.
      * @return UserInfo object consisting of information about the user identified by "username".
      */
-    public static UserInfo about(String username) {
+    public UserInfo about(String username) {
 
         // Send GET request to get the account overview
         JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null).getResponseObject();
@@ -210,23 +206,22 @@ public class User extends Thing {
      * @return <code>List</code> of submissions made by this user.
      */
     public List<Comment> comments() {
-        return User.comments(username);
+        return comments(username);
     }
 
 
-    public static List<Comment> comments(String username) {
+    public List<Comment> comments(String username) {
         return comments(username, CommentSort.NEW);
     }
 
     /**
-     * Returns a list of submissions made by this user.
+     * Returns a list of comments made by this user.
      *
      * @param username The username of the user whose comments you want
      *                 to retrieve.
      * @return <code>List</code> of top 500 comments made by this user.
      */
-    public static List<Comment> comments(String username, CommentSort commentSort) {
-        // List of submissions made by this user
+    public List<Comment> comments(String username, CommentSort commentSort) {
         List<Comment> comments = new ArrayList<Comment>(500);
         try {
             // Send GET request to get the account overview
@@ -266,8 +261,7 @@ public class User extends Thing {
      *                 to retrieve.
      * @return <code>List</code> of submissions made by this user.
      */
-    public static List<Submission> submissions(String username) {
-        // List of submissions made by this user
+    public List<Submission> submissions(String username) {
         List<Submission> submissions = new ArrayList<Submission>(500);
         try {
             // Send GET request to get the account overview
@@ -442,7 +436,7 @@ public class User extends Thing {
      * @return List of Subreddits
      */
     public List<Subreddit> getSubscribed() {
-        List<Subreddit> subscibed = new ArrayList<Subreddit>(1000);
+        List<Subreddit> subscribed = new ArrayList<Subreddit>(1000);
         JSONObject object = (JSONObject) restClient.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, cookie).getResponseObject();
 
         JSONObject rawData = (JSONObject) object.get("data");
@@ -458,9 +452,9 @@ public class User extends Thing {
                     Boolean.parseBoolean(obj.get("over18").toString()),
                     Integer.parseInt(obj.get("subscribers").toString()),
                     obj.get("id").toString(), obj.get("description").toString());
-            subscibed.add(sub);
+            subscribed.add(sub);
         }
 
-        return subscibed;
+        return subscribed;
     }
 }

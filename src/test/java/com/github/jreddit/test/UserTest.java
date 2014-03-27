@@ -4,6 +4,8 @@ import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.user.User;
 import com.github.jreddit.user.UserInfo;
 import com.github.jreddit.utils.TestUtils;
+import com.github.jreddit.utils.restclient.HttpRestClient;
+import com.github.jreddit.utils.restclient.RestClient;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,6 +25,7 @@ import static org.junit.Assert.assertNull;
 public class UserTest {
 
     private static User user;
+    private static RestClient restClient = new HttpRestClient();
 
     @BeforeClass
     public static void initUser() {
@@ -57,7 +60,7 @@ public class UserTest {
         assertNotNull(info);
 
         // Test with non-existent user so that we check it fails
-        User newUser = new User("username", "password");
+        User newUser = new User(restClient, "username", "password");
         info = newUser.getUserInformation();
         assertNull(info);
     }
@@ -65,12 +68,12 @@ public class UserTest {
     @Test
     public void testAboutUser() {
         // Get information about an existing user
-        UserInfo userInfo = User.about(user.getUsername());
+        UserInfo userInfo = user.about(user.getUsername());
         assertNotNull(userInfo);
         assertEquals(userInfo.getName(), user.getUsername());
 
         // Attempt with a non-existent user
-        userInfo = User.about("1");
+        userInfo = user.about("1");
         assertNull(userInfo);
     }
 }

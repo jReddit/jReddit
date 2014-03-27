@@ -36,7 +36,6 @@ public class Captcha {
         String iden = null;
 
         try {
-            // Get the captcha iden
             JSONObject obj = (JSONObject) restClient.post(null, ApiEndpointUtils.CAPTCHA_NEW, user.getCookie()).getResponseObject();
             iden = (String) ((JSONArray) ((JSONArray) ((JSONArray) obj.get("jquery")).get(11)).get(3)).get(0);
             System.out.println("Received CAPTCHA iden: " + iden);
