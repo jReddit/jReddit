@@ -29,13 +29,13 @@ import static org.mockito.Mockito.*;
  */
 public class MessageTest {
 
-    public static final String COOKIE = "cookie";
-    public static final String MOD_HASH = "modHash";
-    public static final String CAPTCHA_TEXT = "captchaText";
-    public static final String CAPTCHA_IDEN = "captcha_iden";
-    public static final String TEST_SUBJECT = "Test Subject";
-    public static final String TEST_BODY = "Test Body";
-    public static final String DESTINATION_USER = "Destination User";
+    private static final String COOKIE = "cookie";
+    private static final String MOD_HASH = "modHash";
+    private static final String CAPTCHA_TEXT = "captchaText";
+    private static final String CAPTCHA_IDEN = "captcha_iden";
+    private static final String TEST_SUBJECT = "Test Subject";
+    private static final String TEST_BODY = "Test Body";
+    private static final String DESTINATION_USER = "Destination User";
 
     private User user;
     private RestClient restClient;

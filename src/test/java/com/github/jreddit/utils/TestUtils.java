@@ -11,8 +11,8 @@ import com.github.jreddit.utils.restclient.RestClient;
  */
 public class TestUtils {
 
-    public static final String TEST_USERNAME = "hvfcjhgrtc";
-    public static final String TEST_PASSWORD = "hvfcjhgrtc";
+    private static final String TEST_USERNAME = "hvfcjhgrtc";
+    private static final String TEST_PASSWORD = "hvfcjhgrtc";
     private static final RestClient restClient = new HttpRestClient();
 
     /**

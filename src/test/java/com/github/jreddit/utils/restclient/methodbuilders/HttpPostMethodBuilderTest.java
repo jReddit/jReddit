@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 
 public class HttpPostMethodBuilderTest {
 
-    public static final String URL = "http://www.example.com";
+    private static final String URL = "http://www.example.com";
     private HttpPostMethodBuilder underTest;
 
     @Before
