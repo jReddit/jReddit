@@ -60,8 +60,8 @@ public class Submissions {
         JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 
         JSONObject data;
-        for (int i = 0; i < array.size(); i++) {
-            data = (JSONObject) array.get(i);
+        for (Object anArray : array) {
+            data = (JSONObject) anArray;
             data = ((JSONObject) data.get("data"));
             submissions.add(new Submission(user, data.get("id").toString(), (data.get("permalink").toString())));
         }
