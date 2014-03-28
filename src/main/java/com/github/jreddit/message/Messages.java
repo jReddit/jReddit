@@ -22,7 +22,11 @@ import java.util.List;
 public class Messages {
 
     public static final int ALL_MESSAGES = -1;
-    private RestClient restClient = new HttpRestClient();
+    private RestClient restClient;
+
+    public Messages(RestClient restClient) {
+        this.restClient = restClient;
+    }
 
     /**
      * Get the list of messages of a certain type for a user

@@ -103,6 +103,7 @@ public class CaptchaTest {
         return new UtilResponse("", fooJsonObject(), 200);
     }
 
+    @SuppressWarnings("unchecked") //JSONSimple is not great..
     private JSONObject fooJsonObject() {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();

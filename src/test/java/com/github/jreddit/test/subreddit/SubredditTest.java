@@ -13,6 +13,7 @@ import java.util.List;
 
 import static com.github.jreddit.subreddit.SubredditType.*;
 import static com.github.jreddit.testsupport.JsonHelpers.jsonArrayOf;
+import static com.github.jreddit.testsupport.JsonHelpers.redditListing;
 import static com.github.jreddit.utils.ApiEndpointUtils.SUBREDDITS;
 import static com.github.jreddit.utils.ApiEndpointUtils.SUBREDDITS_GET;
 import static org.junit.Assert.*;
@@ -96,7 +97,7 @@ public class SubredditTest {
     }
 
 
-
+    @SuppressWarnings("unchecked") //JSONSimple is not great..
     private JSONObject subredditListingForFunny() {
 
         JSONObject funnyData = new JSONObject();
@@ -136,17 +137,6 @@ public class SubredditTest {
         funnyListing.put("data", funnyData);
         funnyListing.put("kind", funnyKind);
 
-        JSONObject data = new JSONObject();
-        data.put("after", "t5_2s5oq");
-        data.put("before", null);
-        data.put("children", jsonArrayOf(funnyListing));
-        data.put("modhash", "");
-
-        JSONObject root = new JSONObject();
-
-        root.put("data", data);
-        root.put("kind", "Listing");
-
-        return root;
+        return redditListing(funnyListing);
     }
 }
