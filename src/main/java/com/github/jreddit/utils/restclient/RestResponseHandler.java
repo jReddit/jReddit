@@ -12,7 +12,7 @@ import java.io.InputStream;
 
 public class RestResponseHandler implements ResponseHandler<Response> {
 
-    private JSONParser jsonParser;
+    private final JSONParser jsonParser;
 
     public RestResponseHandler() {
         this.jsonParser = new JSONParser();

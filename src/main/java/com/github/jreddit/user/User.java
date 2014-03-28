@@ -29,10 +29,9 @@ import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
  */
 public class User extends Thing {
 
-    private String username, password;
-    private String modhash, cookie;
-
-    private RestClient restClient;
+    private final String username;
+    private final RestClient restClient;
+    private String modhash, cookie, password;
 
     public User(RestClient restClient, String username, String password) {
         this.restClient = restClient;
@@ -84,13 +83,16 @@ public class User extends Thing {
         JSONObject object = submit(title, link, false, subreddit);
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
             System.err.println("Please login first.");
-        } else if (object.toJSONString().contains(
+        }
+        else if (object.toJSONString().contains(
                 ".error.RATELIMIT.field-ratelimit")) {
             System.err.println("You are doing that too much.");
-        } else if (object.toJSONString().contains(
+        }
+        else if (object.toJSONString().contains(
                 ".error.ALREADY_SUB.field-url")) {
             System.err.println("That link has already been submitted.");
-        } else {
+        }
+        else {
             System.out.println("Link submitted to "
                     + ((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(16)).get(3)).get(0));
         }
@@ -111,13 +113,16 @@ public class User extends Thing {
         JSONObject object = submit(title, text, true, subreddit);
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
             System.err.println("Please login first.");
-        } else if (object.toJSONString().contains(
+        }
+        else if (object.toJSONString().contains(
                 ".error.RATELIMIT.field-ratelimit")) {
             System.err.println("You are doing that too much.");
-        } else if (object.toJSONString().contains(
+        }
+        else if (object.toJSONString().contains(
                 ".error.ALREADY_SUB.field-url")) {
             System.err.println("That link has already been submitted.");
-        } else {
+        }
+        else {
             System.out.println("Self post submitted to "
                     + ((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(10)).get(3)).get(0));
         }
@@ -209,7 +214,6 @@ public class User extends Thing {
         return comments(username);
     }
 
-
     public List<Comment> comments(String username) {
         return comments(username, CommentSort.NEW);
     }
@@ -227,7 +231,7 @@ public class User extends Thing {
             // Send GET request to get the account overview
             JSONObject object =
                     (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_COMMENTS,
-                             username, commentSort.getValue()), null).getResponseObject();
+                            username, commentSort.getValue()), null).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -247,7 +251,8 @@ public class User extends Thing {
                 // Add it to the submissions list
                 comments.add(c);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         // Return the submissions
@@ -278,7 +283,8 @@ public class User extends Thing {
                 //add a new Submission to the list
                 submissions.add(new Submission(obj));
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -415,7 +421,7 @@ public class User extends Thing {
         try {
             JSONObject object =
                     (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS_INTERACTION,
-                             username, where, sort.getValue()), cookie).getResponseObject();
+                            username, where, sort.getValue()), cookie).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -425,7 +431,8 @@ public class User extends Thing {
                 obj = (JSONObject) obj.get("data");
                 submissions.add(new Submission(obj));
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return submissions;
@@ -433,6 +440,7 @@ public class User extends Thing {
 
     /**
      * Returns a list of Subreddits to which the user is subscribed.
+     *
      * @return List of Subreddits
      */
     public List<Subreddit> getSubscribed() {

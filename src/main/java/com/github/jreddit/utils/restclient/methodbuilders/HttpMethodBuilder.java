@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract class HttpMethodBuilder<T extends HttpMethodBuilder, O extends HttpRequestBase> {
 
-    protected List<Header> headers = new ArrayList<Header>();
+    protected final List<Header> headers = new ArrayList<Header>();
     protected URI uri;
 
     public T withUrl(String url) throws URISyntaxException {

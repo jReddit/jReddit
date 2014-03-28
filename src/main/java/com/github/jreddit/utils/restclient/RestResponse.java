@@ -3,9 +3,9 @@ package com.github.jreddit.utils.restclient;
 import org.apache.http.HttpResponse;
 
 public class RestResponse implements Response {
-    private String responseText;
-    private Object responseObject;
-    private HttpResponse httpResponse;
+    private final String responseText;
+    private final Object responseObject;
+    private final HttpResponse httpResponse;
 
     public RestResponse(String responseText, Object responseObject, HttpResponse httpResponse) {
         this.responseText = responseText;

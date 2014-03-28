@@ -120,6 +120,7 @@ public class CaptchaTest {
         return new UtilResponse("", responseObject, 200);
     }
 
+    @SuppressWarnings("unchecked") //JSONSimple is not great..
     private JSONObject newCaptchaJsonResponseWith(String ident) {
         JSONObject root = new JSONObject();
         JSONArray rootArray = jsonArrayOf(

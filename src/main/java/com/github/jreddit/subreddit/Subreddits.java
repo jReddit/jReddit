@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class Subreddits {
 
-    private RestClient restClient;
+    private final RestClient restClient;
 
     public Subreddits(RestClient restClient) {
         this.restClient = restClient;

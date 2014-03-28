@@ -18,8 +18,8 @@ import java.net.MalformedURLException;
  */
 public class Captcha {
 
-    private CaptchaDownloader captchaDownloader;
-    private RestClient restClient;
+    private final CaptchaDownloader captchaDownloader;
+    private final RestClient restClient;
 
     public Captcha(RestClient restClient, CaptchaDownloader captchaDownloader) {
         this.restClient = restClient;

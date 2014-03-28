@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class Submission extends Thing {
 
-    private RestClient restClient = new HttpRestClient();
+    private final RestClient restClient = new HttpRestClient();
 
     /* This is the user that will vote on a submission. */
     private User user;

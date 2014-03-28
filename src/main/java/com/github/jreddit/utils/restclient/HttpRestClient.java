@@ -26,13 +26,13 @@ import static com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBu
 import static com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder.httpPostMethod;
 
 public class HttpRestClient implements RestClient {
-    private HttpClient httpClient;
-    private ResponseHandler<Response> responseHandler;
-    private String userAgent = "Omer's Reddit API Java Wrapper";
-    private RequestConfig globalConfig = RequestConfig.custom()
+    private final HttpClient httpClient;
+    private final ResponseHandler<Response> responseHandler;
+    private final RequestConfig globalConfig = RequestConfig.custom()
             .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
             .setConnectionRequestTimeout(10000)
             .build();
+    private String userAgent = "Omer's Reddit API Java Wrapper";
 
     public HttpRestClient() {
         // As we're currently managing cookies elsewhere we need to set our config to ignore them

@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNull;
 public class UserTest {
 
     private static User user;
-    private static RestClient restClient = new HttpRestClient();
+    private final static RestClient restClient = new HttpRestClient();
 
     @BeforeClass
     public static void initUser() {

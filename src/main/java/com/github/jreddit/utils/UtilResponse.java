@@ -4,9 +4,9 @@ import com.github.jreddit.utils.restclient.Response;
 
 public class UtilResponse implements Response {
 
-    private String responseText;
-    private Object responseObject;
-    private int statusCode;
+    private final String responseText;
+    private final Object responseObject;
+    private final int statusCode;
 
     public UtilResponse(String responseText, Object responseObject, int statusCode) {
         this.responseText = responseText;

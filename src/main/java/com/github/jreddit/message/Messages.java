@@ -22,7 +22,7 @@ import java.util.List;
 public class Messages {
 
     public static final int ALL_MESSAGES = -1;
-    private RestClient restClient;
+    private final RestClient restClient;
 
     public Messages(RestClient restClient) {
         this.restClient = restClient;

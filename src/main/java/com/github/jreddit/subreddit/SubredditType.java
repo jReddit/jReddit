@@ -4,7 +4,7 @@ public enum SubredditType {
 
     NEW("new"), BANNED("banned"), POPULAR("popular");
 
-    private String value;
+    private final String value;
 
     SubredditType(String value) {
         this.value = value;
