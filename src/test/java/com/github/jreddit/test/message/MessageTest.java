@@ -104,16 +104,16 @@ public class MessageTest {
 
     @Test
     public void markMessageAsRead() {
-        underTest.readMessage("messagename", user);
+        underTest.readMessage("messageName", user);
 
-        verify(restClient).post("id=" + "messagename" + "&uh=" + user.getModhash(), ApiEndpointUtils.MESSAGE_READ, user.getCookie());
+        verify(restClient).post("id=" + "messageName" + "&uh=" + user.getModhash(), ApiEndpointUtils.MESSAGE_READ, user.getCookie());
     }
 
     @Test
     public void markMessageAsUnread() {
-        underTest.readMessage("messagename", user);
+        underTest.readMessage("messageName", user);
 
-        verify(restClient).post("id=" + "messagename" + "&uh=" + user.getModhash(), ApiEndpointUtils.MESSAGE_READ, user.getCookie());
+        verify(restClient).post("id=" + "messageName" + "&uh=" + user.getModhash(), ApiEndpointUtils.MESSAGE_READ, user.getCookie());
     }
 
 
