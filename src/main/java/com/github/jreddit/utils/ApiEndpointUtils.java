@@ -52,6 +52,8 @@ public class ApiEndpointUtils {
     public static final String USER_SUBMISSIONS = "/user/%s/submitted.json";
 
     public static final String USER_INFO = REDDIT_BASE_API_ENDPOINT + "/me.json";
+    
+	public static final String USER_UPDATE = REDDIT_BASE_API_ENDPOINT + "/update";
 
     /* Subreddits specific constants */
 
