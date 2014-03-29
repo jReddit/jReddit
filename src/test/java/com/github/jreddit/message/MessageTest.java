@@ -1,10 +1,8 @@
-package com.github.jreddit.test.message;
+package com.github.jreddit.message;
 
-import com.github.jreddit.message.Message;
-import com.github.jreddit.message.Messages;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.UtilResponse;
+import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.apache.commons.lang3.StringUtils;

@@ -1,4 +1,4 @@
-package com.github.jreddit.utils;
+package com.github.jreddit.testsupport;
 
 import com.github.jreddit.utils.restclient.Response;
 

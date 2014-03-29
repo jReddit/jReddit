@@ -1,8 +1,6 @@
-package com.github.jreddit.test.subreddit;
+package com.github.jreddit.subreddit;
 
-import com.github.jreddit.subreddit.Subreddit;
-import com.github.jreddit.subreddit.Subreddits;
-import com.github.jreddit.utils.UtilResponse;
+import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.junit.Before;

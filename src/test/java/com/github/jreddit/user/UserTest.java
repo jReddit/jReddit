@@ -1,10 +1,8 @@
-package com.github.jreddit.test.user;
+package com.github.jreddit.user;
 
 import com.github.jreddit.subreddit.Subreddit;
-import com.github.jreddit.user.User;
-import com.github.jreddit.user.UserInfo;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.UtilResponse;
+import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONObject;

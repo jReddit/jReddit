@@ -1,10 +1,8 @@
-package com.github.jreddit.test.captcha;
+package com.github.jreddit.captcha;
 
-import com.github.jreddit.captcha.Captcha;
-import com.github.jreddit.captcha.CaptchaDownloader;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.UtilResponse;
+import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
