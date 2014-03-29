@@ -18,7 +18,7 @@ import java.util.LinkedList;
  */
 public class Submissions {
 
-    private RestClient restClient;
+    private final RestClient restClient;
 
     public enum Popularity {
         HOT, NEW
