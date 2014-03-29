@@ -12,9 +12,11 @@ import java.util.List;
  */
 public final class OverviewBot {
 	public static void main(String[] args) throws Exception {
-		Utils.setUserAgent("Overview-Bot");
-		User user = new User("user", "password");
-		user.connect();
+        RestClient restClient = new HttpRestClient();
+        restClient.setUserAgent("Overview-Bot");
+
+        User user = new User(restclient, "user", "password");
+        user.connect();
 		
 		//Submission Array from user profile
 		List<Submission> submissions = user.getDislikedSubmissions();
