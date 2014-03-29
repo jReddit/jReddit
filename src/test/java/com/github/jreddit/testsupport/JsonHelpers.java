@@ -159,4 +159,49 @@ public class JsonHelpers {
     public static JSONArray emptyJsonArray() {
         return new JSONArray();
     }
+
+    public static JSONObject createSubmission(String redditObjId, boolean nsfw) {
+        JSONObject submission = new JSONObject();
+        submission.put("approved_by", null);
+        submission.put("author", "jReddittest");
+        submission.put("author_flair_css_class", null);
+        submission.put("author_flair_text", null);
+        submission.put("banned_by", null);
+        submission.put("clicked", false);
+        submission.put("created", 1374180782.0);
+        submission.put("created_utc", 1374177182.0);
+        submission.put("distinguished", null);
+        submission.put("domain", "github.com");
+        submission.put("downs", 0L);
+        submission.put("edited", false);
+        submission.put("gilded", 0);
+        submission.put("hidden", false);
+        submission.put("id", "1ikxpg");
+        submission.put("is_self", false);
+        submission.put("likes", true);
+        submission.put("link_flair_css_class", null);
+        submission.put("link_flair_text", null);
+        submission.put("media", null);
+        submission.put("media_embed", new JSONObject());
+        submission.put("name", redditObjId);
+        submission.put("num_comments", 0L);
+        submission.put("num_reports", 0);
+        submission.put("over_18", nsfw);
+        submission.put("permalink", "/r/jReddit/comments/1ikxpg/thekarangoeljreddit_github/");
+        submission.put("saved", false);
+        submission.put("score", 1L);
+        submission.put("secure_media", null);
+        submission.put("secure_media_embed", new JSONObject());
+        submission.put("selftext", "");
+        submission.put("selftext_html", null);
+        submission.put("stickied", false);
+        submission.put("subreddit", "jReddit");
+        submission.put("subreddit_id", "t5_2xwsy");
+        submission.put("thumbnail", "");
+        submission.put("title", "thekarangoel/jReddit \u00b7 GitHub");
+        submission.put("ups", 1L);
+        submission.put("url", "https://github.com/thekarangoel/jReddit");
+        submission.put("visited", false);
+        return submission;
+    }
 }

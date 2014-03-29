@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class Submission extends Thing {
 
-    private final RestClient restClient = new HttpRestClient();
+    private RestClient restClient;
 
     /* This is the user that will vote on a submission. */
     private User user;
@@ -40,6 +40,7 @@ public class Submission extends Thing {
     private long score;
 
     public Submission() {
+        restClient = new HttpRestClient();
     }
 
     /**
@@ -63,6 +64,12 @@ public class Submission extends Thing {
         } catch (Exception e) {
             System.err.println("Error creating Submission");
         }
+        restClient = new HttpRestClient();
+    }
+
+    // this is very stinky..
+    public void setRestClient(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     public void setUpVotes(long upVotes) {
