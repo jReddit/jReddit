@@ -124,10 +124,6 @@ public class Submission extends Thing {
         this.user = user;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
     public String getURL() {
         return url;
     }
