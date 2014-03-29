@@ -17,12 +17,19 @@ import java.util.LinkedList;
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Submissions {
+
+    private RestClient restClient;
+
     public enum Popularity {
         HOT, NEW
     }
 
     public enum Page {
         FRONTPAGE
+    }
+
+    public Submissions(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     /**
@@ -37,12 +44,11 @@ public class Submissions {
      * @throws IOException    If connection fails
      * @throws ParseException If JSON parsing fails
      */
-    public static LinkedList<Submission> getSubmissions(String redditName,
+    public LinkedList<Submission> getSubmissions(String redditName,
                        Popularity type, Page frontpage, User user) throws IOException, ParseException {
 
         LinkedList<Submission> submissions = new LinkedList<Submission>();
         String urlString = "/r/" + redditName;
-        RestClient restClient = new HttpRestClient();
 
         switch (type) {
             case NEW:

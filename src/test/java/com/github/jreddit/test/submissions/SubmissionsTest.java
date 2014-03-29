@@ -3,42 +3,64 @@ package com.github.jreddit.test.submissions;
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.submissions.Submissions;
 import com.github.jreddit.user.User;
-import com.github.jreddit.utils.TestUtils;
-import org.junit.BeforeClass;
+import com.github.jreddit.utils.UtilResponse;
+import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.RestClient;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
+import static com.github.jreddit.testsupport.JsonHelpers.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SubmissionsTest {
 
-    private static User user;
+    public static final String COOKIE = "cookie";
+    public static final String REDDIT_NAME = "all";
+    private Submissions underTest;
+    private RestClient restClient;
+    private User user;
 
-    @BeforeClass
-    public static void initUser() {
-        try {
-            user = TestUtils.createAndConnectUser();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Before
+    public void setUp() {
+        user = mock(User.class);
+        restClient = mock(RestClient.class);
+        underTest = new Submissions(restClient);
     }
 
     @Test
-    public void test() {
-        try {
-            List<Submission> frontPage = Submissions.getSubmissions("all", Submissions.Popularity.HOT, Submissions.Page.FRONTPAGE, user);
-            Submission first = frontPage.get(0);
+    public void testNew() throws IOException, ParseException {
+        Response response = new UtilResponse(null, submissionListings(), 200);
+        String urlString = "/r/" + REDDIT_NAME + ".json";
 
-            assertNotSame(
-                    "The submission's ID/full name can't be empty, how will reddit identify the submission?",
-                    first.fullName, "");
-            assertNotNull(
-                    "The submission's ID/full name can't be null, how will reddit identify the submission?",
-                    first.fullName);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        when(user.getCookie()).thenReturn(COOKIE);
+        when(restClient.get(urlString, COOKIE)).thenReturn(response);
+
+        List<Submission> frontPage = underTest.getSubmissions(REDDIT_NAME, Submissions.Popularity.HOT, Submissions.Page.FRONTPAGE, user);
+
+        assertTrue(frontPage.size() == 2);
+    }
+
+    private JSONObject submissionListings() {
+        JSONObject media = createMediaObject();
+        JSONObject mediaEmbed = createMediaEmbedObject();
+        JSONObject submission = createSubmission("redditObjName", false, media, mediaEmbed);
+        JSONObject submission1 = createSubmission("anotherRedditObjName", false, media, mediaEmbed);
+
+        JSONObject foo = new JSONObject();
+        foo.put("data", submission);
+        foo.put("kind", "t3");
+
+        JSONObject bar = new JSONObject();
+        bar.put("data", submission1);
+        bar.put("kind", "t3");
+
+        return redditListing(foo, bar);
     }
 }

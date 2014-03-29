@@ -161,6 +161,10 @@ public class JsonHelpers {
     }
 
     public static JSONObject createSubmission(String redditObjId, boolean nsfw) {
+        return createSubmission(redditObjId, nsfw, null, new JSONObject());
+    }
+
+    public static JSONObject createSubmission(String redditObjId, boolean nsfw, JSONObject media, JSONObject mediaEmbed) {
         JSONObject submission = new JSONObject();
         submission.put("approved_by", null);
         submission.put("author", "jReddittest");
@@ -181,8 +185,8 @@ public class JsonHelpers {
         submission.put("likes", true);
         submission.put("link_flair_css_class", null);
         submission.put("link_flair_text", null);
-        submission.put("media", null);
-        submission.put("media_embed", new JSONObject());
+        submission.put("media", media);
+        submission.put("media_embed", mediaEmbed);
         submission.put("name", redditObjId);
         submission.put("num_comments", 0L);
         submission.put("num_reports", 0);
@@ -203,5 +207,37 @@ public class JsonHelpers {
         submission.put("url", "https://github.com/thekarangoel/jReddit");
         submission.put("visited", false);
         return submission;
+    }
+
+    public static JSONObject createMediaObject() {
+        JSONObject oembed = new JSONObject();
+        oembed.put("author_name", "Imgur");
+        oembed.put("author_url", "http://imgur.com/user/Imgur");
+        oembed.put("description", "Imgur is home to the web's most popular image content, curated in real time by a dedicated community through commenting, voting and sharing.");
+        oembed.put("height", 550);
+        oembed.put("html", "&lt;iframe class=\"embedly-embed\" src=\"//cdn.embedly.com/widgets/media.html?src=http%3A%2F%2Fimgur.com%2Fa%2FPs7Ta%2Fembed&amp;url=http%3A%2F%2Fimgur.com%2Fa%2FPs7Ta%3F&amp;image=http%3A%2F%2Fi.imgur.com%2FtSrCkSB.jpg&amp;key=2aa3c4d5f3de4f5b9120b660ad850dc9&amp;type=text%2Fhtml&amp;schema=imgur\" width=\"550\" height=\"550\" scrolling=\"no\" frameborder=\"0\" allowfullscreen&gt;&lt;/iframe&gt;");
+        oembed.put("provider_name", "Imgur");
+        oembed.put("provider_url", "http://imgur.com");
+        oembed.put("thumbnail_height", 350);
+        oembed.put("thumbnail_url", "http://i.imgur.com/tSrCkSB.jpg");
+        oembed.put("thumbnail_width", 600);
+        oembed.put("title", "$9000 Dream Home - Imgur");
+        oembed.put("type", "rich");
+        oembed.put("version", "1.0");
+        oembed.put("width", 550);
+
+        JSONObject mediaObject = new JSONObject();
+        mediaObject.put("oembed", oembed);
+        mediaObject.put("type", "imgur.com");
+        return mediaObject;
+    }
+
+    public static JSONObject createMediaEmbedObject() {
+        JSONObject mediaEmbedObject = new JSONObject();
+        mediaEmbedObject.put("content", "&lt;iframe class=\"embedly-embed\" src=\"//cdn.embedly.com/widgets/media.html?src=http%3A%2F%2Fimgur.com%2Fa%2FPs7Ta%2Fembed&amp;url=http%3A%2F%2Fimgur.com%2Fa%2FPs7Ta%3F&amp;image=http%3A%2F%2Fi.imgur.com%2FtSrCkSB.jpg&amp;key=2aa3c4d5f3de4f5b9120b660ad850dc9&amp;type=text%2Fhtml&amp;schema=imgur\" width=\"550\" height=\"550\" scrolling=\"no\" frameborder=\"0\" allowfullscreen&gt;&lt;/iframe&gt;");
+        mediaEmbedObject.put("height", 550);
+        mediaEmbedObject.put("scrolling", false);
+        mediaEmbedObject.put("width", 550);
+        return mediaEmbedObject;
     }
 }
