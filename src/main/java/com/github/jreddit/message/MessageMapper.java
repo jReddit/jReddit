@@ -23,16 +23,19 @@ public class MessageMapper {
             message.setBody(jsonObject.get("body").toString());
             message.setComment(Boolean.valueOf(jsonObject.get("was_comment").toString()));
             message.setFullName(jsonObject.get("name").toString());
-            message.setAuthor(jsonObject.get("author").toString());
             message.setCreated(jsonObject.get("created").toString());
             message.setRecipient(jsonObject.get("dest").toString());
-            message.setAuthor(jsonObject.get("author").toString());
+            if (jsonObject.get("author") == null)
+            {
+                msg.setAuthor("reddit");
+            } else {
+                msg.setAuthor(jsonObject.get("author").toString());
+            }
             message.setCreatedUTC(jsonObject.get("created_utc").toString());
             message.setBodyHtml(jsonObject.get("body_html").toString());
             message.setSubject(jsonObject.get("subject").toString());
             message.setContext(jsonObject.get("context").toString());
             message.setId(jsonObject.get("id").toString());
-            message.setSubject(jsonObject.get("subject").toString());
         } catch (Exception e) {
             System.err.println("Error mapping JSON object to a Message class");
         }
