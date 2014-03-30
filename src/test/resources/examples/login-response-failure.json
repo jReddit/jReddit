@@ -1,0 +1,11 @@
+{
+    "json":  {
+        "errors":  [
+            [
+                "WRONG_PASSWORD",
+                "invalid password",
+                "passwd"
+            ]
+        ]
+    }
+}
