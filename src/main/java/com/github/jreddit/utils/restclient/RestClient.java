@@ -8,7 +8,7 @@ public interface RestClient {
      * @param urlPath The url to make a get request to
      * @param cookie The cookie to use when making the request
      *
-     * @return <code>Object</code> the JSONSimple interpretation of the response
+     * @return <code>Response</code> an object conforming to the Response interface
      */
     public Response get(String urlPath, String cookie);
 
@@ -19,7 +19,7 @@ public interface RestClient {
      * @param urlPath The url to make a get request to
      * @param cookie The cookie to use when making the request
      *
-     * @return <code>Object</code> the JSONSimple interpretation of the response
+     * @return <code>Response</code> an object conforming to the Response interface
      */
     public Response post(String apiParams, String urlPath, String cookie);
 
