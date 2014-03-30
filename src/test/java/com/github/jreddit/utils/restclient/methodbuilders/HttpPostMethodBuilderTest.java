@@ -63,57 +63,57 @@ public class HttpPostMethodBuilderTest {
 
     @Test
     public void hashCodeIsSameWithSameURL() throws URISyntaxException {
-        HttpGetMethodBuilder first = HttpGetMethodBuilder.httpGetMethod().withUrl(URL);
-        HttpGetMethodBuilder second = HttpGetMethodBuilder.httpGetMethod().withUrl(URL);
+        HttpPostMethodBuilder first = httpPostMethod().withUrl(URL);
+        HttpPostMethodBuilder second = httpPostMethod().withUrl(URL);
         assertTrue(first.hashCode() == second.hashCode());
     }
 
     @Test
     public void hashCodeIsDifferentWithDifferentURL() throws URISyntaxException {
-        HttpGetMethodBuilder first = HttpGetMethodBuilder.httpGetMethod().withUrl(URL);
-        HttpGetMethodBuilder second = HttpGetMethodBuilder.httpGetMethod().withUrl(URL + "foo");
+        HttpPostMethodBuilder first = httpPostMethod().withUrl(URL);
+        HttpPostMethodBuilder second = httpPostMethod().withUrl(URL + "foo");
         assertFalse(first.hashCode() == second.hashCode());
     }
 
     @Test
     public void hashCodeIsSameWithSameCookie() throws URISyntaxException {
-        HttpGetMethodBuilder first = HttpGetMethodBuilder.httpGetMethod().withUrl(URL).withCookie("cookie");
-        HttpGetMethodBuilder second = HttpGetMethodBuilder.httpGetMethod().withUrl(URL).withCookie("cookie");
+        HttpPostMethodBuilder first = httpPostMethod().withUrl(URL).withCookie("cookie");
+        HttpPostMethodBuilder second = httpPostMethod().withUrl(URL).withCookie("cookie");
         assertTrue(first.hashCode() == second.hashCode());
     }
 
     @Test
     public void hashCodeIsDifferentWithDifferentCookie() throws URISyntaxException {
-        HttpGetMethodBuilder first = HttpGetMethodBuilder.httpGetMethod().withUrl(URL).withCookie("cookie");
-        HttpGetMethodBuilder second = HttpGetMethodBuilder.httpGetMethod().withUrl(URL).withCookie("foo");
+        HttpPostMethodBuilder first = httpPostMethod().withUrl(URL).withCookie("cookie");
+        HttpPostMethodBuilder second = httpPostMethod().withUrl(URL).withCookie("foo");
         assertFalse(first.hashCode() == second.hashCode());
     }
 
     @Test
     public void equalityWithSameURL() throws URISyntaxException {
-        HttpGetMethodBuilder first = HttpGetMethodBuilder.httpGetMethod().withUrl(URL);
-        HttpGetMethodBuilder second = HttpGetMethodBuilder.httpGetMethod().withUrl(URL);
+        HttpPostMethodBuilder first = httpPostMethod().withUrl(URL);
+        HttpPostMethodBuilder second = httpPostMethod().withUrl(URL);
         assertTrue(first.equals(second));
     }
 
     @Test
     public void inequalityWithDifferentURL() throws URISyntaxException {
-        HttpGetMethodBuilder first = HttpGetMethodBuilder.httpGetMethod().withUrl(URL);
-        HttpGetMethodBuilder second = HttpGetMethodBuilder.httpGetMethod().withUrl(URL + "foo");
+        HttpPostMethodBuilder first = httpPostMethod().withUrl(URL);
+        HttpPostMethodBuilder second = httpPostMethod().withUrl(URL + "foo");
         assertFalse(first.equals(second));
     }
 
     @Test
     public void equalityWithSameCookie() throws URISyntaxException {
-        HttpGetMethodBuilder first = HttpGetMethodBuilder.httpGetMethod().withUrl(URL).withCookie("cookie");
-        HttpGetMethodBuilder second = HttpGetMethodBuilder.httpGetMethod().withUrl(URL).withCookie("cookie");
+        HttpPostMethodBuilder first = httpPostMethod().withUrl(URL).withCookie("cookie");
+        HttpPostMethodBuilder second = httpPostMethod().withUrl(URL).withCookie("cookie");
         assertTrue(first.equals(second));
     }
 
     @Test
     public void inequalityWithDifferentCookie() throws URISyntaxException {
-        HttpGetMethodBuilder first = HttpGetMethodBuilder.httpGetMethod().withUrl(URL).withCookie("cookie");
-        HttpGetMethodBuilder second = HttpGetMethodBuilder.httpGetMethod().withUrl(URL).withCookie("foo");
+        HttpPostMethodBuilder first = httpPostMethod().withUrl(URL).withCookie("cookie");
+        HttpPostMethodBuilder second = httpPostMethod().withUrl(URL).withCookie("foo");
         assertFalse(first.equals(second));
     }
 }

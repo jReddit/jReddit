@@ -45,8 +45,8 @@ public abstract class HttpMethodBuilder<T extends HttpMethodBuilder, O extends H
 
     @Override
     public boolean equals(final Object obj) {
-        if(obj instanceof HttpGetMethodBuilder){
-            final HttpGetMethodBuilder other = (HttpGetMethodBuilder) obj;
+        if(obj instanceof HttpMethodBuilder){
+            final HttpMethodBuilder other = (HttpMethodBuilder) obj;
             return new EqualsBuilder()
                     .append(uri, other.uri)
                     .append(headers, other.headers)
