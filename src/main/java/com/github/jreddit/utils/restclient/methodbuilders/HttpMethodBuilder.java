@@ -1,8 +1,10 @@
 package com.github.jreddit.utils.restclient.methodbuilders;
 
+import com.github.jreddit.utils.restclient.RestClientHeader;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.http.Header;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.message.BasicHeader;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,15 +23,36 @@ public abstract class HttpMethodBuilder<T extends HttpMethodBuilder, O extends H
 
     public T withCookie(String cookie) {
         if (cookie != null && !cookie.isEmpty()) {
-            headers.add(new BasicHeader("cookie", "reddit_session=" + cookie));
+            headers.add(new RestClientHeader("cookie", "reddit_session=" + cookie));
         }
         return (T) this;
     }
 
     public T withUserAgent(String userAgent) {
-        headers.add(new BasicHeader("User-Agent", userAgent));
+        headers.add(new RestClientHeader("User-Agent", userAgent));
         return (T) this;
     }
 
     public abstract O build();
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(uri)
+                .append(headers)
+                .build();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if(obj instanceof HttpGetMethodBuilder){
+            final HttpGetMethodBuilder other = (HttpGetMethodBuilder) obj;
+            return new EqualsBuilder()
+                    .append(uri, other.uri)
+                    .append(headers, other.headers)
+                    .isEquals();
+        } else{
+            return false;
+        }
+    }
 }
