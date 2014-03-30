@@ -1,15 +1,15 @@
 package com.github.jreddit.testsupport;
 
-import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.ResponseWithJsonSimple;
 
-public class UtilResponse implements Response {
+public class UtilResponse implements ResponseWithJsonSimple {
 
-    private final String responseText;
+    private final String responseBody;
     private final Object responseObject;
     private final int statusCode;
 
-    public UtilResponse(String responseText, Object responseObject, int statusCode) {
-        this.responseText = responseText;
+    public UtilResponse(String responseBody, Object responseObject, int statusCode) {
+        this.responseBody = responseBody;
         this.responseObject = responseObject;
         this.statusCode = statusCode;
     }
@@ -25,7 +25,7 @@ public class UtilResponse implements Response {
     }
 
     @Override
-    public String getResponseText() {
-        return responseText;
+    public String getResponseBody() {
+        return responseBody;
     }
 }

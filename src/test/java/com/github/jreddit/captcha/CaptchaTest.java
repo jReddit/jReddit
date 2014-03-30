@@ -3,7 +3,7 @@ package com.github.jreddit.captcha;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.ResponseWithJsonSimple;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -31,7 +31,7 @@ public class CaptchaTest {
 
     private User user;
     private RestClient restClient;
-    private Response response;
+    private ResponseWithJsonSimple response;
     private CaptchaDownloader captchaDownloader;
     private Captcha underTest;
 
@@ -97,7 +97,7 @@ public class CaptchaTest {
         assertFalse(underTest.needsCaptcha(user));
     }
 
-    private Response generateBadlyFormedJson() throws ParseException {
+    private ResponseWithJsonSimple generateBadlyFormedJson() throws ParseException {
         return new UtilResponse("", fooJsonObject(), 200);
     }
 
@@ -113,7 +113,7 @@ public class CaptchaTest {
         return jsonObject;
     }
 
-    private Response generateNewCaptchaResponseWithIdent(String ident) throws ParseException {
+    private ResponseWithJsonSimple generateNewCaptchaResponseWithIdent(String ident) throws ParseException {
         JSONObject responseObject = newCaptchaJsonResponseWith(ident);
         return new UtilResponse("", responseObject, 200);
     }

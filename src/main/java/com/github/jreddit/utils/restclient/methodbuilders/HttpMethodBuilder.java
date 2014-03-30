@@ -33,6 +33,13 @@ public abstract class HttpMethodBuilder<T extends HttpMethodBuilder, O extends H
         return (T) this;
     }
 
+    public T withHeaders(List<RestClientHeader> headers) {
+        for (RestClientHeader header : headers) {
+            this.headers.add(header);
+        }
+        return (T) this;
+    }
+
     public abstract O build();
 
     @Override

@@ -27,7 +27,7 @@ import static com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodB
 
 public class HttpRestClient implements RestClient {
     private final HttpClient httpClient;
-    private final ResponseHandler<Response> responseHandler;
+    private final ResponseHandler<ResponseWithJsonSimple> responseHandler;
     private final RequestConfig globalConfig = RequestConfig.custom()
             .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
             .setConnectionRequestTimeout(10000)
@@ -39,16 +39,16 @@ public class HttpRestClient implements RestClient {
         this.httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(globalConfig)
                 .build();
-        this.responseHandler = new RestResponseHandler();
+        this.responseHandler = new JsonSimpleResponseHandler();
     }
 
-    public HttpRestClient(HttpClient httpClient, ResponseHandler<Response> responseHandler) {
+    public HttpRestClient(HttpClient httpClient, ResponseHandler<ResponseWithJsonSimple> responseHandler) {
         this.httpClient = httpClient;
         this.responseHandler = responseHandler;
     }
 
     @Override
-    public Response get(String urlPath, String cookie) {
+    public ResponseWithJsonSimple get(String urlPath, String cookie) {
         try {
             return get(httpGetMethod()
                     .withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath)
@@ -67,14 +67,14 @@ public class HttpRestClient implements RestClient {
         return null;
     }
 
-    public Response get(HttpGetMethodBuilder getMethodBuilder) throws IOException, ParseException {
+    public ResponseWithJsonSimple get(HttpGetMethodBuilder getMethodBuilder) throws IOException, ParseException {
         getMethodBuilder.withUserAgent(userAgent);
         HttpGet request = getMethodBuilder.build();
         return httpClient.execute(request, responseHandler);
     }
 
     @Override
-    public Response post(String apiParams, String urlPath, String cookie) {
+    public ResponseWithJsonSimple post(String apiParams, String urlPath, String cookie) {
         try {
             return post(
                     httpPostMethod()
@@ -95,11 +95,11 @@ public class HttpRestClient implements RestClient {
         return null;
     }
 
-    public Response post(HttpPostMethodBuilder postMethodBuilder, NameValuePair... params) throws IOException, ParseException {
+    public ResponseWithJsonSimple post(HttpPostMethodBuilder postMethodBuilder, NameValuePair... params) throws IOException, ParseException {
         return post(postMethodBuilder, Arrays.asList(params));
     }
 
-    public Response post(HttpPostMethodBuilder postMethodBuilder, List<NameValuePair> params) throws IOException, ParseException {
+    public ResponseWithJsonSimple post(HttpPostMethodBuilder postMethodBuilder, List<NameValuePair> params) throws IOException, ParseException {
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
 
         postMethodBuilder.withUserAgent(userAgent);

@@ -1,7 +1,7 @@
 package com.github.jreddit.subreddit;
 
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.ResponseWithJsonSimple;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class SubredditTest {
 
     private RestClient restClient;
     private Subreddits underTest;
-    private Response response;
+    private ResponseWithJsonSimple response;
 
     @Before
     public void setUp() {

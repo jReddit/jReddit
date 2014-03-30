@@ -3,7 +3,7 @@ package com.github.jreddit.message;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.ResponseWithJsonSimple;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -51,7 +51,7 @@ public class MessageTest {
 
     @Test
     public void getUnreadMessages() {
-        Response response = new UtilResponse("", someUnreadDirectMessage(), 200);
+        ResponseWithJsonSimple response = new UtilResponse("", someUnreadDirectMessage(), 200);
 
         when(restClient.get(String.format(MESSAGE_GET, UNREAD.getValue()), COOKIE)).thenReturn(response);
 
@@ -62,7 +62,7 @@ public class MessageTest {
 
     @Test
     public void getInboxMessages() {
-        Response response = new UtilResponse("", allDirectMessage(), 200);
+        ResponseWithJsonSimple response = new UtilResponse("", allDirectMessage(), 200);
 
         when(restClient.get(String.format(MESSAGE_GET, SENT.getValue()), COOKIE)).thenReturn(response);
 
@@ -73,7 +73,7 @@ public class MessageTest {
 
     @Test
     public void getSentMessages() {
-        Response response = new UtilResponse("", someSentMessages(), 200);
+        ResponseWithJsonSimple response = new UtilResponse("", someSentMessages(), 200);
 
         when(restClient.get(String.format(MESSAGE_GET, INBOX.getValue()), COOKIE)).thenReturn(response);
 
@@ -84,7 +84,7 @@ public class MessageTest {
 
     @Test
     public void successfullySendMessage() {
-        Response response = new UtilResponse("", messageSendSuccessResponse(), 200);
+        ResponseWithJsonSimple response = new UtilResponse("", messageSendSuccessResponse(), 200);
 
         when(restClient.post("captcha=" + CAPTCHA_TEXT + "&iden=" + CAPTCHA_IDEN +
                         "&subject=" + TEST_SUBJECT + "&text=" + TEST_BODY + "&to=" + DESTINATION_USER +

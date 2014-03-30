@@ -2,7 +2,7 @@ package com.github.jreddit.submissions;
 
 import com.github.jreddit.user.User;
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.ResponseWithJsonSimple;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -34,7 +34,7 @@ public class SubmissionsTest {
 
     @Test
     public void testNew() throws IOException, ParseException {
-        Response response = new UtilResponse(null, submissionListings(), 200);
+        ResponseWithJsonSimple response = new UtilResponse(null, submissionListings(), 200);
         String urlString = "/r/" + REDDIT_NAME + ".json";
 
         when(user.getCookie()).thenReturn(COOKIE);

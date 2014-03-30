@@ -10,7 +10,7 @@ public interface RestClient {
      *
      * @return <code>Response</code> an object conforming to the Response interface
      */
-    public Response get(String urlPath, String cookie);
+    public ResponseWithJsonSimple get(String urlPath, String cookie);
 
     /**
      * Perform a post request to the Url specified using the cookie specified
@@ -21,7 +21,7 @@ public interface RestClient {
      *
      * @return <code>Response</code> an object conforming to the Response interface
      */
-    public Response post(String apiParams, String urlPath, String cookie);
+    public ResponseWithJsonSimple post(String apiParams, String urlPath, String cookie);
 
 
     /**

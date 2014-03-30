@@ -3,7 +3,8 @@ package com.github.jreddit.user;
 import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.RedditServices;
+import com.github.jreddit.utils.restclient.ResponseWithJsonSimple;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONObject;
 import org.junit.Before;
@@ -32,23 +33,23 @@ public class UserTest {
     public static final String MOD_HASH = "modHash";
     public static final String UNKNOWN_USERNAME = "unknownUsername";
     private User underTest;
-    private RestClient restClient;
-    private Response response;
+    private RedditServices redditServices;
+    private ResponseWithJsonSimple response;
 
     @Before
     public void initUser() throws Exception {
-        Response loginResponse = new UtilResponse(null, userLoginResponse(COOKIE, MOD_HASH), 200);
+        ResponseWithJsonSimple loginResponse = new UtilResponse(null, userLoginResponse(COOKIE, MOD_HASH), 200);
 
-        restClient = mock(RestClient.class);
-        when(restClient.post("api_type=json&user=" + USERNAME + "&passwd=" + PASSWORD, String.format(ApiEndpointUtils.USER_LOGIN, USERNAME), null)).thenReturn(loginResponse);
-        underTest = new User(restClient, USERNAME, PASSWORD);
+        redditServices = mock(RedditServices.class);
+        when(redditServices.post("api_type=json&user=" + USERNAME + "&passwd=" + PASSWORD, String.format(ApiEndpointUtils.USER_LOGIN, USERNAME), null)).thenReturn(loginResponse);
+        underTest = new User(redditServices, USERNAME, PASSWORD);
         underTest.connect();
     }
 
     @Test
     public void getSubscriptions() {
         response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, COOKIE)).thenReturn(response);
+        when(redditServices.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, COOKIE)).thenReturn(response);
 
         List<Subreddit> subreddits = underTest.getSubscribed();
 
@@ -59,7 +60,7 @@ public class UserTest {
     @Test
     public void getUserInformationSuccessfully() {
         response = new UtilResponse(null, generateUserInfo(USERNAME), 200);
-        when(restClient.get(ApiEndpointUtils.USER_INFO, COOKIE)).thenReturn(response);
+        when(redditServices.get(ApiEndpointUtils.USER_INFO, COOKIE)).thenReturn(response);
 
         UserInfo info = underTest.getUserInformation();
         assertNotNull(info);
@@ -67,14 +68,14 @@ public class UserTest {
 
     @Test
     public void getUserInformationForNotLoggedInUser() {
-        User newUser = new User(restClient, "username", "password");
+        User newUser = new User(redditServices, , "username", "password");
         assertNull(newUser.getUserInformation());
     }
 
     @Test
     public void getAboutUserSuccessfully() {
         response = new UtilResponse(null, generateUserAbout(USERNAME), 200);
-        when(restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, USERNAME), null)).thenReturn(response);
+        when(redditServices.get(String.format(ApiEndpointUtils.USER_ABOUT, USERNAME), null)).thenReturn(response);
 
         UserInfo userInfo = underTest.about(USERNAME);
         assertNotNull(userInfo);
@@ -84,7 +85,7 @@ public class UserTest {
     @Test
     public void getAboutUserForUnknownUser() {
         response = new UtilResponse(null, new JSONObject(singletonMap("error", 404)), 404);
-        when(restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, UNKNOWN_USERNAME), null)).thenReturn(response);
+        when(redditServices.get(String.format(ApiEndpointUtils.USER_ABOUT, UNKNOWN_USERNAME), null)).thenReturn(response);
 
         UserInfo userInfo = underTest.about(UNKNOWN_USERNAME);
         assertNull(userInfo);
