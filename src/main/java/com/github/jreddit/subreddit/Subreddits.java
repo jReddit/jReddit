@@ -2,7 +2,8 @@ package com.github.jreddit.subreddit;
 
 
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.Utils;
+import com.github.jreddit.utils.restclient.HttpRestClient;
+import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -18,6 +19,12 @@ import java.util.List;
  */
 public class Subreddits {
 
+    private final RestClient restClient;
+
+    public Subreddits(RestClient restClient) {
+        this.restClient = restClient;
+    }
+
     /**
      * Returns the subreddits that make up the default front page of reddit.
      */
@@ -25,7 +32,7 @@ public class Subreddits {
         List<Subreddit> subreddits = null;
 
         try {
-            JSONObject object = (JSONObject) Utils.get(ApiEndpointUtils.SUBREDDITS, null);
+            JSONObject object = (JSONObject)  restClient.get(ApiEndpointUtils.SUBREDDITS, null).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
 
             subreddits = constructList((JSONArray) data.get("children"));
@@ -49,7 +56,7 @@ public class Subreddits {
 
         try {
             JSONObject object =
-                    (JSONObject) Utils.get(String.format(ApiEndpointUtils.SUBREDDITS_GET, subredditType.getValue()), null);
+                    (JSONObject)  restClient.get(String.format(ApiEndpointUtils.SUBREDDITS_GET, subredditType.getValue()), null).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
 
             subreddits = constructList((JSONArray) data.get("children"));

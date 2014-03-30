@@ -1,12 +1,12 @@
 package com.github.jreddit.user;
 
-import com.github.jreddit.utils.CommentSort;
-import com.github.jreddit.utils.Sort;
 import com.github.jreddit.Thing;
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.Utils;
+import com.github.jreddit.utils.CommentSort;
+import com.github.jreddit.utils.Sort;
+import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -14,6 +14,8 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
 
 /**
  * This class represents a user connected to Reddit.
@@ -27,14 +29,12 @@ import java.util.List;
  */
 public class User extends Thing {
 
-    private String username, password;
-    private String modhash, cookie;
+    private final String username;
+    private final RestClient restClient;
+    private String modhash, cookie, password;
 
-    public User() {
-
-    }
-
-    public User(String username, String password) {
+    public User(RestClient restClient, String username, String password) {
+        this.restClient = restClient;
         this.username = username;
         this.password = password;
     }
@@ -83,13 +83,16 @@ public class User extends Thing {
         JSONObject object = submit(title, link, false, subreddit);
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
             System.err.println("Please login first.");
-        } else if (object.toJSONString().contains(
+        }
+        else if (object.toJSONString().contains(
                 ".error.RATELIMIT.field-ratelimit")) {
             System.err.println("You are doing that too much.");
-        } else if (object.toJSONString().contains(
+        }
+        else if (object.toJSONString().contains(
                 ".error.ALREADY_SUB.field-url")) {
             System.err.println("That link has already been submitted.");
-        } else {
+        }
+        else {
             System.out.println("Link submitted to "
                     + ((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(16)).get(3)).get(0));
         }
@@ -110,13 +113,16 @@ public class User extends Thing {
         JSONObject object = submit(title, text, true, subreddit);
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
             System.err.println("Please login first.");
-        } else if (object.toJSONString().contains(
+        }
+        else if (object.toJSONString().contains(
                 ".error.RATELIMIT.field-ratelimit")) {
             System.err.println("You are doing that too much.");
-        } else if (object.toJSONString().contains(
+        }
+        else if (object.toJSONString().contains(
                 ".error.ALREADY_SUB.field-url")) {
             System.err.println("That link has already been submitted.");
-        } else {
+        }
+        else {
             System.out.println("Self post submitted to "
                     + ((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(10)).get(3)).get(0));
         }
@@ -135,8 +141,8 @@ public class User extends Thing {
     private ArrayList<String> hashCookiePair(String username, String password)
             throws IOException, ParseException {
         ArrayList<String> values = new ArrayList<String>();
-        JSONObject jsonObject = Utils.post("api_type=json&user=" + username
-                + "&passwd=" + password, String.format(ApiEndpointUtils.USER_LOGIN, username), getCookie());
+        JSONObject jsonObject = (JSONObject) restClient.post("api_type=json&user=" + username
+                + "&passwd=" + password, String.format(ApiEndpointUtils.USER_LOGIN, username), getCookie()).getResponseObject();
         JSONObject valuePair = (JSONObject) ((JSONObject) jsonObject.get("json")).get("data");
 
         values.add(valuePair.get("modhash").toString());
@@ -157,7 +163,7 @@ public class User extends Thing {
             return null;
         }
 
-        JSONObject jsonObject = (JSONObject) Utils.get(ApiEndpointUtils.USER_INFO, getCookie());
+        JSONObject jsonObject = (JSONObject) restClient.get(ApiEndpointUtils.USER_INFO, getCookie()).getResponseObject();
         JSONObject info = (JSONObject) jsonObject.get("data");
 
         return new UserInfo(info);
@@ -169,10 +175,10 @@ public class User extends Thing {
      * @param username The username of the user whose account info you want to retrieve.
      * @return UserInfo object consisting of information about the user identified by "username".
      */
-    public static UserInfo about(String username) {
+    public UserInfo about(String username) {
 
         // Send GET request to get the account overview
-        JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null);
+        JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null).getResponseObject();
         JSONObject data = (JSONObject) object.get("data");
 
         // Init account info wrapper
@@ -191,10 +197,10 @@ public class User extends Thing {
      * @throws ParseException If JSON parsing fails
      */
     private JSONObject submit(String title, String linkOrText, boolean selfPost, String subreddit) throws IOException, ParseException {
-        return Utils.post("title=" + title + "&" + (selfPost ? "text" : "url")
+        return (JSONObject) restClient.post("title=" + title + "&" + (selfPost ? "text" : "url")
                 + "=" + linkOrText + "&sr=" + subreddit + "&kind="
                 + (selfPost ? "self" : "link") + "&uh=" + getModhash(),
-                ApiEndpointUtils.USER_SUBMIT, getCookie());
+                ApiEndpointUtils.USER_SUBMIT, getCookie()).getResponseObject();
     }
 
     // TODO: Move comment-related and submission-related methods from the User class
@@ -205,29 +211,27 @@ public class User extends Thing {
      * @return <code>List</code> of submissions made by this user.
      */
     public List<Comment> comments() {
-        return User.comments(username);
+        return comments(username);
     }
 
-
-    public static List<Comment> comments(String username) {
+    public List<Comment> comments(String username) {
         return comments(username, CommentSort.NEW);
     }
 
     /**
-     * Returns a list of submissions made by this user.
+     * Returns a list of comments made by this user.
      *
      * @param username The username of the user whose comments you want
      *                 to retrieve.
      * @return <code>List</code> of top 500 comments made by this user.
      */
-    public static List<Comment> comments(String username, CommentSort commentSort) {
-        // List of submissions made by this user
+    public List<Comment> comments(String username, CommentSort commentSort) {
         List<Comment> comments = new ArrayList<Comment>(500);
         try {
             // Send GET request to get the account overview
             JSONObject object =
-                    (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_COMMENTS,
-                            username, commentSort.getValue()), null);
+                    (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_COMMENTS,
+                            username, commentSort.getValue()), null).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -239,15 +243,16 @@ public class User extends Thing {
                 obj = (JSONObject) obj.get("data");
 
                 // Create a new comment
-                c = new Comment(Utils.toString(obj.get("body")), Utils.toString(obj.get("edited")),
-                        Utils.toString(obj.get("created_utc")), Utils.toString(obj.get("replies")),
-                        Integer.parseInt(Utils.toString(obj.get("ups"))),
-                        Integer.parseInt(Utils.toString(obj.get("downs"))));
+                c = new Comment(safeJsonToString(obj.get("body")), safeJsonToString(obj.get("edited")),
+                        safeJsonToString(obj.get("created_utc")), safeJsonToString(obj.get("replies")),
+                        Integer.parseInt(safeJsonToString(obj.get("ups"))),
+                        Integer.parseInt(safeJsonToString(obj.get("downs"))));
 
                 // Add it to the submissions list
                 comments.add(c);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         // Return the submissions
@@ -261,12 +266,11 @@ public class User extends Thing {
      *                 to retrieve.
      * @return <code>List</code> of submissions made by this user.
      */
-    public static List<Submission> submissions(String username) {
-        // List of submissions made by this user
+    public List<Submission> submissions(String username) {
         List<Submission> submissions = new ArrayList<Submission>(500);
         try {
             // Send GET request to get the account overview
-            JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS, username), null);
+            JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS, username), null).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -279,7 +283,8 @@ public class User extends Thing {
                 //add a new Submission to the list
                 submissions.add(new Submission(obj));
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -415,8 +420,8 @@ public class User extends Thing {
         List<Submission> submissions = new ArrayList<Submission>();
         try {
             JSONObject object =
-                    (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS_INTERACTION,
-                            username, where, sort.getValue()), cookie);
+                    (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS_INTERACTION,
+                            username, where, sort.getValue()), cookie).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
@@ -426,7 +431,8 @@ public class User extends Thing {
                 obj = (JSONObject) obj.get("data");
                 submissions.add(new Submission(obj));
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return submissions;
@@ -434,11 +440,12 @@ public class User extends Thing {
 
     /**
      * Returns a list of Subreddits to which the user is subscribed.
+     *
      * @return List of Subreddits
      */
     public List<Subreddit> getSubscribed() {
-        List<Subreddit> subscibed = new ArrayList<Subreddit>(1000);
-        JSONObject object = (JSONObject) Utils.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, cookie);
+        List<Subreddit> subscribed = new ArrayList<Subreddit>(1000);
+        JSONObject object = (JSONObject) restClient.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, cookie).getResponseObject();
 
         JSONObject rawData = (JSONObject) object.get("data");
         JSONArray subreddits = (JSONArray) rawData.get("children");
@@ -453,9 +460,9 @@ public class User extends Thing {
                     Boolean.parseBoolean(obj.get("over18").toString()),
                     Integer.parseInt(obj.get("subscribers").toString()),
                     obj.get("id").toString(), obj.get("description").toString());
-            subscibed.add(sub);
+            subscribed.add(sub);
         }
 
-        return subscibed;
+        return subscribed;
     }
 }
