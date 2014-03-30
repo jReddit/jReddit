@@ -113,12 +113,9 @@ public class JsonHelpers {
         funnyData.put("user_is_moderator", null);
         funnyData.put("user_is_subscriber", null);
 
-        JSONObject funnyKind = new JSONObject();
-        funnyKind.put("kind", "t5");
-
         JSONObject funnyListing = new JSONObject();
         funnyListing.put("data", funnyData);
-        funnyListing.put("kind", funnyKind);
+        funnyListing.put("kind", "t5");
 
         return redditListing(funnyListing);
     }
