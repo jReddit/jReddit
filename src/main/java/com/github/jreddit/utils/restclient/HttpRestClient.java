@@ -53,7 +53,6 @@ public class HttpRestClient implements RestClient {
             return get(httpGetMethod()
                     .withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath)
                     .withCookie(cookie)
-                    .withUserAgent(userAgent)
             );
         }
         catch (URISyntaxException e) {
@@ -69,6 +68,7 @@ public class HttpRestClient implements RestClient {
     }
 
     public Response get(HttpGetMethodBuilder getMethodBuilder) throws IOException, ParseException {
+        getMethodBuilder.withUserAgent(userAgent);
         HttpGet request = getMethodBuilder.build();
         return httpClient.execute(request, responseHandler);
     }
@@ -79,8 +79,7 @@ public class HttpRestClient implements RestClient {
             return post(
                     httpPostMethod()
                             .withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath)
-                            .withCookie(cookie)
-                            .withUserAgent(userAgent),
+                            .withCookie(cookie),
                     convertRequestStringToList(apiParams)
             );
         }
@@ -102,6 +101,8 @@ public class HttpRestClient implements RestClient {
 
     public Response post(HttpPostMethodBuilder postMethodBuilder, List<NameValuePair> params) throws IOException, ParseException {
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
+
+        postMethodBuilder.withUserAgent(userAgent);
         HttpPost request = postMethodBuilder.build();
         request.setEntity(entity);
         return httpClient.execute(request, responseHandler);
