@@ -1,10 +1,8 @@
 import com.github.jreddit.submissions.Submission;
-import com.github.jreddit.submissions.Submissions;
-import com.github.jreddit.submissions.Submissions.Page;
-import com.github.jreddit.submissions.Submissions.Popularity;
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.Utils;
-
+import com.github.jreddit.utils.Submissions;
+import com.github.jreddit.utils.Submissions.Page;
+import com.github.jreddit.utils.Submissions.Popularity;
+import com.github.jreddit.utils.User;
 
 
 /**
@@ -17,9 +15,10 @@ public final class GenerousBot {
 		String[] subreddits = { "programming", "funny", "wtf", "java",
 				"todayilearned", "redditdev" };
 
-		Utils.setUserAgent("Generous-Bot");
+        RestClient restClient = new HttpRestClient();
+        restClient.setUserAgent("Generous-Bot");
 
-		User user = new User("user", "password");
+		User user = new User(restclient, "user", "password");
 		user.connect();
 
 		for (int i = 0; i < subreddits.length; i++) {
