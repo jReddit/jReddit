@@ -6,7 +6,6 @@ import com.github.jreddit.model.json.response.UserInfo;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
 import com.github.jreddit.utils.restclient.RedditServices;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -53,7 +52,8 @@ public class User extends Thing {
      * effectively sending a POST request to reddit and getting the modhash and
      * cookie, which are required for most reddit API functions.
      *
-     * @throws Exception If connection fails.
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public void connect() throws IOException, URISyntaxException {
         UserLogin userLogin = redditServices.userLogin(username, password);
@@ -68,8 +68,8 @@ public class User extends Thing {
      * @param title     The title of the submission
      * @param link      The link to the submission
      * @param subreddit The subreddit to submit to
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON Parsing fails
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public void submitLink(String title, String link, String subreddit) throws IOException, URISyntaxException {
         redditServices.submit(linkPost().withUrl(link).withTitle(title).withSubreddit(subreddit).withModhash(modhash));
@@ -82,8 +82,8 @@ public class User extends Thing {
      * @param title     The title of the submission
      * @param text      The text of the submission
      * @param subreddit The subreddit to submit to
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON Parsing fails
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public void submitSelfPost(String title, String text, String subreddit) throws IOException, URISyntaxException {
         redditServices.submit(selfPost().withBody(text).withTitle(title).withSubreddit(subreddit).withModhash(modhash));
@@ -93,7 +93,10 @@ public class User extends Thing {
      * Get info about the currently authenticated user.
      * Corresponds to the API "/me.json" method
      *
-     * @return <code>UserInfo</code>object containing the user's info, or null if the retrieval fails
+     * @return UserInfo object containing the user's info, or null if the retrieval fails
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public UserInfo getUserInformation() throws IOException, URISyntaxException {
         if (cookie == null || modhash == null) {
@@ -108,7 +111,10 @@ public class User extends Thing {
      * Returns misc info about the user
      *
      * @param username The username of the user whose account info you want to retrieve.
-     * @return UserInfo object consisting of information about the user identified by "username".
+     * @return UserAbout object consisting of information about the user identified by "username".
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public UserAbout about(String username) throws IOException, URISyntaxException {
         return redditServices.getUserAbout(username);
@@ -119,12 +125,24 @@ public class User extends Thing {
     /**
      * Returns a list of submissions made by this user.
      *
-     * @return <code>List</code> of submissions made by this user.
+     * @return RedditListing of submissions made by this user.
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<CommentListingItem> comments() throws IOException, URISyntaxException {
         return comments(username);
     }
 
+    /**
+     * Returns a list of submissions made by this user.
+     *
+     * @param username The username of the user whose comments you want to retrieve.
+     * @return RedditListing of submissions made by user specified.
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
+     */
     public RedditListing<CommentListingItem> comments(String username) throws IOException, URISyntaxException {
         return comments(username, NEW);
     }
@@ -134,7 +152,10 @@ public class User extends Thing {
      *
      * @param username The username of the user whose comments you want
      *                 to retrieve.
-     * @return <code>List</code> of top 500 comments made by this user.
+     * @return RedditListing of top 500 comments made by this user.
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<CommentListingItem> comments(String username, CommentSort commentSort) throws IOException, URISyntaxException {
         return redditServices.getComments(username, commentSort);
@@ -145,7 +166,10 @@ public class User extends Thing {
      *
      * @param username The username of the user whose submissions you want
      *                 to retrieve.
-     * @return <code>List</code> of submissions made by this user.
+     * @return RedditListing of submissions made by this user.
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> submissions(String username) throws IOException, URISyntaxException {
         return getSubmissions(username, "submissions", Sort.HOT);
@@ -154,7 +178,10 @@ public class User extends Thing {
     /**
      * Returns a list of submissions that this user liked.
      *
-     * @return List of liked links with default sorting.
+     * @return RedditListing of liked links with default sorting.
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getLikedSubmissions() throws IOException, URISyntaxException {
         return getLikedSubmissions(Sort.HOT);
@@ -164,7 +191,10 @@ public class User extends Thing {
      * Returns a list of submissions that this user liked with a Reddit sort
      *
      * @param sort Which sort you'd like to apply
-     * @return List of liked submissions with a Reddit sort
+     * @return RedditListing of liked submissions with a Reddit sort
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getLikedSubmissions(Sort sort) throws IOException, URISyntaxException {
         return getUserSubmissions("liked", sort);
@@ -173,7 +203,10 @@ public class User extends Thing {
     /**
      * Returns a list of submissions that this user chose to hide. with the default sorting
      *
-     * @return List of disliked links.
+     * @return RedditListing of disliked links.
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getHiddenSubmissions() throws IOException, URISyntaxException {
         return getHiddenSubmissions(Sort.HOT);
@@ -183,7 +216,10 @@ public class User extends Thing {
      * Returns a list of Submissions that this user chose to hide with a specified sorting
      *
      * @param sort Which sort you'd like to apply
-     * @return List of hidden Submissions with a Reddit sort
+     * @return RedditListing of hidden Submissions with a Reddit sort
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getHiddenSubmissions(Sort sort) throws IOException, URISyntaxException {
         return getUserSubmissions("hidden", sort);
@@ -192,7 +228,10 @@ public class User extends Thing {
     /**
      * Returns a list of Submissions that the user saved with the default sort
      *
-     * @return List of saved links
+     * @return RedditListing of saved links
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getSavedSubmissions() throws IOException, URISyntaxException {
         return getSavedSubmissions(Sort.HOT);
@@ -202,7 +241,10 @@ public class User extends Thing {
      * Returns a list of Submissions that the user saved with a specified sorting
      *
      * @param sort Which sort you'd like to apply
-     * @return List of saved links with a Reddit sort
+     * @return RedditListing of saved links with a Reddit sort
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getSavedSubmissions(Sort sort) throws IOException, URISyntaxException {
         return getUserSubmissions("saved", sort);
@@ -211,7 +253,10 @@ public class User extends Thing {
     /**
      * Returns a list of Submissions that the user submitted with the default Reddit sort
      *
-     * @return List of submitted Submissions
+     * @return RedditListing of submitted Submissions
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getSubmissions() throws IOException, URISyntaxException {
         return getSubmissions(Sort.HOT);
@@ -220,7 +265,10 @@ public class User extends Thing {
     /**
      * Returns a list of Submissions that the user submitted with a specified Reddit sort
      *
-     * @return List of submitted Submissions with a specified Reddit sort
+     * @return RedditListing of submitted Submissions with a specified Reddit sort
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getSubmissions(Sort sort) throws IOException, URISyntaxException {
         return getUserSubmissions("submitted", sort);
@@ -229,7 +277,10 @@ public class User extends Thing {
     /**
      * Returns a list of submissions that this user disliked with the default Reddit sort
      *
-     * @return List of disliked links.
+     * @return RedditListing of disliked links.
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getDislikedSubmissions() throws IOException, URISyntaxException {
         return getDislikedSubmissions(Sort.HOT);
@@ -239,12 +290,23 @@ public class User extends Thing {
      * Returns a list of Submissions that this user disliked with a specified Reddit sort
      *
      * @param sort Which sort you'd like to apply
-     * @return List of disliked sorts with a specified sort
+     * @return RedditListing of disliked sorts with a specified sort
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubmissionListingItem> getDislikedSubmissions(Sort sort) throws IOException, URISyntaxException {
         return getUserSubmissions("disliked", sort);
     }
 
+    /**
+     * Returns a list of the submission overview for this user
+     *
+     * @return RedditListing submissions
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
+     */
     public RedditListing<SubmissionListingItem> getUserOverview() throws IOException, URISyntaxException {
         return getUserSubmissions("overview", Sort.HOT);
     }
@@ -253,12 +315,29 @@ public class User extends Thing {
      * private function used to get submissions that a user interacts with on Reddit
      *
      * @param where place of Submission - see http://www.reddit.com/dev/api#GET_user_{username}_{where}
-     * @return Submissions from the specified location, null if the location is invalid
+     * @param sort Which sort you'd like to apply
+     *
+     * @return RedditListing from the specified location, null if the location is invalid
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     private RedditListing<SubmissionListingItem> getUserSubmissions(String where, Sort sort) throws IOException, URISyntaxException {
         return getSubmissions(username, where, sort);
     }
 
+    /**
+     * get submissions for a given user, of a given type, with a given sort
+     *
+     * @param username The username of the user whose account info you want to retrieve.
+     * @param where place of Submission - see http://www.reddit.com/dev/api#GET_user_{username}_{where}
+     * @param sort Which sort you'd like to apply
+     *
+     * @return RedditListing from the specified location, null if the location is invalid
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
+     */
     public RedditListing<SubmissionListingItem> getSubmissions(String username, String where, Sort sort) throws IOException, URISyntaxException {
         //valid arguments for where the Submission can come from; should this be an enum?
         //TODO: not all of these JSONs return something that can be processed purely into a Submission class, until those are taken care of, I commented them out
@@ -275,7 +354,10 @@ public class User extends Thing {
     /**
      * Returns a list of Subreddits to which the user is subscribed.
      *
-     * @return List of Subreddits
+     * @return RedditListing of Subreddits
+     *
+     * @throws URISyntaxException If not a valid url.
+     * @throws IOException        If connection fails
      */
     public RedditListing<SubredditListingItem> getSubscribed() throws IOException, URISyntaxException {
         return redditServices.getSubscribed();
