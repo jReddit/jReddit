@@ -9,6 +9,7 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,6 +34,8 @@ public class BetterRestClient implements MethodBuilderRestClient {
     @Override
     public BasicResponse post(HttpPostMethodBuilder postMethodBuilder, List<NameValuePair> params) throws IOException{
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
+
+        params.add(new BasicNameValuePair("api_type", "json"));
 
         postMethodBuilder.withUserAgent(userAgent);
         HttpPost request = postMethodBuilder.build();
