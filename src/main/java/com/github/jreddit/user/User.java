@@ -2,6 +2,7 @@ package com.github.jreddit.user;
 
 import com.github.jreddit.Thing;
 import com.github.jreddit.model.json.response.*;
+import com.github.jreddit.model.json.response.UserInfo;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
 import com.github.jreddit.utils.restclient.RedditServices;
@@ -54,7 +55,7 @@ public class User extends Thing {
      *
      * @throws Exception If connection fails.
      */
-    public void connect() throws Exception {
+    public void connect() throws IOException, URISyntaxException {
         UserLogin userLogin = redditServices.userLogin(username, password);
         this.modhash = userLogin.getJson().getData().getModhash();
         this.cookie = userLogin.getJson().getData().getCookie();
@@ -94,7 +95,7 @@ public class User extends Thing {
      *
      * @return <code>UserInfo</code>object containing the user's info, or null if the retrieval fails
      */
-    public com.github.jreddit.model.json.response.UserInfo getUserInformation() throws IOException, URISyntaxException {
+    public UserInfo getUserInformation() throws IOException, URISyntaxException {
         if (cookie == null || modhash == null) {
             System.err.printf("Please invoke the connect method in order to login the user");
             return null;
@@ -105,7 +106,6 @@ public class User extends Thing {
 
     /**
      * Returns misc info about the user
-     *
      *
      * @param username The username of the user whose account info you want to retrieve.
      * @return UserInfo object consisting of information about the user identified by "username".
@@ -132,7 +132,6 @@ public class User extends Thing {
     /**
      * Returns a list of comments made by this user.
      *
-     *
      * @param username The username of the user whose comments you want
      *                 to retrieve.
      * @return <code>List</code> of top 500 comments made by this user.
@@ -143,7 +142,6 @@ public class User extends Thing {
 
     /**
      * Returns a list of submissions made by this user.
-     *
      *
      * @param username The username of the user whose submissions you want
      *                 to retrieve.
@@ -165,7 +163,6 @@ public class User extends Thing {
     /**
      * Returns a list of submissions that this user liked with a Reddit sort
      *
-     *
      * @param sort Which sort you'd like to apply
      * @return List of liked submissions with a Reddit sort
      */
@@ -185,7 +182,6 @@ public class User extends Thing {
     /**
      * Returns a list of Submissions that this user chose to hide with a specified sorting
      *
-     *
      * @param sort Which sort you'd like to apply
      * @return List of hidden Submissions with a Reddit sort
      */
@@ -204,7 +200,6 @@ public class User extends Thing {
 
     /**
      * Returns a list of Submissions that the user saved with a specified sorting
-     *
      *
      * @param sort Which sort you'd like to apply
      * @return List of saved links with a Reddit sort
@@ -243,7 +238,6 @@ public class User extends Thing {
     /**
      * Returns a list of Submissions that this user disliked with a specified Reddit sort
      *
-     *
      * @param sort Which sort you'd like to apply
      * @return List of disliked sorts with a specified sort
      */
@@ -258,7 +252,6 @@ public class User extends Thing {
     /**
      * private function used to get submissions that a user interacts with on Reddit
      *
-     *
      * @param where place of Submission - see http://www.reddit.com/dev/api#GET_user_{username}_{where}
      * @return Submissions from the specified location, null if the location is invalid
      */
@@ -266,7 +259,7 @@ public class User extends Thing {
         return getSubmissions(username, where, sort);
     }
 
-    private RedditListing<SubmissionListingItem> getSubmissions(String username, String where, Sort sort) throws IOException, URISyntaxException {
+    public RedditListing<SubmissionListingItem> getSubmissions(String username, String where, Sort sort) throws IOException, URISyntaxException {
         //valid arguments for where the Submission can come from; should this be an enum?
         //TODO: not all of these JSONs return something that can be processed purely into a Submission class, until those are taken care of, I commented them out
         final Set<String> validLocations = new HashSet<String>(Arrays.asList(/*"overview",*/ "submitted", /*"comments",*/ "liked", "disliked", "hidden", "saved"));
