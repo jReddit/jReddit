@@ -8,6 +8,7 @@ import com.github.jreddit.submissions.Popularity;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
 import com.github.jreddit.utils.restclient.submitbuilders.CommentBuilder;
+import com.github.jreddit.utils.restclient.submitbuilders.VoteBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,12 +16,17 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static com.github.jreddit.utils.restclient.submitbuilders.CommentBuilder.comment;
+import static com.github.jreddit.utils.restclient.submitbuilders.VoteBuilder.VOTE_DIRECTION.DOWN;
+import static com.github.jreddit.utils.restclient.submitbuilders.VoteBuilder.VOTE_DIRECTION.NEUTRAL;
+import static com.github.jreddit.utils.restclient.submitbuilders.VoteBuilder.VOTE_DIRECTION.UP;
+import static com.github.jreddit.utils.restclient.submitbuilders.VoteBuilder.vote;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class RedditServicesIntegrationTest {
 
+    public static final String THING_ID = "t3_21rn3a";
     private static String USERNAME = "jReddittest";
     private static String PASSWORD = "jReddittest";
     private RedditServices redditServices;
@@ -79,17 +85,31 @@ public class RedditServicesIntegrationTest {
         assertTrue(submission.getData().getChildren()[0].getData().getPermalink().equals(submissionPermaLink));
     }
 
+    @Test
+    public void voteMashing() throws Exception {
+        String modhash = authenticate();
+
+//        redditServices.vote(vote().withModhash(modhash).withThingId(THING_ID).withVote(NEUTRAL));
+//        redditServices.vote(vote().withModhash(modhash).withThingId(THING_ID).withVote(UP));
+        redditServices.vote(vote().withModhash(modhash).withThingId(THING_ID).withVote(DOWN));
+//        redditServices.vote(vote().withModhash(modhash).withThingId(THING_ID).withVote(NEUTRAL));
+    }
+
+    @Test(expected = InvalidCookieException.class)
+    public void voteWhenNotLoggedIn() throws Exception {
+        redditServices.vote(vote().withModhash("modhash").withThingId(THING_ID).withVote(NEUTRAL));
+    }
 
     @Test(expected = InvalidCookieException.class)
     public void commentOnSubmissionFailsWhenNotLoggedIn() throws Exception {
-        redditServices.comment(comment().withCommentText("testComment").withThingId("t3_21rn3a").withModhash("parp"));
+        redditServices.comment(comment().withCommentText("testComment").withThingId(THING_ID).withModhash("parp"));
     }
 
     @Test
     public void commentOnSubmission() throws Exception {
         String modhash = authenticate();
 
-        redditServices.comment(comment().withCommentText("testComment").withThingId("t3_21rn3a").withModhash(modhash));
+        redditServices.comment(comment().withCommentText("testComment").withThingId(THING_ID).withModhash(modhash));
         //TODO: when we've worked out how to handle the response add some sort of assertions here..
     }
 

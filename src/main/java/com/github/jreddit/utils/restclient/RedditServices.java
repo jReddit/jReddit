@@ -19,6 +19,7 @@ import com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder;
 import com.github.jreddit.utils.restclient.submitbuilders.CommentBuilder;
 import com.github.jreddit.utils.restclient.submitbuilders.PostBuilder;
+import com.github.jreddit.utils.restclient.submitbuilders.VoteBuilder;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -98,6 +99,17 @@ public class RedditServices {
         return mapper.readValue(substring, new TypeReference<RedditListing<SubmissionListingItem>>() { });
     }
 
+    public void vote(VoteBuilder votebuilder) throws URISyntaxException, IOException {
+        //TODO: what does this return? if it's same return type as submit generify
+        HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + SUBMISSION_VOTE);
+
+        BasicResponse response = restClient.post(builder, votebuilder.build());
+
+        //TODO: work out how to handle the response to this
+        if (response.getResponseBody().contains(".error.USER_REQUIRED")){
+            throw new InvalidCookieException("Cookie not present");
+        }
+    }
 
     public void comment(CommentBuilder commentBuilder) throws URISyntaxException, IOException {
         //TODO: what does this return? if it's same return type as submit generify
@@ -105,7 +117,7 @@ public class RedditServices {
 
         BasicResponse response = restClient.post(builder, commentBuilder.build());
 
-        //TODO: work out how to handle the response to this; it's the worst bit of the api I've seen so far..
+        //TODO: work out how to handle the response to this
         if (response.getResponseBody().contains(".error.USER_REQUIRED")){
             throw new InvalidCookieException("Cookie not present");
         }
