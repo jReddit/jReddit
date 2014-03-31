@@ -348,7 +348,7 @@ public class User extends Thing {
             return null;
         }
 
-        return redditServices.getSubmissions(username, where, sort);
+        return redditServices.getUserSubmissions(username, where, sort);
     }
 
     /**

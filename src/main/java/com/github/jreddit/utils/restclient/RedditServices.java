@@ -56,7 +56,7 @@ public class RedditServices {
         return mapper.readValue(restClient.get(builder).getResponseBody(), UserAbout.class);
     }
 
-    public RedditListing<SubmissionListingItem> getSubmissions(String username, String type, Sort sorting) throws URISyntaxException, IOException {
+    public RedditListing<SubmissionListingItem> getUserSubmissions(String username, String type, Sort sorting) throws URISyntaxException, IOException {
         HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + format(USER_SUBMISSIONS_INTERACTION, username, type, sorting.getValue()));
 
         return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<SubmissionListingItem>>() { });
@@ -69,6 +69,7 @@ public class RedditServices {
     }
 
     public void submit(PostBuilder postBuilder) throws URISyntaxException, IOException {
+        //TODO: what does this return?
         HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + USER_SUBMIT);
 
         restClient.post(builder, postBuilder.build());

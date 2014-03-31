@@ -89,7 +89,7 @@ public class UserTest {
     @Test
     public void getSubmissions() throws IOException, URISyntaxException {
         RedditListing<SubmissionListingItem> listing = new RedditListing<SubmissionListingItem>();
-        when(redditServices.getSubmissions(USERNAME, "submitted", NEW)).thenReturn(listing);
+        when(redditServices.getUserSubmissions(USERNAME, "submitted", NEW)).thenReturn(listing);
 
         assertNotNull(underTest.getSubmissions(USERNAME, "submitted", NEW));
     }
