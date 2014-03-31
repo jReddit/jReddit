@@ -35,7 +35,7 @@ public class RedditInteractionBuilder {
         }
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("thing_id", thingId));
+        postParams.add(new BasicNameValuePair("id", thingId));
         postParams.add(new BasicNameValuePair("uh", modhash));
         return postParams;
     }
