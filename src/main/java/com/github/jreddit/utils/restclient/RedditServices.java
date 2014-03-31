@@ -142,6 +142,20 @@ public class RedditServices {
         BasicResponse response = restClient.post(builder, interactionBuilder.build());
     }
 
+    public void markMessageRead(RedditInteractionBuilder interactionBuilder) throws URISyntaxException, IOException {
+        //TODO: what does this return?  if it's same return type as comment generify
+        HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + MESSAGE_READ);
+
+        BasicResponse response = restClient.post(builder, interactionBuilder.build());
+    }
+
+    public void markMessageUnRead(RedditInteractionBuilder interactionBuilder) throws URISyntaxException, IOException {
+        //TODO: what does this return?  if it's same return type as comment generify
+        HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + MESSAGE_UNREAD);
+
+        BasicResponse response = restClient.post(builder, interactionBuilder.build());
+    }
+
     public void vote(VoteBuilder votebuilder) throws URISyntaxException, IOException {
         //TODO: what does this return? if it's same return type as submit generify
         HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + SUBMISSION_VOTE);

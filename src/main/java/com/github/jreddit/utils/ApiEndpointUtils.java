@@ -23,6 +23,8 @@ public class ApiEndpointUtils {
     
     public static final String MESSAGE_READ = REDDIT_BASE_API_ENDPOINT + "/read_message";
 
+    public static final String MESSAGE_UNREAD = REDDIT_BASE_API_ENDPOINT + "/unread_message";
+
     public static final String MESSAGE_GET = "/message/%s.json";
     
     /* Submission specific constants */
