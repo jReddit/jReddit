@@ -1,11 +1,10 @@
-package com.github.jreddit.user;
+package com.github.jreddit.utils;
 
 import com.github.jreddit.RedditServices;
 import com.github.jreddit.model.json.response.RedditListing;
 import com.github.jreddit.model.json.response.SubmissionListingItem;
 import com.github.jreddit.model.json.response.UserInfo;
 import com.github.jreddit.model.json.response.UserLogin;
-import com.github.jreddit.utils.User;
 import org.junit.Before;
 import org.junit.Test;
 
