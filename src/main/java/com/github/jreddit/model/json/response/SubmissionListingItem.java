@@ -24,7 +24,7 @@ public class SubmissionListingItem extends RedditListingItem {
         private String distinguished;
         private String domain;
         private long downs;
-        private boolean edited;
+        private Double edited;
         private long gilded;
         private boolean hidden;
         private String id;
@@ -142,12 +142,17 @@ public class SubmissionListingItem extends RedditListingItem {
             this.downs = downs;
         }
 
-        public boolean isEdited() {
+        public Double getEdited() {
             return edited;
         }
 
-        public void setEdited(boolean edited) {
-            this.edited = edited;
+        public void setEdited(Object edited) {
+            // Hack to get around poor reddit api:
+            // the field can contain either a boolean or a double
+
+            if (edited instanceof Double) {
+                this.edited = (Double)edited;
+            }
         }
 
         public long getGilded() {
@@ -407,6 +412,7 @@ public class SubmissionListingItem extends RedditListingItem {
                 private long thumbnailWidth;
                 private String title;
                 private String type;
+                private String url;
                 private String version;
                 private long width;
 
@@ -512,6 +518,14 @@ public class SubmissionListingItem extends RedditListingItem {
 
                 public void setVersion(String version) {
                     this.version = version;
+                }
+
+                public void setUrl(String url) {
+                    this.url = url;
+                }
+
+                public String getUrl() {
+                    return url;
                 }
 
                 public long getWidth() {

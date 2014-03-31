@@ -2,9 +2,10 @@ package com.github.jreddit.utils.restclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jreddit.model.json.response.*;
+import com.github.jreddit.submissions.Page;
+import com.github.jreddit.submissions.Popularity;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
-import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,20 +48,25 @@ public class RedditServicesIntegrationTest {
     }
 
     @Test
-    public void getSubmissions() throws Exception {
-        RedditListing<SubmissionListingItem> submissions = redditServices.getSubmissions(USERNAME, "submitted", Sort.NEW);
+    public void getUserSubmissions() throws Exception {
+        RedditListing<SubmissionListingItem> submissions = redditServices.getUserSubmissions(USERNAME, "submitted", Sort.NEW);
 
         assertTrue(submissions.getData().getChildren().length > 0);
     }
 
     @Test
     public void getComments() throws Exception {
-        RedditListing<CommentListingItem> comments = redditServices.getComments(USERNAME, CommentSort.NEW);
+        RedditListing<CommentListingItem> comments = redditServices.getUserComments(USERNAME, CommentSort.NEW);
 
         assertTrue(comments.getData().getChildren().length > 0);
     }
 
+    @Test
+    public void getRedditSubmissions() throws Exception {
+        RedditListing<SubmissionListingItem> submissions = redditServices.getRedditSubmissions("test", Popularity.NEW, null);
 
+        assertTrue(submissions.getData().getChildren().length > 0);
+    }
 
     public void authenticate() throws IOException, URISyntaxException {
         UserLogin userLogin = redditServices.userLogin(USERNAME, PASSWORD);

@@ -3,6 +3,9 @@ package com.github.jreddit.utils.restclient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jreddit.model.json.response.*;
+import com.github.jreddit.submissions.Page;
+import com.github.jreddit.submissions.Popularity;
+import com.github.jreddit.submissions.Submissions;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
@@ -67,6 +70,13 @@ public class RedditServices {
 
         return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<CommentListingItem>>() { });
     }
+
+    public RedditListing<SubmissionListingItem> getRedditSubmissions(String redditName, Popularity popularity, Page page) throws URISyntaxException, IOException {
+        HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + format(SUBREDDIT_SUBMISSIONS, redditName, popularity.getValue()));
+
+        return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<SubmissionListingItem>>() { });
+    }
+
 
     public void submit(PostBuilder postBuilder) throws URISyntaxException, IOException {
         //TODO: what does this return?
