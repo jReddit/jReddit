@@ -1,0 +1,76 @@
+{
+    "data": {
+        "after": null,
+        "before": null,
+        "children": [
+            {
+                "data": {
+                    "author": "SomeUser",
+                    "body": "message body",
+                    "body_html": "&lt;!-- SC_OFF --&gt;&lt;div class=\"md\"&gt;&lt;p&gt;message body&lt;/p&gt;\n&lt;/div&gt;&lt;!-- SC_ON --&gt;",
+                    "context": "",
+                    "created": 1395989716.0,
+                    "created_utc": 1395989716.0,
+                    "dest": "destinationUser",
+                    "first_message": null,
+                    "first_message_name": null,
+                    "id": "messageId",
+                    "name": "t4_messageId",
+                    "new": true,
+                    "parent_id": null,
+                    "replies": "",
+                    "subject": "TestMessage",
+                    "subreddit": null,
+                    "was_comment": false
+                },
+                "kind": "t4"
+            },
+            {
+                "data": {
+                    "author": "SomeUser",
+                    "body": "message body",
+                    "body_html": "&lt;!-- SC_OFF --&gt;&lt;div class=\"md\"&gt;&lt;p&gt;message body&lt;/p&gt;\n&lt;/div&gt;&lt;!-- SC_ON --&gt;",
+                    "context": "",
+                    "created": 1395989716.0,
+                    "created_utc": 1395989716.0,
+                    "dest": "destinationUser",
+                    "first_message": null,
+                    "first_message_name": null,
+                    "id": "messageId1",
+                    "name": "t4_messageId1",
+                    "new": true,
+                    "parent_id": null,
+                    "replies": "",
+                    "subject": "TestMessage",
+                    "subreddit": null,
+                    "was_comment": false
+                },
+                "kind": "t4"
+            },
+            {
+                "data": {
+                    "author": "SomeUser",
+                    "body": "message body",
+                    "body_html": "&lt;!-- SC_OFF --&gt;&lt;div class=\"md\"&gt;&lt;p&gt;message body&lt;/p&gt;\n&lt;/div&gt;&lt;!-- SC_ON --&gt;",
+                    "context": "",
+                    "created": 1395989716.0,
+                    "created_utc": 1395989716.0,
+                    "dest": "destinationUser",
+                    "first_message": null,
+                    "first_message_name": null,
+                    "id": "messageId1",
+                    "name": "t4_messageId1",
+                    "new": false,
+                    "parent_id": null,
+                    "replies": "",
+                    "subject": "TestMessage",
+                    "subreddit": null,
+                    "was_comment": false
+                },
+                "kind": "t4"
+            }
+        ],
+        "modhash": ""
+    },
+    "kind": "Listing"
+}

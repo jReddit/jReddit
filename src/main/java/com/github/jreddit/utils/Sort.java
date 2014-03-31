@@ -10,7 +10,7 @@ public enum Sort {
 
     CONFIDENCE("confidence"), TOP("top"), NEW("new"), HOT("hot"), CONTROVERSIAL("controversial"), OLD("old"), RANDOM("random");
 
-    private String value;
+    private final String value;
 
     Sort(String value) {
         this.value = value;

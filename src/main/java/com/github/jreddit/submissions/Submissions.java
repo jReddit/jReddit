@@ -1,13 +1,11 @@
 package com.github.jreddit.submissions;
 
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.Utils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
+import com.github.jreddit.model.json.response.RedditListing;
+import com.github.jreddit.model.json.response.SubmissionListingItem;
+import com.github.jreddit.utils.restclient.RedditServices;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.net.URISyntaxException;
 
 
 /**
@@ -16,54 +14,26 @@ import java.util.LinkedList;
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Submissions {
-    public enum Popularity {
-        HOT, NEW
-    }
 
-    public enum Page {
-        FRONTPAGE
+    private final RedditServices redditServices;
+
+    public Submissions(RedditServices redditServices) {
+        this.redditServices = redditServices;
     }
 
     /**
-     * This function returns a linked list containing the submissions on a given
-     * subreddit and page. (in progress)
+     * Return the submissions of a reddit by type, page
      *
      * @param redditName The subreddit's name
-     * @param type       HOT or NEW and some others to come
-     * @param frontpage       TODO this
-     * @param user       The user
-     * @return The linked list containing submissions
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
+     * @param popularity       HOT or NEW and some others to come
+     * @param page       //TODO Implement Pages
+     * @return RedditListing containing submissions
+     *
+     * @throws IOException        If connection fails
+     * @throws URISyntaxException If bad url
      */
-    public static LinkedList<Submission> getSubmissions(String redditName,
-                       Popularity type, Page frontpage, User user) throws IOException, ParseException {
-
-        LinkedList<Submission> submissions = new LinkedList<Submission>();
-        String urlString = "/r/" + redditName;
-
-        switch (type) {
-            case NEW:
-                urlString += "/new";
-                break;
-		default:
-			break;
-        }
-
-        //TODO Implement Pages
-
-        urlString += ".json";
-
-        JSONObject object = (JSONObject) Utils.get(urlString, user.getCookie());
-        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
-
-        JSONObject data;
-        for (int i = 0; i < array.size(); i++) {
-            data = (JSONObject) array.get(i);
-            data = ((JSONObject) data.get("data"));
-            submissions.add(new Submission(user, data.get("id").toString(), (data.get("permalink").toString())));
-        }
-
-        return submissions;
+    public RedditListing<SubmissionListingItem>
+            getSubmissions(String redditName, Popularity popularity, Page page) throws IOException, URISyntaxException {
+        return redditServices.getRedditSubmissions(redditName, popularity, page);
     }
 }
