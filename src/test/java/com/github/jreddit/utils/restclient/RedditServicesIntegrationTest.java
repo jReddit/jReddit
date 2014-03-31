@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jreddit.model.json.response.*;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -21,7 +23,7 @@ public class RedditServicesIntegrationTest {
 
     @Before
     public void setUp() {
-        redditServices = new RedditServices(new BetterRestClient(), new ObjectMapper());
+        redditServices = new RedditServices(new BetterRestClient(createDefault(), new BasicRedditResponseHandler()), new ObjectMapper());
     }
 
     @Test

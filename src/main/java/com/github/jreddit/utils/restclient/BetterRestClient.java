@@ -9,7 +9,6 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClients;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,11 +17,6 @@ public class BetterRestClient implements MethodBuilderRestClient {
     private final HttpClient httpClient;
     private final ResponseHandler<BasicResponse> responseHandler;
     private String userAgent = "Omer's Reddit API Java Wrapper";
-
-    public BetterRestClient() {
-        this.httpClient = HttpClients.createDefault();
-        this.responseHandler = new BasicRedditResponseHandler();
-    }
 
     public BetterRestClient(HttpClient httpClient, ResponseHandler<BasicResponse> responseHandler) {
         this.httpClient = httpClient;
