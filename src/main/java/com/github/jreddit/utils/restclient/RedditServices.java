@@ -12,6 +12,7 @@ import com.github.jreddit.model.json.response.UserInfo;
 import com.github.jreddit.model.json.response.UserLogin;
 import com.github.jreddit.submissions.Page;
 import com.github.jreddit.submissions.Popularity;
+import com.github.jreddit.subreddit.SubredditType;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
@@ -53,7 +54,29 @@ public class RedditServices {
     public RedditListing<SubredditListingItem> getSubscribed() throws URISyntaxException, IOException {
         HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + USER_GET_SUBSCRIBED);
 
+        return getSubredditListings(builder);
+    }
+
+    public RedditListing<SubredditListingItem> getDefaultReddits() throws URISyntaxException, IOException {
+        HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + SUBREDDITS);
+
+        return getSubredditListings(builder);
+    }
+
+    public RedditListing<SubredditListingItem> getRedditsOfType(SubredditType subredditType) throws URISyntaxException, IOException {
+        HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + format(ApiEndpointUtils.SUBREDDITS_GET, subredditType.getValue()));
+
+        return getSubredditListings(builder);
+    }
+
+    private RedditListing<SubredditListingItem> getSubredditListings(HttpGetMethodBuilder builder) throws IOException {
         return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<SubredditListingItem>>() { });
+    }
+
+    public SubredditListingItem getSubredditListing(String redditName) throws URISyntaxException, IOException {
+        HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + format(ApiEndpointUtils.SUBREDDIT_INFO, redditName));
+
+        return mapper.readValue(restClient.get(builder).getResponseBody(), SubredditListingItem.class);
     }
 
     public UserInfo getUserInfo() throws URISyntaxException, IOException {
