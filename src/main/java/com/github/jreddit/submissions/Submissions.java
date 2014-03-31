@@ -1,13 +1,17 @@
 package com.github.jreddit.submissions;
 
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.Utils;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -64,6 +68,40 @@ public class Submissions {
             submissions.add(new Submission(user, data.get("id").toString(), (data.get("permalink").toString())));
         }
 
+        return submissions;
+    }
+    
+    /**
+     * Returns a list of submissions from a subreddit.
+     * @author <a href="https://github.com/trentrand/">Trent Rand</a>
+     
+     * @param subreddit The subreddit at which submissions you want
+     *                 to retrieve submissions.
+     * @return <code>List</code> of submissions on the subreddit.
+     */
+    public static List<Submission> getSubmissions(String subreddit) {
+        // List of submissions made by this user
+        List<Submission> submissions = new ArrayList<Submission>(500);
+        try {
+            // Send GET request to get the account overview
+            JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.SUBMISSIONS, subreddit), null);
+            JSONObject data = (JSONObject) object.get("data");
+            JSONArray children = (JSONArray) data.get("children");
+
+            JSONObject obj;
+
+            for (Object aChildren : children) {
+                // Get the object containing the comment
+                obj = (JSONObject) aChildren;
+                obj = (JSONObject) obj.get("data");
+                //add a new Submission to the list
+                submissions.add(new Submission(obj));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Return the submissions
         return submissions;
     }
 }
