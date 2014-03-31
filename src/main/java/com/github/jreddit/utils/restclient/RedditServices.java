@@ -3,13 +3,8 @@ package com.github.jreddit.utils.restclient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jreddit.exception.InvalidCookieException;
-import com.github.jreddit.model.json.response.CommentListingItem;
-import com.github.jreddit.model.json.response.RedditListing;
-import com.github.jreddit.model.json.response.SubmissionListingItem;
-import com.github.jreddit.model.json.response.SubredditListingItem;
-import com.github.jreddit.model.json.response.UserAbout;
-import com.github.jreddit.model.json.response.UserInfo;
-import com.github.jreddit.model.json.response.UserLogin;
+import com.github.jreddit.message.MessageType;
+import com.github.jreddit.model.json.response.*;
 import com.github.jreddit.submissions.Page;
 import com.github.jreddit.submissions.Popularity;
 import com.github.jreddit.subreddit.SubredditType;
@@ -18,10 +13,7 @@ import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder;
-import com.github.jreddit.utils.restclient.submitbuilders.CommentBuilder;
-import com.github.jreddit.utils.restclient.submitbuilders.PostBuilder;
-import com.github.jreddit.utils.restclient.submitbuilders.RedditInteractionBuilder;
-import com.github.jreddit.utils.restclient.submitbuilders.VoteBuilder;
+import com.github.jreddit.utils.restclient.submitbuilders.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -109,6 +101,12 @@ public class RedditServices {
         return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<SubmissionListingItem>>() { });
     }
 
+    public RedditListing<MessageListingItem> getMessages(MessageType messageType) throws URISyntaxException, IOException {
+        HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + format(MESSAGE_GET, messageType.getValue()));
+
+        return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<MessageListingItem>>() { });
+    }
+
     public RedditListing<SubmissionListingItem> getSubmissionInfo(String submissionPermaLink) throws URISyntaxException, IOException {
         HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + submissionPermaLink + "/info.json");
 
@@ -121,6 +119,13 @@ public class RedditServices {
         String substring = responseBody.substring(first + 1, last -1);
 
         return mapper.readValue(substring, new TypeReference<RedditListing<SubmissionListingItem>>() { });
+    }
+
+    public void composeNewMessage(ComposeMessageBuilder composeMessageBuilder) throws URISyntaxException, IOException {
+        //TODO: what does this return?  if it's same return type as comment generify
+        HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + MESSAGE_COMPOSE);
+
+        BasicResponse response = restClient.post(builder, composeMessageBuilder.build());
     }
 
     public void markNsfw(RedditInteractionBuilder interactionBuilder) throws URISyntaxException, IOException {
