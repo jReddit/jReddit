@@ -1,17 +1,20 @@
 package com.github.jreddit.utils.restclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.model.json.response.*;
 import com.github.jreddit.submissions.Page;
 import com.github.jreddit.submissions.Popularity;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
+import com.github.jreddit.utils.restclient.submitbuilders.CommentBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static com.github.jreddit.utils.restclient.submitbuilders.CommentBuilder.comment;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -68,9 +71,28 @@ public class RedditServicesIntegrationTest {
         assertTrue(submissions.getData().getChildren().length > 0);
     }
 
-    public void authenticate() throws IOException, URISyntaxException {
+    @Test(expected = InvalidCookieException.class)
+    public void commentOnSubmissionFailsWhenNotLoggedIn() throws Exception {
+        String thingId = "t3_21rn3a";
+        String modhash = "parp";
+
+        redditServices.comment(comment().withCommentText("testComment").withThingId(thingId).withModhash(modhash));
+    }
+
+    @Test
+    public void commentOnSubmission() throws Exception {
+        String thingId = "t3_21rn3a";
+        String modhash = authenticate();
+
+        redditServices.comment(comment().withCommentText("testComment").withThingId(thingId).withModhash(modhash));
+        //TODO: when we've worked out how to handle the response add some sort of assertions here..
+    }
+
+
+    public String authenticate() throws IOException, URISyntaxException {
         UserLogin userLogin = redditServices.userLogin(USERNAME, PASSWORD);
         assertFalse(userLogin.getJson().getData().getCookie().isEmpty());
+        return userLogin.getJson().getData().getModhash();
     }
 }
 
