@@ -84,6 +84,21 @@ public class RedditServices {
         return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<SubmissionListingItem>>() { });
     }
 
+    public RedditListing<SubmissionListingItem> getSubmissionInfo(String submissionPermaLink) throws URISyntaxException, IOException {
+        HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + submissionPermaLink + "/info.json");
+
+        String responseBody = restClient.get(builder).getResponseBody();
+
+        // Another annoying part of the reddit api: for a single submission info you get a redditListing returned, wrapped in an array...
+        // So lets hack up a removal of that array so we cna process like a normal submission listing
+        int first = responseBody.indexOf('[');
+        int last = responseBody.lastIndexOf(']');
+        String substring = responseBody.substring(first + 1, last -1);
+
+        return mapper.readValue(substring, new TypeReference<RedditListing<SubmissionListingItem>>() { });
+    }
+
+
     public void comment(CommentBuilder commentBuilder) throws URISyntaxException, IOException {
         //TODO: what does this return? if it's same return type as submit generify
         HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + COMMENT);

@@ -71,20 +71,25 @@ public class RedditServicesIntegrationTest {
         assertTrue(submissions.getData().getChildren().length > 0);
     }
 
+    @Test
+    public void getSubmissionInfo() throws Exception {
+        String submissionPermaLink = "/r/test/comments/21rn3a/foo/";
+        RedditListing<SubmissionListingItem> submission = redditServices.getSubmissionInfo(submissionPermaLink);
+
+        assertTrue(submission.getData().getChildren()[0].getData().getPermalink().equals(submissionPermaLink));
+    }
+
+
     @Test(expected = InvalidCookieException.class)
     public void commentOnSubmissionFailsWhenNotLoggedIn() throws Exception {
-        String thingId = "t3_21rn3a";
-        String modhash = "parp";
-
-        redditServices.comment(comment().withCommentText("testComment").withThingId(thingId).withModhash(modhash));
+        redditServices.comment(comment().withCommentText("testComment").withThingId("t3_21rn3a").withModhash("parp"));
     }
 
     @Test
     public void commentOnSubmission() throws Exception {
-        String thingId = "t3_21rn3a";
         String modhash = authenticate();
 
-        redditServices.comment(comment().withCommentText("testComment").withThingId(thingId).withModhash(modhash));
+        redditServices.comment(comment().withCommentText("testComment").withThingId("t3_21rn3a").withModhash(modhash));
         //TODO: when we've worked out how to handle the response add some sort of assertions here..
     }
 
