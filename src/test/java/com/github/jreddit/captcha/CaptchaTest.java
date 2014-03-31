@@ -1,8 +1,8 @@
 package com.github.jreddit.captcha;
 
+import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.ResponseWithJsonSimple;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
@@ -18,7 +18,6 @@ import java.util.Collections;
 import static com.github.jreddit.testsupport.JsonHelpers.emptyJsonArray;
 import static com.github.jreddit.testsupport.JsonHelpers.jsonArrayOf;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -65,26 +64,6 @@ public class CaptchaTest {
 
         underTest.newCaptcha(user);
         verify(captchaDownloader).getCaptchaImage("ident");
-    }
-
-    @Test
-    public void needsCaptchaReturnsTrue() {
-        response = new UtilResponse("", true, 200);
-
-        when(user.getCookie()).thenReturn("cookie");
-        when(restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, "cookie")).thenReturn(response);
-
-        assertTrue(underTest.needsCaptcha(user));
-    }
-
-    @Test
-    public void needsCaptchaReturnsFalse() {
-        response = new UtilResponse("", false, 200);
-
-        when(user.getCookie()).thenReturn("cookie");
-        when(restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, "cookie")).thenReturn(response);
-
-        assertFalse(underTest.needsCaptcha(user));
     }
 
     @Test

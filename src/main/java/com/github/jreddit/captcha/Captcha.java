@@ -50,23 +50,4 @@ public class Captcha {
 
         return iden;
     }
-
-    /**
-     * Check whether user needs CAPTCHAs for API methods that define the "captcha" and "iden" parameters.
-     *
-     * @param user user to do the check for
-     * @return true if CAPTCHAs are needed, false otherwise
-     */
-    public boolean needsCaptcha(User user) {
-        boolean needsCaptcha = false;
-
-        try {
-            needsCaptcha = (Boolean) restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, user.getCookie()).getResponseObject();
-        } catch (Exception e) {
-            System.err.println("Error verifying if the user needs a captcha");
-        }
-
-        return needsCaptcha;
-    }
-
 }

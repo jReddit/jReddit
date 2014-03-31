@@ -43,6 +43,13 @@ public class RedditServices {
         return mapper.readValue(restClient.post(builder, loginParameters(username, password)).getResponseBody(), UserLogin.class);
     }
 
+    public Boolean userNeedsCaptcha() throws URISyntaxException, IOException {
+        HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + CAPTCHA_NEEDS);
+
+        String responseBody = restClient.get(builder).getResponseBody();
+        return mapper.readValue(responseBody, Boolean.class);
+    }
+
     public RedditListing<SubredditListingItem> getSubscribed() throws URISyntaxException, IOException {
         HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + USER_GET_SUBSCRIBED);
 
