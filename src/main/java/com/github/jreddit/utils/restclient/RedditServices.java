@@ -1,6 +1,7 @@
 package com.github.jreddit.utils.restclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.message.MessageType;
@@ -48,6 +49,14 @@ public class RedditServices {
 
         String responseBody = restClient.get(builder).getResponseBody();
         return mapper.readValue(responseBody, Boolean.class);
+    }
+
+    public String newCaptcha() throws URISyntaxException, IOException {
+        HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + CAPTCHA_NEW);
+
+        //TODO: make this less rubbish
+        return mapper.readValue(restClient.post(builder, new ArrayList<NameValuePair>(1)).getResponseBody(), JsonNode.class)
+                .get("jquery").path(11).path(3).path(0).asText();
     }
 
     public RedditListing<SubredditListingItem> getSubscribed() throws URISyntaxException, IOException {

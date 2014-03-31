@@ -123,6 +123,11 @@ public class RedditServicesIntegrationTest {
         redditServices.userNeedsCaptcha();
     }
 
+    @Test
+    public void callNewCaptchaWhenLoggedIn() throws Exception {
+        authenticate();
+        redditServices.newCaptcha();
+    }
 
     public String authenticate() throws IOException, URISyntaxException {
         UserLogin userLogin = redditServices.userLogin(USERNAME, PASSWORD);
