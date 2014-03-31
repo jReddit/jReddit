@@ -23,10 +23,10 @@ public class SelfPostBuilder extends PostBuilder<SelfPostBuilder> {
         if (body == null || body.isEmpty()) {
             throw new IllegalArgumentException("You cannot make a new self post without a body specified");
         }
-        List<NameValuePair> headers = super.build();
-        headers.add(new BasicNameValuePair("kind", "self"));
-        headers.add(new BasicNameValuePair("text", body));
+        List<NameValuePair> postParams = super.build();
+        postParams.add(new BasicNameValuePair("kind", "self"));
+        postParams.add(new BasicNameValuePair("text", body));
 
-        return headers;
+        return postParams;
     }
 }

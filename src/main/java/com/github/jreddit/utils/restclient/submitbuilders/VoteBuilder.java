@@ -60,10 +60,10 @@ public class VoteBuilder {
             throw new IllegalArgumentException("You cannot vote without specifying how you wish to vote");
         }
 
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        headers.add(new BasicNameValuePair("thing_id", thingId));
-        headers.add(new BasicNameValuePair("dir", vote.getWeight()));
-        headers.add(new BasicNameValuePair("uh", modhash));
-        return headers;
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("thing_id", thingId));
+        postParams.add(new BasicNameValuePair("dir", vote.getWeight()));
+        postParams.add(new BasicNameValuePair("uh", modhash));
+        return postParams;
     }
 }

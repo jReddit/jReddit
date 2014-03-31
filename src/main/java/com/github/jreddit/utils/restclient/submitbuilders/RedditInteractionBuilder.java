@@ -34,9 +34,9 @@ public class RedditInteractionBuilder {
             throw new IllegalArgumentException("You cannot interact with something without a modhash specified");
         }
 
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        headers.add(new BasicNameValuePair("thing_id", thingId));
-        headers.add(new BasicNameValuePair("uh", modhash));
-        return headers;
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("thing_id", thingId));
+        postParams.add(new BasicNameValuePair("uh", modhash));
+        return postParams;
     }
 }

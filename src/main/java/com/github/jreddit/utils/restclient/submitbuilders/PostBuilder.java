@@ -39,10 +39,10 @@ public abstract class PostBuilder<T extends PostBuilder> {
             throw new IllegalArgumentException("You cannot make a new post without a modhash specified");
         }
 
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        headers.add(new BasicNameValuePair("title", title));
-        headers.add(new BasicNameValuePair("sr", subreddit));
-        headers.add(new BasicNameValuePair("uh", modhash));
-        return headers;
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("title", title));
+        postParams.add(new BasicNameValuePair("sr", subreddit));
+        postParams.add(new BasicNameValuePair("uh", modhash));
+        return postParams;
     }
 }

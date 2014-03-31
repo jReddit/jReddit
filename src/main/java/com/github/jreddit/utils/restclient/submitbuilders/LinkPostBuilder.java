@@ -23,10 +23,10 @@ public class LinkPostBuilder extends PostBuilder<LinkPostBuilder> {
         if (url == null || url.isEmpty()) {
             throw new IllegalArgumentException("You cannot make a new link post without a url specified");
         }
-        List<NameValuePair> headers = super.build();
-        headers.add(new BasicNameValuePair("kind", "link"));
-        headers.add(new BasicNameValuePair("url", url));
+        List<NameValuePair> postParams = super.build();
+        postParams.add(new BasicNameValuePair("kind", "link"));
+        postParams.add(new BasicNameValuePair("url", url));
 
-        return headers;
+        return postParams;
     }
 }

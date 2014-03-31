@@ -44,10 +44,10 @@ public class CommentBuilder {
             throw new IllegalArgumentException("You cannot make a new comment without a modhash specified");
         }
 
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        headers.add(new BasicNameValuePair("thing_id", thingId));
-        headers.add(new BasicNameValuePair("text", commentText));
-        headers.add(new BasicNameValuePair("uh", modhash));
-        return headers;
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("thing_id", thingId));
+        postParams.add(new BasicNameValuePair("text", commentText));
+        postParams.add(new BasicNameValuePair("uh", modhash));
+        return postParams;
     }
 }
