@@ -1,8 +1,13 @@
 package com.github.jreddit.user;
 
 import com.github.jreddit.Thing;
-import com.github.jreddit.model.json.response.*;
+import com.github.jreddit.model.json.response.CommentListingItem;
+import com.github.jreddit.model.json.response.RedditListing;
+import com.github.jreddit.model.json.response.SubmissionListingItem;
+import com.github.jreddit.model.json.response.SubredditListingItem;
+import com.github.jreddit.model.json.response.UserAbout;
 import com.github.jreddit.model.json.response.UserInfo;
+import com.github.jreddit.model.json.response.UserLogin;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
 import com.github.jreddit.utils.restclient.RedditServices;
