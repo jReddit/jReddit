@@ -13,11 +13,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import static com.github.jreddit.testsupport.JsonHelpers.emptyJsonArray;
 import static com.github.jreddit.testsupport.JsonHelpers.jsonArrayOf;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 
 /**
@@ -64,16 +62,6 @@ public class CaptchaTest {
 
         underTest.newCaptcha(user);
         verify(captchaDownloader).getCaptchaImage("ident");
-    }
-
-    @Test
-    public void needsCaptchaReceivesJSONObjectAndReturnsFalse() {
-        response = new UtilResponse("", new JSONObject(Collections.singletonMap("key", "value")), 200);
-
-        when(user.getCookie()).thenReturn("cookie");
-        when(restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, "cookie")).thenReturn(response);
-
-        assertFalse(underTest.needsCaptcha(user));
     }
 
     private ResponseWithJsonSimple generateBadlyFormedJson() throws ParseException {
