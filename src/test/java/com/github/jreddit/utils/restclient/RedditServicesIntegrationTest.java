@@ -29,7 +29,7 @@ public class RedditServicesIntegrationTest {
 
     @Before
     public void setUp() {
-        redditServices = new RedditServices(new BetterRestClient(createDefault(), new BasicRedditResponseHandler()), new ObjectMapper());
+        redditServices = new RedditServices(new RedditRestClient(createDefault(), new BasicRedditResponseHandler()), new ObjectMapper());
     }
 
     @Test

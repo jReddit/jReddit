@@ -30,10 +30,10 @@ import static java.lang.String.format;
 
 public class RedditServices {
 
-    private final BetterRestClient restClient;
+    private final MethodBuilderRestClient restClient;
     private final ObjectMapper mapper;
 
-    public RedditServices(BetterRestClient restClient, ObjectMapper mapper) {
+    public RedditServices(MethodBuilderRestClient restClient, ObjectMapper mapper) {
         this.restClient = restClient;
         this.mapper = mapper;
     }

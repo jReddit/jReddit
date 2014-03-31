@@ -14,12 +14,12 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.List;
 
-public class BetterRestClient implements MethodBuilderRestClient {
+public class RedditRestClient implements MethodBuilderRestClient {
     private final HttpClient httpClient;
     private final ResponseHandler<BasicResponse> responseHandler;
     private String userAgent = "Omer's Reddit API Java Wrapper";
 
-    public BetterRestClient(HttpClient httpClient, ResponseHandler<BasicResponse> responseHandler) {
+    public RedditRestClient(HttpClient httpClient, ResponseHandler<BasicResponse> responseHandler) {
         this.httpClient = httpClient;
         this.responseHandler = responseHandler;
     }
