@@ -1,18 +1,19 @@
 package com.github.jreddit.user;
 
+import com.github.jreddit.RedditServices;
 import com.github.jreddit.model.json.response.RedditListing;
 import com.github.jreddit.model.json.response.SubmissionListingItem;
 import com.github.jreddit.model.json.response.UserInfo;
 import com.github.jreddit.model.json.response.UserLogin;
-import com.github.jreddit.utils.restclient.RedditServices;
+import com.github.jreddit.utils.User;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static com.github.jreddit.model.domain.SubmissionSortType.NEW;
 import static com.github.jreddit.testsupport.json.builders.UserLoginBuilder.userLogin;
-import static com.github.jreddit.utils.Sort.NEW;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

@@ -1,8 +1,6 @@
 
 import com.github.jreddit.submissions.Submission;
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.restclient.RestClient;
-import com.github.jreddit.utils.restclient.HttpRestClient;
+import com.github.jreddit.utils.User;
 
 import java.util.List;
 

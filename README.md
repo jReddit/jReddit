@@ -25,8 +25,8 @@ Send in a pull request with the test and I'll be happy to merge! :-)
 Upvote every submission on the frontpage of a subreddit
 
     import com.github.jreddit.submissions.Submission;
-    import com.github.jreddit.submissions.Submissions;
-    import com.github.jreddit.user.User;
+    import com.github.jreddit.utils.Submissions;
+    import com.github.jreddit.utils.User;
 
     public final class Test {
 	    public static void main(String[] args) throws Exception {
@@ -42,7 +42,7 @@ Upvote every submission on the frontpage of a subreddit
 
 Submit a link and self post
 
-	import com.github.jreddit.user.User;
+	import com.github.jreddit.utils.User;
 	
 	public final class Test {
 		public static void main(String[] args) throws Exception {
@@ -61,7 +61,7 @@ Submit a link and self post
 List all submissions made by user called USERNAME_OF_OTHER_USER
 
 	import com.github.jreddit.submissions.Submission;
-	import com.github.jreddit.user.User;
+	import com.github.jreddit.utils.User;
 	
 	/**
 	 * @author Benjamin Jakobus
@@ -83,7 +83,7 @@ List all submissions made by user called USERNAME_OF_OTHER_USER
 Send a message to another user
 
 	import com.github.jreddit.message.Messages;
-	import com.github.jreddit.user.User;
+	import com.github.jreddit.utils.User;
 
 
 	public class ComposeTest {

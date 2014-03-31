@@ -1,10 +1,8 @@
 import com.github.jreddit.submissions.Submission;
-import com.github.jreddit.submissions.Submissions;
-import com.github.jreddit.submissions.Submissions.Page;
-import com.github.jreddit.submissions.Submissions.Popularity;
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.restclient.HttpRestClient;
-import com.github.jreddit.utils.restclient.RestClient;
+import com.github.jreddit.utils.Submissions;
+import com.github.jreddit.utils.Submissions.Page;
+import com.github.jreddit.utils.Submissions.Popularity;
+import com.github.jreddit.utils.User;
 
 
 /**
