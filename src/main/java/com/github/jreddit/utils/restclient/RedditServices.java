@@ -19,6 +19,7 @@ import com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder;
 import com.github.jreddit.utils.restclient.submitbuilders.CommentBuilder;
 import com.github.jreddit.utils.restclient.submitbuilders.PostBuilder;
+import com.github.jreddit.utils.restclient.submitbuilders.RedditInteractionBuilder;
 import com.github.jreddit.utils.restclient.submitbuilders.VoteBuilder;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -97,6 +98,20 @@ public class RedditServices {
         String substring = responseBody.substring(first + 1, last -1);
 
         return mapper.readValue(substring, new TypeReference<RedditListing<SubmissionListingItem>>() { });
+    }
+
+    public void markNsfw(RedditInteractionBuilder interactionBuilder) throws URISyntaxException, IOException {
+        //TODO: what does this return?  if it's same return type as comment generify
+        HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + SUBMISSION_MARK_AS_NSFW);
+
+        BasicResponse response = restClient.post(builder, interactionBuilder.build());
+    }
+
+    public void unMarkNsfw(RedditInteractionBuilder interactionBuilder) throws URISyntaxException, IOException {
+        //TODO: what does this return?  if it's same return type as comment generify
+        HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + SUBMISSION_UNMARK_AS_NSFW);
+
+        BasicResponse response = restClient.post(builder, interactionBuilder.build());
     }
 
     public void vote(VoteBuilder votebuilder) throws URISyntaxException, IOException {
