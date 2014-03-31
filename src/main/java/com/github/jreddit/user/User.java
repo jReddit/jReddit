@@ -158,7 +158,7 @@ public class User extends Thing {
      * @throws IOException        If connection fails
      */
     public RedditListing<CommentListingItem> comments(String username, CommentSort commentSort) throws IOException, URISyntaxException {
-        return redditServices.getComments(username, commentSort);
+        return redditServices.getUserComments(username, commentSort);
     }
 
     /**

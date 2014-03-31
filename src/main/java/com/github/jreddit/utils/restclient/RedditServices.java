@@ -62,7 +62,7 @@ public class RedditServices {
         return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<SubmissionListingItem>>() { });
     }
 
-    public RedditListing<CommentListingItem> getComments(String username, CommentSort commentSort) throws URISyntaxException, IOException {
+    public RedditListing<CommentListingItem> getUserComments(String username, CommentSort commentSort) throws URISyntaxException, IOException {
         HttpGetMethodBuilder builder = httpGetMethod().withUrl(REDDIT_BASE_URL + format(ApiEndpointUtils.USER_COMMENTS, username, commentSort.getValue()));
 
         return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<CommentListingItem>>() { });
