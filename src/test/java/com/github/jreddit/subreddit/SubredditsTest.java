@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Raul Rene Lepsa
  */
-public class SubredditTest {
+public class SubredditsTest {
 
     private RestClient restClient;
     private Subreddits underTest;
