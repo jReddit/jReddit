@@ -1,4 +1,4 @@
-package com.github.jreddit.utils.restclient.submissionbuilders;
+package com.github.jreddit.utils.restclient.submitbuilders;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;

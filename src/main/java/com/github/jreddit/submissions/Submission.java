@@ -139,25 +139,6 @@ public class Submission extends Thing {
     }
 
     /**
-     * This function comments on this submission saying the comment specified in
-     * <code>text</code> (CAN INCLUDE MARKDOWN)
-     *
-     * @param text The text to comment
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public void comment(String text) throws IOException, ParseException {
-        JSONObject object = (JSONObject) restClient.post("thing_id=" + fullName + "&text=" + text
-                + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie()).getResponseObject();
-
-        if (object.toJSONString().contains(".error.USER_REQUIRED"))
-            throw new InvalidCookieException("Cookie not present");
-        else
-            System.out.println("Commented on thread id " + fullName
-                    + " saying: \"" + text + "\"");
-    }
-
-    /**
      * This function returns the name of the author of this submission.
      *
      * @return The author's name

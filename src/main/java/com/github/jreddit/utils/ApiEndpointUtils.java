@@ -18,7 +18,7 @@ public class ApiEndpointUtils {
     public static final String CAPTCHA_NEEDS = REDDIT_BASE_API_ENDPOINT + "/needs_captcha.json";
     
     /* Message specific constants */
-    
+
     public static final String MESSAGE_COMPOSE = REDDIT_BASE_API_ENDPOINT + "/compose";
     
     public static final String MESSAGE_READ = REDDIT_BASE_API_ENDPOINT + "/read_message";
@@ -26,8 +26,6 @@ public class ApiEndpointUtils {
     public static final String MESSAGE_GET = "/message/%s.json";
     
     /* Submission specific constants */
-    
-    public static final String SUBMISSION_COMMENT = REDDIT_BASE_API_ENDPOINT + "/comment";
     
     public static final String SUBMISSION_MARK_AS_NSFW = REDDIT_BASE_API_ENDPOINT + "/marknsfw";
     
@@ -60,4 +58,9 @@ public class ApiEndpointUtils {
     public static final String SUBREDDITS_GET = "/subreddits/%s.json";
 
     public static final String SUBREDDIT_SUBMISSIONS = "/r/%s/%s.json";
+
+
+    /* Non specific constants */
+
+    public static final String COMMENT = REDDIT_BASE_API_ENDPOINT + "/comment";
 }

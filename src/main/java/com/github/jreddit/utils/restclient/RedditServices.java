@@ -2,16 +2,23 @@ package com.github.jreddit.utils.restclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.jreddit.model.json.response.*;
+import com.github.jreddit.exception.InvalidCookieException;
+import com.github.jreddit.model.json.response.CommentListingItem;
+import com.github.jreddit.model.json.response.RedditListing;
+import com.github.jreddit.model.json.response.SubmissionListingItem;
+import com.github.jreddit.model.json.response.SubredditListingItem;
+import com.github.jreddit.model.json.response.UserAbout;
+import com.github.jreddit.model.json.response.UserInfo;
+import com.github.jreddit.model.json.response.UserLogin;
 import com.github.jreddit.submissions.Page;
 import com.github.jreddit.submissions.Popularity;
-import com.github.jreddit.submissions.Submissions;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.Sort;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder;
-import com.github.jreddit.utils.restclient.submissionbuilders.PostBuilder;
+import com.github.jreddit.utils.restclient.submitbuilders.CommentBuilder;
+import com.github.jreddit.utils.restclient.submitbuilders.PostBuilder;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -77,12 +84,23 @@ public class RedditServices {
         return mapper.readValue(restClient.get(builder).getResponseBody(), new TypeReference<RedditListing<SubmissionListingItem>>() { });
     }
 
+    public void comment(CommentBuilder commentBuilder) throws URISyntaxException, IOException {
+        //TODO: what does this return? if it's same return type as submit generify
+        HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + COMMENT);
+
+        BasicResponse response = restClient.post(builder, commentBuilder.build());
+
+        //TODO: work out how to handle the response to this; it's the worst bit of the api I've seen so far..
+        if (response.getResponseBody().contains(".error.USER_REQUIRED")){
+            throw new InvalidCookieException("Cookie not present");
+        }
+    }
 
     public void submit(PostBuilder postBuilder) throws URISyntaxException, IOException {
-        //TODO: what does this return?
+        //TODO: what does this return?  if it's same return type as comment generify
         HttpPostMethodBuilder builder = httpPostMethod().withUrl(REDDIT_BASE_URL + USER_SUBMIT);
 
-        restClient.post(builder, postBuilder.build());
+        BasicResponse response = restClient.post(builder, postBuilder.build());
     }
 
     public static List<NameValuePair> loginParameters(String username, String password) {

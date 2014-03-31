@@ -19,8 +19,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.github.jreddit.utils.CommentSort.NEW;
-import static com.github.jreddit.utils.restclient.submissionbuilders.LinkPostBuilder.linkPost;
-import static com.github.jreddit.utils.restclient.submissionbuilders.SelfPostBuilder.selfPost;
+import static com.github.jreddit.utils.restclient.submitbuilders.LinkPostBuilder.linkPost;
+import static com.github.jreddit.utils.restclient.submitbuilders.SelfPostBuilder.selfPost;
 
 /**
  * This class represents a user connected to Reddit.
