@@ -10,7 +10,7 @@ public enum CommentSort {
 
     NEW("new"), HOT("hot"), TOP("top"), CONTROVERSIAL("controversial");
 
-    private String value;
+    private final String value;
 
     CommentSort(String value) {
         this.value = value;

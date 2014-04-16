@@ -1,9 +1,7 @@
 package com.github.jreddit.submissions;
 
 import com.github.jreddit.user.User;
-import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.Utils;
-
+import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -12,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
+import com.github.jreddit.utils.ApiEndpointUtils;
 
 /**
  * This class offers some submission utilities.
@@ -20,12 +18,19 @@ import java.util.List;
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  */
 public class Submissions {
+
+    private final RestClient restClient;
+
     public enum Popularity {
         HOT, NEW
     }
 
     public enum Page {
         FRONTPAGE
+    }
+
+    public Submissions(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     /**
@@ -40,7 +45,7 @@ public class Submissions {
      * @throws IOException    If connection fails
      * @throws ParseException If JSON parsing fails
      */
-    public static LinkedList<Submission> getSubmissions(String redditName,
+    public LinkedList<Submission> getSubmissions(String redditName,
                        Popularity type, Page frontpage, User user) throws IOException, ParseException {
 
         LinkedList<Submission> submissions = new LinkedList<Submission>();
@@ -58,12 +63,12 @@ public class Submissions {
 
         urlString += ".json";
 
-        JSONObject object = (JSONObject) Utils.get(urlString, user.getCookie());
+        JSONObject object = (JSONObject)  restClient.get(urlString, user.getCookie()).getResponseObject();
         JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 
         JSONObject data;
-        for (int i = 0; i < array.size(); i++) {
-            data = (JSONObject) array.get(i);
+        for (Object anArray : array) {
+            data = (JSONObject) anArray;
             data = ((JSONObject) data.get("data"));
             submissions.add(new Submission(user, data.get("id").toString(), (data.get("permalink").toString())));
         }
@@ -73,18 +78,16 @@ public class Submissions {
     
     /**
      * Returns a list of submissions from a subreddit.
-     * @author <a href="https://github.com/trentrand/">Trent Rand</a>
-     
-     * @param subreddit The subreddit at which submissions you want
-     *                 to retrieve submissions.
+     *
+     * @param subreddit The subreddit at which submissions you want to retrieve submissions.
      * @return <code>List</code> of submissions on the subreddit.
      */
-    public static List<Submission> getSubmissions(String subreddit) {
+    public List<Submission> getSubmissions(String subreddit) {
         // List of submissions made by this user
         List<Submission> submissions = new ArrayList<Submission>(500);
         try {
             // Send GET request to get the account overview
-            JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.SUBMISSIONS, subreddit), null);
+            JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.SUBMISSIONS, subreddit), null);
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
