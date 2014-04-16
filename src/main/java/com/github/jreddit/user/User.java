@@ -202,55 +202,67 @@ public class User extends Thing {
     /**
      * Returns a list of submissions made by this user.
      *
-     * @return <code>List</code> of submissions made by this user.
+     * @return <code>List</code> of top 500 comments made by this user, or an empty list if the user does not have
+     * any comments. In case of an invalid username, it returns <code>null</code>.
      */
     public List<Comment> comments() {
         return User.comments(username);
     }
 
-
+    /**
+     * Returns a list of comments made by a user
+     *
+     * @param username    The username of the user whose comments you want to retrieve.
+     * @return <code>List</code> of top 500 comments made by this user, or an empty list if the user does not have
+     * any comments. In case of an invalid username, it returns <code>null</code>.
+     */
     public static List<Comment> comments(String username) {
         return comments(username, CommentSort.NEW);
     }
 
     /**
-     * Returns a list of submissions made by this user.
+     * Returns a list of comments made by a user
      *
-     * @param username The username of the user whose comments you want
-     *                 to retrieve.
-     * @return <code>List</code> of top 500 comments made by this user.
+     * @param username    The username of the user whose comments you want to retrieve.
+     * @param commentSort <code>CommentSort</code> instance representing what type of comments are being retrieved
+     * @return <code>List</code> of top 500 comments made by this user, or an empty list if the user does not have
+     * any comments. In case of an invalid username, it returns <code>null</code>.
      */
     public static List<Comment> comments(String username, CommentSort commentSort) {
-        // List of submissions made by this user
         List<Comment> comments = new ArrayList<Comment>(500);
+
         try {
-            // Send GET request to get the account overview
-            JSONObject object =
-                    (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_COMMENTS,
-                            username, commentSort.getValue()), null);
-            JSONObject data = (JSONObject) object.get("data");
-            JSONArray children = (JSONArray) data.get("children");
+            JSONObject object = (JSONObject) Utils.get(String.format(ApiEndpointUtils.USER_COMMENTS,
+                    username, commentSort.getValue()), null);
 
-            JSONObject obj;
-            Comment c;
-            for (Object aChildren : children) {
-                // Get the object containing the comment
-                obj = (JSONObject) aChildren;
-                obj = (JSONObject) obj.get("data");
+            if (object != null) {
+                JSONObject data = (JSONObject) object.get("data");
+                JSONArray children = (JSONArray) data.get("children");
 
-                // Create a new comment
-                c = new Comment(Utils.toString(obj.get("body")), Utils.toString(obj.get("edited")),
-                        Utils.toString(obj.get("created_utc")), Utils.toString(obj.get("replies")),
-                        Integer.parseInt(Utils.toString(obj.get("ups"))),
-                        Integer.parseInt(Utils.toString(obj.get("downs"))));
+                JSONObject obj;
+                Comment c;
+                for (Object aChildren : children) {
+                    // Get the object containing the comment
+                    obj = (JSONObject) aChildren;
+                    obj = (JSONObject) obj.get("data");
 
-                // Add it to the submissions list
-                comments.add(c);
+                    // Create a new comment
+                    c = new Comment(Utils.toString(obj.get("body")), Utils.toString(obj.get("edited")),
+                            Utils.toString(obj.get("created_utc")), Utils.toString(obj.get("replies")),
+                            Integer.parseInt(Utils.toString(obj.get("ups"))),
+                            Integer.parseInt(Utils.toString(obj.get("downs"))));
+
+                    // Add it to the submissions list
+                    comments.add(c);
+                }
+            } else {
+                comments = null;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Return the submissions
+
         return comments;
     }
 
@@ -434,6 +446,7 @@ public class User extends Thing {
 
     /**
      * Returns a list of Subreddits to which the user is subscribed.
+     *
      * @return List of Subreddits
      */
     public List<Subreddit> getSubscribed() {
