@@ -73,4 +73,10 @@ public class UserTest {
         userInfo = User.about("1");
         assertNull(userInfo);
     }
+
+    @Test
+    public void commentTest() {
+        assertNotNull(user.comments());
+        assertNull(User.comments("invalid_username_&#%^@*^!"));
+    }
 }
