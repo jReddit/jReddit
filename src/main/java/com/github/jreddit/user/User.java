@@ -123,6 +123,49 @@ public class User extends Thing {
     }
 
     /**
+     * This function changes user's password
+     * Requires authentication.
+     *
+     * @param currentPassword	Current password
+     * @param newPassword	New password
+     * @throws IOException    If connection fails
+     * @throws ParseException If JSON Parsing fails
+     */
+    public void changePassword(String currentPassword, String newPassword)
+            throws IOException, ParseException {
+        JSONObject object = update(currentPassword, "", newPassword);
+        if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+            System.err.println("Please login first.");
+        } else if (object.toJSONString().contains(
+                ".error.RATELIMIT.field-ratelimit")) {
+            System.err.println("You are doing that too much.");
+        } else if (object.toJSONString().contains(
+                ".error.BAD_PASSWORD")) {
+            System.err.println("Current password is bad.");
+        } else {
+            System.out.println("Password successfully changed to " + newPassword);
+        }
+    }
+    
+    /**
+     * This function updates user's profile.
+     * Requires authentication.
+     *
+     * @param currentPassword     Current password
+     * @param email		New e-mail address (can be empty)
+     * @param newPassword		New password
+     * @throws IOException    If connection fails
+     * @throws ParseException If JSON Parsing fails
+     */
+    public JSONObject update(String currentPassword, String email, String newPassword)
+            throws IOException, ParseException {
+    	 return Utils.post("api_type=json&curpass=" + currentPassword + "&dest=http://reddit.com/" + (email != "" ? "&email=" + email : "")
+                + (newPassword != "" ? "&newpass=" + newPassword + "&verpass=" + newPassword : "")
+                + "&uh=" + getModhash(),
+                ApiEndpointUtils.USER_UPDATE, getCookie());
+    }
+
+    /**
      * This function logs in to reddit and returns an ArrayList containing a
      * modhash and cookie.
      *
