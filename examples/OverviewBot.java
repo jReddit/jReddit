@@ -1,7 +1,8 @@
 
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.user.User;
-import com.github.jreddit.utils.Utils;
+import com.github.jreddit.utils.restclient.RestClient;
+import com.github.jreddit.utils.restclient.HttpRestClient;
 
 import java.util.List;
 
@@ -12,9 +13,11 @@ import java.util.List;
  */
 public final class OverviewBot {
 	public static void main(String[] args) throws Exception {
-		Utils.setUserAgent("Overview-Bot");
-		User user = new User("user", "password");
-		user.connect();
+        RestClient restClient = new HttpRestClient();
+        restClient.setUserAgent("Overview-Bot");
+
+        User user = new User(restclient, "user", "password");
+        user.connect();
 		
 		//Submission Array from user profile
 		List<Submission> submissions = user.getDislikedSubmissions();

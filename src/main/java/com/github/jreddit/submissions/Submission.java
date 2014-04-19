@@ -1,10 +1,11 @@
 package com.github.jreddit.submissions;
 
-import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.Thing;
+import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.Utils;
+import com.github.jreddit.utils.restclient.HttpRestClient;
+import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -19,6 +20,8 @@ import java.io.IOException;
  * @author Andrei Sfat
  */
 public class Submission extends Thing {
+
+    private RestClient restClient;
 
     /* This is the user that will vote on a submission. */
     private User user;
@@ -37,6 +40,7 @@ public class Submission extends Thing {
     private long score;
 
     public Submission() {
+        restClient = new HttpRestClient();
     }
 
     /**
@@ -60,6 +64,12 @@ public class Submission extends Thing {
         } catch (Exception e) {
             System.err.println("Error creating Submission");
         }
+        restClient = new HttpRestClient();
+    }
+
+    // this is very stinky..
+    public void setRestClient(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     public void setUpVotes(long upVotes) {
@@ -114,10 +124,6 @@ public class Submission extends Thing {
         this.user = user;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
     public String getURL() {
         return url;
     }
@@ -141,8 +147,8 @@ public class Submission extends Thing {
      * @throws ParseException If JSON parsing fails
      */
     public void comment(String text) throws IOException, ParseException {
-        JSONObject object = Utils.post("thing_id=" + fullName + "&text=" + text
-                + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie());
+        JSONObject object = (JSONObject) restClient.post("thing_id=" + fullName + "&text=" + text
+                + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie()).getResponseObject();
 
         if (object.toJSONString().contains(".error.USER_REQUIRED"))
             throw new InvalidCookieException("Cookie not present");
@@ -266,13 +272,13 @@ public class Submission extends Thing {
     }
 
     public void markNSFW() throws IOException, ParseException {
-        Utils.post(
+        restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_MARK_AS_NSFW, user.getCookie());
     }
 
     public void unmarkNSFW() throws IOException, ParseException {
-        Utils.post(
+        restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_UNMARK_AS_NSFW, user.getCookie());
     }
@@ -351,14 +357,14 @@ public class Submission extends Thing {
     }
 
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
-        return Utils.post(
+        return (JSONObject) restClient.post(
                 "id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
-                ApiEndpointUtils.SUBMISSION_VOTE, user.getCookie());
+                ApiEndpointUtils.SUBMISSION_VOTE, user.getCookie()).getResponseObject();
     }
 
     private JSONObject info(String urlPath) throws IOException, ParseException {
         urlPath += "/info.json";
-        Object object = Utils.get(urlPath, user.getCookie());
+        Object object =  restClient.get(urlPath, user.getCookie()).getResponseObject();
 
         JSONArray array = (JSONArray) object;
         JSONObject obj = (JSONObject) array.get(0);
