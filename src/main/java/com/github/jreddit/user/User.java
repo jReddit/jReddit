@@ -3,6 +3,7 @@ package com.github.jreddit.user;
 import com.github.jreddit.Thing;
 import com.github.jreddit.comment.Comment;
 import com.github.jreddit.comment.Comments;
+import com.github.jreddit.exception.InvalidUserException;
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.utils.ApiEndpointUtils;
@@ -250,10 +251,14 @@ public class User extends Thing {
      * Returns a list of submissions made by this user.
      *
      * @return <code>List</code> of top 500 comments made by this user, or an empty list if the user does not have
-     * any comments. In case of an invalid username, it returns <code>null</code>.
+     * any comments. In case of an invalid user instance, it returns <code>null</code>.
      */
     public List<Comment> comments() {
-        return new Comments(restClient).comments(username);
+        try {
+            return new Comments(restClient).comments(username);
+        } catch (InvalidUserException e) {
+            return null;
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.github.jreddit.comment;
 
 
+import com.github.jreddit.exception.InvalidUserException;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.restclient.RestClient;
@@ -12,6 +13,11 @@ import java.util.List;
 
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
 
+/**
+ * Deals with Comment-related functionality
+ *
+ * @author Raul Rene Lepsa
+ */
 public class Comments {
 
     private RestClient restClient;
@@ -23,11 +29,11 @@ public class Comments {
     /**
      * Returns a list of comments made by a user
      *
-     * @param username    The username of the user whose comments you want to retrieve.
-     * @return <code>List</code> of top 500 comments made by this user, or an empty list if the user does not have
-     * any comments. In case of an invalid username, it returns <code>null</code>.
+     * @param username The username of the user whose comments you want to retrieve.
+     * @return <code>List</code> of top 500 comments made by this user, or an empty list if the user does not have any comments.
+     * @throws com.github.jreddit.exception.InvalidUserException in case of a non-existent username
      */
-    public List<Comment> comments(String username) {
+    public List<Comment> comments(String username) throws InvalidUserException {
         return comments(username, CommentSort.NEW);
     }
 
@@ -36,10 +42,10 @@ public class Comments {
      *
      * @param username    The username of the user whose comments you want to retrieve.
      * @param commentSort <code>CommentSort</code> instance representing what type of comments are being retrieved
-     * @return <code>List</code> of top 500 comments made by this user, or an empty list if the user does not have
-     * any comments. In case of an invalid username, it returns <code>null</code>.
+     * @return <code>List</code> of top 500 comments made by this user, or an empty list if the user does not have any comments.
+     * @throws com.github.jreddit.exception.InvalidUserException in case of a non-existent username
      */
-    public List<Comment> comments(String username, CommentSort commentSort) {
+    public List<Comment> comments(String username, CommentSort commentSort) throws InvalidUserException {
         List<Comment> comments = new ArrayList<Comment>(500);
 
         try {
@@ -67,7 +73,7 @@ public class Comments {
                     comments.add(comment);
                 }
             } else {
-                comments = null;
+                throw new InvalidUserException();
             }
 
         } catch (Exception e) {
