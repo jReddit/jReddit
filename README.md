@@ -34,7 +34,7 @@ Upvote every submission on the frontpage of a subreddit
 		    user.connect();
 
 		    for (Submission submission : Submissions.getSubmissions("programming",
-				    Submissions.HOT, Submissions.FRONTPAGE, user)) {
+				    Submissions.Popularity.HOT, Submissions.Page.FRONTPAGE, user)) {
 			    submission.upVote();
 		    }
 	    }
