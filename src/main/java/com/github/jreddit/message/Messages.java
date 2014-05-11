@@ -3,7 +3,6 @@ package com.github.jreddit.message;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.TypePrefix;
-import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -146,23 +145,23 @@ public class Messages {
                 // Else it is a comment
             } else {
                 obj = (JSONObject) obj.get("data");
-                Comment m = new Comment();
-                m.setBody(obj.get("body").toString());
-                m.setLink_title(obj.get("link_title").toString());
-                m.setComment(Boolean.valueOf(obj.get("was_comment").toString()));
-                m.setFullName(obj.get("name").toString());
-                m.setAuthor(obj.get("author").toString());
-                m.setCreated(obj.get("created").toString());
-                m.setRecipient(obj.get("dest").toString());
-                m.setAuthor(obj.get("author").toString());
-                m.setCreatedUTC(obj.get("created_utc").toString());
-                m.setBodyHtml(obj.get("body_html").toString());
-                m.setSubject(obj.get("subject").toString());
-                m.setSubreddit(obj.get("subreddit").toString());
-                m.setContext(obj.get("context").toString());
-                m.setId(obj.get("id").toString());
-                m.setSubject(obj.get("subject").toString());
-                messages.add(m);
+                Comment comment = new Comment();
+                comment.setBody(obj.get("body").toString());
+                comment.setLink_title(obj.get("link_title").toString());
+                comment.setComment(Boolean.valueOf(obj.get("was_comment").toString()));
+                comment.setFullName(obj.get("name").toString());
+                comment.setAuthor(obj.get("author").toString());
+                comment.setCreated(obj.get("created").toString());
+                comment.setRecipient(obj.get("dest").toString());
+                comment.setAuthor(obj.get("author").toString());
+                comment.setCreatedUTC(obj.get("created_utc").toString());
+                comment.setBodyHtml(obj.get("body_html").toString());
+                comment.setSubject(obj.get("subject").toString());
+                comment.setSubreddit(obj.get("subreddit").toString());
+                comment.setContext(obj.get("context").toString());
+                comment.setId(obj.get("id").toString());
+                comment.setSubject(obj.get("subject").toString());
+                messages.add(comment);
             }
         }
 

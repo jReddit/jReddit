@@ -249,7 +249,14 @@ Example usage:
 #### GET /user/username/comments
 Example usage:
 
-    List<Comment> comments = User.comments("some_username");
+    // Assuming user is a connected User instance:
+    List<Comment> comments = user.comments();
+
+    // Retrieving comments without an existing User instance (comments is a Comments instance):
+    List<Comment> comments = Comments.comments("username");
+    
+    // Additionally, by passing a CommentSort enum type (NEW, HOT, TOP, CONTROVERSIAL):
+    List<Comment> comments = Comments.comments("username", commentSort);
 
 #### GET /user/username/saved
 Example usage:
