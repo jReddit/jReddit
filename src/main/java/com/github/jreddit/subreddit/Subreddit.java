@@ -93,7 +93,6 @@ public class Subreddit {
      * Sets the timestamp of when the subreddit was created.
      *
      * @param created Timestamp of when the subreddit was created.
-     * @author Benjamin Jakobus
      */
     public void setCreated(String created) {
         this.created = created;
@@ -103,7 +102,6 @@ public class Subreddit {
      * Sets the UTC timestamp of when the subreddit was created.
      *
      * @param createdUTC UTC timestamp of when the subreddit was created.
-     * @author Benjamin Jakobus
      */
     public void setCreatedUTC(String createdUTC) {
         this.createdUTC = createdUTC;
@@ -113,7 +111,6 @@ public class Subreddit {
      * Sets the description detailing the subreddit
      *
      * @param description Description detailing the subreddit.
-     * @author Benjamin Jakobus
      */
     public void setDescription(String description) {
         this.description = description;
@@ -123,7 +120,6 @@ public class Subreddit {
      * Sets the subreddit's display name.
      *
      * @param displayName The subreddit's display name.
-     * @author Benjamin Jakobus
      */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
@@ -133,7 +129,6 @@ public class Subreddit {
      * Sets the subreddit's unique identifier.
      *
      * @param id The subreddit's unique identifier.
-     * @author Benjamin Jakobus
      */
     public void setId(String id) {
         this.id = id;
@@ -143,7 +138,6 @@ public class Subreddit {
      * Sets the subreddit's actual name (not its display name).
      *
      * @param name The subreddit's actual name.
-     * @author Benjamin Jakobus
      */
     public void setName(String name) {
         this.name = name;
@@ -153,7 +147,6 @@ public class Subreddit {
      * Sets the flag of whether or not the subreddit is for over 18's.
      *
      * @param nsfw True if the subreddit is for over 18's; false if not.
-     * @author Benjamin Jakobus
      */
     public void setNsfw(boolean nsfw) {
         this.nsfw = nsfw;
@@ -163,7 +156,6 @@ public class Subreddit {
      * Sets the number of subscribers for this subreddit.
      *
      * @param subscribers The number of subscribers for this subreddit.
-     * @author Benjamin Jakobus
      */
     public void setSubscribers(int subscribers) {
         this.subscribers = subscribers;
@@ -173,7 +165,6 @@ public class Subreddit {
      * Sets the subreddit's title.
      *
      * @param title The subreddit's title.
-     * @author Benjamin Jakobus
      */
     public void setTitle(String title) {
         this.title = title;
@@ -183,7 +174,6 @@ public class Subreddit {
      * Sets the subreddit's URL.
      *
      * @param url The subreddit's URL.
-     * @author Benjamin Jakobus
      */
     public void setUrl(String url) {
         this.url = url;
@@ -193,7 +183,6 @@ public class Subreddit {
      * Returns the timestamp of when the subreddit was created.
      *
      * @return Timestamp of when the subreddit was created.
-     * @author Benjamin Jakobus
      */
     public String getCreated() {
         return created;
@@ -203,7 +192,6 @@ public class Subreddit {
      * Returns the UTC timestamp of when the subreddit was created.
      *
      * @return UTC timestamp of when the subreddit was created.
-     * @author Benjamin Jakobus
      */
     public String getCreatedUTC() {
         return createdUTC;
@@ -213,7 +201,6 @@ public class Subreddit {
      * Returns the description detailing the subreddit
      *
      * @return Description detailing the subreddit.
-     * @author Benjamin Jakobus
      */
     public String getDescription() {
         return description;
@@ -223,7 +210,6 @@ public class Subreddit {
      * Returns the subreddit's display name.
      *
      * @return The subreddit's display name.
-     * @author Benjamin Jakobus
      */
     public String getDisplayName() {
         return displayName;
@@ -233,7 +219,6 @@ public class Subreddit {
      * Returns the subreddit's unique identifier.
      *
      * @return The subreddit's unique identifier.
-     * @author Benjamin Jakobus
      */
     public String getId() {
         return id;
@@ -243,7 +228,6 @@ public class Subreddit {
      * Returns the subreddit's actual name (not its display name).
      *
      * @return The subreddit's actual name.
-     * @author Benjamin Jakobus
      */
     public String getName() {
         return name;
@@ -253,7 +237,6 @@ public class Subreddit {
      * Returns the number of subscribers for this subreddit.
      *
      * @return The number of subscribers for this subreddit.
-     * @author Benjamin Jakobus
      */
     public int getSubscribers() {
         return subscribers;
@@ -263,7 +246,6 @@ public class Subreddit {
      * Returns the subreddit's title.
      *
      * @return The subreddit's title.
-     * @author Benjamin Jakobus
      */
     public String getTitle() {
         return title;
@@ -273,7 +255,6 @@ public class Subreddit {
      * Returns the subreddit's URL.
      *
      * @return The subreddit's URL.
-     * @author Benjamin Jakobus
      */
     public String getUrl() {
         return url;
@@ -283,7 +264,6 @@ public class Subreddit {
      * Returns the flag of whether or not the subreddit is for over 18's.
      *
      * @return True if the subreddit is for over 18's; false if not.
-     * @author Benjamin Jakobus
      */
     public boolean isNSFW() {
         return nsfw;
