@@ -1,0 +1,22 @@
+apply plugin: 'java'
+
+
+compileJava {
+    targetCompatibility = JavaVersion.VERSION_1_6
+    sourceCompatibility = JavaVersion.VERSION_1_6
+}
+
+dependencies {
+    compile('com.googlecode.json-simple:json-simple:+') {
+        exclude module: 'junit'
+    }
+    compile 'org.apache.commons:commons-lang3:+'
+    compile 'org.apache.httpcomponents:httpclient:+'
+    compile "org.apache.httpcomponents:httpmime:+"
+    compile 'org.apache.commons:commons-io:+'
+
+    //testCompile 'junit:junit:4.8.1'
+    //testCompile 'org.mockito:mockito-core:1.9.5'
+
+}
+
