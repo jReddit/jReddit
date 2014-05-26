@@ -16,7 +16,7 @@ public final class OverviewBot {
         RestClient restClient = new HttpRestClient();
         restClient.setUserAgent("Overview-Bot");
 
-        User user = new User(restclient, "user", "password");
+        User user = new User(restClient, "user", "password");
         user.connect();
 		
 		//Submission Array from user profile
