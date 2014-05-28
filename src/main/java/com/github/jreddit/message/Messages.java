@@ -2,7 +2,7 @@ package com.github.jreddit.message;
 
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.TypePrefix;
+import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -98,7 +98,7 @@ public class Messages {
      * Mark a message as read
      *
      * @param fullName Full name of the <code>Message</code> to mark as read. The full name is a combination of the
-     *                 <code>TypePrefix</code> and ID of the message
+     *                 <code>Kind</code> and ID of the message
      * @param user     Reddit user that reads the message
      */
     public void readMessage(String fullName, User user) {
@@ -113,7 +113,7 @@ public class Messages {
      * Mark a message as unread
      *
      * @param fullName Full name of the <code>Message</code> to mark as unread. The full name is a combination of the
-     *                 <code>TypePrefix</code> and ID of the message
+     *                 <code>Kind</code> and ID of the message
      * @param user     Reddit user that marks the message as unread
      */
     public void unreadMessage(String fullName, User user) {
@@ -138,7 +138,7 @@ public class Messages {
             obj = (JSONObject) children.get(i);
 
             // If the kind of the object is a MESSAGE
-            if (obj.get("kind").toString().startsWith(TypePrefix.MESSAGE.getValue())) {
+            if (obj.get("kind").toString().startsWith(Kind.MESSAGE.getValue())) {
                 obj = (JSONObject) obj.get("data");
                 messages.add(MessageMapper.mapMessage(obj));
 

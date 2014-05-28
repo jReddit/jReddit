@@ -129,7 +129,7 @@ public class Submission extends Thing {
     }
 
     public Submission(User user, String fullName, String url) {
-        // TODO: Refactor this to use TypePrefix enum
+        // TODO: Refactor this to use Kind enum
         if (fullName.startsWith("t3_"))
             fullName = fullName.replaceFirst("t3_", "");
 
