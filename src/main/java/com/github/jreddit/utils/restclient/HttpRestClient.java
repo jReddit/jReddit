@@ -1,5 +1,6 @@
 package com.github.jreddit.utils.restclient;
 
+import com.github.jreddit.exception.InvalidURIException;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder;
@@ -58,6 +59,9 @@ public class HttpRestClient implements RestClient {
         catch (URISyntaxException e) {
             System.err.println("Error making creating URI bad path: " + urlPath);
         }
+        catch (InvalidURIException e) {
+            System.err.println("Error making GET request to invalid URI path: " + urlPath);
+        }
         catch (IOException e) {
             System.err.println("Error making GET request to URL path: " + urlPath);
         }
@@ -67,10 +71,16 @@ public class HttpRestClient implements RestClient {
         return null;
     }
 
-    public Response get(HttpGetMethodBuilder getMethodBuilder) throws IOException, ParseException {
+    public Response get(HttpGetMethodBuilder getMethodBuilder) throws IOException, ParseException, InvalidURIException {
         getMethodBuilder.withUserAgent(userAgent);
         HttpGet request = getMethodBuilder.build();
-        return httpClient.execute(request, responseHandler);
+
+        Response response = httpClient.execute(request, responseHandler);
+        if (response.getStatusCode() == 404) {
+            throw new InvalidURIException();
+        }
+
+        return response;
     }
 
     @Override
