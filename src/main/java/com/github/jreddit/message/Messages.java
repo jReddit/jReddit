@@ -145,23 +145,23 @@ public class Messages {
                 // Else it is a comment
             } else {
                 obj = (JSONObject) obj.get("data");
-                Comment comment = new Comment();
-                comment.setBody(obj.get("body").toString());
-                comment.setLink_title(obj.get("link_title").toString());
-                comment.setComment(Boolean.valueOf(obj.get("was_comment").toString()));
-                comment.setFullName(obj.get("name").toString());
-                comment.setAuthor(obj.get("author").toString());
-                comment.setCreated(obj.get("created").toString());
-                comment.setRecipient(obj.get("dest").toString());
-                comment.setAuthor(obj.get("author").toString());
-                comment.setCreatedUTC(obj.get("created_utc").toString());
-                comment.setBodyHtml(obj.get("body_html").toString());
-                comment.setSubject(obj.get("subject").toString());
-                comment.setSubreddit(obj.get("subreddit").toString());
-                comment.setContext(obj.get("context").toString());
-                comment.setId(obj.get("id").toString());
-                comment.setSubject(obj.get("subject").toString());
-                messages.add(comment);
+                MessageComment messageComment = new MessageComment();
+                messageComment.setBody(obj.get("body").toString());
+                messageComment.setLink_title(obj.get("link_title").toString());
+                messageComment.setComment(Boolean.valueOf(obj.get("was_comment").toString()));
+                messageComment.setFullName(obj.get("name").toString());
+                messageComment.setAuthor(obj.get("author").toString());
+                messageComment.setCreated(obj.get("created").toString());
+                messageComment.setRecipient(obj.get("dest").toString());
+                messageComment.setAuthor(obj.get("author").toString());
+                messageComment.setCreatedUTC(obj.get("created_utc").toString());
+                messageComment.setBodyHtml(obj.get("body_html").toString());
+                messageComment.setSubject(obj.get("subject").toString());
+                messageComment.setSubreddit(obj.get("subreddit").toString());
+                messageComment.setContext(obj.get("context").toString());
+                messageComment.setId(obj.get("id").toString());
+                messageComment.setSubject(obj.get("subject").toString());
+                messages.add(messageComment);
             }
         }
 
