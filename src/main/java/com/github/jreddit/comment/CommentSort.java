@@ -1,4 +1,4 @@
-package com.github.jreddit.utils;
+package com.github.jreddit.comment;
 
 /**
  * Enum to represent comment sorts on Reddit. You see these on a page that lists comments.
@@ -8,7 +8,7 @@ package com.github.jreddit.utils;
  */
 public enum CommentSort {
 
-    NEW("new"), HOT("hot"), TOP("top"), CONTROVERSIAL("controversial");
+    NEW("new"), HOT("hot"), TOP("top"), CONTROVERSIAL("controversial"), OLD("old"), RANDOM("random"), CONFIDENCE("confidence");
 
     private final String value;
 

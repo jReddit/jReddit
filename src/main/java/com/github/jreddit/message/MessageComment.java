@@ -7,7 +7,7 @@ package com.github.jreddit.message;
  * @author ThatBox
  * @author Raul Rene Lepsa
  */
-public class Comment extends Message {
+public class MessageComment extends Message {
 
     private String link_title;
     private String subreddit;       // Subreddit where this Comment was posted to

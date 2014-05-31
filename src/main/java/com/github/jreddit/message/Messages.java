@@ -2,7 +2,7 @@ package com.github.jreddit.message;
 
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.TypePrefix;
+import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -98,7 +98,7 @@ public class Messages {
      * Mark a message as read
      *
      * @param fullName Full name of the <code>Message</code> to mark as read. The full name is a combination of the
-     *                 <code>TypePrefix</code> and ID of the message
+     *                 <code>Kind</code> and ID of the message
      * @param user     Reddit user that reads the message
      */
     public void readMessage(String fullName, User user) {
@@ -113,7 +113,7 @@ public class Messages {
      * Mark a message as unread
      *
      * @param fullName Full name of the <code>Message</code> to mark as unread. The full name is a combination of the
-     *                 <code>TypePrefix</code> and ID of the message
+     *                 <code>Kind</code> and ID of the message
      * @param user     Reddit user that marks the message as unread
      */
     public void unreadMessage(String fullName, User user) {
@@ -138,30 +138,30 @@ public class Messages {
             obj = (JSONObject) children.get(i);
 
             // If the kind of the object is a MESSAGE
-            if (obj.get("kind").toString().startsWith(TypePrefix.MESSAGE.getValue())) {
+            if (obj.get("kind").toString().startsWith(Kind.MESSAGE.getValue())) {
                 obj = (JSONObject) obj.get("data");
                 messages.add(MessageMapper.mapMessage(obj));
 
                 // Else it is a comment
             } else {
                 obj = (JSONObject) obj.get("data");
-                Comment comment = new Comment();
-                comment.setBody(obj.get("body").toString());
-                comment.setLink_title(obj.get("link_title").toString());
-                comment.setComment(Boolean.valueOf(obj.get("was_comment").toString()));
-                comment.setFullName(obj.get("name").toString());
-                comment.setAuthor(obj.get("author").toString());
-                comment.setCreated(obj.get("created").toString());
-                comment.setRecipient(obj.get("dest").toString());
-                comment.setAuthor(obj.get("author").toString());
-                comment.setCreatedUTC(obj.get("created_utc").toString());
-                comment.setBodyHtml(obj.get("body_html").toString());
-                comment.setSubject(obj.get("subject").toString());
-                comment.setSubreddit(obj.get("subreddit").toString());
-                comment.setContext(obj.get("context").toString());
-                comment.setId(obj.get("id").toString());
-                comment.setSubject(obj.get("subject").toString());
-                messages.add(comment);
+                MessageComment messageComment = new MessageComment();
+                messageComment.setBody(obj.get("body").toString());
+                messageComment.setLink_title(obj.get("link_title").toString());
+                messageComment.setComment(Boolean.valueOf(obj.get("was_comment").toString()));
+                messageComment.setFullName(obj.get("name").toString());
+                messageComment.setAuthor(obj.get("author").toString());
+                messageComment.setCreated(obj.get("created").toString());
+                messageComment.setRecipient(obj.get("dest").toString());
+                messageComment.setAuthor(obj.get("author").toString());
+                messageComment.setCreatedUTC(obj.get("created_utc").toString());
+                messageComment.setBodyHtml(obj.get("body_html").toString());
+                messageComment.setSubject(obj.get("subject").toString());
+                messageComment.setSubreddit(obj.get("subreddit").toString());
+                messageComment.setContext(obj.get("context").toString());
+                messageComment.setId(obj.get("id").toString());
+                messageComment.setSubject(obj.get("subject").toString());
+                messages.add(messageComment);
             }
         }
 

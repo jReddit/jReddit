@@ -3,7 +3,6 @@ package com.github.jreddit.comment;
 
 import com.github.jreddit.exception.InvalidUserException;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
