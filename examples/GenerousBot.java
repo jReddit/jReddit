@@ -20,7 +20,7 @@ public final class GenerousBot {
         RestClient restClient = new HttpRestClient();
         restClient.setUserAgent("Generous-Bot");
 
-		User user = new User(restclient, "user", "password");
+		User user = new User(restClient, "user", "password");
 		user.connect();
 
 		for (int i = 0; i < subreddits.length; i++) {
