@@ -106,6 +106,10 @@ public class Comments {
         if (commentId != null) {
             parameters += "&comment=" + commentId;
         }
+
+        // parentsShown has to be between 0 and 8
+        parentsShown = parentsShown < 0 ? 0: parentsShown;
+        parentsShown = parentsShown > 8 ? 8: parentsShown;
         parameters += "&context=" + parentsShown;
 
         Response response = restClient.get(String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, subreddit, articleLink, parameters), null);
