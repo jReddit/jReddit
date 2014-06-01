@@ -9,38 +9,55 @@ package com.github.jreddit.comment;
 public class Comment {
 
 
-    private String comment;     // The actual comment
-    private String edited;      // Edited timestamp
-    private String created;     // Created UTC timestamp
-    private String replies;     // Replies
-    private int upvotes;        // Number of upvotes that this comment received
-    private int downvotes;      // Number of downvotes that this comment received
+    private String id;
+    private String author;
+    private String fullname;
+    private String parentId;
+    private String body;            // The actual body
+    private String edited;          // Edited timestamp
+    private String created;         // Created UTC timestamp
+    private String replies;         // Replies
+    private Integer upvotes;        // Number of upvotes that this body received
+    private Integer downvotes;      // Number of downvotes that this body received
 
-    /**
-     * The constructor.
-     *
-     * @param comment   The comment.
-     * @param edited    The edited timestamp.
-     * @param created   The UTC created timestamp.
-     * @param replies   The replies.
-     * @param upvotes   Number of upvotes that this comment received.
-     * @param downvotes Number of downvotes that this comment received.
-     */
-    public Comment(String comment, String edited, String created, String replies, int upvotes, int downvotes) {
-        this.comment = comment;
-        this.edited = edited;
-        this.created = created;
-        this.replies = replies;
-        this.upvotes = upvotes;
-        this.downvotes = downvotes;
+    public String getId() {
+        return id;
     }
 
-    public String getComment() {
-        return comment;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getEdited() {
@@ -67,19 +84,19 @@ public class Comment {
         this.replies = replies;
     }
 
-    public int getUpvotes() {
+    public Integer getUpvotes() {
         return upvotes;
     }
 
-    public void setUpvotes(int upvotes) {
+    public void setUpvotes(Integer upvotes) {
         this.upvotes = upvotes;
     }
 
-    public int getDownvotes() {
+    public Integer getDownvotes() {
         return downvotes;
     }
 
-    public void setDownvotes(int downvotes) {
+    public void setDownvotes(Integer downvotes) {
         this.downvotes = downvotes;
     }
 }

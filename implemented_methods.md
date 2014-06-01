@@ -107,9 +107,12 @@ Example usage:
 
 ## listings
 
+#### GET /comments/article
+    // Assuming 'comments' is a 'Comments' instance
+    List<Comment> commentsFromArticle = comments.commentsFromArticle("subreddit", "articleLink", "commentId", 0, 5, 10, CommentSort.TOP);
+
 #### To be implemented:
 
-* GET /comments/article
 * GET /controversial
 * GET /hot
 * GET /new
