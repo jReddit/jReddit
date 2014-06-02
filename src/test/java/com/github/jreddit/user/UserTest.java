@@ -89,10 +89,4 @@ public class UserTest {
         UserInfo userInfo = underTest.about(UNKNOWN_USERNAME);
         assertNull(userInfo);
     }
-
-//    @Test
-//    public void commentTest() {
-//        assertNotNull(user.comments());
-//        assertNull(User.comments("invalid_username_&#%^@*^!"));
-//    }
 }

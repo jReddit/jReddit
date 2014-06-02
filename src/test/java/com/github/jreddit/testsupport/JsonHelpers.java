@@ -1,5 +1,6 @@
 package com.github.jreddit.testsupport;
 
+import com.github.jreddit.utils.Kind;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -143,7 +144,21 @@ public class JsonHelpers {
 
         JSONObject message = new JSONObject();
         message.put("data", data);
-        message.put("kind", "t4");
+        message.put("kind", Kind.MESSAGE.getValue());
+        return message;
+    }
+
+    public static JSONObject createMockComment(String id, String author, String fullname, String parentId) {
+        JSONObject data = new JSONObject();
+        data.put("id", id);
+        data.put("author", author);
+        data.put("name", fullname);
+        data.put("parent_id", parentId);
+        data.put("body", "message body");
+
+        JSONObject message = new JSONObject();
+        message.put("data", data);
+        message.put("kind", Kind.COMMENT.getValue());
         return message;
     }
 

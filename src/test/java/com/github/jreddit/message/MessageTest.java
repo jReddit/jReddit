@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 /**
  * Class for testing Message-related methods
  *
- * @author Raul Rene Lepsa
+ * @author Tom Beresford
  */
 public class MessageTest {
 

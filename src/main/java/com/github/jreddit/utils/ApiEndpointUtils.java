@@ -34,7 +34,9 @@ public class ApiEndpointUtils {
     public static final String SUBMISSION_UNMARK_AS_NSFW = REDDIT_BASE_API_ENDPOINT + "/unmarknsfw";
     
     public static final String SUBMISSION_VOTE = REDDIT_BASE_API_ENDPOINT + "/vote";
-    
+
+    public static final String SUBMISSION_COMMENTS = "/r/%s/comments/%s.json?%s";
+
     /* User specific constants */
     
     public static final String USER_LOGIN = REDDIT_BASE_API_ENDPOINT + "/login/%s";

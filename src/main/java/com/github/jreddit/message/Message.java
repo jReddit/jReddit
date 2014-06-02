@@ -29,6 +29,9 @@ public class Message {
 
 	// If the message was a comment or not
 	private boolean isComment;
+
+    // If it is a comment, it has a parent
+    private String parentId;
 	
 	// Timestamp of when the message was created
 	private String created;
@@ -128,5 +131,13 @@ public class Message {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }
