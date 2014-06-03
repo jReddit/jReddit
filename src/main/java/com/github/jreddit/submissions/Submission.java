@@ -4,6 +4,7 @@ import com.github.jreddit.Thing;
 import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
@@ -12,12 +13,15 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 
+import static com.github.jreddit.utils.restclient.JsonUtils.*;
+
 
 /**
  * This class represents a vote on a link submission on Reddit.
  *
  * @author Omer Elnour
  * @author Andrei Sfat
+ * @author Raul Rene Lepsa
  */
 public class Submission extends Thing {
 
@@ -28,7 +32,7 @@ public class Submission extends Thing {
 
     /* The path to this submission */
     private String url;
-
+    private String permalink;
     private double createdUTC;
     private String author;
     private String title;
@@ -51,16 +55,20 @@ public class Submission extends Thing {
     public Submission(JSONObject obj) {
 
         try {
-            setAuthor((String) obj.get("author"));
-            setTitle((String) obj.get("title"));
-            setNSFW((Boolean) obj.get("over_18"));
-            setCreatedUTC((Double) obj.get("created_utc"));
-            setDownVotes((Long) obj.get("downs"));
-            setFullName((String) obj.get("name"));
-            setScore((Long) obj.get("score"));
-            setUpVotes((Long) obj.get("ups"));
-            setCommentCount((Long) obj.get("num_comments"));
-            setUrl((String) obj.get("url"));
+            setKind(Kind.LINK);
+            setFullName(safeJsonToString(obj.get("name")));
+            setAuthor(safeJsonToString(obj.get("author")));
+            setTitle(safeJsonToString(obj.get("title")));
+            setNSFW(safeJsonToBoolean(obj.get("over_18")));
+            setUrl(safeJsonToString(obj.get("url")));
+            setSubreddit(safeJsonToString(obj.get("subreddit")));
+            setPermalink(safeJsonToString(obj.get("permalink")));
+            setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
+            setUpVotes(safeJsonToLong(obj.get("ups")));
+            setDownVotes(safeJsonToLong(obj.get("downs")));
+            setScore(safeJsonToLong(obj.get("score")));
+            setCommentCount(safeJsonToLong(obj.get("num_comments")));
+
         } catch (Exception e) {
             System.err.println("Error creating Submission");
         }
@@ -116,6 +124,10 @@ public class Submission extends Thing {
         this.fullName = fullName;
     }
 
+    public void setKind(Kind kind) {
+        this.kind = kind.getValue();
+    }
+
     public User getUser() {
         return user;
     }
@@ -128,14 +140,44 @@ public class Submission extends Thing {
         return url;
     }
 
-    public Submission(User user, String fullName, String url) {
-        // TODO: Refactor this to use Kind enum
-        if (fullName.startsWith("t3_"))
-            fullName = fullName.replaceFirst("t3_", "");
+    public String getPermalink() {
+        return permalink;
+    }
 
-        this.user = user;
-        this.fullName = "t3_" + fullName;
-        this.url = url;
+    public void setPermalink(String permalink) {
+        this.permalink = permalink;
+    }
+
+    public RestClient getRestClient() {
+        return restClient;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Boolean getNsfw() {
+        return nsfw;
+    }
+
+    public void setNsfw(Boolean nsfw) {
+        this.nsfw = nsfw;
+    }
+
+    public long getCommentCount() {
+        return commentCount;
+    }
+
+    public long getUpVotes() {
+        return upVotes;
+    }
+
+    public long getDownVotes() {
+        return downVotes;
+    }
+
+    public long getScore() {
+        return score;
     }
 
     /**
@@ -378,15 +420,4 @@ public class Submission extends Thing {
         createdUTC = Double.parseDouble(info(url).get("created_utc").toString());
         return createdUTC;
     }
-
-//    @Override
-//    public String toString() {
-//        try {
-//            return "(" + score() + ") " + getTitle();
-//        } catch (Exception exception) {
-//            exception.printStackTrace();
-//        }
-//
-//        return super.toString();
-//    }
 }
