@@ -7,7 +7,6 @@ import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -180,6 +179,22 @@ public class Submission extends Thing {
         return score;
     }
 
+    public double getCreatedUTC() {
+        return createdUTC;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getSubreddit() {
+        return subreddit;
+    }
+
     /**
      * This function comments on this submission saying the comment specified in
      * <code>text</code> (CAN INCLUDE MARKDOWN)
@@ -192,164 +207,26 @@ public class Submission extends Thing {
         JSONObject object = (JSONObject) restClient.post("thing_id=" + fullName + "&text=" + text
                 + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie()).getResponseObject();
 
-        if (object.toJSONString().contains(".error.USER_REQUIRED"))
+        if (object.toJSONString().contains(".error.USER_REQUIRED")) {
             throw new InvalidCookieException("Cookie not present");
-        else
+        } else {
             System.out.println("Commented on thread id " + fullName
                     + " saying: \"" + text + "\"");
-    }
-
-    /**
-     * This function returns the name of the author of this submission.
-     *
-     * @return The author's name
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public String getAuthor() throws IOException, ParseException {
-        if (author != null) {
-            return author;
-        }
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return info(url).get("author").toString();
-    }
-
-    /**
-     * This function returns the title of this submission.
-     *
-     * @return The title
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public String getTitle() throws IOException, ParseException {
-        if (title != null) {
-            return title;
-        }
-
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return info(url).get("title").toString();
-    }
-
-    /**
-     * This function returns the name of the subreddit that this submission was
-     * submitted to.
-     *
-     * @return The name of the subreddit that this submission was submitted to
-     * @throws IOException    If the connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public String getSubreddit() throws IOException, ParseException {
-        if (subreddit != null) {
-            return subreddit;
-        }
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return info(url).get("subreddit").toString();
-    }
-
-    /**
-     * This function returns the score of this sumbission (issues a new GET request
-     * to Reddit.com).
-     *
-     * @return The score of this submission
-     * @throws IOException    If the connection fails
-     * @throws ParseException If the JSON parsing fails
-     */
-    public int score() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return Integer.parseInt(info(url).get("score").toString());
-    }
-
-    /**
-     * This function returns the number of upvotes of this sumbission.
-     *
-     * @return The number of upvotes of this submission
-     * @throws IOException    If the connection fails
-     * @throws ParseException If the JSON parsing fails
-     */
-    public int upVotes() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return Integer.parseInt(info(url).get("ups").toString());
-    }
-
-    /**
-     * This function returns the number of downvotes of this sumbission.
-     *
-     * @return The number of downvotes of this submission
-     * @throws IOException    If the connection fails
-     * @throws ParseException If the JSON parsing fails
-     */
-    public int downVotes() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return Integer.parseInt(info(url).get("downs").toString());
-    }
-
-    /**
-     * This function returns true if this submission is marked as NSFW (18+)
-     *
-     * @return This submission is NSFW
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public boolean isNSFW() throws IOException, ParseException {
-        if (this.nsfw == null) {
-            if (url == null)
-                throw new IOException("URL needs to be present");
-
-            return Boolean.parseBoolean(info(url).get("over_18").toString());
-        } else {
-            return this.nsfw;
         }
     }
 
+    /** Mark a post as NSFW **/
     public void markNSFW() throws IOException, ParseException {
         restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_MARK_AS_NSFW, user.getCookie());
     }
 
+    /** Unmark a post as NSFW **/
     public void unmarkNSFW() throws IOException, ParseException {
         restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_UNMARK_AS_NSFW, user.getCookie());
-    }
-
-    /**
-     * This function returns true if this submission is a self-post
-     *
-     * @return This submission is a self post
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public boolean isSelfPost() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-
-        return Boolean.parseBoolean(info(url).get("is_self").toString());
-    }
-
-    /**
-     * This function returns the number of comments in this sumbission.
-     *
-     * @return The number of comments in this submission
-     * @throws IOException    If the connection fails
-     * @throws ParseException If the JSON parsing fails
-     */
-    public int commentCount() throws IOException, ParseException {
-        if (url == null)
-            throw new IOException("URL needs to be present");
-        return Integer.parseInt(info(url).get("num_comments").toString());
     }
 
     /**
@@ -360,27 +237,12 @@ public class Submission extends Thing {
      */
     public void upVote() throws IOException, ParseException {
         JSONObject object = voteResponse(1);
-        if (!(object.toJSONString().length() > 2))
+        if (!(object.toJSONString().length() > 2)) {
             // Will return "{}"
             System.out.println("Successful upboat!");
-        else
+        } else {
             System.out.println(object.toJSONString());
-    }
-
-    /**
-     * This function rescinds, or normalizes this submission. <br />
-     * (i.e Removes a downvote or upvote)
-     *
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
-     */
-    public void rescind() throws IOException, ParseException {
-        JSONObject object = voteResponse(0);
-        if (!(object.toJSONString().length() > 2))
-            // Will return "{}"
-            System.out.println("Successful rescind!");
-        else
-            System.out.println(object.toJSONString());
+        }
     }
 
     /**
@@ -391,33 +253,18 @@ public class Submission extends Thing {
      */
     public void downVote() throws IOException, ParseException {
         JSONObject object = voteResponse(-1);
-        if (!(object.toJSONString().length() > 2))
+        if (!(object.toJSONString().length() > 2)) {
             // Will return "{}"
             System.out.println("Successful downvote!");
-        else
+        } else {
             System.out.println(object.toJSONString());
+        }
     }
 
+    /** Upvote/downvote a submission */
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
         return (JSONObject) restClient.post(
                 "id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_VOTE, user.getCookie()).getResponseObject();
-    }
-
-    private JSONObject info(String urlPath) throws IOException, ParseException {
-        urlPath += "/info.json";
-        Object object =  restClient.get(urlPath, user.getCookie()).getResponseObject();
-
-        JSONArray array = (JSONArray) object;
-        JSONObject obj = (JSONObject) array.get(0);
-        obj = (JSONObject) obj.get("data");
-        array = (JSONArray) obj.get("children");
-        obj = (JSONObject) array.get(0);
-        return (JSONObject) obj.get("data");
-    }
-
-    public double getCreatedUTC() throws IOException, ParseException {
-        createdUTC = Double.parseDouble(info(url).get("created_utc").toString());
-        return createdUTC;
     }
 }
