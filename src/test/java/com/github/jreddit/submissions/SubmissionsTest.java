@@ -45,6 +45,7 @@ public class SubmissionsTest {
         assertTrue(frontPage.size() == 2);
     }
 
+    @SuppressWarnings("unchecked")
     private JSONObject submissionListings() {
         JSONObject media = createMediaObject();
         JSONObject mediaEmbed = createMediaEmbedObject();

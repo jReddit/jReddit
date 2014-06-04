@@ -1,6 +1,7 @@
 package com.github.jreddit.submissions;
 
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -10,7 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import com.github.jreddit.utils.ApiEndpointUtils;
 
 /**
  * This class offers some submission utilities.
@@ -67,10 +67,14 @@ public class Submissions {
         JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 
         JSONObject data;
+        Submission submission;
         for (Object anArray : array) {
             data = (JSONObject) anArray;
             data = ((JSONObject) data.get("data"));
-            submissions.add(new Submission(user, data.get("id").toString(), (data.get("permalink").toString())));
+            submission = new Submission(data);
+            submission.setUser(user);
+            submissions.add(submission);
+
         }
 
         return submissions;
