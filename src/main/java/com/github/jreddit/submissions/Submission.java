@@ -21,6 +21,7 @@ import static com.github.jreddit.utils.restclient.JsonUtils.*;
  * @author Omer Elnour
  * @author Andrei Sfat
  * @author Raul Rene Lepsa
+ * @autho Jonny Krysh
  */
 public class Submission extends Thing {
 
@@ -259,6 +260,43 @@ public class Submission extends Thing {
         } else {
             System.out.println(object.toJSONString());
         }
+    }
+
+    /**
+     * This function saves a submission with a specific category (Reddit Gold feature).
+     *
+     * @param category - a category name
+     * @throws IOException      If connection fails
+     * @throws ParseException   If JSON parsing fails
+     */
+    public void save(String category) throws IOException, ParseException {
+        restClient.post(
+                "category=" + category + "&id=" + fullName + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.SUBMISSION_SAVE, user.getCookie());
+    }
+
+    /**
+     * This function saves a submission with no category.
+     *
+     * @throws IOException      If connection fails
+     * @throws ParseException   If JSON parsing fails
+     */
+    public void save() throws IOException, ParseException {
+        restClient.post(
+                "id=" + fullName + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.SUBMISSION_SAVE, user.getCookie());
+    }
+
+    /**
+     * This function unsaves a submission.
+     *
+     * @throws IOException      If connection fails
+     * @throws ParseException   If JSON parsing fails
+     */
+    public void unsave() throws IOException, ParseException {
+        restClient.post(
+                "id=" + fullName + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.SUBMISSION_UNSAVE, user.getCookie());
     }
 
     /** Upvote/downvote a submission */
