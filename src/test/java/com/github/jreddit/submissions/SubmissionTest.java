@@ -73,11 +73,6 @@ public class SubmissionTest {
     }
 
     @Test
-    public void saveWithCategory() throws IOException, ParseException {
-
-    }
-
-    @Test
     public void unsave() throws IOException, ParseException {
         underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
         underTest.setUser(user);
