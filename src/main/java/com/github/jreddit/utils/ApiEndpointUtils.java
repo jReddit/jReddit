@@ -35,6 +35,10 @@ public class ApiEndpointUtils {
     
     public static final String SUBMISSION_VOTE = REDDIT_BASE_API_ENDPOINT + "/vote";
 
+    public static final String SUBMISSION_SAVE = REDDIT_BASE_API_ENDPOINT + "/save";
+
+    public static final String SUBMISSION_UNSAVE = REDDIT_BASE_API_ENDPOINT + "/unsave";
+
     public static final String SUBMISSION_COMMENTS = "/r/%s/comments/%s.json?%s";
 
     /* User specific constants */
