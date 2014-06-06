@@ -12,6 +12,8 @@ import java.io.IOException;
 import static com.github.jreddit.testsupport.JsonHelpers.createSubmission;
 import static com.github.jreddit.utils.ApiEndpointUtils.SUBMISSION_MARK_AS_NSFW;
 import static com.github.jreddit.utils.ApiEndpointUtils.SUBMISSION_UNMARK_AS_NSFW;
+import static com.github.jreddit.utils.ApiEndpointUtils.SUBMISSION_SAVE;
+import static com.github.jreddit.utils.ApiEndpointUtils.SUBMISSION_UNSAVE;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -57,5 +59,32 @@ public class SubmissionTest {
         underTest.unmarkNSFW();
 
         verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH, SUBMISSION_UNMARK_AS_NSFW, COOKIE);
+    }
+
+    @Test
+    public void save() throws IOException, ParseException {
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
+        underTest.setUser(user);
+        underTest.setRestClient(restClient);
+        underTest.save();
+
+        verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH,
+                SUBMISSION_SAVE, COOKIE);
+    }
+
+    @Test
+    public void saveWithCategory() throws IOException, ParseException {
+
+    }
+
+    @Test
+    public void unsave() throws IOException, ParseException {
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
+        underTest.setUser(user);
+        underTest.setRestClient(restClient);
+        underTest.unsave();
+
+        verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH,
+                SUBMISSION_UNSAVE, COOKIE);
     }
 }
