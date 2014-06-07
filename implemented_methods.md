@@ -92,6 +92,15 @@ Example usage:
     subm.markNSFW();
     subm.unmarkNSFW();
 
+### POST /api/save
+### POST /api/unsave
+Example usage:
+
+    // Assuming subm is a valid, initialized Submission instance:
+    subm.save();
+    subm.save("Category");
+    subm.unsave();
+
 #### To be implemented:
 
 * POST /api/del
@@ -100,10 +109,8 @@ Example usage:
 * GET /api/info
 * POST /api/morechildren
 * POST /api/report
-* POST /api/save
 * POST /api/unhide
 
-* POST /api/unsave
 
 ## listings
 
