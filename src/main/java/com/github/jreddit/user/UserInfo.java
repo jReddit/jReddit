@@ -193,7 +193,7 @@ public class UserInfo {
     		  .append("name: ").append(name).append(newLine)
     		  .append("modhash: ").append(modhash).append(newLine)
     		  .append("commentKarma: ").append(commentKarma).append(newLine)
-    		  .append("linkKarma: ").append(id).append(newLine)
+    		  .append("linkKarma: ").append(linkKarma).append(newLine)
     		  .append("isModerator: ").append(isMod).append(newLine)
     		  .append("hasModMail: ").append(hasModMail).append(newLine)
     		  .append("hasMail: ").append(hasMail).append(newLine)
@@ -202,9 +202,8 @@ public class UserInfo {
     		  .append("Created: ").append(created).append(newLine)
     		  .append("CreatedUTC: ").append(createdUTC).append(newLine)
     		  .append("isFriend: ").append(isFriend).append(newLine)
-    		  .append("over18: ").append(over18).append(newLine);
+    		  .append("over18: ").append(over18);
     	
     	return result.toString();
-
     }
 }
