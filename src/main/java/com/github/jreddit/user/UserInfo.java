@@ -45,7 +45,8 @@ public class UserInfo {
     // UTC timestamp of creation date
     private double createdUTC;
 
-    // Indicates whether this user is friend with the current one
+    // Indicates whether this user is friends with the currently connected one. Believe it or not, you can actually be 
+    // friends with yourself. http://www.reddit.com/r/reddit.com/comments/duf7q/random_reddit_protip_you_can_add_yourself_as_a/
     private boolean isFriend;
 
     // Indicates whether the user is over 18
@@ -182,5 +183,28 @@ public class UserInfo {
 
     public void setOver18(Boolean over18) {
         this.over18 = over18;
+    }
+    
+    public String toString() {
+    	StringBuilder result = new StringBuilder();
+    	String newLine = System.lineSeparator();
+    	
+    	result.append("id: ").append(id).append(newLine)
+    		  .append("name: ").append(name).append(newLine)
+    		  .append("modhash: ").append(modhash).append(newLine)
+    		  .append("commentKarma: ").append(commentKarma).append(newLine)
+    		  .append("linkKarma: ").append(id).append(newLine)
+    		  .append("isModerator: ").append(isMod).append(newLine)
+    		  .append("hasModMail: ").append(hasModMail).append(newLine)
+    		  .append("hasMail: ").append(hasMail).append(newLine)
+    		  .append("hasVerifiedEmail: ").append(hasVerifiedEmail).append(newLine)
+    		  .append("isGold: ").append(isGold).append(newLine)
+    		  .append("Created: ").append(created).append(newLine)
+    		  .append("CreatedUTC: ").append(createdUTC).append(newLine)
+    		  .append("isFriend: ").append(isFriend).append(newLine)
+    		  .append("over18: ").append(over18).append(newLine);
+    	
+    	return result.toString();
+
     }
 }
