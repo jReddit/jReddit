@@ -172,11 +172,12 @@ public class JsonHelpers {
         return new JSONArray();
     }
 
-    public static JSONObject createSubmission(String redditObjId, boolean nsfw) {
-        return createSubmission(redditObjId, nsfw, null, new JSONObject());
+    public static JSONObject createSubmission(String redditObjId, boolean nsfw, boolean saved, boolean hidden) {
+        return createSubmission(redditObjId, nsfw, saved, hidden, null, new JSONObject());
     }
 
-    public static JSONObject createSubmission(String redditObjId, boolean nsfw, JSONObject media, JSONObject mediaEmbed) {
+    public static JSONObject createSubmission(String redditObjId, boolean nsfw, boolean saved, boolean hidden,
+                                              JSONObject media, JSONObject mediaEmbed) {
         JSONObject submission = new JSONObject();
         submission.put("approved_by", null);
         submission.put("author", "jReddittest");
@@ -191,7 +192,7 @@ public class JsonHelpers {
         submission.put("downs", 0L);
         submission.put("edited", false);
         submission.put("gilded", 0);
-        submission.put("hidden", false);
+        submission.put("hidden", hidden);
         submission.put("id", "1ikxpg");
         submission.put("is_self", false);
         submission.put("likes", true);
@@ -204,7 +205,7 @@ public class JsonHelpers {
         submission.put("num_reports", 0);
         submission.put("over_18", nsfw);
         submission.put("permalink", "/r/jReddit/comments/1ikxpg/thekarangoeljreddit_github/");
-        submission.put("saved", false);
+        submission.put("saved", saved);
         submission.put("score", 1L);
         submission.put("secure_media", null);
         submission.put("secure_media_embed", new JSONObject());
