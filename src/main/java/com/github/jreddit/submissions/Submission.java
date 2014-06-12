@@ -22,6 +22,7 @@ import static com.github.jreddit.utils.restclient.JsonUtils.*;
  * @author Andrei Sfat
  * @author Raul Rene Lepsa
  * @author Jonny Krysh
+ * @author Danny Tsegai
  */
 public class Submission extends Thing {
 
@@ -240,7 +241,7 @@ public class Submission extends Thing {
         JSONObject object = voteResponse(1);
         if (!(object.toJSONString().length() > 2)) {
             // Will return "{}"
-            System.out.println("Successful upboat!");
+            System.out.println("Successful upvote!");
         } else {
             System.out.println(object.toJSONString());
         }
