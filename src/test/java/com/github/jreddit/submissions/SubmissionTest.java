@@ -60,7 +60,7 @@ public class SubmissionTest {
 
     @Test
     public void save() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, true, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.save();
@@ -71,7 +71,7 @@ public class SubmissionTest {
 
     @Test
     public void unsave() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, true, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.unsave();
@@ -82,7 +82,7 @@ public class SubmissionTest {
 
     @Test
     public void hide() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, true));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.hide();
@@ -93,7 +93,7 @@ public class SubmissionTest {
 
     @Test
     public void unhide() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, true));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.unhide();
