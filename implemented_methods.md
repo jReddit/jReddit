@@ -6,19 +6,26 @@ The purpose of this document is to provide listing and short documentation of AP
 #### POST /api/login
 Usage:
 
-    User user = new User("some_username", "some_password");
-    user.connect();
+```java
+User user = new User("some_username", "some_password");
+user.connect();
+```
+
 #### GET /api/me.json
 Usage:
 
-    // Assuming user is a connected User instance.
-    // In case that the User is not connected, the method will return null.
-    user.getUserInformation();
+```java
+// Assuming user is a connected User instance.
+// In case that the User is not connected, the method will return null.
+user.getUserInformation();
+```
 #### POST /api/submit
 Usage:
 
-    // Assuming user is a connected User instance:
-    user.submitLink("Github","http://www.github.com","technology");
+```java
+// Assuming user is a connected User instance:
+user.submitLink("Github","http://www.github.com","technology");
+```
 
 #### To be implemented:
 
