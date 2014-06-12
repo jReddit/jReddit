@@ -43,16 +43,16 @@ public class Subreddit {
     public Subreddit(){}
     /** Constructs a SubReddit with supplied values
      * 
-     * @param displayName
-     * @param name
-     * @param title
-     * @param url
-     * @param created
-     * @param createdUTC
-     * @param nsfw
-     * @param subscribers
-     * @param id
-     * @param description
+     * @param displayName The subreddit's display name.
+     * @param name The subreddit's actual name.
+     * @param title The subreddit's title.
+     * @param url The subreddit's URL.
+     * @param created Timestamp of when the subreddit was created.
+     * @param createdUTC UTC timestamp of when the subreddit was created.
+     * @param nsfw True if the subreddit is for over 18's; false if not.
+     * @param subscribers The number of subscribers for this subreddit.
+     * @param id The subreddit's unique identifier.
+     * @param description Description detailing the subreddit.
      */
     public Subreddit(String displayName, String name, String title, String url,
     		String created, String createdUTC, boolean nsfw, int subscribers,
@@ -71,16 +71,16 @@ public class Subreddit {
     /** 
      * Constructs a SubReddit with all supplied values except createdUTC is passed as a double
      * because everywhere else in the API we treat it like a double.
-     * @param displayName
-     * @param name
-     * @param title
-     * @param url
-     * @param created
-     * @param createdUTC
-     * @param nsfw
-     * @param subscribers
-     * @param id
-     * @param description
+     * @param displayName The subreddit's display name.
+     * @param name The subreddit's actual name.
+     * @param title The subreddit's title.
+     * @param url The subreddit's URL.
+     * @param created Timestamp of when the subreddit was created.
+     * @param createdUTC UTC timestamp of when the subreddit was created.
+     * @param nsfw True if the subreddit is for over 18's; false if not.
+     * @param subscribers The number of subscribers for this subreddit.
+     * @param id The subreddit's unique identifier.
+     * @param description Description detailing the subreddit.
      */
     public Subreddit(String displayName, String name, String title, String url,
     		String created, double createdUTC, boolean nsfw, int subscribers,
