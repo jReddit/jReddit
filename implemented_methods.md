@@ -54,7 +54,7 @@ Usage:
 // assuming a user is a connected to a User instance
 Captcha captcha = new Captcha();
 String iden = captcha.newCaptcha(user);
-``
+```
 #### GET /api/needs_captcha.json
 Usage:
 
