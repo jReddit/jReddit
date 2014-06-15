@@ -1,5 +1,15 @@
 package com.github.jreddit.submissions;
 
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToBoolean;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToDouble;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToLong;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
+
+import java.io.IOException;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
 import com.github.jreddit.Thing;
 import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.user.User;
@@ -7,12 +17,6 @@ import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
-
-import static com.github.jreddit.utils.restclient.JsonUtils.*;
 
 
 /**
@@ -56,6 +60,7 @@ public class Submission extends Thing {
     public Submission(JSONObject obj) {
 
         try {
+        	
             setKind(Kind.LINK);
             setFullName(safeJsonToString(obj.get("name")));
             setAuthor(safeJsonToString(obj.get("author")));
@@ -199,7 +204,7 @@ public class Submission extends Thing {
 
     /**
      * This function comments on this submission saying the comment specified in
-     * <code>text</code> (CAN INCLUDE MARKDOWN)
+     * <code>text</code> (CAN INCLUDE MARKDOWN).
      *
      * @param text The text to comment
      * @throws IOException    If connection fails
@@ -217,14 +222,24 @@ public class Submission extends Thing {
         }
     }
 
-    /** Mark a post as NSFW **/
+    /** 
+     * Mark a post as NSFW 
+     * 
+     * @throws IOException    If connection fails
+     * @throws ParseException If JSON parsing fails
+    **/
     public void markNSFW() throws IOException, ParseException {
         restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_MARK_AS_NSFW, user.getCookie());
     }
 
-    /** Unmark a post as NSFW **/
+    /** 
+     * Unmark a post as NSFW 
+     * 
+     * @throws IOException    If connection fails
+     * @throws ParseException If JSON parsing fails
+    **/
     public void unmarkNSFW() throws IOException, ParseException {
         restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
@@ -300,10 +315,25 @@ public class Submission extends Thing {
                 ApiEndpointUtils.SUBMISSION_UNSAVE, user.getCookie());
     }
 
-    /** Upvote/downvote a submission */
+    /**
+     * Upvote/downvote a submission 
+     * 
+     * @param dir 				Direction (precondition: either 1 or -1)
+     * @return 					Response from reddit.
+     * @throws IOException 		If connection fails.
+     * @throws ParseException 	If JSON parsing fails
+     */
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
         return (JSONObject) restClient.post(
                 "id=" + fullName + "&dir=" + dir + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_VOTE, user.getCookie()).getResponseObject();
     }
+    
+    /**
+     * String representation of this Submission.
+     */
+    public String toString() {
+    	return "Submission(" + this.getFullName() + ")<" + title + ">";
+    }
+    
 }
