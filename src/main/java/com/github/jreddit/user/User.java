@@ -27,6 +27,7 @@ import java.util.List;
  * @author Benjamin Jakobus
  * @author Evin Ugur
  * @author Andrei Sfat
+ * @author Simon Kassing
  */
 public class User extends Thing {
 
@@ -61,9 +62,10 @@ public class User extends Thing {
      * effectively sending a POST request to reddit and getting the modhash and
      * cookie, which are required for most reddit API functions.
      *
-     * @throws Exception If connection fails.
+     * @throws IOException If connection fails.
+     * @throws ParseException If parsing JSON fails.
      */
-    public void connect() throws Exception {
+    public void connect() throws IOException, ParseException {
         ArrayList<String> hashCookiePair = hashCookiePair(username, password);
         this.modhash = hashCookiePair.get(0);
         this.cookie = hashCookiePair.get(1);
@@ -388,6 +390,10 @@ public class User extends Thing {
         return getUserSubmissions("disliked", sort);
     }
 
+    /**
+     * Return a list of Submissions that are in the user's overview with the default Reddit sort ('Hot')
+     * @return List of submissions in the user overview.
+     */
     public List<Submission> getUserOverview() {
         return getUserSubmissions("overview", Sort.HOT);
     }

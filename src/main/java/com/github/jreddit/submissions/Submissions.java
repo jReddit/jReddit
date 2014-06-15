@@ -1,71 +1,119 @@
 package com.github.jreddit.submissions;
 
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.restclient.RestClient;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import com.github.jreddit.user.User;
+import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.RestClient;
 
 /**
  * This class offers some submission utilities.
  *
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
+ * @author Simon Kassing (sk-TUD, email: deltacdev@gmail.com)
  */
 public class Submissions {
 
     private final RestClient restClient;
 
-    public enum Popularity {
-        HOT, NEW
-    }
-
-    public enum Page {
-        FRONTPAGE
+    public enum Sort {
+        POPULAR, NEW, RISING, CONTROVERSIAL, TOP, GILDED
     }
 
     public Submissions(RestClient restClient) {
         this.restClient = restClient;
     }
+    
+    /**
+     * Get the reddit URL sort tag for the given sort method.
+     * @param s Sort method
+     * @return Sort tag (e.g. 'new' or 'top')
+     */
+    protected String getSortTag(Sort s) {
+    	
+    	switch (s) {
+			case CONTROVERSIAL:
+				return "controversial";
+			case GILDED:
+				return "gilded";
+			case NEW:
+				return "new";
+			case POPULAR:
+				return "popular";
+			case RISING:
+				return "rising";
+			case TOP:
+				return "top";
+			default:
+				System.err.println("Unknown sort: " + s);
+				return null;
+    	}
+		
+    }
 
     /**
-     * This function returns a linked list containing the submissions on a given
-     * subreddit and page. (in progress)
+     * This function returns a linked list containing the submissions on a given subreddit.
+     * 
+     * Preconditions: redditName is not null, user is not null
+     * 
+     * Notes:
+     *  > This is only possible when using the New sorting, as popular can shift based on current trends.
      *
-     * @param redditName The subreddit's name
-     * @param type       HOT or NEW and some others to come
-     * @param frontpage       TODO this
-     * @param user       The user
-     * @return The linked list containing submissions
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON parsing fails
+     * @param redditName 	The subreddit's name
+     * @param user 				The user (set null if the user is not needed)
+     * @param sort				Sorting method
+     * @param limit				Maximum amount of submissions that can be returned (0-100, 25 default (see Reddit API))
+     * @param after				The submission after which needs to be retrieved
+     * @return 					The linked list containing submissions
+     * @throws IOException    	If connection fails
+     * @throws ParseException 	If JSON parsing fails
      */
-    public LinkedList<Submission> getSubmissions(String redditName,
-                       Popularity type, Page frontpage, User user) throws IOException, ParseException {
-
+    public LinkedList<Submission> getSubmissionsWithinLimit(String redditName, User user, Sort sort, int limit, Submission after) throws IOException, ParseException {
+    	assert redditName != null && user != null;
+    	
+    	// List of submissions
         LinkedList<Submission> submissions = new LinkedList<Submission>();
-        String urlString = "/r/" + redditName;
+        
+        // Sort tag
+        String sort_tag = getSortTag(sort);
+        if (sort_tag == null) {
+        	return null;
+        }
+        
+        // URL string
+        String url = "/r/" + redditName + "/" + sort_tag + ".json";
+        String url_params = "";
 
-        switch (type) {
-            case NEW:
-                urlString += "/new";
-                break;
-		default:
-			break;
+        if (after != null) {
+        	url_params += "&after=" + after.getFullName();
         }
 
-        //TODO Implement Pages
-
-        urlString += ".json";
-
-        JSONObject object = (JSONObject)  restClient.get(urlString, user.getCookie()).getResponseObject();
+        if (limit != -1) {
+        	url_params += "&limit=" + limit;
+        }
+        
+        if (url_params.length() > 0) {
+        	url = String.format("%s%s%s", url, "?", url_params.substring(1, url_params.length()));
+        }
+        
+        //System.out.println(url);
+        
+        // Retrieve session information from user via cookie
+        String cookie = (user == null) ? null : user.getCookie();
+       	
+        // Send request to reddit server via REST client
+        Response r =  restClient.get(url, cookie);
+        
+        JSONObject object = (JSONObject) r.getResponseObject();
         JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 
+        // Iterate over the submission results
         JSONObject data;
         Submission submission;
         for (Object anArray : array) {
@@ -74,41 +122,115 @@ public class Submissions {
             submission = new Submission(data);
             submission.setUser(user);
             submissions.add(submission);
-
         }
 
+        // Finally return list of submissions
         return submissions;
+        
+    }
+
+    /**
+     * Get submissions from the specified subreddit after a specific submission, as the given user, attempting to retrieve the desired amount.
+     * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
+     * @param user				User session
+     * @param desiredAmount		Desired amount which will be attempted. No guarantee! See request limits.
+     * @param after				Submission after which the submissions need to be fetched.
+     * @return					List of the submissions
+     * @throws IOException		Thrown if the connection failed
+     * @throws ParseException 	Thrown if the parsing of JSON failed
+     */
+    public LinkedList<Submission> getSubmissions(String redditName, User user, Sort sort, int desiredAmount, Submission after) throws IOException, ParseException {
+    	
+    	if (desiredAmount < 0) {
+    		System.err.println("You cannot retrieve a negative amount of submissions.");
+    		return null;
+    	}
+    	
+    	// Limit per iteration, between 0 and 100, 25 is default in API
+    	int limit_step = 100;
+
+    	// List of submissions
+        LinkedList<Submission> submissions = new LinkedList<Submission>();
+
+        // Do all iterations
+		while (desiredAmount >= 0) {
+			
+			// Determine how much still to retrieve in this iteration
+			int limit = limit_step;
+			if (desiredAmount < limit_step) {
+				limit = desiredAmount;
+			}
+			desiredAmount -= limit;
+			
+			// Retrieve submissions
+			LinkedList<Submission> result = this.getSubmissionsWithinLimit(redditName, user, sort, limit, after);
+			submissions.addAll(result);
+			
+			// If not enough are returned, we can stop.
+			// Reasons:
+			// > There are not enough posts left after the 'after' submission
+			// > Reddit denies, because limit was surpassed
+			if (result.size() != limit) {
+				System.out.println("API Response failure: received " + result.size() + " but wanted " + limit + ".");
+				break;
+			}
+			
+			// If nothing is left desired, exit.
+			if (desiredAmount <= 0) {
+				break;
+			}
+			
+			// Previous last submission
+			after = result.get(result.size() - 1);
+			
+			// TODO: Is a time limitation what is required? API suggests 1 call per 2 secs maximum, or 30 per minute with some burstiness allowed.
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return submissions;
+    	
+    }
+    
+    /**
+     * Get submissions from the specified subreddit, as the given user, attempting to retrieve the desired amount.
+     * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
+     * @param user				User session
+     * @param desiredAmount		Desired amount which will be attempted. No guarantee! See request limits.
+     * @return					List of the submissions
+     * @throws IOException		Thrown if the connection failed
+     * @throws ParseException 	Thrown if the parsing of JSON failed
+     */
+    public LinkedList<Submission> getSubmissions(String redditName, User user, Sort sort, int desiredAmount) throws IOException, ParseException {
+    	return getSubmissions(redditName, user, sort, desiredAmount, null);
+    }
+    
+    /**
+     * Get submissions from the specified subreddit attempting to retrieve the desired amount.
+     * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
+     * @param desiredAmount		Desired amount which will be attempted. No guarantee! See request limits.
+     * @return					List of the submissions
+     * @throws IOException		Thrown if the connection failed
+     * @throws ParseException 	Thrown if the parsing of JSON failed
+     */
+    public LinkedList<Submission> getSubmissions(String redditName, Sort sort, int desiredAmount) throws IOException, ParseException {
+    	return getSubmissions(redditName, null, sort, desiredAmount, null);
     }
     
     /**
      * Returns a list of submissions from a subreddit.
+     * TODO: This is a very simple method that uses all default values, delete this?
      *
-     * @param subreddit The subreddit at which submissions you want to retrieve submissions.
+     * @param redditName The subreddit at which submissions you want to retrieve submissions.
      * @return <code>List</code> of submissions on the subreddit.
      */
-    public List<Submission> getSubmissions(String subreddit) {
-        // List of submissions made by this user
-        List<Submission> submissions = new ArrayList<Submission>(500);
-        try {
-            // Send GET request to get the account overview
-            JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.SUBMISSIONS, subreddit), null);
-            JSONObject data = (JSONObject) object.get("data");
-            JSONArray children = (JSONArray) data.get("children");
-
-            JSONObject obj;
-
-            for (Object aChildren : children) {
-                // Get the object containing the comment
-                obj = (JSONObject) aChildren;
-                obj = (JSONObject) obj.get("data");
-                //add a new Submission to the list
-                submissions.add(new Submission(obj));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Return the submissions
-        return submissions;
+    public List<Submission> getSubmissions(String redditName, Sort sort) throws IOException, ParseException {
+    	return getSubmissionsWithinLimit(redditName, null, sort, -1, null);
     }
+    
 }

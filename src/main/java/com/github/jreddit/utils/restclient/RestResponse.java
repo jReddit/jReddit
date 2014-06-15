@@ -13,17 +13,14 @@ public class RestResponse implements Response {
         this.httpResponse = httpResponse;
     }
 
-    @Override
     public Object getResponseObject() {
         return responseObject;
     }
 
-    @Override
     public String getResponseText() {
         return responseText;
     }
 
-    @Override
     public int getStatusCode() {
         return httpResponse.getStatusLine().getStatusCode();
     }

@@ -1,21 +1,28 @@
 package com.github.jreddit.submissions;
 
-import com.github.jreddit.user.User;
-import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.restclient.Response;
-import com.github.jreddit.utils.restclient.RestClient;
+import static com.github.jreddit.testsupport.JsonHelpers.createMediaEmbedObject;
+import static com.github.jreddit.testsupport.JsonHelpers.createMediaObject;
+import static com.github.jreddit.testsupport.JsonHelpers.createSubmission;
+import static com.github.jreddit.testsupport.JsonHelpers.redditListing;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.List;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
 
-import static com.github.jreddit.testsupport.JsonHelpers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.github.jreddit.submissions.Submissions.Sort;
+import com.github.jreddit.testsupport.UtilResponse;
+import com.github.jreddit.user.User;
+import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.RestClient;
 
 public class SubmissionsTest {
 
@@ -31,18 +38,17 @@ public class SubmissionsTest {
         restClient = mock(RestClient.class);
         underTest = new Submissions(restClient);
     }
-
+    
     @Test
-    public void testNew() throws IOException, ParseException {
-        Response response = new UtilResponse(null, submissionListings(), 200);
-        String urlString = "/r/" + REDDIT_NAME + ".json";
-
+    public void testSubmissionsWithinLimit() throws IOException, ParseException {
+    	Response response = new UtilResponse(null, submissionListings(), 50);
+    	
+        when(restClient.get("/r/" + REDDIT_NAME + "/new.json?limit=50", COOKIE)).thenReturn(response);
         when(user.getCookie()).thenReturn(COOKIE);
-        when(restClient.get(urlString, COOKIE)).thenReturn(response);
 
-        List<Submission> frontPage = underTest.getSubmissions(REDDIT_NAME, Submissions.Popularity.HOT, Submissions.Page.FRONTPAGE, user);
-
-        assertTrue(frontPage.size() == 2);
+         List<Submission> frontPage = underTest.getSubmissionsWithinLimit(REDDIT_NAME, user, Sort.NEW, 50, null);
+         assertEquals(frontPage.size(), 2);
+    	
     }
 
     @SuppressWarnings("unchecked")

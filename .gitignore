@@ -5,3 +5,6 @@ bin/
 .idea/
 *.iml
 lib/
+target/
+.prefs
+.settings/

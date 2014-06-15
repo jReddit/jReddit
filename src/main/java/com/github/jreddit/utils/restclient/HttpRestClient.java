@@ -48,7 +48,6 @@ public class HttpRestClient implements RestClient {
         this.responseHandler = responseHandler;
     }
 
-    @Override
     public Response get(String urlPath, String cookie) {
         try {
             return get(httpGetMethod()
@@ -83,7 +82,6 @@ public class HttpRestClient implements RestClient {
         return response;
     }
 
-    @Override
     public Response post(String apiParams, String urlPath, String cookie) {
         try {
             return post(
@@ -118,7 +116,6 @@ public class HttpRestClient implements RestClient {
         return httpClient.execute(request, responseHandler);
     }
 
-    @Override
     public void setUserAgent(String agent) {
         this.userAgent = agent;
     }
