@@ -10,10 +10,10 @@ public class HttpPostMethodBuilder extends HttpMethodBuilder<HttpPostMethodBuild
 
     @Override
     public HttpPost build() {
-        HttpPost httpGet = new HttpPost(uri);
+        HttpPost httpPost = new HttpPost(uri);
         for (Header header : headers) {
-            httpGet.addHeader(header);
+            httpPost.addHeader(header);
         }
-        return httpGet;
+        return httpPost;
     }
 }

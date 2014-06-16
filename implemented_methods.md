@@ -6,19 +6,26 @@ The purpose of this document is to provide listing and short documentation of AP
 #### POST /api/login
 Usage:
 
-    User user = new User("some_username", "some_password");
-    user.connect();
+```java
+User user = new User("some_username", "some_password");
+user.connect();
+```
+
 #### GET /api/me.json
 Usage:
 
-    // Assuming user is a connected User instance.
-    // In case that the User is not connected, the method will return null.
-    user.getUserInformation();
+```java
+// Assuming user is a connected User instance.
+// In case that the User is not connected, the method will return null.
+user.getUserInformation();
+```
 #### POST /api/submit
 Usage:
 
-    // Assuming user is a connected User instance:
-    user.submitLink("Github","http://www.github.com","technology");
+```java
+// Assuming user is a connected User instance:
+user.submitLink("Github","http://www.github.com","technology");
+```
 
 #### To be implemented:
 
@@ -43,17 +50,19 @@ Usage:
 #### POST /api/new_captcha
 Usage:
 
-    // assuming a user is a connected to a User instance
-    Captcha captcha = new Captcha();
-    String iden = captcha.newCaptcha(user);
-
+```java
+// assuming a user is a connected to a User instance
+Captcha captcha = new Captcha();
+String iden = captcha.newCaptcha(user);
+```
 #### GET /api/needs_captcha.json
 Usage:
 
-    // assuming a user is connected to a User instance
-    Captcha captcha = new Captcha();
-    boolean needsCaptcha = captcha.needsCaptcha(user);
-
+```java
+// assuming a user is connected to a User instance
+Captcha captcha = new Captcha();
+boolean needsCaptcha = captcha.needsCaptcha(user);
+```
 
 ## flair
 
@@ -74,32 +83,39 @@ Usage:
 #### POST /api/comment
 Example usage:
 
-    // Assuming subm is a valid, initialized Submission instance:
-    subm.comment("Some comment");
-
+```java
+// Assuming subm is a valid, initialized Submission instance:
+subm.comment("Some comment");
+```
 #### POST /api/vote
 Example usage:
 
-    // Assuming subm is a valid, initialized Submission instance:
-    subm.upVote();
-    subm.downVote();
+```java
+// Assuming subm is a valid, initialized Submission instance:
+subm.upVote();
+subm.downVote();
+```
 
 #### POST /api/marknsfw
 #### POST /api/unmarknsfw
 Example usage:
 
-    // Assuming subm is a valid, initialized Submission instance:
-    subm.markNSFW();
-    subm.unmarkNSFW();
+```java
+// Assuming subm is a valid, initialized Submission instance:
+subm.markNSFW();
+subm.unmarkNSFW();
+```
 
 ### POST /api/save
 ### POST /api/unsave
 Example usage:
 
-    // Assuming subm is a valid, initialized Submission instance:
-    subm.save();
-    subm.save("Category");
-    subm.unsave();
+```java
+// Assuming subm is a valid, initialized Submission instance:
+subm.save();
+subm.save("Category");
+subm.unsave();
+```
 
 ### POST /api/hide
 ### POST /api/unhide
@@ -120,8 +136,11 @@ Example usage:
 ## listings
 
 #### GET /comments/article
-    // Assuming 'comments' is a 'Comments' instance
-    List<Comment> commentsFromArticle = comments.commentsFromArticle("subreddit", "articleLink", "commentId", 0, 5, 10, CommentSort.TOP);
+
+```java
+// Assuming 'comments' is a 'Comments' instance
+List<Comment> commentsFromArticle = comments.commentsFromArticle("subreddit", "articleLink", "commentId", 0, 5, 10, CommentSort.TOP);
+```
 
 #### To be implemented:
 
@@ -135,39 +154,50 @@ Example usage:
 #### POST /api/compose
 Example usage:
 
-    // Assuming user is a connected User instance:
-    new Messages().compose(user, "recipient_user", "Subject", "Message body", "captcha_iden", "captcha_solution");
+```java
+// Assuming user is a connected User instance:
+new Messages().compose(user, "recipient_user", "Subject", "Message body", "captcha_iden", "captcha_solution");
+```
 
 #### GET /message/inbox
 Example usage:
 
-    // Assuming user is a connected User instance:
-    List<Message> inbox = new Messages().getMessages(user, 10, MessageType.INBOX);
+```java
+// Assuming user is a connected User instance:
+List<Message> inbox = new Messages().getMessages(user, 10, MessageType.INBOX);
+```
 
 #### GET /message/sent
 Example usage:
 
-    // Assuming user is a connected User instance:
-    List<Message> sent = new Messages().getMessages(user, 10, MessageType.SENT);
+```java
+// Assuming user is a connected User instance:
+List<Message> sent = new Messages().getMessages(user, 10, MessageType.SENT);
+```
 
 #### GET /message/unread
 Example usage:
 
-    // Assuming user is a connected User instance:
-    List<Message> unread = new Messages().getMessages(user, Messages.ALL_MESSAGES, MessageType.UNREAD);
-
+```java
+// Assuming user is a connected User instance:
+List<Message> unread = new Messages().getMessages(user, Messages.ALL_MESSAGES, MessageType.UNREAD);
+```
+	
 #### POST /api/read_message
 Example usage:
     
-    // Assuming user is a connected User instance and we have a message instance of the Message class
-    new Messages().readMessage(message.getFullName(), user);
+```java
+// Assuming user is a connected User instance and we have a message instance of the Message class
+new Messages().readMessage(message.getFullName(), user);
+```
 
 #### POST /api/unread_message
 Example usage:
 
-    // Assuming user is a connected User instance and we have a message instance of the Message class
-    new Messages().unreadMessage(message.getFullName(), user);
-    
+```java
+// Assuming user is a connected User instance and we have a message instance of the Message class
+new Messages().unreadMessage(message.getFullName(), user);
+```    
 #### To be implemented:
 
 * POST /api/block
@@ -196,23 +226,30 @@ Example usage:
 #### GET /subreddits/new
 Example usage:
 
-    List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.NEW);
+```java
+List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.NEW);
+```
 
 #### GET /subreddits/popular
 Example usage:
 
-    List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.POPULAR);
-
+```java
+List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.POPULAR);
+```
 #### GET /subreddits/banned
 Example usage:
 
-       List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.BANNED);
+```java
+List<Subreddit> subreddits = subreddits.getSubreddits(SubredditType.BANNED);
+```
 
 #### GET /subreddits/mine/subscriber.json
 Example usage:
 
-    // Assuming user is a connected User instance:
-    user.getSubscribed()
+```java
+// Assuming user is a connected User instance:
+user.getSubscribed()
+```
 
 #### To be implemented:
 
@@ -233,51 +270,63 @@ Example usage:
 #### GET /user/username/disliked
 Example usage:
 
-    // Assuming user is a connected User instance:
-    List<Submission> sm = user.getDislikedSubmissions();
+```java
+// Assuming user is a connected User instance:
+List<Submission> sm = user.getDislikedSubmissions();
+```
 
 #### GET /user/username/hidden
 Example usage:
 
-    // Assuming user is a connected User instance:
-    List<Submission> sm = user.getHiddenSubmissions();
+```java
+// Assuming user is a connected User instance:
+List<Submission> sm = user.getHiddenSubmissions();
+```
 
 #### GET /user/username/liked
 Example usage:
 
-    // Assuming user is a connected User instance:
-    List<Submission> sm = user.getLikedSubmissions();
-
+```java
+// Assuming user is a connected User instance:
+List<Submission> sm = user.getLikedSubmissions();
+```
 
 #### GET user/username/submitted
 Example usage:
 
-    // Assuming user is a connected User instance:
-    List<Submission> sm = user.getSubmissions();
-
+```java
+// Assuming user is a connected User instance:
+List<Submission> sm = user.getSubmissions();
+```
 
 #### GET /user/username/about.json
 Example usage:
 
-    UserInfo userInfo = User.about("some_username");
+```java
+UserInfo userInfo = User.about("some_username");
+```
 
 #### GET /user/username/comments
 Example usage:
 
-    // Assuming user is a connected User instance:
-    List<Comment> comments = user.comments();
+```java
+// Assuming user is a connected User instance:
+List<Comment> comments = user.comments();
 
-    // Retrieving comments without an existing User instance (comments is a Comments instance):
-    List<Comment> comments = Comments.comments("username");
+// Retrieving comments without an existing User instance (comments is a Comments instance):
+List<Comment> comments = Comments.comments("username");
     
-    // Additionally, by passing a CommentSort enum type (NEW, HOT, TOP, CONTROVERSIAL):
-    List<Comment> comments = Comments.comments("username", commentSort);
+// Additionally, by passing a CommentSort enum type (NEW, HOT, TOP, CONTROVERSIAL):
+List<Comment> comments = Comments.comments("username", commentSort);
+```
 
 #### GET /user/username/saved
 Example usage:
 
-    // Assuming user is an initialized User instance:
-    List<Submission> saved = user.getSavedSubmissions();
+```java
+// Assuming user is an initialized User instance:
+List<Submission> saved = user.getSavedSubmissions();
+```
 
 #### To be implemented:
 
