@@ -4,7 +4,7 @@ import static com.github.jreddit.testsupport.JsonHelpers.createMediaEmbedObject;
 import static com.github.jreddit.testsupport.JsonHelpers.createMediaObject;
 import static com.github.jreddit.testsupport.JsonHelpers.createSubmission;
 import static com.github.jreddit.testsupport.JsonHelpers.redditListing;
-import static org.mockito.Matchers.any;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -16,9 +16,7 @@ import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
-import com.github.jreddit.submissions.Submissions.Sort;
+import com.github.jreddit.submissions.SubmissionParams.SubredditSort;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.restclient.Response;
@@ -46,7 +44,7 @@ public class SubmissionsTest {
         when(restClient.get("/r/" + REDDIT_NAME + "/new.json?limit=50", COOKIE)).thenReturn(response);
         when(user.getCookie()).thenReturn(COOKIE);
 
-         List<Submission> frontPage = underTest.getSubmissionsWithinLimit(REDDIT_NAME, user, Sort.NEW, 50, null);
+         List<Submission> frontPage = underTest.getLimited(user, REDDIT_NAME, SubredditSort.NEW, 50, null);
          assertEquals(frontPage.size(), 2);
     	
     }
