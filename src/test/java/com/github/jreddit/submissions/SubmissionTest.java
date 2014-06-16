@@ -10,10 +10,7 @@ import org.mockito.Mockito;
 import java.io.IOException;
 
 import static com.github.jreddit.testsupport.JsonHelpers.createSubmission;
-import static com.github.jreddit.utils.ApiEndpointUtils.SUBMISSION_MARK_AS_NSFW;
-import static com.github.jreddit.utils.ApiEndpointUtils.SUBMISSION_UNMARK_AS_NSFW;
-import static com.github.jreddit.utils.ApiEndpointUtils.SUBMISSION_SAVE;
-import static com.github.jreddit.utils.ApiEndpointUtils.SUBMISSION_UNSAVE;
+import static com.github.jreddit.utils.ApiEndpointUtils.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -43,7 +40,7 @@ public class SubmissionTest {
 
     @Test
     public void markNSFW() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.markNSFW();
@@ -53,7 +50,7 @@ public class SubmissionTest {
 
     @Test
     public void unmarkNSFW() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, true));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, true, false, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.unmarkNSFW();
@@ -63,7 +60,7 @@ public class SubmissionTest {
 
     @Test
     public void save() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.save();
@@ -74,12 +71,34 @@ public class SubmissionTest {
 
     @Test
     public void unsave() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, true, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.unsave();
 
         verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH,
                 SUBMISSION_UNSAVE, COOKIE);
+    }
+
+    @Test
+    public void hide() throws IOException, ParseException {
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, false));
+        underTest.setUser(user);
+        underTest.setRestClient(restClient);
+        underTest.hide();
+
+        verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH,
+                SUBMISSION_HIDE, COOKIE);
+    }
+
+    @Test
+    public void unhide() throws IOException, ParseException {
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false, false, true));
+        underTest.setUser(user);
+        underTest.setRestClient(restClient);
+        underTest.unhide();
+
+        verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH,
+                SUBMISSION_UNHIDE, COOKIE);
     }
 }

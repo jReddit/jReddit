@@ -49,8 +49,8 @@ public class SubmissionsTest {
     private JSONObject submissionListings() {
         JSONObject media = createMediaObject();
         JSONObject mediaEmbed = createMediaEmbedObject();
-        JSONObject submission = createSubmission("redditObjName", false, media, mediaEmbed);
-        JSONObject submission1 = createSubmission("anotherRedditObjName", false, media, mediaEmbed);
+        JSONObject submission = createSubmission("redditObjName", false, false, false, media, mediaEmbed);
+        JSONObject submission1 = createSubmission("anotherRedditObjName", false, false, false, media, mediaEmbed);
 
         JSONObject foo = new JSONObject();
         foo.put("data", submission);

@@ -39,6 +39,10 @@ public class ApiEndpointUtils {
 
     public static final String SUBMISSION_UNSAVE = REDDIT_BASE_API_ENDPOINT + "/unsave";
 
+    public static final String SUBMISSION_HIDE = REDDIT_BASE_API_ENDPOINT + "/hide";
+
+    public static final String SUBMISSION_UNHIDE = REDDIT_BASE_API_ENDPOINT + "/unhide";
+
     public static final String SUBMISSION_COMMENTS = "/r/%s/comments/%s.json?%s";
 
     /* User specific constants */

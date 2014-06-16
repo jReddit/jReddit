@@ -300,6 +300,28 @@ public class Submission extends Thing {
                 ApiEndpointUtils.SUBMISSION_UNSAVE, user.getCookie());
     }
 
+    /**
+     * This function hides a submission.
+     * @throws IOException      If connection fails
+     * @throws ParseException   If JSON parsing fails
+     */
+    public void hide() throws IOException, ParseException {
+        restClient.post(
+                "id=" + fullName + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.SUBMISSION_HIDE, user.getCookie());
+    }
+
+    /**
+     * This function unhides a submission.
+     * @throws IOException      If connection fails
+     * @throws ParseException   If JSON parsing fails
+     */
+    public void unhide() throws IOException, ParseException {
+        restClient.post(
+                "id=" + fullName + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.SUBMISSION_UNHIDE, user.getCookie());
+    }
+
     /** Upvote/downvote a submission */
     private JSONObject voteResponse(int dir) throws IOException, ParseException {
         return (JSONObject) restClient.post(

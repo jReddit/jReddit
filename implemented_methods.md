@@ -101,15 +101,20 @@ Example usage:
     subm.save("Category");
     subm.unsave();
 
+### POST /api/hide
+### POST /api/unhide
+
+    // Assuming subm is a valid, initialize Submission instance:
+    subm.hide();
+    subm.unhide();
+
 #### To be implemented:
 
 * POST /api/del
 * POST /api/editusertext
-* POST /api/hide
 * GET /api/info
 * POST /api/morechildren
 * POST /api/report
-* POST /api/unhide
 
 
 ## listings
