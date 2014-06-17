@@ -67,6 +67,8 @@ public class ApiEndpointUtils {
 
     public static final String SUBREDDITS_GET = "/subreddits/%s.json";
     
+    public static final String SUBREDDITS_SEARCH = "/subreddits/search.json";
+    
     public static final String SUBMISSIONS = "/r/%s/.json";
 
 }

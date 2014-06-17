@@ -38,8 +38,7 @@ public class PostExample {
 
 		try {
 			
-			// Captcha downloader and captcha requester
-			CaptchaDownloader cd = new CaptchaDownloader();
+			// Captcha requester
 			Captcha c = new Captcha(restClient);
 			
 			// Check if a captcha is needed for this user

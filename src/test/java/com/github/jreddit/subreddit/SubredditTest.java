@@ -3,9 +3,12 @@ package com.github.jreddit.subreddit;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
+
+import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.github.jreddit.subreddit.SubredditType.*;
@@ -34,60 +37,50 @@ public class SubredditTest {
     }
 
     @Test
-    public void getSubredditByNameSuccessfully() {
+    public void getSubredditByNameSuccessfully() throws IOException, ParseException {
         response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(SUBREDDITS, null)).thenReturn(response);
+        when(restClient.get("/subreddits/search.json?q=funny&limit=1", null)).thenReturn(response);
 
-        Subreddit subreddit = underTest.getSubredditByName("funny");
+        Subreddit subreddit = underTest.getByName("funny");
         assertNotNull(subreddit);
     }
 
     @Test
-    public void getSubredditByNameForUnknownReddit() {
+    public void getSubredditByNameForUnknownReddit() throws IOException, ParseException {
         response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(SUBREDDITS, null)).thenReturn(response);
+        when(restClient.get("/subreddits/search.json?q=parp&limit=1", null)).thenReturn(response);
 
-        Subreddit subreddit = underTest.getSubredditByName("parp");
+        Subreddit subreddit = underTest.getByName("parp");
         assertNull(subreddit);
     }
 
-    @Test
-    public void listDefaultReddits() {
-        response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(SUBREDDITS, null)).thenReturn(response);
-
-        List<Subreddit> subreddits = underTest.listDefault();
-        assertNotNull(subreddits);
-        assertTrue(subreddits.size() == 1);
-    }
-
 
     @Test
-    public void testGetNewSubreddits() throws InterruptedException {
+    public void testGetNewSubreddits() throws InterruptedException, IOException, ParseException {
         response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(String.format(SUBREDDITS_GET, NEW.getValue()), null)).thenReturn(response);
+        when(restClient.get(String.format(SUBREDDITS_GET, NEW.getValue()) + "?limit=" + Subreddits.MAX_LIMIT, null)).thenReturn(response);
 
-        List<Subreddit> subreddits = underTest.getSubreddits(NEW);
+        List<Subreddit> subreddits = underTest.get(NEW);
         assertNotNull(subreddits);
         assertTrue(subreddits.size() == 1);
     }
 
     @Test
-    public void testGetBannedSubreddits() throws InterruptedException {
+    public void testGetMineSubreddits() throws InterruptedException, IOException, ParseException {
         response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(String.format(SUBREDDITS_GET, BANNED.getValue()), null)).thenReturn(response);
+        when(restClient.get(String.format(SUBREDDITS_GET, MINE.getValue()) + "?limit=" + Subreddits.MAX_LIMIT, null)).thenReturn(response);
 
-        List<Subreddit> subreddits = underTest.getSubreddits(BANNED);
+        List<Subreddit> subreddits = underTest.get(MINE);
         assertNotNull(subreddits);
         assertTrue(subreddits.size() == 1);
     }
 
     @Test
-    public void testGetPopularSubreddits() throws InterruptedException {
+    public void testGetPopularSubreddits() throws InterruptedException, IOException, ParseException {
         response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(String.format(SUBREDDITS_GET, POPULAR.getValue()), null)).thenReturn(response);
+        when(restClient.get(String.format(SUBREDDITS_GET, POPULAR.getValue()) + "?limit=" + Subreddits.MAX_LIMIT, null)).thenReturn(response);
 
-        List<Subreddit> subreddits = underTest.getSubreddits(POPULAR);
+        List<Subreddit> subreddits = underTest.get(POPULAR);
         assertNotNull(subreddits);
         assertTrue(subreddits.size() == 1);
     }

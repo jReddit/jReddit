@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 public class SubmissionTest {
 
     public static final String COOKIE = "cookie";
-    public static final String REDDIT_OBJ_ID = "redditObjName";
+    public static final String REDDIT_OBJ_FULLNAME = "Type_Identifier";
     public static final String MOD_HASH = "modHash";
     private Submission underTest;
     private User user;
@@ -43,43 +43,43 @@ public class SubmissionTest {
 
     @Test
     public void markNSFW() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_FULLNAME, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.markNSFW();
 
-        verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH, SUBMISSION_MARK_AS_NSFW, COOKIE);
+        verify(restClient).post("id=" + REDDIT_OBJ_FULLNAME + "&uh=" + MOD_HASH, SUBMISSION_MARK_AS_NSFW, COOKIE);
     }
 
     @Test
     public void unmarkNSFW() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, true));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_FULLNAME, true));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.unmarkNSFW();
 
-        verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH, SUBMISSION_UNMARK_AS_NSFW, COOKIE);
+        verify(restClient).post("id=" + REDDIT_OBJ_FULLNAME + "&uh=" + MOD_HASH, SUBMISSION_UNMARK_AS_NSFW, COOKIE);
     }
 
     @Test
     public void save() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_FULLNAME, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.save();
 
-        verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH,
+        verify(restClient).post("id=" + REDDIT_OBJ_FULLNAME + "&uh=" + MOD_HASH,
                 SUBMISSION_SAVE, COOKIE);
     }
 
     @Test
     public void unsave() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_FULLNAME, false));
         underTest.setUser(user);
         underTest.setRestClient(restClient);
         underTest.unsave();
 
-        verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH,
+        verify(restClient).post("id=" + REDDIT_OBJ_FULLNAME + "&uh=" + MOD_HASH,
                 SUBMISSION_UNSAVE, COOKIE);
     }
 }

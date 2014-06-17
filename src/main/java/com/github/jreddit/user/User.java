@@ -32,7 +32,7 @@ import com.github.jreddit.utils.restclient.RestClient;
  * @author Andrei Sfat
  * @author Simon Kassing
  */
-public class User extends Thing {
+public class User {
 
     private final String username;
     private final RestClient restClient;
@@ -505,13 +505,7 @@ public class User extends Thing {
         for (Object subreddit : subreddits) {
             JSONObject obj = (JSONObject) subreddit;
             obj = (JSONObject) obj.get("data");
-            Subreddit sub = new Subreddit(obj.get("display_name").toString(),
-                    obj.get("display_name").toString(), obj.get("title").toString(),
-                    obj.get("url").toString(), obj.get("created").toString(),
-                    obj.get("created_utc").toString(),
-                    Boolean.parseBoolean(obj.get("over18").toString()),
-                    Integer.parseInt(obj.get("subscribers").toString()),
-                    obj.get("id").toString(), obj.get("description").toString());
+            Subreddit sub = new Subreddit(obj);
             subscribed.add(sub);
         }
 

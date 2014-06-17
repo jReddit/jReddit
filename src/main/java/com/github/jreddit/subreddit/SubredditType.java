@@ -2,7 +2,7 @@ package com.github.jreddit.subreddit;
 
 public enum SubredditType {
 
-    NEW("new"), BANNED("banned"), POPULAR("popular");
+    NEW("new"), MINE("mine"), POPULAR("popular");
 
     private final String value;
 

@@ -1,11 +1,25 @@
 package com.github.jreddit.subreddit;
 
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToBoolean;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToDouble;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToLong;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
+
+import org.json.simple.JSONObject;
+
+import com.github.jreddit.Thing;
+import com.github.jreddit.utils.restclient.HttpRestClient;
+import com.github.jreddit.utils.restclient.RestClient;
+
 /**
  * Encapsulates a subreddit.
  *
  * @author Benjamin Jakobus
  */
-public class Subreddit {
+public class Subreddit extends Thing {
+	
+    private RestClient restClient;
+    
     // The subreddit's display name
     private String displayName;
 
@@ -22,71 +36,45 @@ public class Subreddit {
     private String created;
 
     // UTC timestamp of when the subreddit was created
-    private String createdUTC;
+    private double createdUTC;
 
     // Whether or not the subreddit is for over 18's
     private boolean nsfw;
 
     // The number of subscribers for this subreddit
-    private int subscribers;
+    private long subscribers;
 
     // The subreddit's unique identifier
     private String id;
 
     // Description detailing the subreddit
     private String description;
-
     
-    /**Constructs a Subreddit with empty values - probably not what you want
-     * 
+    /**
+     * Create a Submission from a JSONObject
+     *
+     * @param obj The JSONObject to load Submission data from
      */
-    public Subreddit(){}
-    /** Constructs a SubReddit with supplied values
-     * 
-     * @param displayName
-     * @param name
-     * @param title
-     * @param url
-     * @param created
-     * @param createdUTC
-     * @param nsfw
-     * @param subscribers
-     * @param id
-     * @param description
-     */
-    public Subreddit(String displayName, String name, String title, String url,
-    		String created, String createdUTC, boolean nsfw, int subscribers,
-    		String id, String description){
-    	this.displayName = displayName;
-    	this.name = name;
-    	this.title = title;
-    	this.url = url;
-    	this.created = created;
-    	this.createdUTC = createdUTC;
-    	this.nsfw = nsfw;
-    	this.subscribers = subscribers;
-    	this.id = id;
-    	this.description = description;
-    }
-    /** 
-     * Constructs a SubReddit with all supplied values except createdUTC is passed as a double
-     * because everywhere else in the API we treat it like a double.
-     * @param displayName
-     * @param name
-     * @param title
-     * @param url
-     * @param created
-     * @param createdUTC
-     * @param nsfw
-     * @param subscribers
-     * @param id
-     * @param description
-     */
-    public Subreddit(String displayName, String name, String title, String url,
-    		String created, double createdUTC, boolean nsfw, int subscribers,
-    		String id, String description){
-    	this(displayName, name, title, url, created, ("" + createdUTC), nsfw,
-    			subscribers, id, description);
+    public Subreddit(JSONObject obj) {
+    	super(safeJsonToString(obj.get("name")));
+    	
+        try {
+        	
+            setDisplayName(safeJsonToString(obj.get("display_name")));
+            setTitle(safeJsonToString(obj.get("title")));
+            setUrl(safeJsonToString(obj.get("url")));
+            setCreated(safeJsonToString(obj.get("subreddit")));
+            setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
+            setNSFW(safeJsonToBoolean(obj.get("over_18")));
+            setSubscribers(safeJsonToLong(obj.get("subscribers")));
+            setDescription(safeJsonToString(obj.get("description")));
+            
+        } catch (Exception e) {
+        	e.printStackTrace();
+            System.err.println("Error creating Subreddit");
+        }
+        
+        restClient = new HttpRestClient();
     }
     
     /**
@@ -103,7 +91,7 @@ public class Subreddit {
      *
      * @param createdUTC UTC timestamp of when the subreddit was created.
      */
-    public void setCreatedUTC(String createdUTC) {
+    public void setCreatedUTC(double createdUTC) {
         this.createdUTC = createdUTC;
     }
 
@@ -148,7 +136,7 @@ public class Subreddit {
      *
      * @param nsfw True if the subreddit is for over 18's; false if not.
      */
-    public void setNsfw(boolean nsfw) {
+    public void setNSFW(boolean nsfw) {
         this.nsfw = nsfw;
     }
 
@@ -157,7 +145,7 @@ public class Subreddit {
      *
      * @param subscribers The number of subscribers for this subreddit.
      */
-    public void setSubscribers(int subscribers) {
+    public void setSubscribers(long subscribers) {
         this.subscribers = subscribers;
     }
 
@@ -193,7 +181,7 @@ public class Subreddit {
      *
      * @return UTC timestamp of when the subreddit was created.
      */
-    public String getCreatedUTC() {
+    public double getCreatedUTC() {
         return createdUTC;
     }
 
@@ -238,7 +226,7 @@ public class Subreddit {
      *
      * @return The number of subscribers for this subreddit.
      */
-    public int getSubscribers() {
+    public long getSubscribers() {
         return subscribers;
     }
 
@@ -268,4 +256,9 @@ public class Subreddit {
     public boolean isNSFW() {
         return nsfw;
     }
+    
+    public String toString() {
+    	return "Subreddit(" + this.getFullName() + ")<" + this.getDisplayName() + ">";
+    }
+    
 }

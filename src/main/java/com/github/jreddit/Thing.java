@@ -1,5 +1,7 @@
 package com.github.jreddit;
 
+import com.github.jreddit.utils.Kind;
+
 /**
  * This class represents a reddit "thing"
  *
@@ -8,21 +10,39 @@ package com.github.jreddit;
  * @see <a href="http://www.reddit.com/dev/api#fullname">Reddit API Reference</a>
  */
 public abstract class Thing {
+    
+	/**
+	 * Constructor. Must be called.
+	 * @param name
+	 */
+	public Thing(String name) {
+		this.fullName = name;
+		String[] split = name.split("_");
+		this.kind = split[0];
+		this.identifier = split[1];
+	}
 	
     /**
      * The kind ('type') of this thing.
      * 
      * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names (section 'type prefixes')</a>
      */
-    protected String kind;
+    protected final String kind;
 
+    /**
+     * The identifier of this thing.
+     * 
+     * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names (section 'identifier')</a>
+     */
+    protected final String identifier;
+    
     /**
      * The full name of this thing.
      * Combination of its kind ({@link #getKind() getKind}) and its unique ID.
      *
      * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names</a>
      */
-    protected String fullName;
+    protected final String fullName;
 
     /**
      * Retrieve the kind ('type') of this thing.
@@ -32,6 +52,16 @@ public abstract class Thing {
      */
     public String getKind() {
         return kind;
+    }
+    
+    /**
+     * Retrieve the identifier of this thing.
+     * Example: 15bfi0.
+     *
+     * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names (section 'identifier')</a>
+     */
+    public String getIdentifier() {
+        return identifier;
     }
 
     /**

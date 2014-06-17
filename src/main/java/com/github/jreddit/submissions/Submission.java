@@ -47,22 +47,17 @@ public class Submission extends Thing {
     private long upVotes;
     private long downVotes;
     private long score;
-
-    public Submission() {
-        restClient = new HttpRestClient();
-    }
-
+    
     /**
      * Create a Submission from a JSONObject
      *
      * @param obj The JSONObject to load Submission data from
      */
     public Submission(JSONObject obj) {
+    	super(safeJsonToString(obj.get("name")));
 
         try {
         	
-            setKind(Kind.LINK);
-            setFullName(safeJsonToString(obj.get("name")));
             setAuthor(safeJsonToString(obj.get("author")));
             setTitle(safeJsonToString(obj.get("title")));
             setNSFW(safeJsonToBoolean(obj.get("over_18")));
@@ -124,14 +119,6 @@ public class Submission extends Thing {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public void setKind(Kind kind) {
-        this.kind = kind.getValue();
     }
 
     public User getUser() {
