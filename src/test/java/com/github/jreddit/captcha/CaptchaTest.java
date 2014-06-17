@@ -23,6 +23,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Class for testing the Captcha methods
+ * FIXME Requires more test cases.
  *
  * @author Karan Goel
  * @author Raul Rene Lepsa
@@ -40,7 +41,7 @@ public class CaptchaTest {
         user = mock(User.class);
         restClient = mock(RestClient.class);
         captchaDownloader = mock(CaptchaDownloader.class);
-        underTest = new Captcha(restClient, captchaDownloader);
+        underTest = new Captcha(restClient);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class CaptchaTest {
         when(restClient.post(null, ApiEndpointUtils.CAPTCHA_NEW, "cookie")).thenReturn(response);
 
         underTest.newCaptcha(user);
-        verify(captchaDownloader).getCaptchaImage("ident");
+        
     }
 
     @Ignore
@@ -69,7 +70,7 @@ public class CaptchaTest {
 
     @Test
     public void needsCaptchaReturnsTrue() {
-        response = new UtilResponse("", true, 200);
+        response = new UtilResponse("true", true, 200);
 
         when(user.getCookie()).thenReturn("cookie");
         when(restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, "cookie")).thenReturn(response);
@@ -79,7 +80,7 @@ public class CaptchaTest {
 
     @Test
     public void needsCaptchaReturnsFalse() {
-        response = new UtilResponse("", false, 200);
+        response = new UtilResponse("false", false, 200);
 
         when(user.getCookie()).thenReturn("cookie");
         when(restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, "cookie")).thenReturn(response);
@@ -88,13 +89,23 @@ public class CaptchaTest {
     }
 
     @Test
-    public void needsCaptchaReceivesJSONObjectAndReturnsFalse() {
-        response = new UtilResponse("", new JSONObject(Collections.singletonMap("key", "value")), 200);
+    public void needsCaptchaReceivesFalseAndReturnsFalse() {
+        response = new UtilResponse("false", false, 200);
 
         when(user.getCookie()).thenReturn("cookie");
         when(restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, "cookie")).thenReturn(response);
 
         assertFalse(underTest.needsCaptcha(user));
+    }
+    
+    @Test
+    public void needsCaptchaReceivesTrueAndReturnsTrue() {
+        response = new UtilResponse("true", true, 200);
+
+        when(user.getCookie()).thenReturn("cookie");
+        when(restClient.get(ApiEndpointUtils.CAPTCHA_NEEDS, "cookie")).thenReturn(response);
+
+        assertTrue(underTest.needsCaptcha(user));
     }
 
     private Response generateBadlyFormedJson() throws ParseException {
