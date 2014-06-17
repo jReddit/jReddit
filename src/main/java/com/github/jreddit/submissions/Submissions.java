@@ -72,6 +72,7 @@ public class Submissions {
         List<Submission> submissions = new LinkedList<Submission>();
         
         // Send request to reddit server via REST client
+        // System.out.println(url);
         JSONObject object = (JSONObject) restClient.get(url, cookie).getResponseObject();
         JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 
@@ -397,7 +398,7 @@ public class Submissions {
      * @return <code>List</code> of submissions that match the query.
      */
     public List<Submission> search(User user, String query, SearchSort sort, SearchTime time) throws IOException, ParseException {
-    	return search(user, query, sort, time, APPROXIMATE_MAX_LISTING_SIZE, null);
+    	return search(user, query, sort, time, APPROXIMATE_MAX_LISTING_SIZE);
     }
     
     /**
@@ -425,7 +426,7 @@ public class Submissions {
      * @return <code>List</code> of submissions that match the query.
      */
     public List<Submission> search(String query, SearchSort sort, SearchTime time, int amount) throws IOException, ParseException {
-    	return search(null, query, sort, time, amount, null);
+    	return search(query, sort, time, amount, null);
     }
     
     /**
@@ -437,7 +438,7 @@ public class Submissions {
      * @return <code>List</code> of submissions that match the query.
      */
     public List<Submission> search(String query, SearchSort sort, SearchTime time) throws IOException, ParseException {
-    	return search(null, query, sort, time, APPROXIMATE_MAX_LISTING_SIZE, null);
+    	return search(query, sort, time, APPROXIMATE_MAX_LISTING_SIZE);
     }
     
 }

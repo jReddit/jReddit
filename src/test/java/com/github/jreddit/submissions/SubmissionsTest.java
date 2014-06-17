@@ -1,14 +1,20 @@
 package com.github.jreddit.submissions;
 
+import static com.github.jreddit.subreddit.SubredditType.MINE;
 import static com.github.jreddit.testsupport.JsonHelpers.createMediaEmbedObject;
 import static com.github.jreddit.testsupport.JsonHelpers.createMediaObject;
 import static com.github.jreddit.testsupport.JsonHelpers.createSubmission;
 import static com.github.jreddit.testsupport.JsonHelpers.redditListing;
+import static com.github.jreddit.testsupport.JsonHelpers.subredditListingForFunny;
+import static com.github.jreddit.utils.ApiEndpointUtils.SUBREDDITS_GET;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -16,7 +22,11 @@ import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.jreddit.submissions.SubmissionParams.SearchSort;
+import com.github.jreddit.submissions.SubmissionParams.SearchTime;
 import com.github.jreddit.submissions.SubmissionParams.SubredditSort;
+import com.github.jreddit.subreddit.Subreddit;
+import com.github.jreddit.subreddit.Subreddits;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.restclient.Response;
@@ -47,6 +57,26 @@ public class SubmissionsTest {
          List<Submission> frontPage = underTest.getLimited(user, REDDIT_NAME, SubredditSort.NEW, 50, null);
          assertEquals(frontPage.size(), 2);
     	
+    }
+    
+    @Test
+    public void testGetSubmissions() throws InterruptedException, IOException, ParseException {
+        UtilResponse response = new UtilResponse(null, submissionListings(), 200);
+        when(restClient.get("/r/funny/new.json" + "?limit=" + Submissions.MAX_LIMIT, null)).thenReturn(response);
+
+        List<Submission> subs = underTest.get("funny", SubmissionParams.SubredditSort.NEW);
+        assertNotNull(subs);
+        assertEquals(subs.size(), 2);
+    }
+    
+    @Test
+    public void testSearchSubmissions() throws InterruptedException, IOException, ParseException {
+        UtilResponse response = new UtilResponse(null, submissionListings(), 200);
+        when(restClient.get("/search.json?q=query&sort=new&t=all&limit=" + Submissions.MAX_LIMIT, null)).thenReturn(response);
+
+        List<Submission> subs = underTest.search("query", SearchSort.NEW, SearchTime.ALL);
+        assertNotNull(subs);
+        assertEquals(subs.size(), 2);
     }
 
     @SuppressWarnings("unchecked")

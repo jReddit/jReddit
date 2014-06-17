@@ -24,6 +24,8 @@ import com.github.jreddit.utils.restclient.RestClient;
 /**
  * This class represents a user connected to Reddit.
  *
+ * Implement: gildSelf, giveGold, 
+ *
  * @author Omer Elnour
  * @author Karan Goel
  * @author Raul Rene Lepsa
