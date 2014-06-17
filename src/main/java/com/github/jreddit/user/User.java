@@ -1,6 +1,16 @@
 package com.github.jreddit.user;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
 import com.github.jreddit.Thing;
+import com.github.jreddit.captcha.CaptchaDownloader;
 import com.github.jreddit.comment.Comment;
 import com.github.jreddit.comment.Comments;
 import com.github.jreddit.exception.InvalidUserException;
@@ -10,13 +20,6 @@ import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.Sort;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class represents a user connected to Reddit.
@@ -35,24 +38,46 @@ public class User extends Thing {
     private final RestClient restClient;
     private String modhash, cookie, password;
 
+    /**
+     * Create a user.
+     * @param restClient REST Client handle
+     * @param username User name
+     * @param password Password
+     */
     public User(RestClient restClient, String username, String password) {
         this.restClient = restClient;
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Get the user name of the user.
+     * @return User name
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Set the password of the user.
+     * @param password Password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Retrieve the modulo hash of the cookie.
+     * @return Modulo hash
+     */
     public String getModhash() {
         return modhash;
     }
 
+    /**
+     * Retrieve the cookie of the user containing all session information.
+     * @return Cookie
+     */
     public String getCookie() {
         return cookie;
     }
@@ -75,60 +100,32 @@ public class User extends Thing {
      * This function submits a link to the specified subreddit.
      * Requires authentication.
      *
-     * @param title     The title of the submission
-     * @param link      The link to the submission
-     * @param subreddit The subreddit to submit to
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON Parsing fails
+     * @param title     		The title of the submission
+     * @param link      		The link to the submission
+     * @param subreddit 		The subreddit to submit to
+     * @param captcha_iden		Captcha identifier
+     * @param captcha_sol		Captcha solution
+     * @throws IOException    	If connection fails
+     * @throws ParseException 	If JSON Parsing fails
      */
-    public void submitLink(String title, String link, String subreddit)
-            throws IOException, ParseException {
-        JSONObject object = submit(title, link, false, subreddit);
-        if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-            System.err.println("Please login first.");
-        }
-        else if (object.toJSONString().contains(
-                ".error.RATELIMIT.field-ratelimit")) {
-            System.err.println("You are doing that too much.");
-        }
-        else if (object.toJSONString().contains(
-                ".error.ALREADY_SUB.field-url")) {
-            System.err.println("That link has already been submitted.");
-        }
-        else {
-            System.out.println("Link submitted to "
-                    + ((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(16)).get(3)).get(0));
-        }
+    public boolean submitLink(String title, String link, String subreddit, String captcha_iden, String captcha_sol) throws IOException, ParseException {
+        return submit(title, link, false, subreddit, captcha_iden, captcha_sol);
     }
 
     /**
      * This function submits a self post to the specified subreddit.
      * Requires authentication.
      *
-     * @param title     The title of the submission
-     * @param text      The text of the submission
-     * @param subreddit The subreddit to submit to
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON Parsing fails
+     * @param title     		The title of the submission
+     * @param text      		The text of the submission
+     * @param subreddit 		The subreddit to submit to
+     * @param captcha_iden		Captcha identifier
+     * @param captcha_sol		Captcha solution
+     * @throws IOException    	If connection fails
+     * @throws ParseException 	If JSON Parsing fails
      */
-    public void submitSelfPost(String title, String text, String subreddit)
-            throws IOException, ParseException {
-        JSONObject object = submit(title, text, true, subreddit);
-        if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-            System.err.println("Please login first.");
-        }
-        else if (object.toJSONString().contains(
-                ".error.RATELIMIT.field-ratelimit")) {
-            System.err.println("You are doing that too much.");
-        }
-        else if (object.toJSONString().contains(
-                ".error.ALREADY_SUB.field-url")) {
-            System.err.println("That link has already been submitted.");
-        }
-        else {
-            System.out.println("Self post submitted to "
-                    + ((JSONArray) ((JSONArray) ((JSONArray) object.get("jquery")).get(10)).get(3)).get(0));
-        }
+    public boolean submitSelfPost(String title, String text, String subreddit, String captcha_iden, String captcha_sol) throws IOException, ParseException {
+        return submit(title, text, true, subreddit, captcha_iden, captcha_sol);
     }
 
     /**
@@ -136,42 +133,52 @@ public class User extends Thing {
      * Requires authentication.
      *
      * @param currentPassword	Current password
-     * @param newPassword	New password
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON Parsing fails
+     * @param newPassword		New password
+     * @throws IOException    	If connection fails
+     * @throws ParseException 	If JSON Parsing fails
      */
-    public void changePassword(String currentPassword, String newPassword)
-            throws IOException, ParseException {
+    public void changePassword(String currentPassword, String newPassword) throws IOException, ParseException {
+    	
+    	// Make the request
         JSONObject object = (JSONObject) update(currentPassword, "", newPassword).getResponseObject();
+        
+        // User required
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-            System.err.println("Please login first.");
-        } else if (object.toJSONString().contains(
-                ".error.RATELIMIT.field-ratelimit")) {
-            System.err.println("You are doing that too much.");
-        } else if (object.toJSONString().contains(
-                ".error.BAD_PASSWORD")) {
-            System.err.println("Current password is bad.");
+            System.err.println("Change password failed: please login first.");
+        } // Rate limit exceeded
+        else if (object.toJSONString().contains(".error.RATELIMIT.field-ratelimit")) {
+            System.err.println("Change password failed: you are doing that too much.");
+        } // Incorrect password
+        else if (object.toJSONString().contains(".error.BAD_PASSWORD")) {
+            System.err.println("Change password failed: current password is bad.");
         } else {
-            System.out.println("Password successfully changed to " + newPassword);
+            System.out.println("Password successfully changed to " + newPassword + ".");
         }
+        
     }
     
     /**
      * This function updates user's profile.
      * Requires authentication.
      *
-     * @param currentPassword     Current password
-     * @param email		New e-mail address (can be empty)
+     * @param currentPassword   Current password
+     * @param email				New e-mail address (can be empty)
      * @param newPassword		New password
-     * @throws IOException    If connection fails
-     * @throws ParseException If JSON Parsing fails
+     * @throws IOException    	If connection fails
+     * @throws ParseException 	If JSON Parsing fails
      */
-    public Response update(String currentPassword, String email, String newPassword)
-            throws IOException, ParseException {
-    	 return restClient.post("api_type=json&curpass=" + currentPassword + "&dest=http://reddit.com/" + (!email.equals("") ? "&email=" + email : "")
-                + (!newPassword.equals("") ? "&newpass=" + newPassword + "&verpass=" + newPassword : "")
-                + "&uh=" + getModhash(),
-                ApiEndpointUtils.USER_UPDATE, getCookie());
+    public Response update(String currentPassword, String email, String newPassword)throws IOException, ParseException {
+    	
+    	// Format parameters
+    	String params = 
+    			"api_type=json&curpass=" + currentPassword + 
+    			"&dest=http://reddit.com/" + (!email.equals("") ? "&email=" + email : "") + 
+    			(!newPassword.equals("") ? "&newpass=" + newPassword + "&verpass=" + newPassword : "")
+                + "&uh=" + getModhash();
+    	
+    	// Post request
+    	return restClient.post(params, ApiEndpointUtils.USER_UPDATE, getCookie());
+    	
     }
 
     /**
@@ -233,20 +240,57 @@ public class User extends Thing {
 
     /**
      * This function submits a link or self post.
+     * TODO: throw exceptions instead of returning a boolean? Or error codes?
      *
-     * @param title      The title of the submission
-     * @param linkOrText The link of the submission or text
-     * @param selfPost   If this submission is a self post
-     * @param subreddit  Which subreddit to submit this to
-     * @return A JSONObject
+     * @param title      	The title of the submission
+     * @param linkOrText 	The link of the submission or text
+     * @param selfPost   	If this submission is a self post
+     * @param subreddit  	Which subreddit to submit this to
+     * @param captcha_iden	Captcha identifier
+     * @param captcha_sol	Captcha solution
+     * @return Was the submission a success?
      * @throws IOException    If connection fails
      * @throws ParseException If JSON parsing fails
      */
-    private JSONObject submit(String title, String linkOrText, boolean selfPost, String subreddit) throws IOException, ParseException {
-        return (JSONObject) restClient.post("title=" + title + "&" + (selfPost ? "text" : "url")
-                + "=" + linkOrText + "&sr=" + subreddit + "&kind="
-                + (selfPost ? "self" : "link") + "&uh=" + getModhash(),
-                ApiEndpointUtils.USER_SUBMIT, getCookie()).getResponseObject();
+    private boolean submit(String title, String linkOrText, boolean selfPost, String subreddit, String captcha_iden, String captcha_sol) throws IOException, ParseException {
+        
+    	// Parameters
+    	String params =         		
+        		"title=" 							+ title 							+ 
+        		(selfPost ? "&text=" : "&url=") 	+ linkOrText 						+ 
+        		"&sr=" 								+ subreddit 						+ 
+        		"&kind=" 							+ (selfPost ? "self" : "link") 		+ 
+        		"&uh=" 								+ getModhash() 						+ 
+        		"&iden=" 							+ captcha_iden						+
+        		"&captcha=" 						+ captcha_sol;
+        
+    	// Make the request
+    	JSONObject object = (JSONObject) restClient.post(params,ApiEndpointUtils.USER_SUBMIT, getCookie()).getResponseObject();
+    	
+        // User required
+        if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+            System.err.println("User submission failed: please login first.");
+            return false;
+        } // Rate limit exceeded
+        else if (object.toJSONString().contains(
+                ".error.RATELIMIT.field-ratelimit")) {
+            System.err.println("User submission failed: you are doing that too much.");
+            return false;
+        } // Already submitted link
+        else if (object.toJSONString().contains(
+                ".error.ALREADY_SUB.field-url")) {
+            System.err.println("User submission failed: that link has already been submitted.");
+            return false;
+        } // Captcha problem
+        else if (object.toJSONString().contains(".error.BAD_CAPTCHA.field-captcha")) {
+            System.err.println("User submission failed: the catpcha field was incorrect.");
+            return false;
+        }
+        else { // Success
+            System.out.println("User submission succesful.");
+            return true;
+        }
+    	
     }
 
     /**
