@@ -24,84 +24,92 @@ Send in a pull request with the test and I'll be happy to merge! :-)
 
 Upvote every submission on the frontpage of a subreddit
 
-    import com.github.jreddit.submissions.Submission;
-    import com.github.jreddit.submissions.Submissions;
-    import com.github.jreddit.user.User;
+```java
+import com.github.jreddit.submissions.Submission;
+import com.github.jreddit.submissions.Submissions;
+import com.github.jreddit.user.User;
 
-    public final class Test {
-	    public static void main(String[] args) throws Exception {
-		    User user = new User("username", "password");
-		    user.connect();
+public class Test {
+    public static void main(String[] args) throws Exception {
+        User user = new User("username", "password");
+        user.connect();
 
-		    for (Submission submission : Submissions.getSubmissions("programming",
-				    Submissions.Popularity.HOT, Submissions.Page.FRONTPAGE, user)) {
-			    submission.upVote();
-		    }
-	    }
+        for (Submission submission : Submissions.getSubmissions("programming",
+                Submissions.Popularity.HOT, Submissions.Page.FRONTPAGE, user)) {
+            submission.upVote();
+        }
     }
+}
+```
 
 Submit a link and self post
 
-	import com.github.jreddit.user.User;
-	
-	public final class Test {
-		public static void main(String[] args) throws Exception {
-			User user = new User("username", "password");
-			user.connect();
-	
-			user.submitLink(
-					"Oracle V Google judge is a programmer!",
-					"http://www.i-programmer.info/news/193-android/4224-oracle-v-google-judge-is-a-programmer.html",
-					"programming");
-			user.submitSelfPost("What's the difference between a duck?",
-					"One of its legs are both the same!", "funny");
-		}
-	}
-	
-List all submissions made by user called USERNAME_OF_OTHER_USER
+```java
 
-	import com.github.jreddit.submissions.Submission;
-	import com.github.jreddit.user.User;
+import com.github.jreddit.user.User;
 	
-	/**
-	 * @author Benjamin Jakobus
-	 */
-	public final class Test {
-		public static void main(String[] args) throws Exception {
-			User user = new User("username", "password");
-        		user.connect();
+public class Test {
+    public static void main(String[] args) throws Exception {
+        User user = new User("username", "password");
+        user.connect();
+	
+        user.submitLink(
+                "Oracle V Google judge is a programmer!",
+                "http://www.i-programmer.info/news/193-android/4224-oracle-v-google-judge-is-a-programmer.html",
+                "programming");
+        user.submitSelfPost("What's the difference between a duck?",
+                "One of its legs are both the same!", "funny");
+    }
+}
+```
 
-        		List<Submission> submissions = User.submissions("USERNAME_OF_OTHER_USER");
-        		// To list hidden submissions, user User.hidden("...");
-		
-			for (Submission s : submissions) {
-				// Print info here
-			}
-		}
-	}
+List all submissions made by user called `USERNAME_OF_OTHER_USER`
+
+```java
+import java.util.List;
+import com.github.jreddit.submissions.Submission;
+import com.github.jreddit.user.User;
+	
+/**
+ * @author Benjamin Jakobus
+ */
+public class Test {
+    public static void main(String[] args) throws Exception {
+        User user = new User("username", "password");
+        user.connect();
+
+        List<Submission> submissions = User.submissions("USERNAME_OF_OTHER_USER");
+        // To list hidden submissions, user User.hidden("...");
+	
+        for (Submission s : submissions) {
+            // Print info here
+        }
+    }
+}
+```
 
 Send a message to another user
 
-	import com.github.jreddit.message.Messages;
-	import com.github.jreddit.user.User;
+```java
+import com.github.jreddit.message.Messages;
+import com.github.jreddit.user.User;
 
+/**
+ * @author Karan Goel
+ */
+public class ComposeTest {
 
-	public class ComposeTest {
+    public static void main(String[] args) {
+        User user = null;
+        String recipientUsername = "other_user";
+        try {
+            user = new User("username", "password"); // Add your username and password
+            user.connect();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
-		/**
-		 * @author Karan Goel
-		 */
-		public static void main(String[] args) {
-			User user = null;
-			username_of_recipient = "other_user";
-			try {
-				user = new User("username", "password"); // Add your username and password
-				user.connect();
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-			
-			new Messages().compose(user, username_of_recipient, "this is the title", "the message", "", "");
-		}
-
-	}
+        new Messages().compose(user, recipientUsername, "this is the title", "the message", "", "");
+    }
+}
+```
