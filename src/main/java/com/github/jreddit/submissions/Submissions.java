@@ -34,18 +34,18 @@ public class Submissions {
     }
 
     /**
-     * This function returns a linked list containing the submissions on a given
+     * This function returns a list containing the submissions on a given
      * subreddit and page. (in progress)
      *
      * @param redditName The subreddit's name
      * @param type       HOT or NEW and some others to come
      * @param frontpage       TODO this
      * @param user       The user
-     * @return The linked list containing submissions
+     * @return The list containing submissions
      * @throws IOException    If connection fails
      * @throws ParseException If JSON parsing fails
      */
-    public LinkedList<Submission> getSubmissions(String redditName,
+    public List<Submission> getSubmissions(String redditName,
                        Popularity type, Page frontpage, User user) throws IOException, ParseException {
 
         LinkedList<Submission> submissions = new LinkedList<Submission>();
