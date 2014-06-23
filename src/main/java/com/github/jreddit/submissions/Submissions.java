@@ -1,7 +1,9 @@
 package com.github.jreddit.submissions;
 
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.PaginationResult;
 import com.github.jreddit.utils.restclient.RestClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -84,16 +86,22 @@ public class Submissions {
      * Returns a list of submissions from a subreddit.
      *
      * @param subreddit The subreddit at which submissions you want to retrieve submissions.
-     * @return <code>List</code> of submissions on the subreddit.
+     * @return <code>PaginationResult<Submission></Submission></code> of submissions on the subreddit.
      */
-    public List<Submission> getSubmissions(String subreddit) {
-        // List of submissions made by this user
+    public PaginationResult<Submission> getSubmissions(String subreddit, String after) {
+        PaginationResult<Submission> result = new PaginationResult();
         List<Submission> submissions = new ArrayList<Submission>(500);
         try {
             // Send GET request to get the account overview
-            JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.SUBMISSIONS, subreddit), null);
+            String endPoint = String.format(ApiEndpointUtils.SUBMISSIONS, subreddit);
+            if (after != null)
+                endPoint += "?after=" + after;
+
+            JSONObject object = (JSONObject) restClient.get(endPoint, null);
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
+
+            result.setAfter( safeJsonToString( data.get("after") ) );
 
             JSONObject obj;
 
@@ -109,6 +117,7 @@ public class Submissions {
         }
 
         // Return the submissions
-        return submissions;
+        result.setResults(submissions);
+        return result;
     }
 }
