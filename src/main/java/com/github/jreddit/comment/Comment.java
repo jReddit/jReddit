@@ -1,5 +1,7 @@
 package com.github.jreddit.comment;
 
+import java.util.List;
+
 /**
  * A Reddit comment. Contains the edited timestamp, the body
  *
@@ -16,7 +18,7 @@ public class Comment {
     private String body;            // The actual body
     private String edited;          // Edited timestamp
     private String created;         // Created UTC timestamp
-    private String replies;         // Replies
+    private List<Comment> replies;  // Replies to this comment
     private Integer upvotes;        // Number of upvotes that this body received
     private Integer downvotes;      // Number of downvotes that this body received
 
@@ -76,11 +78,11 @@ public class Comment {
         this.created = created;
     }
 
-    public String getReplies() {
+    public List<Comment> getReplies() {
         return replies;
     }
 
-    public void setReplies(String replies) {
+    public void setReplies(List<Comment> replies) {
         this.replies = replies;
     }
 
