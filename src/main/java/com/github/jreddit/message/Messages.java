@@ -1,14 +1,15 @@
 package com.github.jreddit.message;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.restclient.RestClient;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -138,7 +139,7 @@ public class Messages {
             obj = (JSONObject) children.get(i);
 
             // If the kind of the object is a MESSAGE
-            if (obj.get("kind").toString().startsWith(Kind.MESSAGE.getValue())) {
+            if (obj.get("kind").toString().startsWith(Kind.MESSAGE.value())) {
                 obj = (JSONObject) obj.get("data");
                 messages.add(MessageMapper.mapMessage(obj));
 

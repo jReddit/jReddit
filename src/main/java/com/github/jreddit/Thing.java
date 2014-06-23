@@ -1,7 +1,5 @@
 package com.github.jreddit;
 
-import com.github.jreddit.utils.Kind;
-
 /**
  * This class represents a reddit "thing"
  *
@@ -13,9 +11,10 @@ public abstract class Thing {
     
 	/**
 	 * Constructor. Must be called.
-	 * @param name
+	 * @param name Full name of the thing
 	 */
 	public Thing(String name) {
+		assert name.contains("_") : "A full name must contain an underscore.";
 		this.fullName = name;
 		String[] split = name.split("_");
 		this.kind = split[0];
@@ -23,9 +22,9 @@ public abstract class Thing {
 	}
 	
     /**
-     * The kind ('type') of this thing.
+     * The kind of this thing.
      * 
-     * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names (section 'type prefixes')</a>
+     * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names (section 'kind prefixes')</a>
      */
     protected final String kind;
 
@@ -45,10 +44,10 @@ public abstract class Thing {
     protected final String fullName;
 
     /**
-     * Retrieve the kind ('type') of this thing.
-     * Example: t3 indicates a type 3 (a link).
+     * Retrieve the kind of this thing.
+     * Example: t3 indicates a kind 3 (a link).
      *
-     * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names (section 'type prefixes')</a>
+     * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names (section 'kind prefixes')</a>
      */
     public String getKind() {
         return kind;
@@ -67,7 +66,7 @@ public abstract class Thing {
     /**
      * Retrieve the full name of this thing.
      * Combination of its kind (see {@link #getKind() getKind}) and its unique ID, combined with a underscore.
-     * Example: t3_15bfi0 indicates a type 3 (a link) and as unique identifier 15bfi0.
+     * Example: t3_15bfi0 indicates a kind 3 (a link) and as unique identifier 15bfi0.
      *
      * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names</a>
      */

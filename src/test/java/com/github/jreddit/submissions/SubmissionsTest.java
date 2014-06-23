@@ -1,20 +1,15 @@
 package com.github.jreddit.submissions;
 
-import static com.github.jreddit.subreddit.SubredditType.MINE;
 import static com.github.jreddit.testsupport.JsonHelpers.createMediaEmbedObject;
 import static com.github.jreddit.testsupport.JsonHelpers.createMediaObject;
 import static com.github.jreddit.testsupport.JsonHelpers.createSubmission;
 import static com.github.jreddit.testsupport.JsonHelpers.redditListing;
-import static com.github.jreddit.testsupport.JsonHelpers.subredditListingForFunny;
-import static com.github.jreddit.utils.ApiEndpointUtils.SUBREDDITS_GET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -25,8 +20,6 @@ import org.junit.Test;
 import com.github.jreddit.submissions.SubmissionParams.SearchSort;
 import com.github.jreddit.submissions.SubmissionParams.SearchTime;
 import com.github.jreddit.submissions.SubmissionParams.SubredditSort;
-import com.github.jreddit.subreddit.Subreddit;
-import com.github.jreddit.subreddit.Subreddits;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.restclient.Response;

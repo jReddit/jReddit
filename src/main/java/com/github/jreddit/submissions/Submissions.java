@@ -1,46 +1,37 @@
 package com.github.jreddit.submissions;
 
-import java.io.IOException;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
-import com.github.jreddit.submissions.SubmissionParams.SearchSort;
-import com.github.jreddit.submissions.SubmissionParams.SearchTime;
-import com.github.jreddit.submissions.SubmissionParams.SubredditSort;
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.Kind;
+import com.github.jreddit.utils.ParamFormatter;
+import com.github.jreddit.utils.QuerySyntax;
+import com.github.jreddit.utils.RedditConstants;
+import com.github.jreddit.utils.SubmissionsGetSort;
+import com.github.jreddit.utils.SubmissionsSearchSort;
+import com.github.jreddit.utils.SubmissionsSearchTime;
 import com.github.jreddit.utils.restclient.RestClient;
 
+
 /**
- * This class offers some submission utilities.
+ * This class offers the following functionality:
+ * 1) Parsing the results of a request into Submission objects (see <code>Submissions.parse()</code>).
+ * 2) The ability to get submissions from a subreddit (see <code>Submissions.get()</code>).
+ * 3) The ability to search submissions on Reddit (see <code>Submissions.search()</code>).
  * 
- * Considerations: there is a ~1000 maximum amount of submissions that are available in listings
- *
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
- * @author Simon Kassing (sk-TUD, email: deltacdev@gmail.com)
+ * @author <a href="http://www.deltacdev.com">Simon Kassing</a>
  */
 public class Submissions {
-
-	/**
-	 * Limit of submissions that are retrieved per request.
-	 * Minimum: 0.
-	 * Default: 25.
-	 * Maximum: 100.
-	 * 
-	 * According to Reddit API.
-	 */
-	public static final int MAX_LIMIT = 100;
-	
-	/**
-	 * Approximately the maximum listing size, including pagination until
-	 * the end. This differs from time to time, but after some observations
-	 * this is a nice upper bound.
-	 */
-	public static final int APPROXIMATE_MAX_LISTING_SIZE = 1300;
 	
 	/**
 	 * Handle to REST client instance.
@@ -56,14 +47,13 @@ public class Submissions {
     }
     
     /**
-     * Retrieve submissions from the given URL as the given user.
+     * Parses a JSON feed received from Reddit (URL) into a nice list of Submission objects.
+     * 
      * @param user 	User
      * @param url 	URL
      * @return 		Listing of submissions
-     * @throws IOException    	If connection fails
-     * @throws ParseException 	If JSON parsing fails
      */
-    protected List<Submission> retrieve(User user, String url) throws IOException, ParseException {
+    public List<Submission> parse(User user, String url) {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -72,19 +62,35 @@ public class Submissions {
         List<Submission> submissions = new LinkedList<Submission>();
         
         // Send request to reddit server via REST client
-        // System.out.println(url);
-        JSONObject object = (JSONObject) restClient.get(url, cookie).getResponseObject();
-        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
+        Object response = restClient.get(url, cookie).getResponseObject();
+        
+        if (response instanceof JSONObject) {
+        	
+	        JSONObject object = (JSONObject) response;
+	        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 
-        // Iterate over the submission results
-        JSONObject data;
-        Submission submission;
-        for (Object anArray : array) {
-            data = (JSONObject) anArray;
-            data = ((JSONObject) data.get("data"));
-            submission = new Submission(data);
-            submission.setUser(user);
-            submissions.add(submission);
+	        // Iterate over the submission results
+	        JSONObject data;
+	        Submission submission;
+	        for (Object anArray : array) {
+	            data = (JSONObject) anArray;
+	            
+	            // Make sure it is of the correct kind
+	            String kind = safeJsonToString(data.get("kind"));
+	            if (kind.equals(Kind.LINK.value())) {
+	            	
+	            	// Create and add submission
+		            data = ((JSONObject) data.get("data"));
+		            submission = new Submission(data);
+		            submission.setUser(user);
+		            submissions.add(submission);
+	            
+	            }
+	            
+	        }
+        
+        } else {
+        	System.err.println("Cannot cast to JSON Object: '" + response.toString() + "'");
         }
 
         // Finally return list of submissions 
@@ -93,352 +99,156 @@ public class Submissions {
     }
 
     /**
-     * This function returns a linked list containing the submissions on a given subreddit.
-     * Preconditions: redditName is not null, user is not null
-	 * 
+     * Gets all the submissions of a particular subreddit using the given parameters.
+     * The parameters here are in Strings instead of wrapper objects, which allows users
+     * to manually adjust the parameters (if the API changes and jReddit is not updated
+     * in time yet).
+     * 
      * @param user 				The user (set null if the user is not needed)
-     * @param redditName 		The subreddit's name
-     * @param sort				SubredditSorting method
+     * @param subreddit			Name of the reddit (e.g. "funny")
+     * @param sort				Sorting method
+     * @param count				Count at which the submissions are started being numbered
      * @param limit				Maximum amount of submissions that can be returned (0-100, 25 default (see Reddit API))
      * @param after				The submission after which needs to be retrieved
+     * @param before			The submission before which needs to be retrieved
+     * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
-     * @throws IOException    	If connection fails
-     * @throws ParseException 	If JSON parsing fails
      */
-    public List<Submission> getLimited(User user, String redditName, SubredditSort sort, int limit, Submission after) throws IOException, ParseException {
-    	assert redditName != null && user != null;
-
-        // Subreddit sort tag
-        String sort_tag = SubmissionParams.translate(sort);
-        if (sort_tag == null) {
-        	return null;
-        }
-        
-        // URL string
-        String url = "/r/" + URLEncoder.encode(redditName, "ISO-8859-1") + "/" + sort_tag + ".json";
-        String url_params = "";
-
-        // After
-        if (after != null) {
-        	url_params += "&after=" + after.getFullName();
-        }
-
-        // Limit
-        if (limit != -1) {
-        	url_params += "&limit=" + limit;
-        }
-        
-        // Concatenate parameters behind url
-        if (url_params.length() > 0) {
-        	url = url
-        			.concat("?")
-        			.concat(url_params.substring(1, url_params.length()));
-        }
-        
+    public List<Submission> ofSubreddit(User user, String subreddit, String sort, String count, String limit, String after, String before, String show) {
+    	assert subreddit != null && user != null;
+    	
+    	// Encode the reddit name for the URL:
+    	try {
+			subreddit = URLEncoder.encode(subreddit, "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	
+    	// Format parameters
+    	String params = "";
+    	
+    	params = ParamFormatter.addParameter(params, "sort", sort);
+    	params = ParamFormatter.addParameter(params, "count", count);
+    	params = ParamFormatter.addParameter(params, "limit", limit);
+    	params = ParamFormatter.addParameter(params, "after", after);
+    	params = ParamFormatter.addParameter(params, "before", before);
+    	params = ParamFormatter.addParameter(params, "show", show);
+    	
         // Retrieve submissions from the given URL
-        return retrieve(user, url);
+        return parse(user, String.format(ApiEndpointUtils.SUBMISSIONS_GET, subreddit, params));
+        
+    }
+    
+    /**
+     * Gets all the submissions of a particular subreddit using the given parameters.
+     * 
+     * @param user 				The user (set null if the user is not needed)
+     * @param subreddit			Name of the reddit (e.g. "funny")
+     * @param sort				Sorting method
+     * @param count				Count at which the submissions are started being numbered
+     * @param limit				Maximum amount of submissions that can be returned (0-100, 25 default (see Reddit API))
+     * @param after				The submission after which needs to be retrieved
+     * @param before			The submission before which needs to be retrieved
+     * @param show_all			Show all (disables filters such as "hide links that I have voted on")
+     * @return 					The linked list containing submissions
+     */
+    public List<Submission> ofSubreddit(User user, String subreddit, SubmissionsGetSort sort, int count, int limit, Submission after, Submission before, boolean show_all) {
+    	
+    	if (subreddit == null || subreddit.isEmpty()) {
+    		throw new IllegalArgumentException("The subreddit must be defined.");
+    	}
+    	
+    	return ofSubreddit(
+    			user, 
+    			subreddit, 
+    			(sort != null) ? sort.value() : "",
+    			String.valueOf(count),
+    			String.valueOf(limit),
+    			(after != null) ? after.getFullName() : "",
+    			(before != null) ? before.getFullName() : "",
+    			(show_all) ? "all" : ""	
+    	);
+    }
+    
+    /**
+     * Searches with the given query using the constraints given as parameters.
+     * The parameters here are in Strings instead of wrapper objects, which allows users
+     * to manually adjust the parameters (if the API changes and jReddit is not updated
+     * in time yet).
+     * 
+     * @param user 				The user (set null if the user is not needed)
+     * @param query 			The query
+     * @param syntax			The query syntax
+     * @param sort				Search sorting method
+     * @param time				Search time
+     * @param count				Count at which the submissions are started being numbered
+     * @param limit				Maximum amount of submissions that can be returned (0-100, 25 default (see Reddit API))
+     * @param after				The submission after which needs to be retrieved
+     * @param before			The submission before which needs to be retrieved
+     * @param show_all			Show all (disables filters such as "hide links that I have voted on")
+     * @return 					The linked list containing submissions
+     */
+    public List<Submission> search(User user, String query, String syntax, String sort, String time, String count, String limit, String after, String before, String show) {
+    	assert query != null && user != null;
+    	
+    	// Format parameters
+    	String params = "";
+    	try {
+			params = ParamFormatter.addParameter(params, "q", URLEncoder.encode(query, "ISO-8859-1"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	params = ParamFormatter.addParameter(params, "syntax", syntax);
+    	params = ParamFormatter.addParameter(params, "sort", sort);
+    	params = ParamFormatter.addParameter(params, "t", time);
+    	params = ParamFormatter.addParameter(params, "count", count);
+    	params = ParamFormatter.addParameter(params, "limit", limit);
+    	params = ParamFormatter.addParameter(params, "after", after);
+    	params = ParamFormatter.addParameter(params, "before", before);
+    	params = ParamFormatter.addParameter(params, "show", show);
+    	
+        // Retrieve submissions from the given URL
+        return parse(user, String.format(ApiEndpointUtils.SUBMISSIONS_SEARCH, params));
         
     }
     
     /**
      * Searches with the given query using the constraints given as parameters.
-     * Preconditions: query is not null, user is not null
      * 
      * @param user 				The user (set null if the user is not needed)
      * @param query 			The query
+     * @param syntax			The query syntax
      * @param sort				Search sorting method
      * @param time				Search time
+     * @param count				Count at which the submissions are started being numbered
      * @param limit				Maximum amount of submissions that can be returned (0-100, 25 default (see Reddit API))
      * @param after				The submission after which needs to be retrieved
+     * @param before			The submission before which needs to be retrieved
+     * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
-     * @throws IOException    	If connection fails
-     * @throws ParseException 	If JSON parsing fails
      */
-    public List<Submission> searchLimited(User user, String query, SearchSort sort, SearchTime time, int limit, Submission after) throws IOException, ParseException {
-    	assert query != null && user != null;
-        
-        // URL string
-        String url = "/search.json?q=" + URLEncoder.encode(query, "ISO-8859-1");
-        String url_params = "";
-        
-        // Search sort
-        String sort_tag = SubmissionParams.translate(sort);
-        if (sort_tag != null) {
-        	url_params += "&sort=" + sort_tag;
-        }
-        
-        // Search time
-        String time_tag = SubmissionParams.translate(time);
-        if (time_tag != null) {
-        	url_params += "&t=" + time_tag;
-        }
-
-        // After
-        if (after != null) {
-        	url_params += "&after=" + after.getFullName();
-        }
-
-        // Limit
-        if (limit != -1) {
-        	url_params += "&limit=" + limit;
-        }
-        
-        // Concatenate all the parameters
-        if (url_params.length() > 0) {
-        	url = url.concat(url_params);
-        }
-        
-        // Retrieve submissions from the given URL
-        return retrieve(user, url);
-        
-    }
-
-    /**
-     * Get submissions from the specified subreddit after a specific submission, as the given user, 
-     * attempting to retrieve the desired amount.
-     * 
-     * @param user				User session
-     * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
-     * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
-     * @param after				Submission after which the submissions need to be fetched.
-     * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
-     */
-    public List<Submission> get(User user, String redditName, SubredditSort sort, int amount, Submission after) throws IOException, ParseException {
+    public List<Submission> search(User user, String query, QuerySyntax syntax, SubmissionsSearchSort sort, SubmissionsSearchTime time, int count, int limit, Submission after, Submission before, boolean show_all) {
     	
-    	if (amount < 0) {
-    		System.err.println("You cannot retrieve a negative amount of submissions.");
-    		return null;
+    	if (query == null || query.isEmpty()) {
+    		throw new IllegalArgumentException("The query must be defined.");
     	}
-
-    	// List of submissions
-        List<Submission> submissions = new LinkedList<Submission>();
-
-        // Do all iterations
-		while (amount >= 0) {
-			
-			// Determine how much still to retrieve in this iteration
-			int limit = MAX_LIMIT;
-			if (amount < MAX_LIMIT) {
-				limit = amount;
-			}
-			amount -= limit;
-			
-			// Retrieve submissions
-			List<Submission> result = this.getLimited(user, redditName, sort, limit, after);
-			submissions.addAll(result);
-			
-			// If the end of the submission stream has been reached
-			if (result.size() != limit) {
-				System.out.println("API Stream finished prematurely: received " + result.size() + " but wanted " + limit + ".");
-				break;
-			}
-			
-			// If nothing is left desired, exit.
-			if (amount <= 0) {
-				break;
-			}
-			
-			// Previous last submission
-			after = result.get(result.size() - 1);
-			
-		}
-		
-		return submissions;
     	
-    }
-    
-    /**
-     * Get submissions from the specified subreddit, as the given user, 
-     * attempting to retrieve the desired amount after the given submission.
-     * 
-     * @param user				User session
-     * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
-     * @param sort				Subreddit sorting method
-     * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
-     * @param after				Submission after which to get
-     * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
-     */
-    public List<Submission> get(String redditName, SubredditSort sort, int amount, Submission after) throws IOException, ParseException {
-    	return get(null, redditName, sort, amount, after);
-    }
-    
-    /**
-     * Get submissions from the specified subreddit, as the given user, attempting to retrieve the desired amount.
-     * @param user				User session
-     * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
-     * @param sort				Subreddit sorting method
-     * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
-     * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
-     */
-    public List<Submission> get(User user, String redditName, SubredditSort sort, int amount) throws IOException, ParseException {
-    	return get(user, redditName, sort, amount, null);
-    }
-    
-    /**
-     * Get submissions from the specified subreddit, as the specified user, using the given sorting method.
-     * 
-     * @param user			User
-     * @param redditName 	The subreddit at which submissions you want to retrieve submissions.
-     * @param sort			Subreddit sorting method
-     * @return <code>List</code> of submissions on the subreddit.
-     */
-    public List<Submission> get(User user, String redditName, SubredditSort sort) throws IOException, ParseException {
-    	return get(user, redditName, sort, APPROXIMATE_MAX_LISTING_SIZE, null);
-    }
-    
-    /**
-     * Get submissions from the specified subreddit attempting to retrieve the desired amount.
-     * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
-     * @param sort				Subreddit sorting method
-     * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
-     * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
-     */
-    public List<Submission> get(String redditName, SubredditSort sort, int amount) throws IOException, ParseException {
-    	return get(null, redditName, sort, amount, null);
-    }
-    
-    /**
-     * Returns a list of submissions from a subreddit.
-     * 
-     * @param redditName 	The subreddit at which submissions you want to retrieve submissions.
-     * @param sort			Subreddit sorting method
-     * @return <code>List</code> of submissions on the subreddit.
-     */
-    public List<Submission> get(String redditName, SubredditSort sort) throws IOException, ParseException {
-    	return get(null, redditName, sort, APPROXIMATE_MAX_LISTING_SIZE, null);
-    }
-    
-    /**
-     * Get submissions from the specified subreddit after a specific submission, as the given user, attempting to retrieve the desired amount.
-     * FIXME Essentially, this is code duplication of the get method.
-     * 
-     * @param user				User session
-     * @param query 			Search query
-     * @param sort				Search sorting method (e.g. new or top)
-     * @param time				Search time (e.g. day or all)
-     * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
-     * @param after				Submission after which the submissions need to be fetched.
-     * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
-     */
-    public List<Submission> search(User user, String query, SearchSort sort, SearchTime time, int amount, Submission after) throws IOException, ParseException {
-    	
-    	if (amount < 0) {
-    		System.err.println("You cannot retrieve a negative amount of submissions.");
-    		return null;
+    	if (limit < -1 || limit > RedditConstants.MAX_LIMIT) {
+    		throw new IllegalArgumentException("The limit needs to be between 0 and 100 (or -1 for default).");
     	}
-
-    	// List of submissions
-        List<Submission> submissions = new LinkedList<Submission>();
-
-        // Do all iterations
-		while (amount >= 0) {
-			
-			// Determine how much still to retrieve in this iteration
-			int limit = MAX_LIMIT;
-			if (amount < MAX_LIMIT) {
-				limit = amount;
-			}
-			amount -= limit;
-			
-			// Retrieve submissions
-			List<Submission> result = this.searchLimited(user, query, sort, time, limit, after);
-			submissions.addAll(result);
-			
-			// If the end of the submission stream has been reached
-			if (result.size() != limit) {
-				System.out.println("API Stream finished prematurely: received " + result.size() + " but wanted " + limit + ".");
-				break;
-			}
-			
-			// If nothing is left desired, exit.
-			if (amount <= 0) {
-				break;
-			}
-			
-			// Previous last submission
-			after = result.get(result.size() - 1);
-			
-		}
-		
-		return submissions;
     	
+    	return search(
+    			user, 
+    			query, 
+    			(syntax != null) ? syntax.value() : "",
+    			(sort != null) ? sort.value() : "",
+    			(time != null) ? time.value() : "",
+    			String.valueOf(count),
+    			String.valueOf(limit),
+    			(after != null) ? after.getFullName() : "",
+    			(before != null) ? before.getFullName() : "",
+    			(show_all) ? "all" : ""		
+    	);
     }
-    
-    /**
-     * Search for submissions using the query with the given sorting method and within the given time as the given user and with maximum amount returned.
-	 * 
-     * @param user		User
-     * @param query 	Search query
-     * @param sort		Search sorting method
-     * @param time		Search time
-     * @param amount	How many to retrieve (if possible, result <= amount guaranteed)
-     * @return <code>List</code> of submissions that match the query.
-     */
-    public List<Submission> search(User user, String query, SearchSort sort, SearchTime time, int amount) throws IOException, ParseException {
-    	return search(user, query, sort, time, amount, null);
-    }
-    
-    /**
-     * Search for submissions using the query with the given sorting method and within the given time as the given user.
-	 * 
-     * @param user		User
-     * @param query 	Search query
-     * @param sort		Search sorting method
-     * @param time		Search time
-     * @return <code>List</code> of submissions that match the query.
-     */
-    public List<Submission> search(User user, String query, SearchSort sort, SearchTime time) throws IOException, ParseException {
-    	return search(user, query, sort, time, APPROXIMATE_MAX_LISTING_SIZE);
-    }
-    
-    /**
-     * Search for submissions using the query with the given sorting method and 
-     * within the given time and with maximum amount returned after the given submission.
-	 * 
-     * @param query 	Search query
-     * @param sort		Search sorting method
-     * @param time		Search time
-     * @param amount	How many to retrieve (if possible, result <= amount guaranteed)
-     * @param after		Submission after which need to be retrieved
-     * @return <code>List</code> of submissions that match the query.
-     */
-    public List<Submission> search(String query, SearchSort sort, SearchTime time, int amount, Submission after) throws IOException, ParseException {
-    	return search(null, query, sort, time, amount, after);
-    }
-    
-    /**
-     * Search for submissions using the query with the given sorting method and within the given time and with maximum amount returned.
-	 * 
-     * @param query 	Search query
-     * @param sort		Search sorting method
-     * @param time		Search time
-     * @param amount	How many to retrieve (if possible, result <= amount guaranteed)
-     * @return <code>List</code> of submissions that match the query.
-     */
-    public List<Submission> search(String query, SearchSort sort, SearchTime time, int amount) throws IOException, ParseException {
-    	return search(query, sort, time, amount, null);
-    }
-    
-    /**
-     * Search for submissions using the query with the given sorting method and within the given time.
-	 * 
-     * @param query 	Search query
-     * @param sort		Search sorting method
-     * @param time		Search time
-     * @return <code>List</code> of submissions that match the query.
-     */
-    public List<Submission> search(String query, SearchSort sort, SearchTime time) throws IOException, ParseException {
-    	return search(query, sort, time, APPROXIMATE_MAX_LISTING_SIZE);
-    }
-    
+
 }

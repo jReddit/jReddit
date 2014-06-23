@@ -1,16 +1,25 @@
-package com.github.jreddit.subreddit;
+package com.github.jreddit.utils;
 
-public enum SubredditType {
+/**
+ * Enumeration to represent the different subreddit categories.
+ * @author Simon Kassing
+ */
+public enum SubredditsView {
 
-    NEW("new"), MINE("mine"), POPULAR("popular");
+    NEW					("new"), 
+    POPULAR				("popular"), 
+    MINE_SUBSCRIBER		("mine/subscriber"), 
+    MINE_CONTRIBUTOR	("mine/contributor"), 
+    MINE_MODERATOR		("mine/moderator");
 
     private final String value;
 
-    SubredditType(String value) {
+    SubredditsView(String value) {
         this.value = value;
     }
 
-    public String getValue() {
+    public String value() {
         return this.value;
     }
+    
 }

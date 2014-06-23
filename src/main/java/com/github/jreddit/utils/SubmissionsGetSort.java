@@ -5,18 +5,23 @@ package com.github.jreddit.utils;
  *
  * @author Evin Ugur
  * @author Raul Rene Lepsa
+ * @author Simon Kassing
  */
-public enum Sort {
+public enum SubmissionsGetSort {
 
-    CONFIDENCE("confidence"), TOP("top"), NEW("new"), HOT("hot"), CONTROVERSIAL("controversial"), OLD("old"), RANDOM("random");
+    HOT				("hot"), 
+    NEW				("new"), 
+    RISING			("rising"), 
+    CONTROVERSIAL	("controversial"), 
+    TOP				("top");
 
     private final String value;
 
-    Sort(String value) {
+    SubmissionsGetSort(String value) {
         this.value = value;
     }
 
-    public String getValue() {
+    public String value() {
         return this.value;
     }
 }

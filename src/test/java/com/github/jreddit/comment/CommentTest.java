@@ -3,8 +3,10 @@ package com.github.jreddit.comment;
 import com.github.jreddit.testsupport.JsonHelpers;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.CommentSort;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Before;

@@ -17,7 +17,7 @@ import com.github.jreddit.exception.InvalidUserException;
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.subreddit.Subreddit;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.Sort;
+import com.github.jreddit.utils.UserOverviewSort;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 
@@ -302,11 +302,7 @@ public class User {
      * any comments. In case of an invalid user instance, it returns <code>null</code>.
      */
     public List<Comment> comments() {
-        try {
-            return new Comments(restClient).comments(username);
-        } catch (InvalidUserException e) {
-            return null;
-        }
+    	return new Comments(restClient).ofUser(null, username, null, null, -1, -1, null, null, false);
     }
 
     /**
@@ -348,7 +344,7 @@ public class User {
      * @return List of liked links with default sorting.
      */
     public List<Submission> getLikedSubmissions() {
-        return getLikedSubmissions(Sort.HOT);
+        return getLikedSubmissions(UserOverviewSort.HOT);
     }
 
     /**
@@ -357,7 +353,7 @@ public class User {
      * @param sort Which sort you'd like to apply
      * @return List of liked submissions with a Reddit sort
      */
-    public List<Submission> getLikedSubmissions(Sort sort) {
+    public List<Submission> getLikedSubmissions(UserOverviewSort sort) {
         return getUserSubmissions("liked", sort);
     }
 
@@ -367,7 +363,7 @@ public class User {
      * @return List of disliked links.
      */
     public List<Submission> getHiddenSubmissions() {
-        return getHiddenSubmissions(Sort.HOT);
+        return getHiddenSubmissions(UserOverviewSort.HOT);
     }
 
     /**
@@ -376,7 +372,7 @@ public class User {
      * @param sort Which sort you'd like to apply
      * @return List of hidden Submissions with a Reddit sort
      */
-    public List<Submission> getHiddenSubmissions(Sort sort) {
+    public List<Submission> getHiddenSubmissions(UserOverviewSort sort) {
         return getUserSubmissions("hidden", sort);
     }
 
@@ -386,7 +382,7 @@ public class User {
      * @return List of saved links
      */
     public List<Submission> getSavedSubmissions() {
-        return getSavedSubmissions(Sort.HOT);
+        return getSavedSubmissions(UserOverviewSort.HOT);
     }
 
     /**
@@ -395,7 +391,7 @@ public class User {
      * @param sort Which sort you'd like to apply
      * @return List of saved links with a Reddit sort
      */
-    public List<Submission> getSavedSubmissions(Sort sort) {
+    public List<Submission> getSavedSubmissions(UserOverviewSort sort) {
         return getUserSubmissions("saved", sort);
     }
 
@@ -405,7 +401,7 @@ public class User {
      * @return List of submitted Submissions
      */
     public List<Submission> getSubmissions() {
-        return getSubmissions(Sort.HOT);
+        return getSubmissions(UserOverviewSort.HOT);
     }
 
     /**
@@ -413,7 +409,7 @@ public class User {
      *
      * @return List of submitted Submissions with a specified Reddit sort
      */
-    public List<Submission> getSubmissions(Sort sort) {
+    public List<Submission> getSubmissions(UserOverviewSort sort) {
         return getUserSubmissions("submitted", sort);
     }
 
@@ -423,7 +419,7 @@ public class User {
      * @return List of disliked links.
      */
     public List<Submission> getDislikedSubmissions() {
-        return getDislikedSubmissions(Sort.HOT);
+        return getDislikedSubmissions(UserOverviewSort.HOT);
     }
 
     /**
@@ -432,7 +428,7 @@ public class User {
      * @param sort Which sort you'd like to apply
      * @return List of disliked sorts with a specified sort
      */
-    public List<Submission> getDislikedSubmissions(Sort sort) {
+    public List<Submission> getDislikedSubmissions(UserOverviewSort sort) {
         return getUserSubmissions("disliked", sort);
     }
 
@@ -441,7 +437,7 @@ public class User {
      * @return List of submissions in the user overview.
      */
     public List<Submission> getUserOverview() {
-        return getUserSubmissions("overview", Sort.HOT);
+        return getUserSubmissions("overview", UserOverviewSort.HOT);
     }
 
     /**
@@ -450,7 +446,7 @@ public class User {
      * @param where place of Submission - see http://www.reddit.com/dev/api#GET_user_{username}_{where}
      * @return Submissions from the specified location, null if the location is invalid
      */
-    private List<Submission> getUserSubmissions(String where, Sort sort) {
+    private List<Submission> getUserSubmissions(String where, UserOverviewSort sort) {
         //valid arguments for where the Submission can come from
         final String[] LOCATIONS = {
                 //TODO: not all of these JSONs return something that can be processed purely into a Submission class, until those are taken care of, I commented them out
@@ -475,7 +471,7 @@ public class User {
         try {
             JSONObject object =
                     (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_SUBMISSIONS_INTERACTION,
-                            username, where, sort.getValue()), cookie).getResponseObject();
+                            username, where, sort.value()), cookie).getResponseObject();
             JSONObject data = (JSONObject) object.get("data");
             JSONArray children = (JSONArray) data.get("children");
 

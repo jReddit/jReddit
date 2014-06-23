@@ -1,14 +1,21 @@
-package com.github.jreddit.comment;
+package com.github.jreddit.utils;
 
 /**
  * Enum to represent comment sorts on Reddit. You see these on a page that lists comments.
  *
  * @author Evin Ugur
  * @author Raul Rene Lepsa
+ * @author Simon Kassing
  */
 public enum CommentSort {
 
-    NEW("new"), HOT("hot"), TOP("top"), CONTROVERSIAL("controversial"), OLD("old"), RANDOM("random"), CONFIDENCE("confidence");
+    NEW				("new"), 
+    HOT				("hot"), 
+    TOP				("top"), 
+    CONTROVERSIAL	("controversial"), 
+    OLD				("old"), 
+    RANDOM			("random"), 
+    CONFIDENCE		("confidence");
 
     private final String value;
 
@@ -16,7 +23,8 @@ public enum CommentSort {
         this.value = value;
     }
 
-    public String getValue() {
+    public String value() {
         return this.value;
     }
+    
 }

@@ -14,7 +14,6 @@ import com.github.jreddit.Thing;
 import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
 

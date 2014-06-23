@@ -5,10 +5,11 @@ import java.util.List;
 
 import org.json.simple.parser.ParseException;
 
+import com.github.jreddit.subreddit.ExtendedSubreddits;
 import com.github.jreddit.subreddit.Subreddit;
-import com.github.jreddit.subreddit.SubredditType;
 import com.github.jreddit.subreddit.Subreddits;
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.SubredditsView;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
 
@@ -21,7 +22,7 @@ public class SubredditsExample {
 	    restClient.setUserAgent("bot/1.0 by name");
 
 		// Connect the user
-	    User user = new User(restClient, "username", "password");
+	    User user = new User(restClient, "ER-bot", "peanut34");
 		try {
 			user.connect();
 		} catch (IOException e1) {
@@ -31,15 +32,15 @@ public class SubredditsExample {
 		}
 
 		// Create handle to retrieve submissions
-		Subreddits subrs = new Subreddits(restClient);
+		ExtendedSubreddits subrs = new ExtendedSubreddits(new Subreddits(restClient));
 		
 		// Retrieve some submissions!
 
 			try {
 				
 				
-				List<Subreddit> getsubreddits = subrs.get(SubredditType.NEW, 36);
-				System.out.println("Get subreddits, size received: " + getsubreddits.size());
+				//List<Subreddit> getsubreddits = subrs.get(SubredditsView.NEW, 36);
+				//System.out.println("Get subreddits, size received: " + getsubreddits.size());
 				
 				// Other possibilities:
 				// subrs.get(SubredditType.NEW);
@@ -50,7 +51,7 @@ public class SubredditsExample {
 				// subrs.get(user, SubredditType.MINE, 16);
 				// subrs.get(user, SubredditType.NEW, 22, "t1_29429");
 				
-				List<Subreddit> searchsubreddits = subrs.search("science", 222);
+				List<Subreddit> searchsubreddits = subrs.search("science", 10);
 				System.out.println("Search subreddits, size received: " + searchsubreddits.size());
 				
 				// Other possibilities:

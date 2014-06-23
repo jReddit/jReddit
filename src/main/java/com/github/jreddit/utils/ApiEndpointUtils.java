@@ -1,5 +1,7 @@
 package com.github.jreddit.utils;
 
+import java.net.URLEncoder;
+
 /**
  * Some constants that are used for specifying Reddit API endpoints (example: /api/new_captcha)
  *
@@ -39,8 +41,12 @@ public class ApiEndpointUtils {
 
     public static final String SUBMISSION_UNSAVE = REDDIT_BASE_API_ENDPOINT + "/unsave";
 
-    public static final String SUBMISSION_COMMENTS = "/r/%s/comments/%s.json?%s";
-
+    public static final String SUBMISSION_COMMENTS = "/comments/%s.json?%s";
+    
+    public static final String SUBMISSIONS_SEARCH = "/search.json?%s";
+    
+    public static final String SUBMISSIONS_GET = "/r/%s.json?%s";
+    
     /* User specific constants */
     
     public static final String USER_LOGIN = REDDIT_BASE_API_ENDPOINT + "/login/%s";
@@ -65,10 +71,10 @@ public class ApiEndpointUtils {
 
     public static final String SUBREDDITS = "/subreddits.json";
 
-    public static final String SUBREDDITS_GET = "/subreddits/%s.json";
+    public static final String SUBREDDITS_GET = "/subreddits/%s.json?%s";
     
-    public static final String SUBREDDITS_SEARCH = "/subreddits/search.json";
-    
-    public static final String SUBMISSIONS = "/r/%s/.json";
+    public static final String SUBREDDITS_SEARCH = "/subreddits/search.json?%s";
+
+
 
 }

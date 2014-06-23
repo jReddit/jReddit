@@ -11,10 +11,10 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static com.github.jreddit.subreddit.SubredditType.*;
 import static com.github.jreddit.testsupport.JsonHelpers.subredditListingForFunny;
 import static com.github.jreddit.utils.ApiEndpointUtils.SUBREDDITS;
 import static com.github.jreddit.utils.ApiEndpointUtils.SUBREDDITS_GET;
+import static com.github.jreddit.utils.SubredditType.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -68,9 +68,9 @@ public class SubredditTest {
     @Test
     public void testGetMineSubreddits() throws InterruptedException, IOException, ParseException {
         response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(String.format(SUBREDDITS_GET, MINE.getValue()) + "?limit=" + Subreddits.MAX_LIMIT, null)).thenReturn(response);
+        when(restClient.get(String.format(SUBREDDITS_GET, MINE_SUBSCRIBER.getValue()) + "?limit=" + Subreddits.MAX_LIMIT, null)).thenReturn(response);
 
-        List<Subreddit> subreddits = underTest.get(MINE);
+        List<Subreddit> subreddits = underTest.get(MINE_SUBSCRIBER);
         assertNotNull(subreddits);
         assertTrue(subreddits.size() == 1);
     }

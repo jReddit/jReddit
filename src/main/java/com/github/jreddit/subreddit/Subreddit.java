@@ -13,8 +13,10 @@ import com.github.jreddit.utils.restclient.RestClient;
 
 /**
  * Encapsulates a subreddit.
+ * TODO: Subreddit info
  *
  * @author Benjamin Jakobus
+ * @author Simon Kassing
  */
 public class Subreddit extends Thing {
 	
