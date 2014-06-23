@@ -19,8 +19,11 @@ import com.github.jreddit.utils.UserOverviewSort;
 import com.github.jreddit.utils.restclient.RestClient;
 
 /**
- * Deals with Comment-related functionality
- *
+ * This class offers the following functionality:
+ * 1) Parsing the results of a request into Comment objects (see <code>Comments.parseBreadth()</code> and <code>Comments.parseDepth()</code>).
+ * 2) The ability to get comments of a user (see <code>Commments.ofUser()</code>).
+ * 3) The ability to get comments of a submission/article (see <code>Comments.ofSubmission()</code>).
+ * 
  * @author Raul Rene Lepsa
  * @author Simon Kassing
  */
@@ -37,7 +40,8 @@ public class Comments {
     }
     
     /**
-     * Parses a JSON feed from Reddit (URL) into a nice tree set of Comment objects.
+     * Parses a JSON feed of comments from Reddit (URL) into a nice list of Comment objects
+     * maintaining the order. This parses ONLY the first depth of comments.
      * 
      * @param user		User
      * @param url		URL for the request
@@ -45,7 +49,7 @@ public class Comments {
      * 
      * @return Parsed list of comments.
      */
-    public List<Comment> parse(User user, String url, boolean article) {
+    public List<Comment> parseBreadth(User user, String url, boolean article) {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -91,8 +95,19 @@ public class Comments {
         return comments;
         
     }
-    
-    public List<Comment> parseRecursive(User user, String url) {
+
+    /**
+     * Parses a JSON feed of comments from Reddit (URL) into a nice list of Comment objects
+     * maintaining the order. This parses all comments that are defined with their associated values,
+     * those that fall outside the (default) limit are omitted.
+     * 
+     * @param user		User
+     * @param url		URL for the request
+     * @param article	Are it comments of an article (submission) or from a listing (e.g. from a user overview)
+     * 
+     * @return Parsed list of comments.
+     */
+    public List<Comment> parseDepth(User user, String url, boolean article) {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -105,78 +120,67 @@ public class Comments {
         
         if (response instanceof JSONObject || response instanceof JSONArray) {
         	
-	        JSONObject object =  (JSONObject) ((JSONArray) response).get(1);
-	        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
+        	JSONObject object =  (JSONObject) ( (article) ? ((JSONArray) response).get(1) : response );
+        	parseRecursive(comments, object);
 	        
-	        // Iterate over the submission results
-	        JSONObject data;
-	        Comment comment;
-	        for (Object anArray : array) {
-	            data = (JSONObject) anArray;
-	            
-	            // Make sure it is of the correct kind
-	            String kind = safeJsonToString(data.get("kind"));
-	            if (kind.equals(Kind.COMMENT.value())) {
-	            	
-	            	// Contents of the comment
-	            	data = ((JSONObject) data.get("data"));
-	            	
-		            // Create and add the new comment
-		            comment = new Comment(data);
-		            comments.add(comment);
-		            System.out.println("Parent: " + comment);
-		            
-		            Object o = data.get("replies");
-		            if (o instanceof JSONObject) {
-		            	
-		            	// Dig towards the replies
-		            	JSONObject replies = (JSONObject) o;
-			            replies = (JSONObject) replies.get("data");
-			            JSONArray children = (JSONArray) replies.get("children");
-			            
-			            for (Object replyObj : children) {
-			            	JSONObject reply = (JSONObject) replyObj;
-			            	
-	
-					        kind = safeJsonToString(reply.get("kind"));
-				            if (kind.equals(Kind.COMMENT.value())) {
-				            	
-				            	// Contents of the comment
-				            	JSONObject data2 = ((JSONObject) reply.get("data"));
-				            	
-					            // Create and add the new comment
-					            comment = new Comment(data2);
-					            comments.add(comment);
-					            System.out.println("\t> Reply comment: " + comment);
-					            
-				            } else if (kind.equals(Kind.MORE.value())) {
-				            	
-					            replies = (JSONObject) reply.get("data");
-					            children = (JSONArray) replies.get("children");
-					            System.out.println("\t+ More children: " + children);
-				            }
-			            
-			            }
-
-		            }
-		            
-	            }
-
-	            System.out.println();
-	        }
-        
-        } else {
-        	System.err.println("Cannot cast to JSON Object: '" + response.toString() + "'");
         }
-
-        // Finally return list of submissions 
-        return comments;
         
+        return comments;
+	        
     }
     
-  //  private addComment(List<Comment> list, JSONObject commentObject) {
+    /**
+     * Parse a JSON object consisting of comments and add them
+     * to the already existing list of comments. This does NOT create
+     * a new comment list.
+     * 
+     * @param comments 	List of comments
+     * @param object	JSON Object
+     */
+    protected void parseRecursive(List<Comment> comments, JSONObject object) {
+    	assert comments != null : "List of comments must be instantiated.";
+    	assert object != null : "JSON Object must be instantiated.";
     	
-   // }
+    	// Get the comments in an array
+        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
+        
+        // Iterate over the submission results
+        JSONObject data;
+        Comment comment;
+        for (Object anArray : array) {
+            data = (JSONObject) anArray;
+            
+            // Make sure it is of the correct kind
+            String kind = safeJsonToString(data.get("kind"));
+            if (kind.equals(Kind.COMMENT.value())) {
+            	
+            	// Contents of the comment
+            	data = ((JSONObject) data.get("data"));
+            	
+	            // Create and add the new comment
+	            comment = new Comment(data);
+	            comments.add(comment);
+	            
+	            Object o = data.get("replies");
+	            if (o instanceof JSONObject) {
+	            	
+	            	// Dig towards the replies
+	            	JSONObject replies = (JSONObject) o;
+	            	parseRecursive(comments, replies);
+
+	            }
+	            
+            } else if (kind.equals(Kind.MORE.value())) {
+            	
+	            data = (JSONObject) data.get("data");
+	            JSONArray children = (JSONArray) data.get("children");
+	            System.out.println("\t+ More children: " + children);
+	            
+            }
+
+        }
+        
+    }
     
     /**
      * Get the comment tree of the given user.
@@ -207,7 +211,7 @@ public class Comments {
     	params = ParamFormatter.addParameter(params, "show", show);
     	
         // Retrieve submissions from the given URL
-        return parse(user, String.format(ApiEndpointUtils.USER_COMMENTS, username, params), false);
+        return parseBreadth(user, String.format(ApiEndpointUtils.USER_COMMENTS, username, params), false);
         
     }
     
@@ -275,7 +279,7 @@ public class Comments {
      * @param parentsShown 		(Optional, set null is not used) An integer between 0 and 8 representing the number of parents shown for the comment identified by <code>commentId</code>
      * @param depth        		(Optional, set null if not used) Integer representing the maximum depth of subtrees in the thread
      * @param limit        		(Optional, set null if not used) Integer representing the maximum number of comments to return
-     * @param sort  		(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
+     * @param sort  			(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
      * @return Comments for an article.
      */
     public List<Comment> ofSubmission(User user, String submissionId, String commentId, String parentsShown, String depth, String limit, String sort) {
@@ -289,7 +293,7 @@ public class Comments {
     	params = ParamFormatter.addParameter(params, "sort", sort);
     	
         // Retrieve submissions from the given URL
-        return parse(user, String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, submissionId, params), true);
+        return parseBreadth(user, String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, submissionId, params), true);
         
     }
     

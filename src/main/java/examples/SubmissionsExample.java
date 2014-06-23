@@ -24,7 +24,7 @@ public class SubmissionsExample {
 	    restClient.setUserAgent("bot/1.0 by name");
 
 		// Connect the user
-	    User user = new User(restClient, "ER-bot", "peanut34");
+	    User user = new User(restClient, "username", "password");
 		try {
 			user.connect();
 		} catch (IOException e1) {

@@ -22,7 +22,7 @@ public class CommentsExample {
 	    restClient.setUserAgent("bot/1.0 by name");
 
 		// Connect the user
-	    User user = new User(restClient, "ER-bot", "peanut34");
+	    User user = new User(restClient, "username", "password");
 		try {
 			user.connect();
 		} catch (IOException e1) {
@@ -37,7 +37,7 @@ public class CommentsExample {
 		// Retrieve some submissions!
 		
 		//List<Comment> comments1 = coms.ofSubmission(user, "28obnl", null, 0, 1, 1, CommentSort.NEW);
-		List<Comment> comments1 = coms.parseRecursive(user, "/comments/28svdn.json?comment=cieirih");//"/comments/28svdn.json?&context=0&depth=2&limit=500&sort=popular");
+		List<Comment> comments1 = coms.parseDepth(user, "/comments/28svdn.json?comment=cieirih&limit=5", true);//"/comments/28svdn.json?&context=0&depth=2&limit=500&sort=popular");
 		//.ofUser(user, "Unidan", null, null, -1, 133, null, null, false);
 		
 		System.out.println("Size: " + comments1.size());
@@ -46,7 +46,7 @@ public class CommentsExample {
 		int i = 0;
 		for (Comment c : comments1) {
 			//if (i % 10 == 0 || i == comments1.size() - 1) {
-			//System.out.println(c);
+			System.out.println(c);
 			//}
 			i++;
 		}
