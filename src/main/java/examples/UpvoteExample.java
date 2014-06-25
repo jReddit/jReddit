@@ -1,7 +1,5 @@
-import com.github.jreddit.submissions.Submission;
-import com.github.jreddit.submissions.Submissions;
-import com.github.jreddit.submissions.Submissions.Page;
-import com.github.jreddit.submissions.Submissions.Popularity;
+package examples;
+
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
@@ -12,7 +10,7 @@ import com.github.jreddit.utils.restclient.RestClient;
  * 
  * @author Omer Elnour
  */
-public final class GenerousBot {
+public class UpvoteExample {
 	public static void main(String[] args) throws Exception {
 		String[] subreddits = { "programming", "funny", "wtf", "java",
 				"todayilearned", "redditdev" };
@@ -20,15 +18,15 @@ public final class GenerousBot {
         RestClient restClient = new HttpRestClient();
         restClient.setUserAgent("Generous-Bot");
 
-		User user = new User(restClient, "user", "password");
+		User user = new User(restClient, Authentication.getUsername(), Authentication.getPassword());
 		user.connect();
-
+/*
 		for (int i = 0; i < subreddits.length; i++) {
 			for (Submission submission : Submissions
 					.getSubmissions(subreddits[i], Popularity.NEW,
 							Page.FRONTPAGE, user)) {
 				submission.upVote();
 			}
-		}
+		}*/
 	}
 }

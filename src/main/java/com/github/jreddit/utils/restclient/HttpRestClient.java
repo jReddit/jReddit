@@ -1,9 +1,14 @@
 package com.github.jreddit.utils.restclient;
 
-import com.github.jreddit.exception.InvalidURIException;
-import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder;
-import com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder;
+import static com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder.httpGetMethod;
+import static com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder.httpPostMethod;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -17,118 +22,148 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.github.jreddit.exception.InvalidURIException;
+import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder;
+import com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder;
 
-import static com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder.httpGetMethod;
-import static com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder.httpPostMethod;
-
+/**
+ * HTTP implementation of the REST Client interface.
+ */
 public class HttpRestClient implements RestClient {
-    private final HttpClient httpClient;
-    private final ResponseHandler<Response> responseHandler;
-    private final RequestConfig globalConfig = RequestConfig.custom()
-            .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
-            .setConnectionRequestTimeout(10000)
-            .build();
-    private String userAgent = "Omer's Reddit API Java Wrapper";
+	
+	/**
+	 * HTTP Client instance.
+	 */
+	private final HttpClient httpClient;
+	
+	/**
+	 * Response handler instance.
+	 */
+	private final ResponseHandler<Response> responseHandler;
+	
+	/**
+	 * Global request configuration.
+	 */
+	private final RequestConfig globalConfig = RequestConfig.custom()
+			.setCookieSpec(CookieSpecs.IGNORE_COOKIES)
+			.setConnectionRequestTimeout(10000).build();
+	
+	/**
+	 * Default User Agent
+	 */
+	private String userAgent = "jReddit: Reddit API Wrapper for Java";
 
-    public HttpRestClient() {
-        // As we're currently managing cookies elsewhere we need to set our config to ignore them
-        this.httpClient = HttpClients.custom()
-                .setDefaultRequestConfig(globalConfig)
-                .build();
-        this.responseHandler = new RestResponseHandler();
-    }
+	/**
+	 * Default constructor.
+	 */
+	public HttpRestClient() {
+		// As we're currently managing cookies elsewhere we need to set our configure to ignore them
+		this.httpClient = HttpClients.custom().setDefaultRequestConfig(globalConfig).build();
+		this.responseHandler = new RestResponseHandler();
+	}
 
-    public HttpRestClient(HttpClient httpClient, ResponseHandler<Response> responseHandler) {
-        this.httpClient = httpClient;
-        this.responseHandler = responseHandler;
-    }
+	/**
+	 * Constructor with option to define own client and response handler.
+	 * @param httpClient		HTTP Client
+	 * @param responseHandler	HTTP Request response handler
+	 */
+	public HttpRestClient(HttpClient httpClient, ResponseHandler<Response> responseHandler) {
+		this.httpClient = httpClient;
+		this.responseHandler = responseHandler;
+	}
 
-    public Response get(String urlPath, String cookie) {
-        try {
-            return get(httpGetMethod()
-                    .withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath)
-                    .withCookie(cookie)
-            );
-        }
-        catch (URISyntaxException e) {
-            System.err.println("Error making creating URI bad path: " + urlPath);
-        }
-        catch (InvalidURIException e) {
-            System.err.println("Error making GET request to invalid URI path: " + urlPath);
-        }
-        catch (IOException e) {
-            System.err.println("Error making GET request to URL path: " + urlPath);
-        }
-        catch (ParseException e) {
-            System.err.println("Error parsing response from POST request for URL path: " + urlPath);
-        }
-        return null;
-    }
 
-    public Response get(HttpGetMethodBuilder getMethodBuilder) throws IOException, ParseException, InvalidURIException {
-        getMethodBuilder.withUserAgent(userAgent);
-        HttpGet request = getMethodBuilder.build();
+	public Response get(String urlPath, String cookie) {
+		
+		try {
+			return get(httpGetMethod().withUrl(
+					ApiEndpointUtils.REDDIT_BASE_URL + urlPath).withCookie(cookie));
+		} catch (URISyntaxException e) {
+			System.err.println("Error making creating URI bad path: " + urlPath);
+		} catch (InvalidURIException e) {
+			System.err.println("Error making GET request to invalid URI path: " + urlPath);
+		} catch (IOException e) {
+			System.err.println("Error making GET request to URL path: " + urlPath);
+		} catch (ParseException e) {
+			System.err.println("Error parsing response from POST request for URL path: "+ urlPath);
+		}
+		
+		return null;
+		
+	}
 
-        Response response = httpClient.execute(request, responseHandler);
-        if (response.getStatusCode() == 404) {
-            throw new InvalidURIException();
-        }
+	public Response get(HttpGetMethodBuilder getMethodBuilder) throws IOException, ParseException, InvalidURIException {
+		
+		// Build HTTP GET request
+		getMethodBuilder.withUserAgent(userAgent);
+		HttpGet request = getMethodBuilder.build();
 
-        return response;
-    }
+		// Execute request
+		Response response = httpClient.execute(request, responseHandler);
+		
+		// If URL not found (4040), URI was incorrect.
+		if (response.getStatusCode() == 404) {
+			throw new InvalidURIException();
+		}
 
-    public Response post(String apiParams, String urlPath, String cookie) {
-        try {
-            return post(
-                    httpPostMethod()
-                            .withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath)
-                            .withCookie(cookie),
-                    convertRequestStringToList(apiParams)
-            );
-        }
-        catch (URISyntaxException e) {
-            System.err.println("Error making creating URI bad path: " + urlPath);
-        }
-        catch (IOException e) {
-            System.err.println("Error making GET request to URL path: " + urlPath);
-        }
-        catch (ParseException e) {
-            System.err.println("Error parsing response from POST request for URL path: " + urlPath);
-        }
-        return null;
-    }
+		return response;
+	}
 
-    public Response post(HttpPostMethodBuilder postMethodBuilder, NameValuePair... params) throws IOException, ParseException {
-        return post(postMethodBuilder, Arrays.asList(params));
-    }
+	public Response post(String apiParams, String urlPath, String cookie) {
+		
+		try {
+			return post(
+					httpPostMethod()
+					.withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath)
+					.withCookie(cookie),
+					convertRequestStringToList(apiParams)
+			);
+		} catch (URISyntaxException e) {
+			System.err.println("Error making creating URI bad path: " + urlPath);
+		} catch (IOException e) {
+			System.err.println("Error making GET request to URL path: " + urlPath);
+		} catch (ParseException e) {
+			System.err.println("Error parsing response from POST request for URL path: " + urlPath);
+		}
+		
+		return null;
+		
+	}
 
-    public Response post(HttpPostMethodBuilder postMethodBuilder, List<NameValuePair> params) throws IOException, ParseException {
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
+	public Response post(HttpPostMethodBuilder postMethodBuilder, NameValuePair... params) throws IOException, ParseException {
+		return post(postMethodBuilder, Arrays.asList(params));
+	}
 
-        postMethodBuilder.withUserAgent(userAgent);
-        HttpPost request = postMethodBuilder.build();
-        request.setEntity(entity);
-        return httpClient.execute(request, responseHandler);
-    }
+	public Response post(HttpPostMethodBuilder postMethodBuilder, List<NameValuePair> params) throws IOException, ParseException {
+		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
 
-    public void setUserAgent(String agent) {
-        this.userAgent = agent;
-    }
+		// Assign user agent
+		postMethodBuilder.withUserAgent(userAgent);
+		
+		// Set entity
+		HttpPost request = postMethodBuilder.build();
+		request.setEntity(entity);
+		
+		// Execute reuest
+		return httpClient.execute(request, responseHandler);
+		
+	}
 
-    private List<NameValuePair> convertRequestStringToList(String apiParams) {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        if (apiParams != null && !apiParams.isEmpty()) {
-            String[] valuePairs = apiParams.split("&");
-            for (String valuePair : valuePairs) {
-                String[] nameValue = valuePair.split("=");
-                params.add(new BasicNameValuePair(nameValue[0], nameValue[1]));
-            }
-        }
-        return params;
-    }
+	public void setUserAgent(String agent) {
+		this.userAgent = agent;
+	}
+
+	private List<NameValuePair> convertRequestStringToList(String apiParams) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		if (apiParams != null && !apiParams.isEmpty()) {
+			String[] valuePairs = apiParams.split("&");
+			for (String valuePair : valuePairs) {
+				String[] nameValue = valuePair.split("=");
+				params.add(new BasicNameValuePair(nameValue[0], nameValue[1]));
+			}
+		}
+		return params;
+	}
+	
 }

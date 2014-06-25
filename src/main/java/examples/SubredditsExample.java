@@ -36,9 +36,6 @@ public class SubredditsExample {
 		
 		// Retrieve some submissions!
 
-			try {
-				
-				
 				//List<Subreddit> getsubreddits = subrs.get(SubredditsView.NEW, 36);
 				//System.out.println("Get subreddits, size received: " + getsubreddits.size());
 				
@@ -67,14 +64,6 @@ public class SubredditsExample {
 					System.out.println(s.getDisplayName());
 				}
 				*/
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
 
 	

@@ -7,6 +7,7 @@ import java.util.List;
 import org.json.simple.parser.ParseException;
 
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.RedditConstants;
 import com.github.jreddit.utils.SubredditsView;
 
 public class ExtendedSubreddits {
@@ -18,23 +19,6 @@ public class ExtendedSubreddits {
 	}
 	
 	/**
-	 * Limit of subreddits that are retrieved per request.
-	 * Minimum: 0.
-	 * Default: 25.
-	 * Maximum: 100.
-	 * 
-	 * According to Reddit API.
-	 */
-	public static final int MAX_LIMIT = 100;
-	
-	/**
-	 * Approximately the maximum listing size, including pagination until
-	 * the end. This differs from time to time, but after some observations
-	 * this is a nice upper bound.
-	 */
-	public static final int APPROXIMATE_MAX_LISTING_SIZE = 1300;
-
-	/**
      * Search for the subreddit as the given user, using the given query, for the given amount after the given subreddit.
      * This concatenates several requests to reach the amount.
      * 
@@ -42,11 +26,9 @@ public class ExtendedSubreddits {
      * @param query		Query (only simple, Reddit does not yet support field search for subreddits)
      * @param amount	Amount to retrieve (result <= amount)
      * @param after		After which subreddit (used for pagination, leave null otherwise)
-     * @return
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
+     * @return			List of subreddits matching the search query
      */
-    public List<Subreddit> search(User user, String query, int amount, Subreddit after) throws IOException, ParseException {
+    public List<Subreddit> search(User user, String query, int amount, Subreddit after) {
     	
     	if (amount < 0) {
     		System.err.println("You cannot retrieve a negative amount of subreddits.");
@@ -60,10 +42,7 @@ public class ExtendedSubreddits {
 		while (amount >= 0) {
 			
 			// Determine how much still to retrieve in this iteration
-			int limit = MAX_LIMIT;
-			if (amount < MAX_LIMIT) {
-				limit = amount;
-			}
+			int limit = (amount < RedditConstants.MAX_LIMIT_LISTING) ? amount : RedditConstants.MAX_LIMIT_LISTING;
 			amount -= limit;
 			
 			// Retrieve submissions
@@ -98,10 +77,8 @@ public class ExtendedSubreddits {
      * @param amount	Amount to retrieve (result <= amount)
      * @param after		After which subreddit (used for pagination, leave null otherwise)
      * @return 			List of subreddits matching the search query
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      */
-    public List<Subreddit> search(String query, int amount, Subreddit after) throws IOException, ParseException {
+    public List<Subreddit> search(String query, int amount, Subreddit after) {
     	return search(null, query, amount, after);
     }
     
@@ -113,10 +90,8 @@ public class ExtendedSubreddits {
      * @param query		Query (only simple, Reddit does not yet support field search for subreddits)
      * @param amount	Amount to retrieve (result <= amount)
      * @return 			List of subreddits matching the search query
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      */
-    public List<Subreddit> search(User user, String query, int amount) throws IOException, ParseException {
+    public List<Subreddit> search(User user, String query, int amount) {
     	return search(user, query, amount, null);
     }
     
@@ -127,10 +102,8 @@ public class ExtendedSubreddits {
      * @param query		Query (only simple, Reddit does not yet support field search for subreddits)
      * @param amount	Amount to retrieve (result <= amount)
      * @return 			List of subreddits matching the search query
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      */
-    public List<Subreddit> search(String query, int amount) throws IOException, ParseException {
+    public List<Subreddit> search(String query, int amount) {
     	return search(null, query, amount);
     }
     
@@ -141,11 +114,9 @@ public class ExtendedSubreddits {
      * @param user		User
      * @param query		Query (only simple, Reddit does not yet support field search for subreddits)
      * @return 			List of subreddits matching the search query
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      */
-    public List<Subreddit> search(User user, String query) throws IOException, ParseException {
-    	return search(user, query, APPROXIMATE_MAX_LISTING_SIZE);
+    public List<Subreddit> search(User user, String query) {
+    	return search(user, query, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT);
     }
     
     /**
@@ -154,10 +125,8 @@ public class ExtendedSubreddits {
      * 
      * @param query		Query (only simple, Reddit does not yet support field search for subreddits)
      * @return 			List of subreddits matching the search query
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      */
-    public List<Subreddit> search(String query) throws IOException, ParseException {
+    public List<Subreddit> search(String query) {
     	return search(null, query);
     }
     
@@ -170,10 +139,8 @@ public class ExtendedSubreddits {
      * @param amount	Amount to retrieve (result <= amount)
      * @param after		After which subreddit (used for pagination, leave null otherwise)
      * @return			List of subreddits
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      */
-    public List<Subreddit> get(User user, SubredditsView type, int amount, Subreddit after) throws IOException, ParseException {
+    public List<Subreddit> get(User user, SubredditsView type, int amount, Subreddit after) {
     	
     	if (amount < 0) {
     		System.err.println("You cannot retrieve a negative amount of subreddits.");
@@ -187,10 +154,7 @@ public class ExtendedSubreddits {
 		while (amount >= 0) {
 			
 			// Determine how much still to retrieve in this iteration
-			int limit = MAX_LIMIT;
-			if (amount < MAX_LIMIT) {
-				limit = amount;
-			}
+			int limit = (amount < RedditConstants.MAX_LIMIT_LISTING) ? amount : RedditConstants.MAX_LIMIT_LISTING;
 			amount -= limit;
 			
 			// Retrieve submissions
@@ -228,7 +192,7 @@ public class ExtendedSubreddits {
      * @throws IOException		If connection failed
      * @throws ParseException	If parsing failed
      */
-    public List<Subreddit> get(SubredditsView type, int amount, Subreddit after) throws IOException, ParseException {
+    public List<Subreddit> get(SubredditsView type, int amount, Subreddit after) {
     	return get(null, type, amount, after);
     }
 
@@ -238,11 +202,9 @@ public class ExtendedSubreddits {
      * @param user			User
      * @param type		 	Type of subreddit 
      * @param amount		Amount to retrieve
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      * @return list of Subreddits of that type
      */
-    public List<Subreddit> get(User user, SubredditsView type, int amount) throws IOException, ParseException {
+    public List<Subreddit> get(User user, SubredditsView type, int amount) {
 		return get(user, type, amount, null);
     }
     
@@ -251,11 +213,9 @@ public class ExtendedSubreddits {
      *
      * @param type		 	Type of subreddit 
      * @param amount		Amount to retrieve
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      * @return list of Subreddits of that type
      */
-    public List<Subreddit> get(SubredditsView type, int amount) throws IOException, ParseException {
+    public List<Subreddit> get(SubredditsView type, int amount) {
 		return get(null, type, amount);
     }
     
@@ -264,12 +224,10 @@ public class ExtendedSubreddits {
      *
      * @param user			User
      * @param type		 	Type of subreddit 
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      * @return list of Subreddits of that type
      */
-    public List<Subreddit> get(User user, SubredditsView type) throws IOException, ParseException {
-		return get(user, type, APPROXIMATE_MAX_LISTING_SIZE);
+    public List<Subreddit> get(User user, SubredditsView type) {
+		return get(user, type, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT);
     }
     
     /**
@@ -277,10 +235,8 @@ public class ExtendedSubreddits {
      * 
      * @param type Type of subreddit
      * @return List of subreddits of that type
-     * @throws IOException		If connection failed
-     * @throws ParseException	If parsing failed
      */
-    public List<Subreddit> get(SubredditsView type) throws IOException, ParseException {
+    public List<Subreddit> get(SubredditsView type) {
 		return get(null, type);
     }
 
@@ -291,7 +247,7 @@ public class ExtendedSubreddits {
      * @param subredditName Name of the subreddit to retrieve
      * @return Subreddit object representing the desired subreddit, or NULL if it does not exist
      */
-    public Subreddit getByName(User user, String subredditName) throws IOException, ParseException {
+    public Subreddit getByName(User user, String subredditName) {
     	List<Subreddit> all = search(user, subredditName, 1, null);
 
     	if (all.size() == 1 && all.get(0).getDisplayName().equalsIgnoreCase(subredditName)) {
@@ -308,7 +264,7 @@ public class ExtendedSubreddits {
      * @param subredditName name of the subreddit to retrieve
      * @return Subreddit object representing the desired subreddit, or NULL if it does not exist
      */
-    public Subreddit getByName(String subredditName) throws IOException, ParseException {
+    public Subreddit getByName(String subredditName) {
     	return getByName(null, subredditName);
     }
     

@@ -40,22 +40,22 @@ public class CommentTest {
         String articleLink = "articleLink";
         String commentId = "comment";
         int parentsShown = 0;
-        int depth = 10;
+        int depth = 8;
         int limit = 20;
         CommentSort commentSort = CommentSort.CONFIDENCE;
 
         // Construct extra parameters
         String parameters = "";
-        parameters += "&depth=" + depth;
-        parameters += "&limit=" + limit;
-        parameters += "&sort=" + commentSort.getValue();
         parameters += "&comment=" + commentId;
         parameters += "&context=" + parentsShown;
-
+        parameters += "&depth=" + depth;
+        parameters += "&limit=" + limit;
+        parameters += "&sort=" + commentSort.value();
+        
         Response response = new UtilResponse("", commentsList(), 200);
-        when(restClient.get(String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, subreddit, articleLink, parameters), null)).thenReturn(response);
+        when(restClient.get(String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, articleLink, parameters), null)).thenReturn(response);
 
-        int size = comments.commentsFromArticle(subreddit, articleLink, commentId, parentsShown, depth, limit, commentSort).size();
+        int size = comments.ofSubmission(null, articleLink, commentId, parentsShown, depth, limit, commentSort).size();
         assertEquals(size, 1);
     }
 

@@ -1,13 +1,11 @@
 package com.github.jreddit.submissions;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.json.simple.parser.ParseException;
-
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.QuerySyntax;
+import com.github.jreddit.utils.RedditConstants;
 import com.github.jreddit.utils.SubmissionsGetSort;
 import com.github.jreddit.utils.SubmissionsSearchSort;
 import com.github.jreddit.utils.SubmissionsSearchTime;
@@ -15,24 +13,7 @@ import com.github.jreddit.utils.SubmissionsSearchTime;
 public class ExtendedSubmissions {
 	
 	private Submissions submissions;
-	
-	/**
-	 * Limit of submissions that are retrieved per request.
-	 * Minimum: 0.
-	 * Default: 25.
-	 * Maximum: 100.
-	 * 
-	 * According to Reddit API.
-	 */
-	public static final int MAX_LIMIT = 100;
-	
-	/**
-	 * Approximately the maximum listing size, including pagination until
-	 * the end. This differs from time to time, but after some observations
-	 * this is a nice upper bound.
-	 */
-	public static final int APPROXIMATE_MAX_LISTING_SIZE = 1300;
-	
+
 	public ExtendedSubmissions(Submissions submissions) {
 		this.submissions = submissions;
 	}
@@ -47,10 +28,8 @@ public class ExtendedSubmissions {
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
      * @param after				Submission after which the submissions need to be fetched.
      * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
      */
-    public List<Submission> get(User user, String redditName, SubmissionsGetSort sort, int amount, Submission after) throws IOException, ParseException {
+    public List<Submission> get(User user, String redditName, SubmissionsGetSort sort, int amount, Submission after) {
     	
     	if (amount < 0) {
     		System.err.println("You cannot retrieve a negative amount of submissions.");
@@ -65,10 +44,7 @@ public class ExtendedSubmissions {
 		while (amount >= 0) {
 			
 			// Determine how much still to retrieve in this iteration
-			int limit = MAX_LIMIT;
-			if (amount < MAX_LIMIT) {
-				limit = amount;
-			}
+			int limit = (amount < RedditConstants.MAX_LIMIT_LISTING) ? amount : RedditConstants.MAX_LIMIT_LISTING;
 			amount -= limit;
 			
 			// Retrieve submissions
@@ -79,7 +55,7 @@ public class ExtendedSubmissions {
 			counter += limit;
 			
 			// If the end of the submission stream has been reached
-			if (subresult.size() != limit) {
+			if (subresult.size() < limit) {
 				System.out.println("API Stream finished prematurely: received " + subresult.size() + " but wanted " + limit + ".");
 				break;
 			}
@@ -108,10 +84,8 @@ public class ExtendedSubmissions {
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
      * @param after				Submission after which to get
      * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
      */
-    public List<Submission> get(String redditName, SubmissionsGetSort sort, int amount, Submission after) throws IOException, ParseException {
+    public List<Submission> get(String redditName, SubmissionsGetSort sort, int amount, Submission after) {
     	return get(null, redditName, sort, amount, after);
     }
     
@@ -122,10 +96,8 @@ public class ExtendedSubmissions {
      * @param sort				Subreddit sorting method
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
      * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
      */
-    public List<Submission> get(User user, String redditName, SubmissionsGetSort sort, int amount) throws IOException, ParseException {
+    public List<Submission> get(User user, String redditName, SubmissionsGetSort sort, int amount) {
     	return get(user, redditName, sort, amount, null);
     }
     
@@ -137,8 +109,8 @@ public class ExtendedSubmissions {
      * @param sort			Subreddit sorting method
      * @return <code>List</code> of submissions on the subreddit.
      */
-    public List<Submission> get(User user, String redditName, SubmissionsGetSort sort) throws IOException, ParseException {
-    	return get(user, redditName, sort, APPROXIMATE_MAX_LISTING_SIZE, null);
+    public List<Submission> get(User user, String redditName, SubmissionsGetSort sort) {
+    	return get(user, redditName, sort, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT, null);
     }
     
     /**
@@ -147,10 +119,8 @@ public class ExtendedSubmissions {
      * @param sort				Subreddit sorting method
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
      * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
      */
-    public List<Submission> get(String redditName, SubmissionsGetSort sort, int amount) throws IOException, ParseException {
+    public List<Submission> get(String redditName, SubmissionsGetSort sort, int amount) {
     	return get(null, redditName, sort, amount, null);
     }
     
@@ -161,8 +131,8 @@ public class ExtendedSubmissions {
      * @param sort			Subreddit sorting method
      * @return <code>List</code> of submissions on the subreddit.
      */
-    public List<Submission> get(String redditName, SubmissionsGetSort sort) throws IOException, ParseException {
-    	return get(null, redditName, sort, APPROXIMATE_MAX_LISTING_SIZE, null);
+    public List<Submission> get(String redditName, SubmissionsGetSort sort) {
+    	return get(null, redditName, sort, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT, null);
     }
     
     /**
@@ -176,10 +146,8 @@ public class ExtendedSubmissions {
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
      * @param after				Submission after which the submissions need to be fetched.
      * @return					List of the submissions
-     * @throws IOException		Thrown if the connection failed
-     * @throws ParseException 	Thrown if the parsing of JSON failed
      */
-    public List<Submission> search(User user, String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount, Submission after) throws IOException, ParseException {
+    public List<Submission> search(User user, String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount, Submission after) {
     	
     	if (amount < 0) {
     		System.err.println("You cannot retrieve a negative amount of submissions.");
@@ -194,10 +162,7 @@ public class ExtendedSubmissions {
 		while (amount >= 0) {
 			
 			// Determine how much still to retrieve in this iteration
-			int limit = MAX_LIMIT;
-			if (amount < MAX_LIMIT) {
-				limit = amount;
-			}
+			int limit = (amount < RedditConstants.MAX_LIMIT_LISTING) ? amount : RedditConstants.MAX_LIMIT_LISTING;
 			amount -= limit;
 			
 			// Retrieve submissions
@@ -237,7 +202,7 @@ public class ExtendedSubmissions {
      * @param amount	How many to retrieve (if possible, result <= amount guaranteed)
      * @return <code>List</code> of submissions that match the query.
      */
-    public List<Submission> search(User user, String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount) throws IOException, ParseException {
+    public List<Submission> search(User user, String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount) {
     	return search(user, query, sort, time, amount, null);
     }
     
@@ -250,8 +215,8 @@ public class ExtendedSubmissions {
      * @param time		Search time
      * @return <code>List</code> of submissions that match the query.
      */
-    public List<Submission> search(User user, String query, SubmissionsSearchSort sort, SubmissionsSearchTime time) throws IOException, ParseException {
-    	return search(user, query, sort, time, APPROXIMATE_MAX_LISTING_SIZE);
+    public List<Submission> search(User user, String query, SubmissionsSearchSort sort, SubmissionsSearchTime time) {
+    	return search(user, query, sort, time, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT);
     }
     
     /**
@@ -265,7 +230,7 @@ public class ExtendedSubmissions {
      * @param after		Submission after which need to be retrieved
      * @return <code>List</code> of submissions that match the query.
      */
-    public List<Submission> search(String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount, Submission after) throws IOException, ParseException {
+    public List<Submission> search(String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount, Submission after) {
     	return search(null, query, sort, time, amount, after);
     }
     
@@ -278,7 +243,7 @@ public class ExtendedSubmissions {
      * @param amount	How many to retrieve (if possible, result <= amount guaranteed)
      * @return <code>List</code> of submissions that match the query.
      */
-    public List<Submission> search(String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount) throws IOException, ParseException {
+    public List<Submission> search(String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount) {
     	return search(query, sort, time, amount, null);
     }
     
@@ -290,8 +255,8 @@ public class ExtendedSubmissions {
      * @param time		Search time
      * @return <code>List</code> of submissions that match the query.
      */
-    public List<Submission> search(String query, SubmissionsSearchSort sort, SubmissionsSearchTime time) throws IOException, ParseException {
-    	return search(query, sort, time, APPROXIMATE_MAX_LISTING_SIZE);
+    public List<Submission> search(String query, SubmissionsSearchSort sort, SubmissionsSearchTime time) {
+    	return search(query, sort, time, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT);
     }
     
 	

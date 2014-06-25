@@ -24,7 +24,11 @@ public class SubmissionsExample {
 	    restClient.setUserAgent("bot/1.0 by name");
 
 		// Connect the user
-	    User user = new User(restClient, "username", "password");
+	    User user = new User(
+	    		restClient, 
+	    		Authentication.getUsername(), Authentication.getPassword()
+	    );
+	    
 		try {
 			user.connect();
 		} catch (IOException e1) {
@@ -37,22 +41,12 @@ public class SubmissionsExample {
 		ExtendedSubmissions subms = new ExtendedSubmissions(new Submissions(restClient));
 		
 		// Retrieve some submissions!
-		try {
-			int desired1 = 322;
-			List<Submission> submissions1 = subms.get("askreddit", SubmissionsGetSort.RISING, desired1);
+			int desired1 = 800;
+			List<Submission> submissions1 = subms.get("flowers", SubmissionsGetSort.TOP, desired1);
 			System.out.println("API Caller (get): received " + submissions1.size() + " of the desired " + desired1 + " submissions.");
-			
 			int desired2 = 142;
 			//List<Submission> submissions2 = subms.search("subreddit:askreddit AND title:valentine", SubmissionsSearchSort.NEW, SubmissionsSearchTime.YEAR, desired2);
 			//System.out.println("API Caller (search): received " + submissions2.size() + " of the desired " + desired2 + " submissions.");
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	
 	}

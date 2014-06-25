@@ -41,15 +41,15 @@ public class Comments {
     
     /**
      * Parses a JSON feed of comments from Reddit (URL) into a nice list of Comment objects
-     * maintaining the order. This parses ONLY the first depth of comments.
+     * maintaining the order. This parses ONLY the first depth of comments. Only call
+     * this function to parse shallow comment listings (e.g. of the user overview).
      * 
      * @param user		User
      * @param url		URL for the request
-     * @param article	Are it comments of an article (submission) or from a listing (e.g. from a user overview)
      * 
      * @return Parsed list of comments.
      */
-    public List<Comment> parseBreadth(User user, String url, boolean article) {
+    public List<Comment> parseBreadth(User user, String url) {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -59,11 +59,10 @@ public class Comments {
         
         // Send request to reddit server via REST client
         Object response = restClient.get(url, cookie).getResponseObject();
-        System.out.println(url);
         
-        if (response instanceof JSONObject || response instanceof JSONArray) {
+        if (response instanceof JSONObject) {
         	
-	        JSONObject object =  (JSONObject) ( (article) ? ((JSONArray) response).get(1) : response );
+	        JSONObject object =  (JSONObject) response;
 	        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 	        
 	        // Iterate over the submission results
@@ -88,7 +87,7 @@ public class Comments {
 	        }
         
         } else {
-        	System.err.println("Cannot cast to JSON Object: '" + response.toString() + "'");
+        	throw new IllegalArgumentException("Parsing failed because JSON is not from a shallow comment listing.");
         }
 
         // Finally return list of submissions 
@@ -103,11 +102,10 @@ public class Comments {
      * 
      * @param user		User
      * @param url		URL for the request
-     * @param article	Are it comments of an article (submission) or from a listing (e.g. from a user overview)
      * 
      * @return Parsed list of comments.
      */
-    public List<Comment> parseDepth(User user, String url, boolean article) {
+    public List<Comment> parseDepth(User user, String url) {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -118,11 +116,14 @@ public class Comments {
         // Send request to reddit server via REST client
         Object response = restClient.get(url, cookie).getResponseObject();
         
-        if (response instanceof JSONObject || response instanceof JSONArray) {
+        
+        if (response instanceof JSONArray) {
         	
-        	JSONObject object =  (JSONObject) ( (article) ? ((JSONArray) response).get(1) : response );
+        	JSONObject object =  (JSONObject) ((JSONArray) response).get(1);
         	parseRecursive(comments, object);
 	        
+        } else {
+        	throw new IllegalArgumentException("Parsing failed because JSON input is not from a submission.");
         }
         
         return comments;
@@ -166,15 +167,15 @@ public class Comments {
 	            	
 	            	// Dig towards the replies
 	            	JSONObject replies = (JSONObject) o;
-	            	parseRecursive(comments, replies);
+	            	parseRecursive(comment.getReplies(), replies);
 
 	            }
 	            
             } else if (kind.equals(Kind.MORE.value())) {
             	
-	            data = (JSONObject) data.get("data");
-	            JSONArray children = (JSONArray) data.get("children");
-	            System.out.println("\t+ More children: " + children);
+	            //data = (JSONObject) data.get("data");
+	            //JSONArray children = (JSONArray) data.get("children");
+	            //System.out.println("\t+ More children: " + children);
 	            
             }
 
@@ -211,7 +212,7 @@ public class Comments {
     	params = ParamFormatter.addParameter(params, "show", show);
     	
         // Retrieve submissions from the given URL
-        return parseBreadth(user, String.format(ApiEndpointUtils.USER_COMMENTS, username, params), false);
+        return parseBreadth(user, String.format(ApiEndpointUtils.USER_COMMENTS, username, params));
         
     }
     
@@ -243,8 +244,8 @@ public class Comments {
     			(time != null) ? time.value() : null,
     			String.valueOf(count),
     			String.valueOf(limit),
-    			(after != null) ? after.getId() : null,
-    			(before != null) ? before.getId() : null, 
+    			(after != null) ? after.getFullname() : null,
+    			(before != null) ? before.getFullname() : null, 
     			(show_given) ? "given" : null
     	);
     	
@@ -293,7 +294,7 @@ public class Comments {
     	params = ParamFormatter.addParameter(params, "sort", sort);
     	
         // Retrieve submissions from the given URL
-        return parseBreadth(user, String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, submissionId, params), true);
+        return parseDepth(user, String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, submissionId, params));
         
     }
     
@@ -306,7 +307,7 @@ public class Comments {
      * @param parentsShown 		(Optional, set -1 is not used) An integer between 0 and 8 representing the number of parents shown for the comment identified by <code>commentId</code>
      * @param depth        		(Optional, set -1 if not used) Integer representing the maximum depth of subtrees in the thread
      * @param limit        		(Optional, set -1 if not used) Integer representing the maximum number of comments to return
-     * @param sort  		(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
+     * @param sort  			(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
      * @return Comments for an article.
      */
     public List<Comment> ofSubmission(User user, String submissionId, String commentId, int parentsShown, int depth, int limit, CommentSort sort) {
@@ -340,11 +341,50 @@ public class Comments {
      * @param parentsShown 		(Optional, set -1 is not used) An integer between 0 and 8 representing the number of parents shown for the comment identified by <code>commentId</code>
      * @param depth        		(Optional, set -1 if not used) Integer representing the maximum depth of subtrees in the thread
      * @param limit        		(Optional, set -1 if not used) Integer representing the maximum number of comments to return
-     * @param sort  		(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
+     * @param sort  			(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
      * @return Comments for an article.
      */
     public List<Comment> ofSubmission(User user, Submission submission, String commentId, int parentsShown, int depth, int limit, CommentSort sort) {
         return ofSubmission(user, submission.getIdentifier(), commentId, parentsShown, depth, limit, sort);
     }
+    
+	/**
+	 * Flatten the comment tree.
+	 * The original comment tree is not overwritten.
+	 * 
+	 * @param cs		List of comments that you get returned from one of the other methods here
+	 * @param target	List in which to place the flattend comment tree.
+	 */
+	public static void flattenCommentTree(List<Comment> cs, List<Comment> target) {
+		for (Comment c : cs) {
+			target.add(c);
+			flattenCommentTree(c.getReplies(), target);
+		}
+	}
+	
+	/**
+	 * Print the given comment tree.
+	 * @param cs 	List of comments that you get returned from one of the other methods here
+	 */
+	public static void printCommentTree(List<Comment> cs) {
+		for (Comment c : cs) {
+			printCommentTree(c, 0);
+		}
+	}
+	
+	/**
+	 * Print the comment at a specific level. Recursive function.
+	 * @param c			Comment
+	 * @param level		Level to place at
+	 */
+	private static void printCommentTree(Comment c, int level) {
+		for (int i = 0; i < level; i++) {
+			System.out.print("\t");
+		}
+		System.out.println(c);
+		for (Comment child : c.getReplies()) {
+			printCommentTree(child, level + 1);
+		}
+	}
     
 }

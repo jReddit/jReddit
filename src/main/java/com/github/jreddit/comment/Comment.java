@@ -3,6 +3,9 @@ package com.github.jreddit.comment;
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToInteger;
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.json.simple.JSONObject;
 
 /**
@@ -22,7 +25,8 @@ public class Comment {
     private String body;            // The actual body
     private String edited;          // Edited timestamp
     private String created;         // Created UTC timestamp
-    private String replies;         // Replies
+    private boolean hasReplies;
+    private List<Comment> replies;         // Replies
     private Integer upvotes;        // Number of upvotes that this body received
     private Integer downvotes;      // Number of downvotes that this body received
 
@@ -37,14 +41,32 @@ public class Comment {
             this.setBody(safeJsonToString(obj.get("body")));
             this.setEdited(safeJsonToString(obj.get("edited")));
             this.setCreated(safeJsonToString(obj.get("created_utc")));
-            this.setReplies(safeJsonToString(obj.get("replies")));
+            hasReplies = (obj.get("replies") != null) ? !safeJsonToString(obj.get("replies")).isEmpty() : false;
+            this.replies = new LinkedList<Comment>();
             this.setUpvotes(safeJsonToInteger(obj.get("ups")));
             this.setDownvotes(safeJsonToInteger(obj.get("downs")));
 
         } catch (Exception e) {
-            System.err.println("Error mapping JSONObject to Comment");
+        	e.printStackTrace();
+        	throw new IllegalArgumentException("JSON Object could not be parsed into a Comment. Provide a JSON Object with a valid structure.");
         }
 
+    }
+    
+    public void addReply(Comment c) {
+    	this.replies.add(c);
+    }
+    
+    public List<Comment> getReplies() {
+    	return this.replies;
+    }
+    
+    public void setReplies(List<Comment> replies) {
+    	this.replies = replies;
+    }
+    
+    public boolean hasRepliesSomewhere() {
+    	return hasReplies;
     }
     
     public String getId() {
@@ -101,14 +123,6 @@ public class Comment {
 
     public void setCreated(String created) {
         this.created = created;
-    }
-
-    public String getReplies() {
-        return replies;
-    }
-
-    public void setReplies(String replies) {
-        this.replies = replies;
     }
 
     public Integer getUpvotes() {

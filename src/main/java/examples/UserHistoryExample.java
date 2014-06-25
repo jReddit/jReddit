@@ -1,17 +1,18 @@
+package examples;
+
+import java.util.List;
 
 import com.github.jreddit.submissions.Submission;
 import com.github.jreddit.user.User;
-import com.github.jreddit.utils.restclient.RestClient;
 import com.github.jreddit.utils.restclient.HttpRestClient;
-
-import java.util.List;
+import com.github.jreddit.utils.restclient.RestClient;
 
 /**
  * Simple bot to print submissions from your profile...
  * 
  * @author Evin Ugur
  */
-public final class OverviewBot {
+public class UserHistoryExample {
 	public static void main(String[] args) throws Exception {
         RestClient restClient = new HttpRestClient();
         restClient.setUserAgent("Overview-Bot");

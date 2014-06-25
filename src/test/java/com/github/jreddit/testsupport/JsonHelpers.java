@@ -1,9 +1,15 @@
 package com.github.jreddit.testsupport;
 
+import java.util.LinkedList;
+
+import com.github.jreddit.comment.Comment;
 import com.github.jreddit.utils.Kind;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToInteger;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
 import static java.util.Collections.addAll;
 
 @SuppressWarnings("unchecked") //JSONSimple is not great..
@@ -144,7 +150,7 @@ public class JsonHelpers {
 
         JSONObject message = new JSONObject();
         message.put("data", data);
-        message.put("kind", Kind.MESSAGE.getValue());
+        message.put("kind", Kind.MESSAGE.value());
         return message;
     }
 
@@ -155,10 +161,15 @@ public class JsonHelpers {
         data.put("name", fullname);
         data.put("parent_id", parentId);
         data.put("body", "message body");
-
+        data.put("edited", "edited");
+        data.put("created_utc", "created");
+        data.put("replies", "");
+        data.put("ups", "10");
+        data.put("downs", "10");
+        
         JSONObject message = new JSONObject();
         message.put("data", data);
-        message.put("kind", Kind.COMMENT.getValue());
+        message.put("kind", Kind.COMMENT.value());
         return message;
     }
 

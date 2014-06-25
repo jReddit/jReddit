@@ -17,11 +17,13 @@ import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.jreddit.submissions.SubmissionParams.SearchSort;
-import com.github.jreddit.submissions.SubmissionParams.SearchTime;
-import com.github.jreddit.submissions.SubmissionParams.SubredditSort;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.user.User;
+import com.github.jreddit.utils.QuerySyntax;
+import com.github.jreddit.utils.RedditConstants;
+import com.github.jreddit.utils.SubmissionsGetSort;
+import com.github.jreddit.utils.SubmissionsSearchSort;
+import com.github.jreddit.utils.SubmissionsSearchTime;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 
@@ -44,20 +46,21 @@ public class SubmissionsTest {
     public void testSubmissionsWithinLimit() throws IOException, ParseException {
     	Response response = new UtilResponse(null, submissionListings(), 50);
     	
-        when(restClient.get("/r/" + REDDIT_NAME + "/new.json?limit=50", COOKIE)).thenReturn(response);
+        when(restClient.get("/r/" + REDDIT_NAME + ".json?&sort=new&limit=50", COOKIE)).thenReturn(response);
         when(user.getCookie()).thenReturn(COOKIE);
 
-         List<Submission> frontPage = underTest.getLimited(user, REDDIT_NAME, SubredditSort.NEW, 50, null);
-         assertEquals(frontPage.size(), 2);
+        List<Submission> frontPage = underTest.ofSubreddit(user, REDDIT_NAME, SubmissionsGetSort.NEW, -1, 50, null, null, false);
+        assertEquals(2, frontPage.size());
+        
     	
     }
     
     @Test
     public void testGetSubmissions() throws InterruptedException, IOException, ParseException {
         UtilResponse response = new UtilResponse(null, submissionListings(), 200);
-        when(restClient.get("/r/funny/new.json" + "?limit=" + Submissions.MAX_LIMIT, null)).thenReturn(response);
-
-        List<Submission> subs = underTest.get("funny", SubmissionParams.SubredditSort.NEW);
+        when(restClient.get("/r/funny.json" + "?&sort=new&limit=" + RedditConstants.MAX_LIMIT_LISTING, null)).thenReturn(response);
+        
+        List<Submission> subs = underTest.ofSubreddit(user, "funny", SubmissionsGetSort.NEW, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
         assertNotNull(subs);
         assertEquals(subs.size(), 2);
     }
@@ -65,9 +68,9 @@ public class SubmissionsTest {
     @Test
     public void testSearchSubmissions() throws InterruptedException, IOException, ParseException {
         UtilResponse response = new UtilResponse(null, submissionListings(), 200);
-        when(restClient.get("/search.json?q=query&sort=new&t=all&limit=" + Submissions.MAX_LIMIT, null)).thenReturn(response);
+        when(restClient.get("/search.json?&q=query&syntax=lucene&sort=new&t=all&limit=" + RedditConstants.MAX_LIMIT_LISTING, null)).thenReturn(response);
 
-        List<Submission> subs = underTest.search("query", SearchSort.NEW, SearchTime.ALL);
+        List<Submission> subs = underTest.search(user, "query", QuerySyntax.LUCENE, SubmissionsSearchSort.NEW, SubmissionsSearchTime.ALL, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
         assertNotNull(subs);
         assertEquals(subs.size(), 2);
     }
@@ -81,10 +84,12 @@ public class SubmissionsTest {
 
         JSONObject foo = new JSONObject();
         foo.put("data", submission);
+        foo.put("kind", "t3");
 
         JSONObject bar = new JSONObject();
         bar.put("data", submission1);
-
+        bar.put("kind", "t3");
+        
         return redditListing(foo, bar);
     }
 }
