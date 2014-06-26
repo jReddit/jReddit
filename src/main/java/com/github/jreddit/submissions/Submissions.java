@@ -21,6 +21,7 @@ import com.github.jreddit.utils.SubmissionsSearchSort;
 import com.github.jreddit.utils.SubmissionsSearchTime;
 import com.github.jreddit.utils.UserOverviewSort;
 import com.github.jreddit.utils.UserSubmissionsCategory;
+import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 
 
@@ -64,11 +65,20 @@ public class Submissions {
         List<Submission> submissions = new LinkedList<Submission>();
         
         // Send request to reddit server via REST client
-        Object response = restClient.get(url, cookie).getResponseObject();
+        Response r = restClient.get(url, cookie);
+        if (r == null) {
+        	System.err.println("Response failed (see reason above this line).");
+        	return null;
+        }
+        Object response = r.getResponseObject();
         
         if (response instanceof JSONObject) {
         	
 	        JSONObject object = (JSONObject) response;
+	        if (object.get("error") != null) {
+	        	System.err.println("Response received contained an error: " + object.get("error"));
+	        	return null;
+	        }
 	        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 
 	        // Iterate over the submission results

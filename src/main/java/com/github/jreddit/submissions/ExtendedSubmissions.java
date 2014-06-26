@@ -51,6 +51,9 @@ public class ExtendedSubmissions {
 			
 			// Retrieve submissions
 			List<Submission> subresult = submissions.ofSubreddit(user, redditName, sort, counter, limit, after, null, true);
+			if (subresult == null) {
+				return null;
+			}
 			result.addAll(subresult);
 			
 			// Increment counter
@@ -58,7 +61,7 @@ public class ExtendedSubmissions {
 			
 			// If the end of the submission stream has been reached
 			if (subresult.size() < limit) {
-				System.out.println("API Stream finished prematurely: received " + subresult.size() + " but wanted " + limit + ".");
+				// System.out.println("API Stream finished prematurely: received " + subresult.size() + " but wanted " + limit + ".");
 				break;
 			}
 			
@@ -168,6 +171,9 @@ public class ExtendedSubmissions {
 			
 			// Retrieve submissions
 			List<Submission> subresult = submissions.search(user, query, QuerySyntax.LUCENE, sort, time, counter, limit, after, null, true);
+			if (subresult == null) {
+				return null;
+			}
 			result.addAll(subresult);
 			
 			// Increment counter
@@ -292,6 +298,9 @@ public class ExtendedSubmissions {
 			
 			// Retrieve submissions
 			List<Submission> subresult = submissions.ofUser(user, username, category, sort, counter, limit, after, null, true);
+			if (subresult == null) {
+				return null;
+			}
 			result.addAll(subresult);
 			
 			// Increment counter
@@ -299,7 +308,7 @@ public class ExtendedSubmissions {
 			
 			// If the end of the submission stream has been reached
 			if (subresult.size() != limit) {
-				System.out.println("API Stream finished prematurely: received " + subresult.size() + " but wanted " + limit + ".");
+				// System.out.println("API Stream finished prematurely: received " + subresult.size() + " but wanted " + limit + ".");
 				break;
 			}
 			

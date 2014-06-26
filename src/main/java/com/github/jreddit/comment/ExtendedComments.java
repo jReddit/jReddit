@@ -92,6 +92,9 @@ public class ExtendedComments {
 			
 			// Retrieve comments
 			List<Comment> subresult = comments.ofUser(user, username, sort, time, counter, limit, after, null, true);
+			if (subresult == null) {
+				return null;
+			}
 			result.addAll(subresult);
 			
 			// Increment counter
@@ -99,7 +102,7 @@ public class ExtendedComments {
 			
 			// If the end of the comment stream has been reached
 			if (subresult.size() != limit) {
-				System.out.println("API Stream finished prematurely: received " + subresult.size() + " but wanted " + limit + ".");
+				//System.out.println("API Stream finished prematurely: received " + subresult.size() + " but wanted " + limit + ".");
 				break;
 			}
 			

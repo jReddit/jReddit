@@ -47,11 +47,14 @@ public class ExtendedSubreddits {
 			
 			// Retrieve submissions
 			List<Subreddit> subresult = subreddits.search(user, query, -1, limit, after, null);
+			if (subresult == null) {
+				return null;
+			}
 			result.addAll(subresult);
 			
 			// If the end of the submission stream has been reached
 			if (subresult.size() != limit) {
-				System.out.println("API Stream finished prematurely: received " + subresult.size() + " subreddits but wanted " + limit + ".");
+				//System.out.println("API Stream finished prematurely: received " + subresult.size() + " subreddits but wanted " + limit + ".");
 				break;
 			}
 			
@@ -159,11 +162,14 @@ public class ExtendedSubreddits {
 			
 			// Retrieve submissions
 			List<Subreddit> subresult = subreddits.get(user, type, -1, limit, after, null);
+			if (subresult == null) {
+				return null;
+			}
 			result.addAll(subresult);
 			
 			// If the end of the submission stream has been reached
 			if (subresult.size() != limit) {
-				System.out.println("API Stream finished prematurely: received " + subresult.size() + " subreddits but wanted " + limit + ".");
+				//System.out.println("API Stream finished prematurely: received " + subresult.size() + " subreddits but wanted " + limit + ".");
 				break;
 			}
 			
