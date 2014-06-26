@@ -19,6 +19,8 @@ import com.github.jreddit.utils.RedditConstants;
 import com.github.jreddit.utils.SubmissionsGetSort;
 import com.github.jreddit.utils.SubmissionsSearchSort;
 import com.github.jreddit.utils.SubmissionsSearchTime;
+import com.github.jreddit.utils.UserOverviewSort;
+import com.github.jreddit.utils.UserSubmissionsCategory;
 import com.github.jreddit.utils.restclient.RestClient;
 
 
@@ -114,7 +116,7 @@ public class Submissions {
      * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
-    public List<Submission> ofSubreddit(User user, String subreddit, String sort, String count, String limit, String after, String before, String show) {
+    protected List<Submission> ofSubreddit(User user, String subreddit, String sort, String count, String limit, String after, String before, String show) {
     	assert subreddit != null && user != null;
     	
     	// Encode the reddit name for the URL:
@@ -188,7 +190,7 @@ public class Submissions {
      * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
-    public List<Submission> search(User user, String query, String syntax, String sort, String time, String count, String limit, String after, String before, String show) {
+    protected List<Submission> search(User user, String query, String syntax, String sort, String time, String count, String limit, String after, String before, String show) {
     	assert query != null && user != null;
     	
     	// Format parameters
@@ -248,6 +250,83 @@ public class Submissions {
     			(after != null) ? after.getFullName() : "",
     			(before != null) ? before.getFullName() : "",
     			(show_all) ? "all" : ""		
+    	);
+    }
+    
+    /**
+     * Get the submissions of a user.
+     * In this variant all parameters are Strings.
+     *
+     * @param user				(Optional, set null/empty if not used) The user as whom to retrieve the comments
+     * @param username	 		Username of the user you want to retrieve from.
+     * @param category    		(Optional, set null/empty if not used) Category in the user overview to retrieve submissions from
+     * @param sort	    		(Optional, set null/empty if not used) Sorting method.
+     * @param time		 		(Optional, set null/empty is not used) Time window
+     * @param count        		(Optional, set null/empty if not used) Number at which the counter starts
+     * @param limit        		(Optional, set null/empty if not used) Integer representing the maximum number of comments to return
+     * @param after				(Optional, set null/empty if not used) After which comment to retrieve
+     * @param before			(Optional, set null/empty if not used) Before which comment to retrieve
+     * @param show				(Optional, set null/empty if not used) Show parameter ('given' is only acceptable value)
+     * 
+     * @return Comments of a user.
+     */
+    protected List<Submission> ofUser(User user, String username, String category, String sort, String count, String limit, String after, String before, String show) {
+    	
+    	// Format parameters
+    	String params = "";
+    	params = ParamFormatter.addParameter(params, "sort", sort);
+    	params = ParamFormatter.addParameter(params, "count", count);
+    	params = ParamFormatter.addParameter(params, "limit", limit);
+    	params = ParamFormatter.addParameter(params, "after", after);
+    	params = ParamFormatter.addParameter(params, "before", before);
+    	params = ParamFormatter.addParameter(params, "show", show);
+    	
+        // Retrieve submissions from the given URL
+        return parse(user, String.format(ApiEndpointUtils.USER_SUBMISSIONS_INTERACTION, username, category, params));
+        
+    }
+    
+    /**
+     * Get the submissions of a user.
+     * In this variant all parameters are Strings.
+     *
+     * @param user				(Optional, set null if not used) The user as whom to retrieve the comments
+     * @param username	 		Username of the user you want to retrieve from.
+     * @param category    		Category in the user overview to retrieve submissions from
+     * @param sort	    		(Optional, set null if not used) Sorting method.
+     * @param time		 		(Optional, set null is not used) Time window
+     * @param count        		(Optional, set -1 if not used) Number at which the counter starts
+     * @param limit        		(Optional, set -1 if not used) Integer representing the maximum number of comments to return
+     * @param after				(Optional, set null if not used) After which comment to retrieve
+     * @param before			(Optional, set null if not used) Before which comment to retrieve
+     * @param show				(Optional, set false if not used) Show parameter ('given' is only acceptable value)
+     * 
+     * @return Submissions of a user.
+     */
+    public List<Submission> ofUser(User user, String username, UserSubmissionsCategory category, UserOverviewSort sort, int count, int limit, Submission after, Submission before, boolean show_given) {
+    	
+    	if (username == null || username.isEmpty()) {
+    		throw new IllegalArgumentException("The username must be defined.");
+    	}
+
+    	if (category == null) {
+    		throw new IllegalArgumentException("The category must be defined.");
+    	}
+    	
+    	if (limit < -1 || limit > RedditConstants.MAX_LIMIT_LISTING) {
+    		throw new IllegalArgumentException("The limit needs to be between 0 and 100 (or -1 for default).");
+    	}
+    	
+    	return ofUser(
+    			user, 
+    			username,
+    			(category != null) ? category.value() : "",
+    			(sort != null) ? sort.value() : "",
+    			String.valueOf(count),
+    			String.valueOf(limit),
+    			(after != null) ? after.getFullName() : "",
+    			(before != null) ? before.getFullName() : "",
+    			(show_given) ? "given" : ""		
     	);
     }
 

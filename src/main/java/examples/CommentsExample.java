@@ -63,7 +63,7 @@ public class CommentsExample {
 		*/
 		
 		// Handle to ExtendedComments, which offers functionality beyond the Reddit API
-		ExtendedComments extendedComs = new ExtendedComments(new Comments(restClient));
+		ExtendedComments extendedComs = new ExtendedComments(coms);
 		
 		// Retrieve the top 50 first level comments, and all their (up to 500) subcomments each
 		System.out.println("\n============== Extended submission comments retrieval ==============");
