@@ -56,7 +56,7 @@ public class CommentTest {
         Response response = new UtilResponse("", commentsList(), 200);
         when(restClient.get(String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, articleLink, parameters), null)).thenReturn(response);
 
-        int size = comments.ofSubmission(null, articleLink, commentId, parentsShown, depth, limit, commentSort).size();
+        int size = comments.ofSubmission(articleLink, commentId, parentsShown, depth, limit, commentSort).size();
         assertEquals(size, 1);
     }
 

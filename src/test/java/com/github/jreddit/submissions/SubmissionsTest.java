@@ -8,7 +8,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import java.io.IOException;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class SubmissionsTest {
     public void setUp() {
         user = mock(User.class);
         restClient = mock(RestClient.class);
-        underTest = new Submissions(restClient);
+        underTest = new Submissions(restClient, user);
     }
     
     @Test
@@ -51,7 +52,8 @@ public class SubmissionsTest {
         when(restClient.get("/r/" + REDDIT_NAME + ".json?&sort=new&limit=50", COOKIE)).thenReturn(response);
         when(user.getCookie()).thenReturn(COOKIE);
 
-        List<Submission> frontPage = underTest.ofSubreddit(user, REDDIT_NAME, SubmissionSort.NEW, -1, 50, null, null, false);
+        List<Submission> frontPage = underTest.ofSubreddit(REDDIT_NAME, SubmissionSort.NEW, -1, 50, null, null, false);
+        verify(restClient, times(1)).get("/r/" + REDDIT_NAME + ".json?&sort=new&limit=50", COOKIE);
         assertEquals(2, frontPage.size());
         
     	
@@ -62,7 +64,7 @@ public class SubmissionsTest {
         UtilResponse response = new UtilResponse(null, submissionListings(), 200);
         when(restClient.get("/r/funny.json" + "?&sort=new&limit=" + RedditConstants.MAX_LIMIT_LISTING, null)).thenReturn(response);
         
-        List<Submission> subs = underTest.ofSubreddit(user, "funny", SubmissionSort.NEW, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
+        List<Submission> subs = underTest.ofSubreddit("funny", SubmissionSort.NEW, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
         assertNotNull(subs);
         assertEquals(subs.size(), 2);
     }
@@ -72,7 +74,7 @@ public class SubmissionsTest {
         UtilResponse response = new UtilResponse(null, submissionListings(), 200);
         when(restClient.get("/search.json?&q=query&syntax=lucene&sort=new&t=all&limit=" + RedditConstants.MAX_LIMIT_LISTING, null)).thenReturn(response);
 
-        List<Submission> subs = underTest.search(user, "query", QuerySyntax.LUCENE, SearchSort.NEW, TimeSpan.ALL, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
+        List<Submission> subs = underTest.search("query", QuerySyntax.LUCENE, SearchSort.NEW, TimeSpan.ALL, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
         assertNotNull(subs);
         assertEquals(subs.size(), 2);
     }

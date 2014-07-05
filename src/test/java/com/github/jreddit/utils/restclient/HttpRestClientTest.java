@@ -36,7 +36,7 @@ public class HttpRestClientTest {
 		subject.get("jkldsja8989&*&*&(98989s89f89s89/\\/// %39;22090", mockCookie);
 	}
 	
-	@Test/*(expected=GETRequestFailedException.class)*/
+	@Test(expected=RetrievalFailedException.class)
 	public void testInvalidURI() {
 		subject.get("/this/is/not/part/of/reddit", mockCookie);
 	}

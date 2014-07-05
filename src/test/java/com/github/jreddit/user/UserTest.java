@@ -48,7 +48,7 @@ public class UserTest {
         underTest.connect();
     }
 
-    @Test
+    /*@Test
     public void getSubscriptions() {
         response = new UtilResponse(null, subredditListingForFunny(), 200);
         when(restClient.get(ApiEndpointUtils.USER_GET_SUBSCRIBED, COOKIE)).thenReturn(response);
@@ -91,5 +91,5 @@ public class UserTest {
 
         UserInfo userInfo = underTest.about(UNKNOWN_USERNAME);
         assertNull(userInfo);
-    }
+    }*/
 }

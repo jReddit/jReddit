@@ -2,6 +2,7 @@ package examples;
 
 import java.util.List;
 
+import com.github.jreddit.action.SubmissionActions;
 import com.github.jreddit.entity.Submission;
 import com.github.jreddit.entity.User;
 import com.github.jreddit.retrieval.Submissions;
@@ -29,8 +30,10 @@ public class UpvoteExample {
 		Submissions subms = new Submissions(restClient, user);
 		List<Submission> submissions = subms.ofSubreddit("programming", SubmissionSort.HOT, 0, 25, null, null, true);
 
+		SubmissionActions submAct = new SubmissionActions(restClient, user);
+		
 		for (Submission submission : submissions) {
-			submission.upVote();
+			submAct.upVote(submission);
 		}
 		
 	}

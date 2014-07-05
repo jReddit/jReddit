@@ -43,7 +43,7 @@ public class SubmissionTest {
         Mockito.when(user.getModhash()).thenReturn(MOD_HASH);
     }
 
-    @Test
+    /*@Test
     public void markNSFW() throws IOException, ParseException {
         underTest = new Submission(createSubmission(REDDIT_OBJ_FULLNAME, false));
         underTest.setUser(user);
@@ -83,5 +83,5 @@ public class SubmissionTest {
 
         verify(restClient).post("id=" + REDDIT_OBJ_FULLNAME + "&uh=" + MOD_HASH,
                 SUBMISSION_UNSAVE, COOKIE);
-    }
+    }*/
 }

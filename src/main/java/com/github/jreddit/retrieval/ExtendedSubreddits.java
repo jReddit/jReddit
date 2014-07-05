@@ -153,7 +153,7 @@ public class ExtendedSubreddits {
      * @return list of Subreddits of that type
      */
     public List<Subreddit> get(SubredditsView type, int amount) {
-		return get(type, amount);
+		return get(type, amount, null);
     }
     
     /**
