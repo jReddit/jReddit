@@ -1,5 +1,6 @@
 package com.github.jreddit.comment;
 
+import com.github.jreddit.exception.InvalidUserException;
 import com.github.jreddit.testsupport.JsonHelpers;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.ApiEndpointUtils;
@@ -54,7 +55,23 @@ public class CommentTest {
         when(restClient.get(String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, subreddit, articleLink, parameters), null)).thenReturn(response);
 
         int size = comments.commentsFromArticle(subreddit, articleLink, commentId, parentsShown, depth, limit, commentSort).size();
-        assertEquals(size, 1);
+        assertEquals(1, size);
+    }
+
+    @Test
+    public void commentsFromUser() throws InvalidUserException {
+        String username = "author";
+        CommentSort commentSort = CommentSort.NEW;
+
+        JSONObject comment = createMockComment("id", "author", "full_name_of_comment", "parent_id");
+        JSONObject comment2 = createMockComment("ie", "author", "full_name_of_comment", "parent_id");
+        JSONObject commentListing = JsonHelpers.redditListing(comment, comment2);
+
+        Response response = new UtilResponse("", commentListing, 200);
+        when(restClient.get(String.format(ApiEndpointUtils.USER_COMMENTS, username, commentSort.getValue()), null)).thenReturn(response);
+
+        int size = comments.comments(username, commentSort).size();
+        assertEquals(2, size);
     }
 
     private JSONArray commentsList() {
