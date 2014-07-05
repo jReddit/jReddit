@@ -5,15 +5,15 @@ import java.util.List;
 
 import org.json.simple.parser.ParseException;
 
-import com.github.jreddit.submissions.ExtendedSubmissions;
-import com.github.jreddit.submissions.Submission;
-import com.github.jreddit.submissions.Submissions;
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.SubmissionsGetSort;
-import com.github.jreddit.utils.SubmissionsSearchSort;
-import com.github.jreddit.utils.SubmissionsSearchTime;
-import com.github.jreddit.utils.UserOverviewSort;
-import com.github.jreddit.utils.UserSubmissionsCategory;
+import com.github.jreddit.entity.Submission;
+import com.github.jreddit.entity.User;
+import com.github.jreddit.retrieval.ExtendedSubmissions;
+import com.github.jreddit.retrieval.Submissions;
+import com.github.jreddit.retrieval.params.SubmissionSort;
+import com.github.jreddit.retrieval.params.SearchSort;
+import com.github.jreddit.retrieval.params.TimeSpan;
+import com.github.jreddit.retrieval.params.UserOverviewSort;
+import com.github.jreddit.retrieval.params.UserSubmissionsCategory;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
 
@@ -45,21 +45,21 @@ public class SubmissionsExample {
 		*/
 		
 		// Handle to Submissions, which offers the basic API functionality
-		Submissions subms = new Submissions(restClient);
+		Submissions subms = new Submissions(restClient, user);
 		
 		// Retrieve submissions of a submission
 		System.out.println("\n============== Basic subreddit submissions ==============");
-		List<Submission> submissionsSubreddit = subms.ofSubreddit(user, "flowers", SubmissionsGetSort.TOP, -1, 100, null, null, true);
+		List<Submission> submissionsSubreddit = subms.ofSubreddit("flowers", SubmissionSort.TOP, -1, 100, null, null, true);
 		printSubmissionsList(submissionsSubreddit);
 		
 		// Search for submissions
 		System.out.println("\n============== Basic search submissions ==============");
-		List<Submission> submissionsSearch = subms.search(user, "flowers", null, null, SubmissionsSearchTime.MONTH, -1, 100, null, null, true);
+		List<Submission> submissionsSearch = subms.search("flowers", null, null, TimeSpan.MONTH, -1, 100, null, null, true);
 		printSubmissionsList(submissionsSearch);
 		
 		// Retrieve submissions of a user
 		System.out.println("\n============== Basic user submissions ==============");
-		List<Submission> submissionsUser = subms.ofUser(user, "Unidan", UserSubmissionsCategory.SUBMITTED, UserOverviewSort.TOP, -1, 100, null, null, true);
+		List<Submission> submissionsUser = subms.ofUser("Unidan", UserSubmissionsCategory.SUBMITTED, UserOverviewSort.TOP, -1, 100, null, null, true);
 		printSubmissionsList(submissionsUser);
 		
 		
@@ -72,17 +72,17 @@ public class SubmissionsExample {
 		
 		// Retrieve the top 323 submissions of funny
 		System.out.println("\n============== Extended subreddits submissions retrieval ==============");
-		List<Submission> submissionsSubredditExtra = extendedSubms.ofSubreddit(user, "funny", SubmissionsGetSort.TOP, 323, null);
+		List<Submission> submissionsSubredditExtra = extendedSubms.ofSubreddit("funny", SubmissionSort.TOP, 323, null);
 		printSubmissionsList(submissionsSubredditExtra);
 
 		// Retrieve the top 532 submissions of query "valentine", user is not given (which is optional)
 		System.out.println("\n============== Extended search submissions retrieval ==============");
-		List<Submission> submissionsSearchExtra = extendedSubms.search("valentine", SubmissionsSearchSort.RELEVANCE, SubmissionsSearchTime.ALL, 532);
+		List<Submission> submissionsSearchExtra = extendedSubms.search("valentine", SearchSort.RELEVANCE, TimeSpan.ALL, 532);
 		printSubmissionsList(submissionsSearchExtra);
 		
 		// Retrieve the top 233 submissions of a user
 		System.out.println("\n============== Extended user submissions retrieval ==============");
-		List<Submission> submissionsUserExtra = extendedSubms.ofUser(user, "Unidan", UserSubmissionsCategory.SUBMITTED, UserOverviewSort.HOT, 233);
+		List<Submission> submissionsUserExtra = extendedSubms.ofUser("Unidan", UserSubmissionsCategory.SUBMITTED, UserOverviewSort.HOT, 233);
 		printSubmissionsList(submissionsUserExtra);
 
 	}

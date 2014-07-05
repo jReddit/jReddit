@@ -1,14 +1,14 @@
-package com.github.jreddit.comment;
+package com.github.jreddit.retrieval;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.CommentSort;
+import com.github.jreddit.entity.Comment;
+import com.github.jreddit.retrieval.params.CommentSort;
+import com.github.jreddit.retrieval.params.TimeSpan;
+import com.github.jreddit.retrieval.params.UserOverviewSort;
 import com.github.jreddit.utils.RedditConstants;
-import com.github.jreddit.utils.SubmissionsSearchTime;
-import com.github.jreddit.utils.UserOverviewSort;
 
 public class ExtendedComments {
 
@@ -30,7 +30,7 @@ public class ExtendedComments {
      * @param after					(Optional, set to null if not used) After which comment to retrieve
      * @return Comments for an article.
      */
-    public List<Comment> ofSubmission(User user, String submissionId, CommentSort sort, int amount_first_depth, Comment after) {
+    public List<Comment> ofSubmission(String submissionId, CommentSort sort, int amount_first_depth, Comment after) {
     	
     	if (amount_first_depth < -1) {
     		throw new IllegalArgumentException("A negative amount of comments is not allowed.");
@@ -39,7 +39,7 @@ public class ExtendedComments {
     	int limit = amount_first_depth > RedditConstants.MAX_LIMIT_COMMENTS ? RedditConstants.MAX_LIMIT_COMMENTS : amount_first_depth;
     	
     	// List of first depth comments
-        List<Comment> result = comments.ofSubmission(user, submissionId, null, -1, 1, limit, sort);
+        List<Comment> result = comments.ofSubmission(submissionId, null, -1, 1, limit, sort);
 
         // Retrieval the deeper comments for each first depth comment
         for (Comment c : result) {
@@ -48,7 +48,7 @@ public class ExtendedComments {
         	if (c.hasRepliesSomewhere()) {
 
         		// Deeper comments, more than 500 if extremely rare.
-        		List<Comment> subresult = comments.ofSubmission(user, submissionId, c.getId(), -1, 8, RedditConstants.MAX_LIMIT_COMMENTS, sort);
+        		List<Comment> subresult = comments.ofSubmission(submissionId, c.getIdentifier(), -1, 8, RedditConstants.MAX_LIMIT_COMMENTS, sort);
         		
         		//System.out.println(subresult.size());
         		c.setReplies(subresult.get(0).getReplies());
@@ -73,7 +73,7 @@ public class ExtendedComments {
      * 
      * @return Comments of a user.
      */
-    public List<Comment> ofUser(User user, String username, UserOverviewSort sort, SubmissionsSearchTime time, int amount, Comment after) {
+    public List<Comment> ofUser(String username, UserOverviewSort sort, TimeSpan time, int amount, Comment after) {
     	
     	if (amount < 0) {
     		throw new IllegalArgumentException("A negative amount of comments is not allowed.");
@@ -91,9 +91,9 @@ public class ExtendedComments {
 			amount -= limit;
 			
 			// Retrieve comments
-			List<Comment> subresult = comments.ofUser(user, username, sort, time, counter, limit, after, null, true);
+			List<Comment> subresult = comments.ofUser(username, sort, time, counter, limit, after, null, true);
 			if (subresult == null) {
-				return null;
+				return new ArrayList<Comment>();
 			}
 			result.addAll(subresult);
 			

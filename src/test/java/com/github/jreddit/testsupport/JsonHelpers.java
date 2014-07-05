@@ -2,8 +2,8 @@ package com.github.jreddit.testsupport;
 
 import java.util.LinkedList;
 
-import com.github.jreddit.comment.Comment;
-import com.github.jreddit.utils.Kind;
+import com.github.jreddit.entity.Comment;
+import com.github.jreddit.entity.Kind;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

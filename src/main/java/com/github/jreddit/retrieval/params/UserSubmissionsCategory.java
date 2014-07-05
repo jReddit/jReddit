@@ -1,4 +1,4 @@
-package com.github.jreddit.utils;
+package com.github.jreddit.retrieval.params;
 
 public enum UserSubmissionsCategory {
 	

@@ -6,9 +6,9 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.github.jreddit.user.User;
+import com.github.jreddit.entity.Kind;
+import com.github.jreddit.entity.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.restclient.RestClient;
 
 

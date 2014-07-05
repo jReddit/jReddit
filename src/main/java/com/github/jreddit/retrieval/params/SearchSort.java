@@ -1,10 +1,10 @@
-package com.github.jreddit.utils;
+package com.github.jreddit.retrieval.params;
 
 /**
  * Enumeration to represent the different sort methods for submission search.
  * @author Simon Kassing
  */
-public enum SubmissionsSearchSort {
+public enum SearchSort {
 
     HOT			("hot"), 
     RELEVANCE	("relevance"), 
@@ -14,7 +14,7 @@ public enum SubmissionsSearchSort {
 
     private final String value;
 
-    SubmissionsSearchSort(String value) {
+    SearchSort(String value) {
         this.value = value;
     }
 

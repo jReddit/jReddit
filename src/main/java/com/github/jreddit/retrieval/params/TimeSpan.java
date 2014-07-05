@@ -1,10 +1,10 @@
-package com.github.jreddit.utils;
+package com.github.jreddit.retrieval.params;
 
 /**
  * Enumeration to represent the different submission search times.
  * @author Simon Kassing
  */
-public enum SubmissionsSearchTime {
+public enum TimeSpan {
 
     HOUR		("hour"), 
     DAY			("day"), 
@@ -15,7 +15,7 @@ public enum SubmissionsSearchTime {
 
     private final String value;
 
-    SubmissionsSearchTime(String value) {
+    TimeSpan(String value) {
         this.value = value;
     }
 

@@ -15,9 +15,12 @@ import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.jreddit.entity.Subreddit;
+import com.github.jreddit.retrieval.ExtendedSubreddits;
+import com.github.jreddit.retrieval.Subreddits;
+import com.github.jreddit.retrieval.params.SubredditsView;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.RedditConstants;
-import com.github.jreddit.utils.SubredditsView;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 

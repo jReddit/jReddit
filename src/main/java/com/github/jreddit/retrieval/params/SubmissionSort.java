@@ -1,4 +1,4 @@
-package com.github.jreddit.utils;
+package com.github.jreddit.retrieval.params;
 
 /**
  * Enum to represent submission sorts on Reddit. You see these on a page that lists Submissions.
@@ -7,7 +7,7 @@ package com.github.jreddit.utils;
  * @author Raul Rene Lepsa
  * @author Simon Kassing
  */
-public enum SubmissionsGetSort {
+public enum SubmissionSort {
 
     HOT				("hot"), 
     NEW				("new"), 
@@ -17,7 +17,7 @@ public enum SubmissionsGetSort {
 
     private final String value;
 
-    SubmissionsGetSort(String value) {
+    SubmissionSort(String value) {
         this.value = value;
     }
 

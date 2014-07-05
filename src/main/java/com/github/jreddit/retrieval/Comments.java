@@ -1,4 +1,4 @@
-package com.github.jreddit.comment;
+package com.github.jreddit.retrieval;
 
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
 
@@ -8,14 +8,17 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.github.jreddit.submissions.Submission;
-import com.github.jreddit.user.User;
+import com.github.jreddit.entity.Comment;
+import com.github.jreddit.entity.Kind;
+import com.github.jreddit.entity.Submission;
+import com.github.jreddit.entity.User;
+import com.github.jreddit.exception.RetrievalFailedException;
+import com.github.jreddit.exception.RedditError;
+import com.github.jreddit.retrieval.params.CommentSort;
+import com.github.jreddit.retrieval.params.TimeSpan;
+import com.github.jreddit.retrieval.params.UserOverviewSort;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.CommentSort;
-import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.ParamFormatter;
-import com.github.jreddit.utils.SubmissionsSearchTime;
-import com.github.jreddit.utils.UserOverviewSort;
 import com.github.jreddit.utils.restclient.RestClient;
 
 /**
@@ -27,16 +30,38 @@ import com.github.jreddit.utils.restclient.RestClient;
  * @author Raul Rene Lepsa
  * @author Simon Kassing
  */
-public class Comments {
+public class Comments implements ActorDriven {
 
     private RestClient restClient;
+    private User user;
 
     /**
-     * Constructor.
+     * Constructor. Global default user (null) is used.
      * @param restClient REST Client instance
      */
     public Comments(RestClient restClient) {
         this.restClient = restClient;
+        this.user = null;
+    }
+    
+    /**
+     * Constructor.
+     * @param restClient REST Client instance
+     * @param actor User instance
+     */
+    public Comments(RestClient restClient, User actor) {
+    	this.restClient = restClient;
+        this.user = actor;
+    }
+    
+    /**
+     * Switch the current user for the new user who will
+     * be used when invoking retrieval requests.
+     * 
+     * @param new_actor New user
+     */
+    public void switchActor(User new_actor) {
+    	this.user = new_actor;
     }
     
     /**
@@ -44,12 +69,11 @@ public class Comments {
      * maintaining the order. This parses ONLY the first depth of comments. Only call
      * this function to parse shallow comment listings (e.g. of the user overview).
      * 
-     * @param user		User
      * @param url		URL for the request
      * 
      * @return Parsed list of comments.
      */
-    public List<Comment> parseBreadth(User user, String url) {
+    public List<Comment> parseBreadth(String url) throws RetrievalFailedException {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -59,10 +83,14 @@ public class Comments {
         
         // Send request to reddit server via REST client
         Object response = restClient.get(url, cookie).getResponseObject();
-        
+
         if (response instanceof JSONObject) {
         	
-	        JSONObject object =  (JSONObject) response;
+	        JSONObject object = (JSONObject) response;
+	        if (object.get("error") != null) {
+	        	throw new RedditError("Comments response contained error code " + object.get("error") + ".");
+	        }
+	        
 	        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
 	        
 	        // Iterate over the submission results
@@ -105,7 +133,7 @@ public class Comments {
      * 
      * @return Parsed list of comments.
      */
-    public List<Comment> parseDepth(User user, String url) {
+    public List<Comment> parseDepth(String url) {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -115,7 +143,6 @@ public class Comments {
         
         // Send request to reddit server via REST client
         Object response = restClient.get(url, cookie).getResponseObject();
-        
         
         if (response instanceof JSONArray) {
         	
@@ -187,7 +214,6 @@ public class Comments {
      * Get the comment tree of the given user.
      * In this variant all parameters are Strings.
      *
-     * @param user				(Optional, set null if not used) The user as whom to retrieve the comments
      * @param username	 		Username of the user you want to retrieve from.
      * @param sort	    		(Optional, set null if not used) Sorting method.
      * @param time		 		(Optional, set null is not used) Time window
@@ -199,7 +225,7 @@ public class Comments {
      * 
      * @return Comments of a user.
      */
-    public List<Comment> ofUser(User user, String username, String sort, String time, String count, String limit, String after, String before, String show) {
+    public List<Comment> ofUser(String username, String sort, String time, String count, String limit, String after, String before, String show) {
         
     	// Format parameters
     	String params = "";
@@ -212,14 +238,13 @@ public class Comments {
     	params = ParamFormatter.addParameter(params, "show", show);
     	
         // Retrieve submissions from the given URL
-        return parseBreadth(user, String.format(ApiEndpointUtils.USER_COMMENTS, username, params));
+        return parseBreadth(String.format(ApiEndpointUtils.USER_COMMENTS, username, params));
         
     }
     
     /**
      * Get the comment tree of the given user (username).
      *
-     * @param user				(Optional, set null if not used) The user as whom to retrieve the comments
      * @param username	 		Username of the user you want to retrieve from.
      * @param sort	    		(Optional, set null if not used) Sorting method.
      * @param time		 		(Optional, set null is not used) Time window
@@ -231,21 +256,20 @@ public class Comments {
      * 
      * @return Comments of a user.
      */
-    public List<Comment> ofUser(User user, String username, UserOverviewSort sort, SubmissionsSearchTime time, int count, int limit, Comment after, Comment before, boolean show_given) {
+    public List<Comment> ofUser(String username, UserOverviewSort sort, TimeSpan time, int count, int limit, Comment after, Comment before, boolean show_given) {
        
     	if (username == null || username.isEmpty()) {
     		throw new IllegalArgumentException("The username must be set.");
     	}
         
     	return ofUser(
-    			user,
     			username,
     			(sort != null) ? sort.value() : null,
     			(time != null) ? time.value() : null,
     			String.valueOf(count),
     			String.valueOf(limit),
-    			(after != null) ? after.getFullname() : null,
-    			(before != null) ? before.getFullname() : null, 
+    			(after != null) ? after.getFullName() : null,
+    			(before != null) ? before.getFullName() : null, 
     			(show_given) ? "given" : null
     	);
     	
@@ -254,7 +278,6 @@ public class Comments {
     /**
      * Get the comment tree of the given user (object).
      *
-     * @param user				(Optional, set null if not used) The user as whom to retrieve the comments
      * @param username	 		Username of the user you want to retrieve from.
      * @param sort	    		(Optional, set null if not used) Sorting method.
      * @param time		 		(Optional, set null is not used) Time window
@@ -266,15 +289,14 @@ public class Comments {
      * 
      * @return Comments of a user.
      */
-    public List<Comment> ofUser(User user, User target, UserOverviewSort sort, SubmissionsSearchTime time, int count, int limit, Comment after, Comment before, boolean show_given) {
-    	return ofUser(user, target.getUsername(), sort, time, count, limit, after, before, show_given);
+    public List<Comment> ofUser(User target, UserOverviewSort sort, TimeSpan time, int count, int limit, Comment after, Comment before, boolean show_given) {
+    	return ofUser(target.getUsername(), sort, time, count, limit, after, before, show_given);
     }
 
     /**
      * Get the comment tree from a given submission.
      * In this variant all parameters are Strings.
      *
-     * @param user				(Optional, set null if not used) The user as whom to retrieve the comments
      * @param submissionId 		Submission ID36 identifier
      * @param commentId    		(Optional, set null if not used) ID of a comment. If specified, this comment will be the focal point of the returned view.
      * @param parentsShown 		(Optional, set null is not used) An integer between 0 and 8 representing the number of parents shown for the comment identified by <code>commentId</code>
@@ -283,7 +305,7 @@ public class Comments {
      * @param sort  			(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
      * @return Comments for an article.
      */
-    public List<Comment> ofSubmission(User user, String submissionId, String commentId, String parentsShown, String depth, String limit, String sort) {
+    public List<Comment> ofSubmission(String submissionId, String commentId, String parentsShown, String depth, String limit, String sort) {
     	
     	// Format parameters
     	String params = "";
@@ -294,14 +316,13 @@ public class Comments {
     	params = ParamFormatter.addParameter(params, "sort", sort);
     	
         // Retrieve submissions from the given URL
-        return parseDepth(user, String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, submissionId, params));
+        return parseDepth(String.format(ApiEndpointUtils.SUBMISSION_COMMENTS, submissionId, params));
         
     }
     
     /**
      * Get the comment tree from a given submission (ID36)
      *
-     * @param user				(Optional, set null if not used) The user as whom to retrieve the comments
      * @param submissionId 		Submission ID36 identifier
      * @param commentId    		(Optional, set null if not used) ID of a comment. If specified, this comment will be the focal point of the returned view.
      * @param parentsShown 		(Optional, set -1 is not used) An integer between 0 and 8 representing the number of parents shown for the comment identified by <code>commentId</code>
@@ -310,7 +331,7 @@ public class Comments {
      * @param sort  			(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
      * @return Comments for an article.
      */
-    public List<Comment> ofSubmission(User user, String submissionId, String commentId, int parentsShown, int depth, int limit, CommentSort sort) {
+    public List<Comment> ofSubmission(String submissionId, String commentId, int parentsShown, int depth, int limit, CommentSort sort) {
        
     	if (submissionId == null || submissionId.isEmpty()) {
     		throw new IllegalArgumentException("The identifier of the submission must be set.");
@@ -321,7 +342,6 @@ public class Comments {
     	}
         
     	return ofSubmission(
-    			user,
     			submissionId,
     			commentId,
     			String.valueOf(parentsShown),
@@ -335,7 +355,6 @@ public class Comments {
     /**
      * Get the comment tree from a given submission (object).
      *
-     * @param user				(Optional, set null if not used) The user as whom to retrieve the comments
      * @param submission 		Submission object
      * @param commentId    		(Optional, set null if not used) ID of a comment. If specified, this comment will be the focal point of the returned view.
      * @param parentsShown 		(Optional, set -1 is not used) An integer between 0 and 8 representing the number of parents shown for the comment identified by <code>commentId</code>
@@ -344,8 +363,8 @@ public class Comments {
      * @param sort  			(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
      * @return Comments for an article.
      */
-    public List<Comment> ofSubmission(User user, Submission submission, String commentId, int parentsShown, int depth, int limit, CommentSort sort) {
-        return ofSubmission(user, submission.getIdentifier(), commentId, parentsShown, depth, limit, sort);
+    public List<Comment> ofSubmission(Submission submission, String commentId, int parentsShown, int depth, int limit, CommentSort sort) {
+        return ofSubmission(submission.getIdentifier(), commentId, parentsShown, depth, limit, sort);
     }
     
 	/**

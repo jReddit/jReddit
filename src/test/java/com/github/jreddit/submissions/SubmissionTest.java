@@ -1,7 +1,9 @@
 package com.github.jreddit.submissions;
 
-import com.github.jreddit.user.User;
+import com.github.jreddit.entity.Submission;
+import com.github.jreddit.entity.User;
 import com.github.jreddit.utils.restclient.RestClient;
+
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;

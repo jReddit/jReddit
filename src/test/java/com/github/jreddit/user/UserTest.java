@@ -1,10 +1,13 @@
 package com.github.jreddit.user;
 
-import com.github.jreddit.subreddit.Subreddit;
+import com.github.jreddit.entity.Subreddit;
+import com.github.jreddit.entity.User;
+import com.github.jreddit.entity.UserInfo;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
+
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;

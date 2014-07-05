@@ -1,4 +1,4 @@
-package com.github.jreddit.utils;
+package com.github.jreddit.entity;
 
 /**
  * Enumeration to represent the different types of Things.

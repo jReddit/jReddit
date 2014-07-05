@@ -1,4 +1,4 @@
-package com.github.jreddit.subreddit;
+package com.github.jreddit.entity;
 
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToBoolean;
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToDouble;
@@ -6,10 +6,6 @@ import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToLong;
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
 
 import org.json.simple.JSONObject;
-
-import com.github.jreddit.Thing;
-import com.github.jreddit.utils.restclient.HttpRestClient;
-import com.github.jreddit.utils.restclient.RestClient;
 
 /**
  * Encapsulates a subreddit.
@@ -20,13 +16,8 @@ import com.github.jreddit.utils.restclient.RestClient;
  */
 public class Subreddit extends Thing {
 	
-    private RestClient restClient;
-    
     // The subreddit's display name
     private String displayName;
-
-    // The subreddit's actual name
-    private String name;
 
     // The subreddit's title
     private String title;
@@ -46,9 +37,6 @@ public class Subreddit extends Thing {
     // The number of subscribers for this subreddit
     private long subscribers;
 
-    // The subreddit's unique identifier
-    private String id;
-
     // Description detailing the subreddit
     private String description;
     
@@ -65,7 +53,7 @@ public class Subreddit extends Thing {
             setDisplayName(safeJsonToString(obj.get("display_name")));
             setTitle(safeJsonToString(obj.get("title")));
             setUrl(safeJsonToString(obj.get("url")));
-            setCreated(safeJsonToString(obj.get("subreddit")));
+            setCreated(safeJsonToString(obj.get("created")));
             setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
             setNSFW(safeJsonToBoolean(obj.get("over_18")));
             setSubscribers(safeJsonToLong(obj.get("subscribers")));
@@ -76,7 +64,6 @@ public class Subreddit extends Thing {
             System.err.println("Error creating Subreddit");
         }
         
-        restClient = new HttpRestClient();
     }
     
     /**
@@ -113,24 +100,6 @@ public class Subreddit extends Thing {
      */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
-    }
-
-    /**
-     * Sets the subreddit's unique identifier.
-     *
-     * @param id The subreddit's unique identifier.
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * Sets the subreddit's actual name (not its display name).
-     *
-     * @param name The subreddit's actual name.
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -206,24 +175,6 @@ public class Subreddit extends Thing {
     }
 
     /**
-     * Returns the subreddit's unique identifier.
-     *
-     * @return The subreddit's unique identifier.
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Returns the subreddit's actual name (not its display name).
-     *
-     * @return The subreddit's actual name.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
      * Returns the number of subscribers for this subreddit.
      *
      * @return The number of subscribers for this subreddit.
@@ -262,5 +213,14 @@ public class Subreddit extends Thing {
     public String toString() {
     	return "Subreddit(" + this.getFullName() + ")<" + this.getDisplayName() + ">";
     }
+    
+    @Override
+    public boolean equals(Object other) {
+    	return (other instanceof Subreddit && this.getFullName().equals(((Subreddit) other).getFullName()));
+    }
+
+	public int compareTo(Thing o) {
+		return this.getFullName().compareTo(o.getFullName());
+	}
     
 }

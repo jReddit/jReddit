@@ -1,10 +1,11 @@
 package com.github.jreddit.captcha;
 
-import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.entity.User;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;

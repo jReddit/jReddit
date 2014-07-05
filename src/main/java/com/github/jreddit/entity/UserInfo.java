@@ -1,4 +1,4 @@
-package com.github.jreddit.user;
+package com.github.jreddit.entity;
 
 import org.json.simple.JSONObject;
 

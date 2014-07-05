@@ -17,13 +17,15 @@ import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.jreddit.entity.Submission;
+import com.github.jreddit.entity.User;
+import com.github.jreddit.retrieval.Submissions;
+import com.github.jreddit.retrieval.params.QuerySyntax;
+import com.github.jreddit.retrieval.params.SubmissionSort;
+import com.github.jreddit.retrieval.params.SearchSort;
+import com.github.jreddit.retrieval.params.TimeSpan;
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.QuerySyntax;
 import com.github.jreddit.utils.RedditConstants;
-import com.github.jreddit.utils.SubmissionsGetSort;
-import com.github.jreddit.utils.SubmissionsSearchSort;
-import com.github.jreddit.utils.SubmissionsSearchTime;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 
@@ -49,7 +51,7 @@ public class SubmissionsTest {
         when(restClient.get("/r/" + REDDIT_NAME + ".json?&sort=new&limit=50", COOKIE)).thenReturn(response);
         when(user.getCookie()).thenReturn(COOKIE);
 
-        List<Submission> frontPage = underTest.ofSubreddit(user, REDDIT_NAME, SubmissionsGetSort.NEW, -1, 50, null, null, false);
+        List<Submission> frontPage = underTest.ofSubreddit(user, REDDIT_NAME, SubmissionSort.NEW, -1, 50, null, null, false);
         assertEquals(2, frontPage.size());
         
     	
@@ -60,7 +62,7 @@ public class SubmissionsTest {
         UtilResponse response = new UtilResponse(null, submissionListings(), 200);
         when(restClient.get("/r/funny.json" + "?&sort=new&limit=" + RedditConstants.MAX_LIMIT_LISTING, null)).thenReturn(response);
         
-        List<Submission> subs = underTest.ofSubreddit(user, "funny", SubmissionsGetSort.NEW, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
+        List<Submission> subs = underTest.ofSubreddit(user, "funny", SubmissionSort.NEW, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
         assertNotNull(subs);
         assertEquals(subs.size(), 2);
     }
@@ -70,7 +72,7 @@ public class SubmissionsTest {
         UtilResponse response = new UtilResponse(null, submissionListings(), 200);
         when(restClient.get("/search.json?&q=query&syntax=lucene&sort=new&t=all&limit=" + RedditConstants.MAX_LIMIT_LISTING, null)).thenReturn(response);
 
-        List<Submission> subs = underTest.search(user, "query", QuerySyntax.LUCENE, SubmissionsSearchSort.NEW, SubmissionsSearchTime.ALL, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
+        List<Submission> subs = underTest.search(user, "query", QuerySyntax.LUCENE, SearchSort.NEW, TimeSpan.ALL, -1, RedditConstants.MAX_LIMIT_LISTING, null, null, false);
         assertNotNull(subs);
         assertEquals(subs.size(), 2);
     }

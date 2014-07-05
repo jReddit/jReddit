@@ -1,4 +1,4 @@
-package com.github.jreddit;
+package com.github.jreddit.entity;
 
 /**
  * This class represents a reddit "thing"
@@ -7,7 +7,7 @@ package com.github.jreddit;
  * @author Simon Kassing
  * @see <a href="http://www.reddit.com/dev/api#fullname">Reddit API Reference</a>
  */
-public abstract class Thing {
+public abstract class Thing implements Comparable<Thing> {
     
 	/**
 	 * Constructor. Must be called.

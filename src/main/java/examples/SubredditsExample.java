@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.json.simple.parser.ParseException;
 
-import com.github.jreddit.subreddit.ExtendedSubreddits;
-import com.github.jreddit.subreddit.Subreddit;
-import com.github.jreddit.subreddit.Subreddits;
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.SubredditsView;
+import com.github.jreddit.entity.Subreddit;
+import com.github.jreddit.entity.User;
+import com.github.jreddit.retrieval.ExtendedSubreddits;
+import com.github.jreddit.retrieval.Subreddits;
+import com.github.jreddit.retrieval.params.SubredditsView;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
 
@@ -22,7 +22,7 @@ public class SubredditsExample {
 	    restClient.setUserAgent("bot/1.0 by name");
 
 		// Connect the user
-	    User user = new User(restClient, "username", "password");
+	    User user = new User(restClient, Authentication.getUsername(), Authentication.getPassword());
 		try {
 			user.connect();
 		} catch (IOException e1) {
@@ -48,7 +48,7 @@ public class SubredditsExample {
 				// subrs.get(user, SubredditType.MINE, 16);
 				// subrs.get(user, SubredditType.NEW, 22, "t1_29429");
 				
-				List<Subreddit> searchsubreddits = subrs.search("science", 10);
+				List<Subreddit> searchsubreddits = subrs.search("abbot", 10);
 				System.out.println("Search subreddits, size received: " + searchsubreddits.size());
 				
 				// Other possibilities:

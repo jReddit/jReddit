@@ -1,16 +1,17 @@
-package com.github.jreddit.submissions;
+package com.github.jreddit.retrieval;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.github.jreddit.user.User;
-import com.github.jreddit.utils.QuerySyntax;
+import com.github.jreddit.entity.Submission;
+import com.github.jreddit.retrieval.params.QuerySyntax;
+import com.github.jreddit.retrieval.params.SearchSort;
+import com.github.jreddit.retrieval.params.SubmissionSort;
+import com.github.jreddit.retrieval.params.TimeSpan;
+import com.github.jreddit.retrieval.params.UserOverviewSort;
+import com.github.jreddit.retrieval.params.UserSubmissionsCategory;
 import com.github.jreddit.utils.RedditConstants;
-import com.github.jreddit.utils.SubmissionsGetSort;
-import com.github.jreddit.utils.SubmissionsSearchSort;
-import com.github.jreddit.utils.SubmissionsSearchTime;
-import com.github.jreddit.utils.UserOverviewSort;
-import com.github.jreddit.utils.UserSubmissionsCategory;
 
 public class ExtendedSubmissions {
 	
@@ -25,13 +26,12 @@ public class ExtendedSubmissions {
      * Get submissions from the specified subreddit after a specific submission, as the given user, 
      * attempting to retrieve the desired amount.
      * 
-     * @param user				User session
      * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
      * @param after				Submission after which the submissions need to be fetched.
      * @return					List of the submissions
      */
-    public List<Submission> ofSubreddit(User user, String redditName, SubmissionsGetSort sort, int amount, Submission after) {
+    public List<Submission> ofSubreddit(String redditName, SubmissionSort sort, int amount, Submission after) {
     	
     	if (amount < 0) {
     		System.err.println("You cannot retrieve a negative amount of submissions.");
@@ -50,9 +50,9 @@ public class ExtendedSubmissions {
 			amount -= limit;
 			
 			// Retrieve submissions
-			List<Submission> subresult = submissions.ofSubreddit(user, redditName, sort, counter, limit, after, null, true);
+			List<Submission> subresult = submissions.ofSubreddit(redditName, sort, counter, limit, after, null, true);
 			if (subresult == null) {
-				return null;
+				return new ArrayList<Submission>();
 			}
 			result.addAll(subresult);
 			
@@ -83,27 +83,14 @@ public class ExtendedSubmissions {
      * Get submissions from the specified subreddit, as the given user, 
      * attempting to retrieve the desired amount after the given submission.
      * 
-     * @param user				User session
      * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
      * @param sort				Subreddit sorting method
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
      * @param after				Submission after which to get
      * @return					List of the submissions
      */
-    public List<Submission> get(String redditName, SubmissionsGetSort sort, int amount, Submission after) {
-    	return ofSubreddit(null, redditName, sort, amount, after);
-    }
-    
-    /**
-     * Get submissions from the specified subreddit, as the given user, attempting to retrieve the desired amount.
-     * @param user				User session
-     * @param redditName 		Subreddit name (e.g. 'fun', 'wtf', 'programming')
-     * @param sort				Subreddit sorting method
-     * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
-     * @return					List of the submissions
-     */
-    public List<Submission> ofSubreddit(User user, String redditName, SubmissionsGetSort sort, int amount) {
-    	return ofSubreddit(user, redditName, sort, amount, null);
+    public List<Submission> get(String redditName, SubmissionSort sort, int amount, Submission after) {
+    	return ofSubreddit(redditName, sort, amount, after);
     }
     
     /**
@@ -114,8 +101,8 @@ public class ExtendedSubmissions {
      * @param sort			Subreddit sorting method
      * @return <code>List</code> of submissions on the subreddit.
      */
-    public List<Submission> ofSubreddit(User user, String redditName, SubmissionsGetSort sort) {
-    	return ofSubreddit(user, redditName, sort, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT, null);
+    public List<Submission> ofSubreddit(String redditName, SubmissionSort sort) {
+    	return ofSubreddit(redditName, sort, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT, null);
     }
     
     /**
@@ -125,25 +112,13 @@ public class ExtendedSubmissions {
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
      * @return					List of the submissions
      */
-    public List<Submission> ofSubreddit(String redditName, SubmissionsGetSort sort, int amount) {
-    	return ofSubreddit(null, redditName, sort, amount, null);
-    }
-    
-    /**
-     * Returns a list of submissions from a subreddit.
-     * 
-     * @param redditName 	The subreddit at which submissions you want to retrieve submissions.
-     * @param sort			Subreddit sorting method
-     * @return <code>List</code> of submissions on the subreddit.
-     */
-    public List<Submission> ofSubreddit(String redditName, SubmissionsGetSort sort) {
-    	return ofSubreddit(null, redditName, sort, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT, null);
+    public List<Submission> ofSubreddit(String redditName, SubmissionSort sort, int amount) {
+    	return ofSubreddit(redditName, sort, amount, null);
     }
     
     /**
      * Get submissions from the specified subreddit after a specific submission, as the given user, attempting to retrieve the desired amount.
      * 
-     * @param user				User session
      * @param query 			Search query
      * @param sort				Search sorting method (e.g. new or top)
      * @param time				Search time (e.g. day or all)
@@ -151,7 +126,7 @@ public class ExtendedSubmissions {
      * @param after				Submission after which the submissions need to be fetched.
      * @return					List of the submissions
      */
-    public List<Submission> search(User user, String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount, Submission after) {
+    public List<Submission> search(String query, SearchSort sort, TimeSpan time, int amount, Submission after) {
     	
     	if (amount < 0) {
     		System.err.println("You cannot retrieve a negative amount of submissions.");
@@ -170,9 +145,9 @@ public class ExtendedSubmissions {
 			amount -= limit;
 			
 			// Retrieve submissions
-			List<Submission> subresult = submissions.search(user, query, QuerySyntax.LUCENE, sort, time, counter, limit, after, null, true);
+			List<Submission> subresult = submissions.search(query, QuerySyntax.LUCENE, sort, time, counter, limit, after, null, true);
 			if (subresult == null) {
-				return null;
+				return new ArrayList<Submission>();
 			}
 			result.addAll(subresult);
 			
@@ -202,74 +177,32 @@ public class ExtendedSubmissions {
     /**
      * Search for submissions using the query with the given sorting method and within the given time as the given user and with maximum amount returned.
 	 * 
-     * @param user		User
      * @param query 	Search query
      * @param sort		Search sorting method
      * @param time		Search time
      * @param amount	How many to retrieve (if possible, result <= amount guaranteed)
      * @return <code>List</code> of submissions that match the query.
      */
-    public List<Submission> search(User user, String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount) {
-    	return search(user, query, sort, time, amount, null);
+    public List<Submission> search(String query, SearchSort sort, TimeSpan time, int amount) {
+    	return search(query, sort, time, amount, null);
     }
     
     /**
      * Search for submissions using the query with the given sorting method and within the given time as the given user.
 	 * 
-     * @param user		User
      * @param query 	Search query
      * @param sort		Search sorting method
      * @param time		Search time
      * @return <code>List</code> of submissions that match the query.
      */
-    public List<Submission> search(User user, String query, SubmissionsSearchSort sort, SubmissionsSearchTime time) {
-    	return search(user, query, sort, time, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT);
-    }
-    
-    /**
-     * Search for submissions using the query with the given sorting method and 
-     * within the given time and with maximum amount returned after the given submission.
-	 * 
-     * @param query 	Search query
-     * @param sort		Search sorting method
-     * @param time		Search time
-     * @param amount	How many to retrieve (if possible, result <= amount guaranteed)
-     * @param after		Submission after which need to be retrieved
-     * @return <code>List</code> of submissions that match the query.
-     */
-    public List<Submission> search(String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount, Submission after) {
-    	return search(null, query, sort, time, amount, after);
-    }
-    
-    /**
-     * Search for submissions using the query with the given sorting method and within the given time and with maximum amount returned.
-	 * 
-     * @param query 	Search query
-     * @param sort		Search sorting method
-     * @param time		Search time
-     * @param amount	How many to retrieve (if possible, result <= amount guaranteed)
-     * @return <code>List</code> of submissions that match the query.
-     */
-    public List<Submission> search(String query, SubmissionsSearchSort sort, SubmissionsSearchTime time, int amount) {
-    	return search(query, sort, time, amount, null);
-    }
-    
-    /**
-     * Search for submissions using the query with the given sorting method and within the given time.
-	 * 
-     * @param query 	Search query
-     * @param sort		Search sorting method
-     * @param time		Search time
-     * @return <code>List</code> of submissions that match the query.
-     */
-    public List<Submission> search(String query, SubmissionsSearchSort sort, SubmissionsSearchTime time) {
+    public List<Submission> search(String query, SearchSort sort, TimeSpan time) {
     	return search(query, sort, time, RedditConstants.APPROXIMATE_MAX_LISTING_AMOUNT);
     }
+
     
     /**
      * Get submissions from the specified user.
      * 
-     * @param user				User session
      * @param query 			Search query
      * @param category			Category
      * @param sort				Search sorting method (e.g. new or top)
@@ -278,7 +211,7 @@ public class ExtendedSubmissions {
      * @param after				Submission after which the submissions need to be fetched.
      * @return					List of the submissions
      */
-    public List<Submission> ofUser(User user, String username, UserSubmissionsCategory category, UserOverviewSort sort, int amount, Submission after) {
+    public List<Submission> ofUser(String username, UserSubmissionsCategory category, UserOverviewSort sort, int amount, Submission after) {
     	
     	if (amount < 0) {
     		System.err.println("You cannot retrieve a negative amount of submissions.");
@@ -297,9 +230,9 @@ public class ExtendedSubmissions {
 			amount -= limit;
 			
 			// Retrieve submissions
-			List<Submission> subresult = submissions.ofUser(user, username, category, sort, counter, limit, after, null, true);
+			List<Submission> subresult = submissions.ofUser(username, category, sort, counter, limit, after, null, true);
 			if (subresult == null) {
-				return null;
+				return new ArrayList<Submission>();
 			}
 			result.addAll(subresult);
 			
@@ -329,7 +262,6 @@ public class ExtendedSubmissions {
     /**
      * Get submissions from the specified user.
      * 
-     * @param user				User session
      * @param query 			Search query
      * @param category			Category
      * @param sort				Search sorting method (e.g. new or top)
@@ -338,8 +270,8 @@ public class ExtendedSubmissions {
      * @param after				Submission after which the submissions need to be fetched.
      * @return					List of the submissions
      */
-    public List<Submission> ofUser(User user, String username, UserSubmissionsCategory category, UserOverviewSort sort, int amount) {
-    	return ofUser(user, username, category, sort, amount, null);
+    public List<Submission> ofUser(String username, UserSubmissionsCategory category, UserOverviewSort sort, int amount) {
+    	return ofUser(username, category, sort, amount, null);
     }
 	
 }

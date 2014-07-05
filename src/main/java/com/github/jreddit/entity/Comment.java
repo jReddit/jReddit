@@ -1,4 +1,4 @@
-package com.github.jreddit.comment;
+package com.github.jreddit.entity;
 
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToInteger;
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
@@ -15,34 +15,36 @@ import org.json.simple.JSONObject;
  * @author Raul Rene Lepsa
  * @author Simon Kassing
  */
-public class Comment {
+public class Comment extends Thing {
 
-
-    private String id;
-    private String author;
-    private String fullname;
-    private String parentId;
+    private String author;			// Username of the author
+    private String parentId;		// Parent identifier
     private String body;            // The actual body
     private String edited;          // Edited timestamp
-    private String created;         // Created UTC timestamp
-    private boolean hasReplies;
-    private List<Comment> replies;         // Replies
+    private String created;         // Created timestamp
+    private String createdUTC;      // Created UTC timestamp
+    private boolean hasReplies;		// If replies exist on reddit
+    private List<Comment> replies;  // Replies if retrieved
+    private Integer gilded;        	// Amount of times the comment been gilded
+    private Integer score;        	// Karma score
     private Integer upvotes;        // Number of upvotes that this body received
     private Integer downvotes;      // Number of downvotes that this body received
 
     public Comment(JSONObject obj) {
-
+    	super(safeJsonToString(obj.get("name")));
+    	
         try {
         	
-            this.setId(safeJsonToString(obj.get("id")));
             this.setAuthor(safeJsonToString(obj.get("author")));
-            this.setFullname(safeJsonToString(obj.get("name")));
             this.setParentId(safeJsonToString(obj.get("parent_id")));
             this.setBody(safeJsonToString(obj.get("body")));
             this.setEdited(safeJsonToString(obj.get("edited")));
-            this.setCreated(safeJsonToString(obj.get("created_utc")));
+            this.setCreated(safeJsonToString(obj.get("created")));
+            this.setCreatedUTC(safeJsonToString(obj.get("created_utc")));
             hasReplies = (obj.get("replies") != null) ? !safeJsonToString(obj.get("replies")).isEmpty() : false;
             this.replies = new LinkedList<Comment>();
+            this.setGilded(safeJsonToInteger(obj.get("gilded")));
+            this.setScore(safeJsonToInteger(obj.get("score")));
             this.setUpvotes(safeJsonToInteger(obj.get("ups")));
             this.setDownvotes(safeJsonToInteger(obj.get("downs")));
 
@@ -53,10 +55,18 @@ public class Comment {
 
     }
     
+    /**
+     * Add a reply to this comment.
+     * @param c Reply comment
+     */
     public void addReply(Comment c) {
     	this.replies.add(c);
     }
     
+    /**
+     * If the comment is retrieved recursively, this might have the replies.
+     * @return Replies
+     */
     public List<Comment> getReplies() {
     	return this.replies;
     }
@@ -65,16 +75,13 @@ public class Comment {
     	this.replies = replies;
     }
     
+    /**
+     * Return whether the comment has replies, this is only set if the comment
+     * is retrieved recursively.
+     * @return Whether there are replies on Reddit for this comment
+     */
     public boolean hasRepliesSomewhere() {
     	return hasReplies;
-    }
-    
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getAuthor() {
@@ -83,14 +90,6 @@ public class Comment {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
     }
 
     public String getParentId() {
@@ -125,7 +124,15 @@ public class Comment {
         this.created = created;
     }
 
-    public Integer getUpvotes() {
+    public Integer getGilded() {
+		return gilded;
+	}
+
+	public void setGilded(Integer gilded) {
+		this.gilded = gilded;
+	}
+
+	public Integer getUpvotes() {
         return upvotes;
     }
 
@@ -141,9 +148,34 @@ public class Comment {
         this.downvotes = downvotes;
     }
     
-    @Override
+    public String getCreatedUTC() {
+		return createdUTC;
+	}
+
+	public void setCreatedUTC(String createdUTC) {
+		this.createdUTC = createdUTC;
+	}
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
+	@Override
     public String toString() {
-    	return "Comment(" + id + ")<" + ((body.length() > 10) ? body.substring(0, 10) : body) + ">";
+    	return "Comment(" + identifier + ")<" + ((body.length() > 10) ? body.substring(0, 10) : body) + ">";
+    }    
+    
+    @Override
+    public boolean equals(Object other) {
+    	return (other instanceof Comment && this.getFullName().equals(((Comment) other).getFullName()));
     }
+
+	public int compareTo(Thing o) {
+		return this.getFullName().compareTo(o.getFullName());
+	}
     
 }

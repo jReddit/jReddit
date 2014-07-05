@@ -1,4 +1,4 @@
-package com.github.jreddit.subreddit;
+package com.github.jreddit.retrieval;
 
 
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
@@ -11,11 +11,12 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.github.jreddit.user.User;
+import com.github.jreddit.entity.Kind;
+import com.github.jreddit.entity.Subreddit;
+import com.github.jreddit.entity.User;
+import com.github.jreddit.retrieval.params.SubredditsView;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.Kind;
 import com.github.jreddit.utils.ParamFormatter;
-import com.github.jreddit.utils.SubredditsView;
 import com.github.jreddit.utils.restclient.RestClient;
 
 /**
@@ -35,6 +36,7 @@ public class Subreddits {
 	 * Handle to the REST client instance.
 	 */
     private final RestClient restClient;
+    private User user;
 
     /**
      * Constructor.
@@ -46,13 +48,33 @@ public class Subreddits {
     }
     
     /**
+     * Constructor.
+     * @param restClient REST Client instance
+     * @param actor User instance
+     */
+    public Subreddits(RestClient restClient, User actor) {
+    	this.restClient = restClient;
+        this.user = actor;
+    }
+    
+    /**
+     * Switch the current user for the new user who will
+     * be used when invoking retrieval requests.
+     * 
+     * @param new_actor New user
+     */
+    public void switchActor(User new_actor) {
+    	this.user = new_actor;
+    }
+    
+    /**
      * Parses a JSON feed from the Reddit (URL) into a nice list of Subreddit objects.
      * 
      * @param user 	User
      * @param url 	URL
      * @return 		Listing of submissions
      */
-    public List<Subreddit> parse(User user, String url) {
+    public List<Subreddit> parse(String url) {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -100,7 +122,6 @@ public class Subreddits {
      * to manually adjust the parameters (if the API changes and jReddit is not updated
      * in time yet).
      * 
-     * @param user		User
      * @param query		Search query
      * @param count		Count at which the subreddits are started being numbered
      * @param limit		Maximum amount of subreddits that can be returned (0-100, 25 default (see Reddit API))
@@ -109,7 +130,7 @@ public class Subreddits {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> search(User user, String query, String count, String limit, String after, String before) {
+    public List<Subreddit> search(String query, String count, String limit, String after, String before) {
     	
     	// Format parameters
     	String params = "";
@@ -124,14 +145,13 @@ public class Subreddits {
     	params = ParamFormatter.addParameter(params, "before", before);
     	
         // Retrieve submissions from the given URL
-        return parse(user, String.format(ApiEndpointUtils.SUBREDDITS_SEARCH, params));
+        return parse(String.format(ApiEndpointUtils.SUBREDDITS_SEARCH, params));
         
     }
 
     /**
      * Searches all subreddits with the given query using the given parameters.
      * 
-     * @param user		User
      * @param query		Search query
      * @param count		Count at which the subreddits are started being numbered
      * @param limit		Maximum amount of subreddits that can be returned (0-100, 25 default (see Reddit API))
@@ -140,14 +160,13 @@ public class Subreddits {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> search(User user, String query, int count, int limit, Subreddit after, Subreddit before) {
+    public List<Subreddit> search(String query, int count, int limit, Subreddit after, Subreddit before) {
     	
     	if (query == null || query.isEmpty()) {
     		throw new IllegalArgumentException("The query must be defined.");
     	}
     	
     	return search(
-    			user, 
     			query, 
     			String.valueOf(count),
     			String.valueOf(limit),
@@ -163,7 +182,6 @@ public class Subreddits {
      * to manually adjust the parameters (if the API changes and jReddit is not updated
      * in time yet).
      * 
-     * @param user		User
      * @param type		Type of subreddit, this determines the ordering (e.g. new or mine)
      * @param count		Count at which the subreddits are started being numbered
      * @param limit		Maximum amount of subreddits that can be returned (0-100, 25 default (see Reddit API))
@@ -172,7 +190,7 @@ public class Subreddits {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> get(User user, String type, String count, String limit, String after, String before) {
+    public List<Subreddit> get(String type, String count, String limit, String after, String before) {
     	
     	// Format parameters
     	String params = "";
@@ -182,14 +200,13 @@ public class Subreddits {
     	params = ParamFormatter.addParameter(params, "before", before);
     	
         // Retrieve submissions from the given URL
-        return parse(user, String.format(ApiEndpointUtils.SUBREDDITS_GET, type, params));
+        return parse(String.format(ApiEndpointUtils.SUBREDDITS_GET, type, params));
         
     }
     
     /**
      * Gets all subreddits using the given parameters.
      * 
-     * @param user		User
      * @param type		Type of subreddit, this determines the ordering (e.g. new or mine)
      * @param count		Count at which the subreddits are started being numbered
      * @param limit		Maximum amount of subreddits that can be returned (0-100, 25 default (see Reddit API))
@@ -198,9 +215,8 @@ public class Subreddits {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> get(User user, SubredditsView type, int count, int limit, Subreddit after, Subreddit before) {
+    public List<Subreddit> get(SubredditsView type, int count, int limit, Subreddit after, Subreddit before) {
         	return get(
-        			user, 
         			(type != null) ? type.value() : "",
         			String.valueOf(count),
         			String.valueOf(limit),

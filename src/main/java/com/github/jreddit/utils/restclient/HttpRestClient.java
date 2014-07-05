@@ -22,13 +22,17 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.parser.ParseException;
 
+import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.exception.InvalidURIException;
+import com.github.jreddit.exception.ActionFailedException;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder;
 
 /**
  * HTTP implementation of the REST Client interface.
+ * 
+ * @author Simon Kassing
  */
 public class HttpRestClient implements RestClient {
 	
@@ -72,24 +76,34 @@ public class HttpRestClient implements RestClient {
 		this.httpClient = httpClient;
 		this.responseHandler = responseHandler;
 	}
+	
+	/**
+	 * Set the user agent.
+	 * @param agent User agent name
+	 */
+	public void setUserAgent(String agent) {
+		this.userAgent = agent;
+	}
 
 
-	public Response get(String urlPath, String cookie) {
+	public Response get(String urlPath, String cookie) throws RetrievalFailedException {
 		
 		try {
-			return get(httpGetMethod().withUrl(
-					ApiEndpointUtils.REDDIT_BASE_URL + urlPath).withCookie(cookie));
+			Response result = get(httpGetMethod().withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath).withCookie(cookie));
+			if (result == null) {
+				throw new RetrievalFailedException("The given URI path does not exist on Reddit: " + urlPath);
+			} else {
+				return result;
+			}
 		} catch (URISyntaxException e) {
-			System.err.println("Error making creating URI bad path: " + urlPath);
+			throw new RetrievalFailedException("The syntax of the URI path was incorrect: " + urlPath);
 		} catch (InvalidURIException e) {
-			System.err.println("Error making GET request to invalid URI path: " + urlPath);
+			throw new RetrievalFailedException("The URI path was invalid: " + urlPath);
 		} catch (IOException e) {
-			System.err.println("Error making GET request to URL path: " + urlPath);
+			throw new RetrievalFailedException("Input/output failed when retrieving from URI path: " + urlPath);
 		} catch (ParseException e) {
-			System.err.println("Error parsing response from POST request for URL path: "+ urlPath);
+			throw new RetrievalFailedException("Failed to parse the response from GET request to URI path: "+ urlPath);
 		}
-		
-		return null;
 		
 	}
 
@@ -102,9 +116,9 @@ public class HttpRestClient implements RestClient {
 		// Execute request
 		Response response = httpClient.execute(request, responseHandler);
 		
-		// If URL not found (4040), URI was incorrect.
-		if (response.getStatusCode() == 404) {
-			throw new InvalidURIException();
+		// A HTTP error occurred
+		if (response != null && response.getStatusCode() >= 300) {
+			throw new RetrievalFailedException("HTTP Error (" + response.getStatusCode() + ") occurred for URI path: " + request.getURI().toString());
 		}
 
 		return response;
@@ -113,21 +127,24 @@ public class HttpRestClient implements RestClient {
 	public Response post(String apiParams, String urlPath, String cookie) {
 		
 		try {
-			return post(
+			Response result = post(
 					httpPostMethod()
 					.withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath)
 					.withCookie(cookie),
 					convertRequestStringToList(apiParams)
 			);
+			if (result == null) {
+				throw new ActionFailedException("Due to unknown reasons, the response was undefined for URI path: " + urlPath);
+			} else {
+				return result;
+			}
 		} catch (URISyntaxException e) {
-			System.err.println("Error making creating URI bad path: " + urlPath);
+			throw new ActionFailedException("The syntax of the URI path was incorrect: " + urlPath);
 		} catch (IOException e) {
-			System.err.println("Error making GET request to URL path: " + urlPath);
+			throw new ActionFailedException("Input/output failed when retrieving from URI path: " + urlPath);
 		} catch (ParseException e) {
-			System.err.println("Error parsing response from POST request for URL path: " + urlPath);
+			throw new ActionFailedException("Failed to parse the response from GET request to URI path: "+ urlPath);
 		}
-		
-		return null;
 		
 	}
 
@@ -145,15 +162,24 @@ public class HttpRestClient implements RestClient {
 		HttpPost request = postMethodBuilder.build();
 		request.setEntity(entity);
 		
-		// Execute reuest
-		return httpClient.execute(request, responseHandler);
+		// Execute request
+		Response response = httpClient.execute(request, responseHandler);
+		
+		// A HTTP error occurred
+		if (response != null && response.getStatusCode() >= 300) {
+			throw new ActionFailedException("HTTP Error (" + response.getStatusCode() + ") occurred for URI path: " + request.getURI().toString());
+		}
+		
+		return response;
 		
 	}
 
-	public void setUserAgent(String agent) {
-		this.userAgent = agent;
-	}
-
+	/**
+	 * Convert a API parameters to a appropriate list.
+	 * 
+	 * @param apiParams Input string, for example 'a=2894&b=194'
+	 * @return List of name value pairs to pass with the POST request
+	 */
 	private List<NameValuePair> convertRequestStringToList(String apiParams) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		if (apiParams != null && !apiParams.isEmpty()) {
