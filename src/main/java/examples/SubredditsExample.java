@@ -7,6 +7,8 @@ import org.json.simple.parser.ParseException;
 
 import com.github.jreddit.entity.Subreddit;
 import com.github.jreddit.entity.User;
+import com.github.jreddit.exception.RedditError;
+import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.retrieval.ExtendedSubreddits;
 import com.github.jreddit.retrieval.Subreddits;
 import com.github.jreddit.retrieval.params.SubredditsView;
@@ -32,7 +34,10 @@ public class SubredditsExample {
 		}
 
 		// Create handle to retrieve submissions
-		ExtendedSubreddits subrs = new ExtendedSubreddits(new Subreddits(restClient));
+		Subreddits subrs = new Subreddits(restClient, user);
+		ExtendedSubreddits extSubrs = new ExtendedSubreddits(subrs);
+		
+		try {
 		
 		// Retrieve some submissions!
 
@@ -48,7 +53,7 @@ public class SubredditsExample {
 				// subrs.get(user, SubredditType.MINE, 16);
 				// subrs.get(user, SubredditType.NEW, 22, "t1_29429");
 				
-				List<Subreddit> searchsubreddits = subrs.search("abbot", 10);
+				List<Subreddit> searchsubreddits = extSubrs.search("abbot", 10);
 				System.out.println("Search subreddits, size received: " + searchsubreddits.size());
 				
 				// Other possibilities:
@@ -64,7 +69,12 @@ public class SubredditsExample {
 					System.out.println(s.getDisplayName());
 				}
 				*/
-
+				
+		} catch (RetrievalFailedException e) {
+			e.printStackTrace();
+		} catch (RedditError e) {
+			e.printStackTrace();
+		}
 
 	
 	}

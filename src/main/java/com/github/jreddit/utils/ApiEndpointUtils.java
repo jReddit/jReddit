@@ -1,6 +1,5 @@
 package com.github.jreddit.utils;
 
-import java.net.URLEncoder;
 
 /**
  * Some constants that are used for specifying Reddit API endpoints (example: /api/new_captcha)
@@ -74,7 +73,5 @@ public class ApiEndpointUtils {
     public static final String SUBREDDITS_GET = "/subreddits/%s.json?%s";
     
     public static final String SUBREDDITS_SEARCH = "/subreddits/search.json?%s";
-
-
 
 }

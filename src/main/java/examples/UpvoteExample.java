@@ -5,6 +5,8 @@ import java.util.List;
 import com.github.jreddit.action.SubmissionActions;
 import com.github.jreddit.entity.Submission;
 import com.github.jreddit.entity.User;
+import com.github.jreddit.exception.RedditError;
+import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.retrieval.Submissions;
 import com.github.jreddit.retrieval.params.SubmissionSort;
 import com.github.jreddit.utils.restclient.HttpRestClient;
@@ -28,12 +30,24 @@ public class UpvoteExample {
 		user.connect();
 		
 		Submissions subms = new Submissions(restClient, user);
-		List<Submission> submissions = subms.ofSubreddit("programming", SubmissionSort.HOT, 0, 25, null, null, true);
-
 		SubmissionActions submAct = new SubmissionActions(restClient, user);
 		
-		for (Submission submission : submissions) {
-			submAct.upVote(submission);
+		try {
+			
+			// Retrieve the 25 hottest submissions of the subreddit
+			List<Submission> submissions = subms.ofSubreddit("programming", SubmissionSort.HOT, 0, 25, null, null, true);
+
+			// Upvote each submission
+			for (Submission submission : submissions) {
+				if (!submAct.upVote(submission)) {
+					System.out.println("Could not upvote.");
+				}
+			}
+		
+		} catch (RetrievalFailedException e) {
+			e.printStackTrace();
+		} catch (RedditError e) {
+			e.printStackTrace();
 		}
 		
 	}
