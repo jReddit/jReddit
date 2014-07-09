@@ -126,6 +126,12 @@ public class JsonHelpers {
 
         return redditListing(funnyListing);
     }
+    
+    public static JSONObject createRedditError(int error_code) {
+    	JSONObject data = new JSONObject();
+    	data.put("error", error_code);
+    	return data;
+    }
 
     public static JSONObject createMessage(String author, String messageId, String parentId, boolean newFlag, boolean wasComment) {
         JSONObject data = new JSONObject();

@@ -30,8 +30,9 @@ import com.github.jreddit.utils.restclient.RestClient;
 /**
  * This class offers the following functionality:
  * 1) Parsing the results of a request into Submission objects (see <code>Submissions.parse()</code>).
- * 2) The ability to get submissions from a subreddit (see <code>Submissions.get()</code>).
+ * 2) The ability to get submissions from a subreddit (see <code>Submissions.ofSubreddit()</code>).
  * 3) The ability to search submissions on Reddit (see <code>Submissions.search()</code>).
+ * 4) The ability to get submissions of a user (see <code>Submissions.ofUser()</code>).
  * 
  * @author <a href="http://www.omrlnr.com">Omer Elnour</a>
  * @author <a href="http://www.deltacdev.com">Simon Kassing</a>
@@ -78,11 +79,10 @@ public class Submissions implements ActorDriven {
     /**
      * Parses a JSON feed received from Reddit (URL) into a nice list of Submission objects.
      * 
-     * @param user 	User
      * @param url 	URL
      * @return 		Listing of submissions
      */
-    public List<Submission> parse(String url) throws RetrievalFailedException {
+    public List<Submission> parse(String url) throws RetrievalFailedException, RedditError {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -145,7 +145,7 @@ public class Submissions implements ActorDriven {
      * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
-    protected List<Submission> ofSubreddit(String subreddit, String sort, String count, String limit, String after, String before, String show) throws RetrievalFailedException {
+    protected List<Submission> ofSubreddit(String subreddit, String sort, String count, String limit, String after, String before, String show) throws RetrievalFailedException, RedditError {
     	assert subreddit != null && user != null;
     	
     	// Encode the reddit name for the URL:
@@ -182,7 +182,7 @@ public class Submissions implements ActorDriven {
      * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
-    public List<Submission> ofSubreddit(String subreddit, SubmissionSort sort, int count, int limit, Submission after, Submission before, boolean show_all) throws RetrievalFailedException {
+    public List<Submission> ofSubreddit(String subreddit, SubmissionSort sort, int count, int limit, Submission after, Submission before, boolean show_all) throws RetrievalFailedException, RedditError {
     	
     	if (subreddit == null || subreddit.isEmpty()) {
     		throw new IllegalArgumentException("The subreddit must be defined.");
@@ -216,7 +216,7 @@ public class Submissions implements ActorDriven {
      * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
-    protected List<Submission> search(String query, String syntax, String sort, String time, String count, String limit, String after, String before, String show) throws RetrievalFailedException {
+    protected List<Submission> search(String query, String syntax, String sort, String time, String count, String limit, String after, String before, String show) throws RetrievalFailedException, RedditError {
     	assert query != null && user != null;
     	
     	// Format parameters
@@ -293,7 +293,7 @@ public class Submissions implements ActorDriven {
      * 
      * @return Comments of a user.
      */
-    protected List<Submission> ofUser(String username, String category, String sort, String count, String limit, String after, String before, String show) throws RetrievalFailedException {
+    protected List<Submission> ofUser(String username, String category, String sort, String count, String limit, String after, String before, String show) throws RetrievalFailedException, RedditError {
     	
     	// Format parameters
     	String params = "";
@@ -313,7 +313,6 @@ public class Submissions implements ActorDriven {
      * Get the submissions of a user.
      * In this variant all parameters are Strings.
      *
-     * @param user				(Optional, set null if not used) The user as whom to retrieve the comments
      * @param username	 		Username of the user you want to retrieve from.
      * @param category    		Category in the user overview to retrieve submissions from
      * @param sort	    		(Optional, set null if not used) Sorting method.
