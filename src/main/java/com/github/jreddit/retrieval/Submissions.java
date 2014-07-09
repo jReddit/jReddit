@@ -14,6 +14,7 @@ import com.github.jreddit.entity.Kind;
 import com.github.jreddit.entity.Submission;
 import com.github.jreddit.entity.User;
 import com.github.jreddit.exception.RedditError;
+import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.retrieval.params.QuerySyntax;
 import com.github.jreddit.retrieval.params.SubmissionSort;
 import com.github.jreddit.retrieval.params.SearchSort;
@@ -81,7 +82,7 @@ public class Submissions implements ActorDriven {
      * @param url 	URL
      * @return 		Listing of submissions
      */
-    public List<Submission> parse(String url) {
+    public List<Submission> parse(String url) throws RetrievalFailedException {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -144,7 +145,7 @@ public class Submissions implements ActorDriven {
      * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
-    protected List<Submission> ofSubreddit(String subreddit, String sort, String count, String limit, String after, String before, String show) {
+    protected List<Submission> ofSubreddit(String subreddit, String sort, String count, String limit, String after, String before, String show) throws RetrievalFailedException {
     	assert subreddit != null && user != null;
     	
     	// Encode the reddit name for the URL:
@@ -181,7 +182,7 @@ public class Submissions implements ActorDriven {
      * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
-    public List<Submission> ofSubreddit(String subreddit, SubmissionSort sort, int count, int limit, Submission after, Submission before, boolean show_all) {
+    public List<Submission> ofSubreddit(String subreddit, SubmissionSort sort, int count, int limit, Submission after, Submission before, boolean show_all) throws RetrievalFailedException {
     	
     	if (subreddit == null || subreddit.isEmpty()) {
     		throw new IllegalArgumentException("The subreddit must be defined.");
@@ -215,7 +216,7 @@ public class Submissions implements ActorDriven {
      * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
-    protected List<Submission> search(String query, String syntax, String sort, String time, String count, String limit, String after, String before, String show) {
+    protected List<Submission> search(String query, String syntax, String sort, String time, String count, String limit, String after, String before, String show) throws RetrievalFailedException {
     	assert query != null && user != null;
     	
     	// Format parameters
@@ -253,7 +254,7 @@ public class Submissions implements ActorDriven {
      * @param show_all			Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
-    public List<Submission> search(String query, QuerySyntax syntax, SearchSort sort, TimeSpan time, int count, int limit, Submission after, Submission before, boolean show_all) {
+    public List<Submission> search(String query, QuerySyntax syntax, SearchSort sort, TimeSpan time, int count, int limit, Submission after, Submission before, boolean show_all) throws RetrievalFailedException, IllegalArgumentException {
     	
     	if (query == null || query.isEmpty()) {
     		throw new IllegalArgumentException("The query must be defined.");
@@ -292,7 +293,7 @@ public class Submissions implements ActorDriven {
      * 
      * @return Comments of a user.
      */
-    protected List<Submission> ofUser(String username, String category, String sort, String count, String limit, String after, String before, String show) {
+    protected List<Submission> ofUser(String username, String category, String sort, String count, String limit, String after, String before, String show) throws RetrievalFailedException {
     	
     	// Format parameters
     	String params = "";
@@ -325,7 +326,7 @@ public class Submissions implements ActorDriven {
      * 
      * @return Submissions of a user.
      */
-    public List<Submission> ofUser(String username, UserSubmissionsCategory category, UserOverviewSort sort, int count, int limit, Submission after, Submission before, boolean show_given) {
+    public List<Submission> ofUser(String username, UserSubmissionsCategory category, UserOverviewSort sort, int count, int limit, Submission after, Submission before, boolean show_given) throws RetrievalFailedException, IllegalArgumentException {
     	
     	if (username == null || username.isEmpty()) {
     		throw new IllegalArgumentException("The username must be defined.");

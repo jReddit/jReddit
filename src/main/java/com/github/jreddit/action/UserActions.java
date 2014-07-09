@@ -7,11 +7,23 @@ import org.json.simple.parser.ParseException;
 
 import com.github.jreddit.entity.User;
 import com.github.jreddit.entity.UserInfo;
+import com.github.jreddit.exception.ActionFailedException;
+import com.github.jreddit.retrieval.ActorDriven;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 
-public class UserActions {
+/**
+ * 
+ * @author Omer Elnour
+ * @author Karan Goel
+ * @author Raul Rene Lepsa
+ * @author Benjamin Jakobus
+ * @author Evin Ugur
+ * @author Andrei Sfat
+ * @author Simon Kassing
+ */
+public class UserActions implements ActorDriven {
 
     private RestClient restClient;
     private User user;
@@ -58,7 +70,7 @@ public class UserActions {
      * @throws IOException    	If connection fails
      * @throws ParseException 	If JSON Parsing fails
      */
-    public boolean submitLink(String title, String link, String subreddit, String captcha_iden, String captcha_sol) {
+    public boolean submitLink(String title, String link, String subreddit, String captcha_iden, String captcha_sol) throws ActionFailedException {
         return submit(title, link, false, subreddit, captcha_iden, captcha_sol);
     }
 
@@ -74,7 +86,7 @@ public class UserActions {
      * @throws IOException    	If connection fails
      * @throws ParseException 	If JSON Parsing fails
      */
-    public boolean submitSelfPost(String title, String text, String subreddit, String captcha_iden, String captcha_sol) {
+    public boolean submitSelfPost(String title, String text, String subreddit, String captcha_iden, String captcha_sol) throws ActionFailedException {
         return submit(title, text, true, subreddit, captcha_iden, captcha_sol);
     }
 
@@ -87,7 +99,7 @@ public class UserActions {
      * @throws IOException    	If connection fails
      * @throws ParseException 	If JSON Parsing fails
      */
-    public boolean changePassword(String currentPassword, String newPassword) {
+    public boolean changePassword(String currentPassword, String newPassword) throws ActionFailedException {
     	
     	// Make the request
         JSONObject object = (JSONObject) update(currentPassword, "", newPassword).getResponseObject();
@@ -120,7 +132,7 @@ public class UserActions {
      * @throws IOException    	If connection fails
      * @throws ParseException 	If JSON Parsing fails
      */
-    public Response update(String currentPassword, String email, String newPassword) {
+    public Response update(String currentPassword, String email, String newPassword) throws ActionFailedException {
     	
     	// Format parameters
     	String params = 
@@ -142,7 +154,7 @@ public class UserActions {
      *
      * @return <code>UserInfo</code>object containing the user's info, or null if the retrieval fails
      */
-    public UserInfo getUserInformation() {
+    public UserInfo getUserInformation() throws ActionFailedException {
         if (user.getCookie() == null || user.getModhash() == null) {
             System.err.printf("Please invoke the connect method in order to login the user");
             return null;
@@ -160,7 +172,7 @@ public class UserActions {
      * @param username The username of the user whose account info you want to retrieve.
      * @return UserInfo object consisting of information about the user identified by "username".
      */
-    public UserInfo about(String username) {
+    public UserInfo about(String username) throws ActionFailedException {
 
         // Send GET request to get the account overview
         JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null).getResponseObject();
@@ -184,7 +196,7 @@ public class UserActions {
      * @throws IOException    If connection fails
      * @throws ParseException If JSON parsing fails
      */
-    private boolean submit(String title, String linkOrText, boolean selfPost, String subreddit, String captcha_iden, String captcha_sol) {
+    private boolean submit(String title, String linkOrText, boolean selfPost, String subreddit, String captcha_iden, String captcha_sol) throws ActionFailedException {
         
     	// Parameters
     	String params =         		

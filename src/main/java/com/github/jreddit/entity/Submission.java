@@ -33,7 +33,7 @@ public class Submission extends Thing {
     private double createdUTC;
     private String author;
     private String title;
-    private Boolean nsfw;
+    private boolean nsfw;
     private long commentCount;
     private String subreddit;
     private long upVotes;
@@ -97,10 +97,6 @@ public class Submission extends Thing {
         this.commentCount = commentCount;
     }
 
-    public void setNSFW(boolean nsfw) {
-        this.nsfw = nsfw;
-    }
-
     public void setSubreddit(String subreddit) {
         this.subreddit = subreddit;
     }
@@ -137,11 +133,11 @@ public class Submission extends Thing {
         return restClient;
     }
 
-    public Boolean getNsfw() {
+    public Boolean getNSFW() {
         return nsfw;
     }
 
-    public void setNsfw(Boolean nsfw) {
+    public void setNSFW(Boolean nsfw) {
         this.nsfw = nsfw;
     }
 

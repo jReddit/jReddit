@@ -7,11 +7,13 @@ import org.json.simple.parser.ParseException;
 
 import com.github.jreddit.entity.Submission;
 import com.github.jreddit.entity.User;
+import com.github.jreddit.exception.ActionFailedException;
 import com.github.jreddit.exception.InvalidCookieException;
+import com.github.jreddit.retrieval.ActorDriven;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.RestClient;
 
-public class SubmissionActions {
+public class SubmissionActions implements ActorDriven {
 
     private RestClient restClient;
     private User user;
@@ -53,7 +55,7 @@ public class SubmissionActions {
      * @param subm Submission
      * @param text The text to comment
      */
-    public void comment(Submission subm, String text) throws IOException, ParseException {
+    public void comment(Submission subm, String text) throws InvalidCookieException, ActionFailedException {
         JSONObject object = (JSONObject) restClient.post("thing_id=" + subm.getFullName() + "&text=" + text
                 + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie()).getResponseObject();
 
@@ -69,7 +71,7 @@ public class SubmissionActions {
      * Mark a post as NSFW 
      * @param subm Submission
     **/
-    public void markNSFW(Submission subm) {
+    public void markNSFW(Submission subm) throws ActionFailedException {
         restClient.post(
                 "id=" + subm.getFullName() + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_MARK_AS_NSFW, user.getCookie());
@@ -81,7 +83,7 @@ public class SubmissionActions {
      * @throws IOException    If connection fails
      * @throws ParseException If JSON parsing fails
     **/
-    public void unmarkNSFW(Submission subm) {
+    public void unmarkNSFW(Submission subm) throws ActionFailedException {
         restClient.post(
                 "id=" + subm.getFullName() + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_UNMARK_AS_NSFW, user.getCookie());
@@ -93,7 +95,7 @@ public class SubmissionActions {
      * @throws IOException    If connection fails
      * @throws ParseException If JSON parsing fails
      */
-    public boolean upVote(Submission subm) {
+    public boolean upVote(Submission subm) throws ActionFailedException {
         JSONObject object = voteResponse(subm, 1);
         if (!(object.toJSONString().length() > 2)) {
             // Will return "{}"
@@ -111,7 +113,7 @@ public class SubmissionActions {
      * @throws IOException    If connection fails
      * @throws ParseException If JSON parsing fails
      */
-    public boolean downVote(Submission subm) {
+    public boolean downVote(Submission subm) throws ActionFailedException {
         JSONObject object = voteResponse(subm, -1);
         if (!(object.toJSONString().length() > 2)) {
             System.out.println("Successful downvote!");
@@ -129,7 +131,7 @@ public class SubmissionActions {
      * @throws IOException      If connection fails
      * @throws ParseException   If JSON parsing fails
      */
-    public void save(Submission subm, String category) {
+    public void save(Submission subm, String category) throws ActionFailedException {
         restClient.post(
                 "category=" + category + "&id=" + subm.getFullName() + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_SAVE, user.getCookie());
@@ -141,7 +143,7 @@ public class SubmissionActions {
      * @throws IOException      If connection fails
      * @throws ParseException   If JSON parsing fails
      */
-    public void save(Submission subm) {
+    public void save(Submission subm) throws ActionFailedException {
         restClient.post(
                 "id=" + subm.getFullName() + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_SAVE, user.getCookie());
@@ -153,7 +155,7 @@ public class SubmissionActions {
      * @throws IOException      If connection fails
      * @throws ParseException   If JSON parsing fails
      */
-    public void unsave(Submission subm) throws IOException, ParseException {
+    public void unsave(Submission subm) throws ActionFailedException {
         restClient.post(
                 "id=" + subm.getFullName() + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_UNSAVE, user.getCookie());
@@ -165,7 +167,7 @@ public class SubmissionActions {
      * @param dir 				Direction (precondition: either 1 or -1)
      * @return Response from reddit.
      */
-    private JSONObject voteResponse(Submission subm, int dir) {
+    private JSONObject voteResponse(Submission subm, int dir) throws ActionFailedException {
         return (JSONObject) restClient.post(
                 "id=" 		+ subm.getFullName() + 
                 "&dir=" 	+ dir + 

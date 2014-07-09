@@ -40,6 +40,9 @@ public class Subreddit extends Thing {
     // Description detailing the subreddit
     private String description;
     
+    // Type detailing whether it is public or private
+    private String type;
+    
     /**
      * Create a Submission from a JSONObject
      *
@@ -58,6 +61,8 @@ public class Subreddit extends Thing {
             setNSFW(safeJsonToBoolean(obj.get("over_18")));
             setSubscribers(safeJsonToLong(obj.get("subscribers")));
             setDescription(safeJsonToString(obj.get("description")));
+            setType(safeJsonToString(obj.get("subreddit_type")));
+            
             
         } catch (Exception e) {
         	e.printStackTrace();
@@ -210,7 +215,15 @@ public class Subreddit extends Thing {
         return nsfw;
     }
     
-    public String toString() {
+    public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String toString() {
     	return "Subreddit(" + this.getFullName() + ")<" + this.getDisplayName() + ">";
     }
     

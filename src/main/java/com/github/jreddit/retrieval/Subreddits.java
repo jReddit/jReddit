@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import com.github.jreddit.entity.Kind;
 import com.github.jreddit.entity.Subreddit;
 import com.github.jreddit.entity.User;
+import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.retrieval.params.SubredditsView;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.ParamFormatter;
@@ -30,7 +31,7 @@ import com.github.jreddit.utils.restclient.RestClient;
  * @author Andrei Sfat
  * @author Simon Kassing
  */
-public class Subreddits {
+public class Subreddits implements ActorDriven {
 	
 	/**
 	 * Handle to the REST client instance.
@@ -74,7 +75,7 @@ public class Subreddits {
      * @param url 	URL
      * @return 		Listing of submissions
      */
-    public List<Subreddit> parse(String url) {
+    public List<Subreddit> parse(String url) throws RetrievalFailedException {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -130,7 +131,7 @@ public class Subreddits {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> search(String query, String count, String limit, String after, String before) {
+    public List<Subreddit> search(String query, String count, String limit, String after, String before) throws RetrievalFailedException {
     	
     	// Format parameters
     	String params = "";
@@ -160,7 +161,7 @@ public class Subreddits {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> search(String query, int count, int limit, Subreddit after, Subreddit before) {
+    public List<Subreddit> search(String query, int count, int limit, Subreddit after, Subreddit before) throws RetrievalFailedException {
     	
     	if (query == null || query.isEmpty()) {
     		throw new IllegalArgumentException("The query must be defined.");
@@ -190,7 +191,7 @@ public class Subreddits {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> get(String type, String count, String limit, String after, String before) {
+    public List<Subreddit> get(String type, String count, String limit, String after, String before) throws RetrievalFailedException {
     	
     	// Format parameters
     	String params = "";
@@ -215,7 +216,7 @@ public class Subreddits {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> get(SubredditsView type, int count, int limit, Subreddit after, Subreddit before) {
+    public List<Subreddit> get(SubredditsView type, int count, int limit, Subreddit after, Subreddit before) throws RetrievalFailedException {
         	return get(
         			(type != null) ? type.value() : "",
         			String.valueOf(count),

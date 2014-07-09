@@ -133,7 +133,7 @@ public class Comments implements ActorDriven {
      * 
      * @return Parsed list of comments.
      */
-    public List<Comment> parseDepth(String url) {
+    public List<Comment> parseDepth(String url) throws RetrievalFailedException {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -165,7 +165,7 @@ public class Comments implements ActorDriven {
      * @param comments 	List of comments
      * @param object	JSON Object
      */
-    protected void parseRecursive(List<Comment> comments, JSONObject object) {
+    protected void parseRecursive(List<Comment> comments, JSONObject object) throws RetrievalFailedException {
     	assert comments != null : "List of comments must be instantiated.";
     	assert object != null : "JSON Object must be instantiated.";
     	
@@ -225,7 +225,7 @@ public class Comments implements ActorDriven {
      * 
      * @return Comments of a user.
      */
-    public List<Comment> ofUser(String username, String sort, String time, String count, String limit, String after, String before, String show) {
+    public List<Comment> ofUser(String username, String sort, String time, String count, String limit, String after, String before, String show) throws RetrievalFailedException {
         
     	// Format parameters
     	String params = "";
@@ -256,7 +256,7 @@ public class Comments implements ActorDriven {
      * 
      * @return Comments of a user.
      */
-    public List<Comment> ofUser(String username, UserOverviewSort sort, TimeSpan time, int count, int limit, Comment after, Comment before, boolean show_given) {
+    public List<Comment> ofUser(String username, UserOverviewSort sort, TimeSpan time, int count, int limit, Comment after, Comment before, boolean show_given) throws RetrievalFailedException {
        
     	if (username == null || username.isEmpty()) {
     		throw new IllegalArgumentException("The username must be set.");
@@ -289,7 +289,7 @@ public class Comments implements ActorDriven {
      * 
      * @return Comments of a user.
      */
-    public List<Comment> ofUser(User target, UserOverviewSort sort, TimeSpan time, int count, int limit, Comment after, Comment before, boolean show_given) {
+    public List<Comment> ofUser(User target, UserOverviewSort sort, TimeSpan time, int count, int limit, Comment after, Comment before, boolean show_given) throws RetrievalFailedException {
     	return ofUser(target.getUsername(), sort, time, count, limit, after, before, show_given);
     }
 
@@ -331,7 +331,7 @@ public class Comments implements ActorDriven {
      * @param sort  			(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
      * @return Comments for an article.
      */
-    public List<Comment> ofSubmission(String submissionId, String commentId, int parentsShown, int depth, int limit, CommentSort sort) {
+    public List<Comment> ofSubmission(String submissionId, String commentId, int parentsShown, int depth, int limit, CommentSort sort) throws RetrievalFailedException, IllegalArgumentException {
        
     	if (submissionId == null || submissionId.isEmpty()) {
     		throw new IllegalArgumentException("The identifier of the submission must be set.");
@@ -363,7 +363,7 @@ public class Comments implements ActorDriven {
      * @param sort  			(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
      * @return Comments for an article.
      */
-    public List<Comment> ofSubmission(Submission submission, String commentId, int parentsShown, int depth, int limit, CommentSort sort) {
+    public List<Comment> ofSubmission(Submission submission, String commentId, int parentsShown, int depth, int limit, CommentSort sort) throws RetrievalFailedException {
         return ofSubmission(submission.getIdentifier(), commentId, parentsShown, depth, limit, sort);
     }
     
