@@ -45,35 +45,31 @@ public class Comments {
      * @throws com.github.jreddit.exception.InvalidUserException in case of a non-existent username
      */
     public List<Comment> comments(String username, CommentSort commentSort) throws InvalidUserException {
+        Response response = restClient.get(String.format(ApiEndpointUtils.USER_COMMENTS, username, commentSort.getValue()), null);
+
         List<Comment> comments = new ArrayList<Comment>(500);
 
-        try {
-            JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_COMMENTS,
-                    username, commentSort.getValue()), null);
+        if (response != null) {
+            JSONObject object = (JSONObject) response.getResponseObject();
 
-            if (object != null) {
-                JSONObject data = (JSONObject) object.get("data");
-                JSONArray children = (JSONArray) data.get("children");
+            JSONObject data = (JSONObject) object.get("data");
+            JSONArray children = (JSONArray) data.get("children");
 
-                JSONObject obj;
-                Comment comment;
-                for (Object aChildren : children) {
-                    // Get the object containing the comment
-                    obj = (JSONObject) aChildren;
-                    obj = (JSONObject) obj.get("data");
+            JSONObject obj;
+            Comment comment;
+            for (Object aChildren : children) {
+                // Get the object containing the comment
+                obj = (JSONObject) aChildren;
+                obj = (JSONObject) obj.get("data");
 
-                    // Create a new comment
-                    comment = CommentMapper.mapMessage(obj);
+                // Create a new comment
+                comment = CommentMapper.mapMessage(obj);
 
-                    // Add it to the submissions list
-                    comments.add(comment);
-                }
-            } else {
-                throw new InvalidUserException();
+                // Add it to the submissions list
+                comments.add(comment);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            throw new InvalidUserException();
         }
 
         return comments;
