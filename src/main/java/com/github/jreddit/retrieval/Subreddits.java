@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import com.github.jreddit.entity.Kind;
 import com.github.jreddit.entity.Subreddit;
 import com.github.jreddit.entity.User;
+import com.github.jreddit.exception.RedditError;
 import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.retrieval.params.SubredditsView;
 import com.github.jreddit.utils.ApiEndpointUtils;
@@ -75,7 +76,7 @@ public class Subreddits implements ActorDriven {
      * @param url 	URL
      * @return 		Listing of submissions
      */
-    public List<Subreddit> parse(String url) throws RetrievalFailedException {
+    public List<Subreddit> parse(String url) throws RetrievalFailedException, RedditError {
     	
     	// Determine cookie
     	String cookie = (user == null) ? null : user.getCookie();
@@ -131,7 +132,7 @@ public class Subreddits implements ActorDriven {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> search(String query, String count, String limit, String after, String before) throws RetrievalFailedException {
+    public List<Subreddit> search(String query, String count, String limit, String after, String before) throws RetrievalFailedException, RedditError {
     	
     	// Format parameters
     	String params = "";
@@ -161,7 +162,7 @@ public class Subreddits implements ActorDriven {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> search(String query, int count, int limit, Subreddit after, Subreddit before) throws RetrievalFailedException {
+    public List<Subreddit> search(String query, int count, int limit, Subreddit after, Subreddit before) throws RetrievalFailedException, RedditError {
     	
     	if (query == null || query.isEmpty()) {
     		throw new IllegalArgumentException("The query must be defined.");
@@ -191,7 +192,7 @@ public class Subreddits implements ActorDriven {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> get(String type, String count, String limit, String after, String before) throws RetrievalFailedException {
+    public List<Subreddit> get(String type, String count, String limit, String after, String before) throws RetrievalFailedException, RedditError {
     	
     	// Format parameters
     	String params = "";
@@ -216,7 +217,7 @@ public class Subreddits implements ActorDriven {
      * 
      * @return	List of subreddits that satisfy the given parameters.
      */
-    public List<Subreddit> get(SubredditsView type, int count, int limit, Subreddit after, Subreddit before) throws RetrievalFailedException {
+    public List<Subreddit> get(SubredditsView type, int count, int limit, Subreddit after, Subreddit before) throws RetrievalFailedException, RedditError {
         	return get(
         			(type != null) ? type.value() : "",
         			String.valueOf(count),

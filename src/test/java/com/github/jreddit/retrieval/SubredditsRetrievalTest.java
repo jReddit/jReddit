@@ -1,27 +1,27 @@
 package com.github.jreddit.retrieval;
 
-import static com.github.jreddit.testsupport.JsonHelpers.subredditListingForFunny;
-import static com.github.jreddit.utils.ApiEndpointUtils.SUBREDDITS_GET;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static com.github.jreddit.testsupport.JsonHelpers.redditListing;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.util.List;
 
-import org.json.simple.parser.ParseException;
+import org.json.simple.JSONObject;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.github.jreddit.entity.Subreddit;
-import com.github.jreddit.retrieval.ExtendedSubreddits;
-import com.github.jreddit.retrieval.Subreddits;
+import com.github.jreddit.entity.User;
+import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.retrieval.params.SubredditsView;
+import com.github.jreddit.testsupport.JsonHelpers;
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.RedditConstants;
-import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 
 /**
@@ -31,62 +31,147 @@ import com.github.jreddit.utils.restclient.RestClient;
  */
 public class SubredditsRetrievalTest {
 
+    public static final String COOKIE = "cookie";
+    public static final String REDDIT_NAME = "all";
+    public static final String USERNAME = "TestUser";
+    private Subreddits subject;
     private RestClient restClient;
-    private ExtendedSubreddits underTest;
-    private Response response;
+    private User user;
+    private UtilResponse normalResponse;
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+    
+    /**
+     * Mock classes it depends on.
+     */
     @Before
-    public void setUp() {
+    public void setup() {
+    	user = mock(User.class);
+        when(user.getCookie()).thenReturn(COOKIE);
         restClient = mock(RestClient.class);
-        underTest = new ExtendedSubreddits(new Subreddits(restClient));
+        subject = new Subreddits(restClient, user);
+        normalResponse = new UtilResponse(null, subredditListings(), 200);
     }
 
+
+    /**
+     * Test parsing with normal response.
+     */
     @Test
-    public void getSubredditByNameSuccessfully() throws IOException, ParseException {
-        response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get("/subreddits/search.json?&q=funny&limit=1", null)).thenReturn(response);
+    public void testParseNormal() {
+    	
+    	// Stub REST client methods
+    	String url = "/some/fake/url";
+        when(restClient.get(url, COOKIE)).thenReturn(normalResponse);
+        when(user.getCookie()).thenReturn(COOKIE);
 
-        Subreddit subreddit = underTest.getByName("funny");
-        assertNotNull(subreddit);
+        // Retrieve the submissions
+        List<Subreddit> result = subject.parse(url);
+        verify(restClient, times(1)).get(url, COOKIE);
+        verifyNormalResult(result);
+    	
     }
-
+    
+    /**
+     * Test parse with erroneous response.
+     */
     @Test
-    public void getSubredditByNameForUnknownReddit() throws IOException, ParseException {
-        response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get("/subreddits/search.json?&q=parp&limit=1", null)).thenReturn(response);
+    public void testParseFailedRetrieval() {
+    	
+    	// Stub REST client methods
+    	String url = "/some/fake/url";
+    	doThrow(new RetrievalFailedException("reason")).when(restClient).get(url, COOKIE);
+        when(user.getCookie()).thenReturn(COOKIE);
 
-        Subreddit subreddit = underTest.getByName("parp");
-        assertNull(subreddit);
+        // Retrieve the submissions
+        exception.expect(RetrievalFailedException.class);
+        subject.parse(url);
+    	
     }
-
-
+    
+    /**
+     * Test retrieving subreddits from the overview.
+     */
     @Test
-    public void testGetNewSubreddits() throws InterruptedException, IOException, ParseException {
-        response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(String.format(SUBREDDITS_GET, SubredditsView.NEW.value(), "&limit=" + RedditConstants.MAX_LIMIT_LISTING), null)).thenReturn(response);
-
-        List<Subreddit> subreddits = underTest.get(SubredditsView.NEW);
-        assertNotNull(subreddits);
-        assertTrue(subreddits.size() == 1);
+    public void testSearchSubreddits() {
+    	
+    	// Stub REST client methods
+    	String url = "/subreddits/search.json?&q=query";
+        when(restClient.get(url, COOKIE)).thenReturn(normalResponse);
+        when(user.getCookie()).thenReturn(COOKIE);
+        
+        // Retrieve the submissions
+        List<Subreddit> result = subject.search("query", -1, -1, null, null);
+        verify(restClient, times(1)).get(url, COOKIE);
+        verifyNormalResult(result);
+    	
     }
-
+    
+    /**
+     * Test that the search of subreddits fail with a null query.
+     */
     @Test
-    public void testGetMineSubreddits() throws InterruptedException, IOException, ParseException {
-        response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(String.format(SUBREDDITS_GET, SubredditsView.MINE_SUBSCRIBER.value(), "&limit=" + RedditConstants.MAX_LIMIT_LISTING), null)).thenReturn(response);
-
-        List<Subreddit> subreddits = underTest.get(SubredditsView.MINE_SUBSCRIBER);
-        assertNotNull(subreddits);
-        assertTrue(subreddits.size() == 1);
+    public void testSearchSubredditsFailedQuery() {
+    	exception.expect(IllegalArgumentException.class);
+        subject.search(null, -1, -1, null, null);
     }
-
+    
+    /**
+     * Test retrieving subreddits using search.
+     */
     @Test
-    public void testGetPopularSubreddits() throws InterruptedException, IOException, ParseException {
-        response = new UtilResponse(null, subredditListingForFunny(), 200);
-        when(restClient.get(String.format(SUBREDDITS_GET, SubredditsView.POPULAR.value(), "&limit=" + RedditConstants.MAX_LIMIT_LISTING), null)).thenReturn(response);
-
-        List<Subreddit> subreddits = underTest.get(SubredditsView.POPULAR);
-        assertNotNull(subreddits);
-        assertTrue(subreddits.size() == 1);
+    public void testOverviewSubreddits() {
+    	
+    	// Stub REST client methods
+    	String url = "/subreddits/" + SubredditsView.MINE_CONTRIBUTOR.value() + ".json?&limit=100";
+        when(restClient.get(url, COOKIE)).thenReturn(normalResponse);
+        when(user.getCookie()).thenReturn(COOKIE);
+        
+        // Retrieve the submissions
+        List<Subreddit> result = subject.get(SubredditsView.MINE_CONTRIBUTOR, -1, 100, null, null);
+        verify(restClient, times(1)).get(url, COOKIE);
+        verifyNormalResult(result);
+    	
     }
+    
+    /**
+     * Verify that the normal result is correct.
+     * @param result The list of subreddits returned.
+     */
+    public void verifyNormalResult(List<Subreddit> result) {
+        assertEquals(3, result.size());
+        assertEquals(result.get(0).getFullName(), "t5_subAID");
+        assertEquals(result.get(1).getFullName(), "t5_subBID");
+        assertEquals(result.get(2).getFullName(), "t5_subCID");
+    }
+    
+    /**
+     * Generate a subreddit listing.
+     * 
+     * @return Subreddit listing
+     */
+    @SuppressWarnings("unchecked")
+    private JSONObject subredditListings() {
+    	
+        JSONObject subreddit1 = JsonHelpers.createSubreddit("subA", "t5_subAID", "subAID");
+        JSONObject subreddit2 = JsonHelpers.createSubreddit("subB", "t5_subBID", "subBID");
+        JSONObject subreddit3 = JsonHelpers.createSubreddit("subC", "t5_subCID", "subCID");
+
+        JSONObject a = new JSONObject();
+        a.put("data", subreddit1);
+        a.put("kind", "t5");
+
+        JSONObject b = new JSONObject();
+        b.put("data", subreddit2);
+        b.put("kind", "t5");
+
+        JSONObject c = new JSONObject();
+        c.put("data", subreddit3);
+        c.put("kind", "t5");
+        
+        return redditListing(a, b, c);
+        
+    }
+    
 }

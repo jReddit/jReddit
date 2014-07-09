@@ -237,6 +237,40 @@ public class JsonHelpers {
         submission.put("visited", false);
         return submission;
     }
+    
+    public static JSONObject createSubreddit(String displayName, String redditObjName, String redditObjId) {
+        JSONObject subreddit = new JSONObject();
+        subreddit.put("submit_text_html", null);
+        subreddit.put("user_is_banned", null);
+        subreddit.put("id", redditObjId);
+        subreddit.put("submit_text", "");
+        subreddit.put("display_name", displayName);
+        subreddit.put("header_img", "http://a.thumbs.redditmedia.com/yyL5sveWcgkCPKbr.png");
+        subreddit.put("description_html", "&lt;div&gt; description of " + displayName + "&gt;/div&lt;");
+        subreddit.put("title", "title of " + displayName);
+        subreddit.put("over18", false);
+        subreddit.put("user_is_moderator", null);
+        subreddit.put("header_title", "Header title of " + displayName);
+        subreddit.put("description", "Welcome to " + displayName + ".\nSome rules...");
+        subreddit.put("submit_link_label", null);
+        subreddit.put("accounts_active", null);
+        subreddit.put("public_traffic", true);
+        int[] hs = {160, 64};
+        subreddit.put("header_size", hs); // TODO
+        subreddit.put("subscribers", 2525);
+        subreddit.put("submit_text_label", null);
+        subreddit.put("name", redditObjName);
+        subreddit.put("created", 1201242956.0);
+        subreddit.put("url", "/r/" + displayName + "/");
+        subreddit.put("created_utc", 1201242956.0);
+        subreddit.put("user_is_contributor", null);
+        subreddit.put("public_description", "");
+        subreddit.put("comment_score_hide_mins", 0);
+        subreddit.put("subreddit_type", "public");
+        subreddit.put("subreddit_type", "any");
+        subreddit.put("user_is_subscriber", null);
+        return subreddit;
+    }
 
     public static JSONObject createMediaObject() {
         JSONObject oembed = new JSONObject();

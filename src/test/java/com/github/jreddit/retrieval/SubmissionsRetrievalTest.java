@@ -98,6 +98,7 @@ public class SubmissionsRetrievalTest {
         subject.parse(url);
     	
     }
+    
     /**
      * Test parse with erroneous response.
      */
