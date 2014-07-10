@@ -151,27 +151,11 @@ public class SubredditsRetrievalTest {
      * 
      * @return Subreddit listing
      */
-    @SuppressWarnings("unchecked")
     private JSONObject subredditListings() {
-    	
         JSONObject subreddit1 = JsonHelpers.createSubreddit("subA", "t5_subAID", "subAID");
         JSONObject subreddit2 = JsonHelpers.createSubreddit("subB", "t5_subBID", "subBID");
         JSONObject subreddit3 = JsonHelpers.createSubreddit("subC", "t5_subCID", "subCID");
-
-        JSONObject a = new JSONObject();
-        a.put("data", subreddit1);
-        a.put("kind", "t5");
-
-        JSONObject b = new JSONObject();
-        b.put("data", subreddit2);
-        b.put("kind", "t5");
-
-        JSONObject c = new JSONObject();
-        c.put("data", subreddit3);
-        c.put("kind", "t5");
-        
-        return redditListing(a, b, c);
-        
+        return redditListing(subreddit1, subreddit2, subreddit3);
     }
     
 }

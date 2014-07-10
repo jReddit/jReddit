@@ -278,7 +278,7 @@ public class Comments implements ActorDriven {
     /**
      * Get the comment tree of the given user (object).
      *
-     * @param username	 		Username of the user you want to retrieve from.
+     * @param target	 		User you want to retrieve from.
      * @param sort	    		(Optional, set null if not used) Sorting method.
      * @param time		 		(Optional, set null is not used) Time window
      * @param count        		(Optional, set -1 if not used) Number at which the counter starts
@@ -290,7 +290,13 @@ public class Comments implements ActorDriven {
      * @return Comments of a user.
      */
     public List<Comment> ofUser(User target, UserOverviewSort sort, TimeSpan time, int count, int limit, Comment after, Comment before, boolean show_given) throws RetrievalFailedException, RedditError {
+    	
+    	if (target == null) {
+    		throw new IllegalArgumentException("The user targeted must be set.");
+    	}
+    	
     	return ofUser(target.getUsername(), sort, time, count, limit, after, before, show_given);
+    	
     }
 
     /**
@@ -333,7 +339,7 @@ public class Comments implements ActorDriven {
      */
     public List<Comment> ofSubmission(String submissionId, String commentId, int parentsShown, int depth, int limit, CommentSort sort) throws RetrievalFailedException, IllegalArgumentException {
        
-    	if (submissionId == null || submissionId.isEmpty()) {
+    	if (submissionId == null || submissionId.isEmpty()) { 
     		throw new IllegalArgumentException("The identifier of the submission must be set.");
     	}
     	
@@ -364,7 +370,12 @@ public class Comments implements ActorDriven {
      * @return Comments for an article.
      */
     public List<Comment> ofSubmission(Submission submission, String commentId, int parentsShown, int depth, int limit, CommentSort sort) throws RetrievalFailedException, RedditError {
-        return ofSubmission(submission.getIdentifier(), commentId, parentsShown, depth, limit, sort);
+        
+    	if (submission == null) {
+    		throw new IllegalArgumentException("The submission must be defined.");
+    	}
+    	
+    	return ofSubmission(submission.getIdentifier(), commentId, parentsShown, depth, limit, sort);
     }
     
 	/**

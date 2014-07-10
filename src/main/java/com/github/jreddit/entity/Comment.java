@@ -2,6 +2,8 @@ package com.github.jreddit.entity;
 
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToInteger;
 import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToString;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToBoolean;
+import static com.github.jreddit.utils.restclient.JsonUtils.safeJsonToDouble;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,16 +21,30 @@ public class Comment extends Thing {
 
     private String author;			// Username of the author
     private String parentId;		// Parent identifier
+    private String subreddit;		// Subreddit name
+    private String subredditId;		// Subreddit identifier
+    private String linkId;			// Submission (aka. link) identifier
+    private String bodyHTML;		// The body with HTML markup
+    private Boolean scoreHidden;	// Whether the score is hidden
     private String body;            // The actual body
-    private String edited;          // Edited timestamp
-    private String created;         // Created timestamp
-    private String createdUTC;      // Created UTC timestamp
-    private boolean hasReplies;		// If replies exist on reddit
+    private Boolean edited;         // Edited timestamp
+    private double created;         // Created timestamp
+    private double createdUTC;      // Created UTC timestamp
+    private Boolean hasReplies;		// If replies exist on reddit
     private List<Comment> replies;  // Replies if retrieved
     private Integer gilded;        	// Amount of times the comment been gilded
     private Integer score;        	// Karma score
     private Integer upvotes;        // Number of upvotes that this body received
     private Integer downvotes;      // Number of downvotes that this body received
+    
+    // Possible fields to add as well:
+//    private String bannedBy;
+//    String likes;
+//    private String approvedBy;
+//    private String authorFlairCSSClass;
+//    private String authorFlairText;
+//    String num_reports = null;
+//    String distinguished = null;
 
     public Comment(JSONObject obj) {
     	super(safeJsonToString(obj.get("name")));
@@ -38,16 +54,21 @@ public class Comment extends Thing {
             this.setAuthor(safeJsonToString(obj.get("author")));
             this.setParentId(safeJsonToString(obj.get("parent_id")));
             this.setBody(safeJsonToString(obj.get("body")));
-            this.setEdited(safeJsonToString(obj.get("edited")));
-            this.setCreated(safeJsonToString(obj.get("created")));
-            this.setCreatedUTC(safeJsonToString(obj.get("created_utc")));
+            this.setEdited(safeJsonToBoolean(obj.get("edited")));
+            this.setCreated(safeJsonToDouble(obj.get("created")));
+            this.setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
             hasReplies = (obj.get("replies") != null) ? !safeJsonToString(obj.get("replies")).isEmpty() : false;
             this.replies = new LinkedList<Comment>();
             this.setGilded(safeJsonToInteger(obj.get("gilded")));
             this.setScore(safeJsonToInteger(obj.get("score")));
             this.setUpvotes(safeJsonToInteger(obj.get("ups")));
             this.setDownvotes(safeJsonToInteger(obj.get("downs")));
-
+            this.setSubreddit(safeJsonToString(obj.get("subreddit")));
+            this.setSubredditId(safeJsonToString(obj.get("subreddit_id")));
+            this.setLinkId(safeJsonToString(obj.get("link_id")));
+            this.setBodyHTML(safeJsonToString(obj.get("body_html")));
+            this.setScoreHidden(safeJsonToBoolean(obj.get("score_hidden")));
+            
         } catch (Exception e) {
         	e.printStackTrace();
         	throw new IllegalArgumentException("JSON Object could not be parsed into a Comment. Provide a JSON Object with a valid structure.");
@@ -80,7 +101,7 @@ public class Comment extends Thing {
      * is retrieved recursively.
      * @return Whether there are replies on Reddit for this comment
      */
-    public boolean hasRepliesSomewhere() {
+    public Boolean hasRepliesSomewhere() {
     	return hasReplies;
     }
 
@@ -108,19 +129,19 @@ public class Comment extends Thing {
         this.body = body;
     }
 
-    public String getEdited() {
+    public Boolean getEdited() {
         return edited;
     }
 
-    public void setEdited(String edited) {
+    public void setEdited(Boolean edited) {
         this.edited = edited;
     }
 
-    public String getCreated() {
+    public double getCreated() {
         return created;
     }
 
-    public void setCreated(String created) {
+    public void setCreated(double created) {
         this.created = created;
     }
 
@@ -148,11 +169,11 @@ public class Comment extends Thing {
         this.downvotes = downvotes;
     }
     
-    public String getCreatedUTC() {
+    public double getCreatedUTC() {
 		return createdUTC;
 	}
 
-	public void setCreatedUTC(String createdUTC) {
+	public void setCreatedUTC(double createdUTC) {
 		this.createdUTC = createdUTC;
 	}
 
@@ -162,6 +183,76 @@ public class Comment extends Thing {
 
 	public void setScore(Integer score) {
 		this.score = score;
+	}
+
+	/**
+	 * @return the subreddit
+	 */
+	public String getSubreddit() {
+		return subreddit;
+	}
+
+	/**
+	 * @param subreddit the subreddit to set
+	 */
+	public void setSubreddit(String subreddit) {
+		this.subreddit = subreddit;
+	}
+
+	/**
+	 * @return the subredditId
+	 */
+	public String getSubredditId() {
+		return subredditId;
+	}
+
+	/**
+	 * @param subredditId the subredditId to set
+	 */
+	public void setSubredditId(String subredditId) {
+		this.subredditId = subredditId;
+	}
+
+	/**
+	 * @return the linkId
+	 */
+	public String getLinkId() {
+		return linkId;
+	}
+
+	/**
+	 * @param linkId the linkId to set
+	 */
+	public void setLinkId(String linkId) {
+		this.linkId = linkId;
+	}
+
+	/**
+	 * @return the bodyHTML
+	 */
+	public String getBodyHTML() {
+		return bodyHTML;
+	}
+
+	/**
+	 * @param bodyHTML the bodyHTML to set
+	 */
+	public void setBodyHTML(String bodyHTML) {
+		this.bodyHTML = bodyHTML;
+	}
+
+	/**
+	 * @return the scoreHidden
+	 */
+	public Boolean isScoreHidden() {
+		return scoreHidden;
+	}
+
+	/**
+	 * @param scoreHidden the scoreHidden to set
+	 */
+	public void setScoreHidden(Boolean scoreHidden) {
+		this.scoreHidden = scoreHidden;
 	}
 
 	@Override

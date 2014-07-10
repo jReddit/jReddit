@@ -9,7 +9,6 @@ import org.json.simple.JSONObject;
 
 /**
  * Encapsulates a subreddit.
- * TODO: Subreddit info
  *
  * @author Benjamin Jakobus
  * @author Simon Kassing
@@ -26,13 +25,13 @@ public class Subreddit extends Thing {
     private String url;
 
     // Timestamp of when the subreddit was created
-    private String created;
+    private double created;
 
     // UTC timestamp of when the subreddit was created
     private double createdUTC;
 
     // Whether or not the subreddit is for over 18's
-    private boolean nsfw;
+    private Boolean nsfw;
 
     // The number of subscribers for this subreddit
     private long subscribers;
@@ -55,8 +54,8 @@ public class Subreddit extends Thing {
         	
             setDisplayName(safeJsonToString(obj.get("display_name")));
             setTitle(safeJsonToString(obj.get("title")));
-            setUrl(safeJsonToString(obj.get("url")));
-            setCreated(safeJsonToString(obj.get("created")));
+            setURL(safeJsonToString(obj.get("url")));
+            setCreated(safeJsonToDouble(obj.get("created")));
             setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
             setNSFW(safeJsonToBoolean(obj.get("over_18")));
             setSubscribers(safeJsonToLong(obj.get("subscribers")));
@@ -76,7 +75,7 @@ public class Subreddit extends Thing {
      *
      * @param created Timestamp of when the subreddit was created.
      */
-    public void setCreated(String created) {
+    public void setCreated(double created) {
         this.created = created;
     }
 
@@ -112,7 +111,7 @@ public class Subreddit extends Thing {
      *
      * @param nsfw True if the subreddit is for over 18's; false if not.
      */
-    public void setNSFW(boolean nsfw) {
+    public void setNSFW(Boolean nsfw) {
         this.nsfw = nsfw;
     }
 
@@ -139,7 +138,7 @@ public class Subreddit extends Thing {
      *
      * @param url The subreddit's URL.
      */
-    public void setUrl(String url) {
+    public void setURL(String url) {
         this.url = url;
     }
 
@@ -148,7 +147,7 @@ public class Subreddit extends Thing {
      *
      * @return Timestamp of when the subreddit was created.
      */
-    public String getCreated() {
+    public double getCreated() {
         return created;
     }
 
@@ -202,7 +201,7 @@ public class Subreddit extends Thing {
      *
      * @return The subreddit's URL.
      */
-    public String getUrl() {
+    public String getURL() {
         return url;
     }
 
@@ -211,7 +210,7 @@ public class Subreddit extends Thing {
      *
      * @return True if the subreddit is for over 18's; false if not.
      */
-    public boolean isNSFW() {
+    public Boolean isNSFW() {
         return nsfw;
     }
     

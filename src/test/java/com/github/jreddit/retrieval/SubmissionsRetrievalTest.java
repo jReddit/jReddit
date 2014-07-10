@@ -239,24 +239,12 @@ public class SubmissionsRetrievalTest {
      * 
      * @return Submission listing
      */
-    @SuppressWarnings("unchecked")
     private JSONObject submissionListings() {
-    	
         JSONObject media = createMediaObject();
         JSONObject mediaEmbed = createMediaEmbedObject();
-        JSONObject submission = createSubmission("t3_redditObjName", false, media, mediaEmbed);
-        JSONObject submission1 = createSubmission("t3_anotherRedditObjName", false, media, mediaEmbed);
-
-        JSONObject foo = new JSONObject();
-        foo.put("data", submission);
-        foo.put("kind", "t3");
-
-        JSONObject bar = new JSONObject();
-        bar.put("data", submission1);
-        bar.put("kind", "t3");
-        
-        return redditListing(foo, bar);
-        
+        JSONObject submission1 = createSubmission("t3_redditObjName", false, media, mediaEmbed);
+        JSONObject submission2 = createSubmission("t3_anotherRedditObjName", false, media, mediaEmbed);
+        return redditListing(submission1, submission2);
     }
     
 }

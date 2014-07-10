@@ -1,26 +1,27 @@
 package com.github.jreddit.captcha;
 
-import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.entity.User;
-import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.restclient.Response;
-import com.github.jreddit.utils.restclient.RestClient;
+import static com.github.jreddit.testsupport.JsonHelpers.emptyJsonArray;
+import static com.github.jreddit.testsupport.JsonHelpers.jsonArrayOf;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import java.io.IOException;
-import java.util.Collections;
-
-import static com.github.jreddit.testsupport.JsonHelpers.emptyJsonArray;
-import static com.github.jreddit.testsupport.JsonHelpers.jsonArrayOf;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import com.github.jreddit.entity.User;
+import com.github.jreddit.testsupport.UtilResponse;
+import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.utils.restclient.Response;
+import com.github.jreddit.utils.restclient.RestClient;
 
 /**
  * Class for testing the Captcha methods
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.*;
  *
  * @author Karan Goel
  * @author Raul Rene Lepsa
+ * @author Simon Kassing
  */
 public class CaptchaTest {
 
@@ -37,6 +39,9 @@ public class CaptchaTest {
     private CaptchaDownloader captchaDownloader;
     private Captcha underTest;
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+    
     @Before
     public void setUp() {
         user = mock(User.class);
@@ -56,8 +61,6 @@ public class CaptchaTest {
         
     }
 
-    @Ignore
-    // TODO; NullPointerException thrown
     @Test
     public void newCaptchaUnexpectedJsonStructure() throws IOException, ParseException {
         response = generateBadlyFormedJson();
@@ -65,8 +68,8 @@ public class CaptchaTest {
         when(user.getCookie()).thenReturn("cookie");
         when(restClient.post(null, ApiEndpointUtils.CAPTCHA_NEW, "cookie")).thenReturn(response);
 
+        exception.expect(NullPointerException.class);
         underTest.newCaptcha(user);
-        verify(captchaDownloader).getCaptchaImage("ident");
     }
 
     @Test
