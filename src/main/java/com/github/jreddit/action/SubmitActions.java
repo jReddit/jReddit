@@ -2,10 +2,8 @@ package com.github.jreddit.action;
 
 import org.json.simple.JSONObject;
 
-import com.github.jreddit.entity.Submission;
 import com.github.jreddit.entity.User;
 import com.github.jreddit.exception.ActionFailedException;
-import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.retrieval.ActorDriven;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.RestClient;
@@ -64,22 +62,26 @@ public class SubmitActions implements ActorDriven {
     }
 
     /**
-     * This function comments on this submission saying the comment specified in
-     * <code>text</code> (CAN INCLUDE MARKDOWN).
+     * This function comments on a submission or comment with the given full name.
      *
-     * @param subm Submission
-     * @param text The text to comment
+     * @param fullName Full name of the submission or comment
+     * @param text The text to comment (can include markdown)
      */
-    public void comment(Submission subm, String text) throws InvalidCookieException, ActionFailedException {
-        JSONObject object = (JSONObject) restClient.post("thing_id=" + subm.getFullName() + "&text=" + text
-                + "&uh=" + user.getModhash(), ApiEndpointUtils.SUBMISSION_COMMENT, user.getCookie()).getResponseObject();
+    public boolean comment(String fullname, String text) throws ActionFailedException {
+        
+    	JSONObject object = (JSONObject) restClient.post(
+        		"thing_id=" + fullname + "&text=" + text + "&uh=" + user.getModhash(), 
+        		ApiEndpointUtils.COMMENT, 
+        		user.getCookie()
+        ).getResponseObject();
 
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-            throw new InvalidCookieException("Cookie not present");
+            System.err.println("User is required for the comment action.");
+            return false;
         } else {
-            System.out.println("Commented on thread id " + subm.getFullName()
-                    + " saying: \"" + text + "\"");
+            return true;
         }
+        
     }
     
     /**
