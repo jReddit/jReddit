@@ -2,7 +2,7 @@ package examples;
 
 import java.util.List;
 
-import com.github.jreddit.action.SubmissionActions;
+import com.github.jreddit.action.MarkActions;
 import com.github.jreddit.entity.Submission;
 import com.github.jreddit.entity.User;
 import com.github.jreddit.exception.RedditError;
@@ -30,7 +30,7 @@ public class UpvoteExample {
 		user.connect();
 		
 		Submissions subms = new Submissions(restClient, user);
-		SubmissionActions submAct = new SubmissionActions(restClient, user);
+		MarkActions submAct = new MarkActions(restClient, user);
 		
 		try {
 			
@@ -39,7 +39,7 @@ public class UpvoteExample {
 
 			// Upvote each submission
 			for (Submission submission : submissions) {
-				if (!submAct.upVote(submission)) {
+				if (!submAct.vote(submission.getFullName(), 1)) {
 					System.out.println("Could not upvote.");
 				}
 			}

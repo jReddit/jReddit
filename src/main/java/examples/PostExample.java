@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 import org.json.simple.parser.ParseException;
 
-import com.github.jreddit.action.UserActions;
+import com.github.jreddit.action.SubmitActions;
 import com.github.jreddit.captcha.Captcha;
 import com.github.jreddit.captcha.CaptchaDownloader;
 import com.github.jreddit.entity.User;
@@ -40,7 +40,7 @@ public class PostExample {
 		}
 		
 		// Enable user actions
-		UserActions userActions = new UserActions(restClient, user);
+		 SubmitActions submitActions = new SubmitActions(restClient, user);
 
 		try {
 		
@@ -63,12 +63,12 @@ public class PostExample {
 				sc.close();
 				
 				// Submit the link with captcha
-				userActions.submitLink("Funny dog image", "http://www.boredpanda.com/blog/wp-content/uploads/2014/03/funny-cats-dogs-stuck-furniture-1.jpg", "funny", iden, solution);
+				submitActions.submitLink("Funny dog image", "http://www.boredpanda.com/blog/wp-content/uploads/2014/03/funny-cats-dogs-stuck-furniture-1.jpg", "funny", iden, solution);
 	
 			} else {
 				
 				// Submit the link without captcha
-				userActions.submitLink("Funny dog image", "http://www.boredpanda.com/blog/wp-content/uploads/2014/03/funny-cats-dogs-stuck-furniture-1.jpg", "funny", "", "");
+				submitActions.submitLink("Funny dog image", "http://www.boredpanda.com/blog/wp-content/uploads/2014/03/funny-cats-dogs-stuck-furniture-1.jpg", "funny", "", "");
 			
 			}
 		

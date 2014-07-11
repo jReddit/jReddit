@@ -34,11 +34,11 @@ public class ApiEndpointUtils {
     
     public static final String SUBMISSION_UNMARK_AS_NSFW = REDDIT_BASE_API_ENDPOINT + "/unmarknsfw";
     
-    public static final String SUBMISSION_VOTE = REDDIT_BASE_API_ENDPOINT + "/vote";
+    public static final String VOTE = REDDIT_BASE_API_ENDPOINT + "/vote";
 
-    public static final String SUBMISSION_SAVE = REDDIT_BASE_API_ENDPOINT + "/save";
+    public static final String SAVE = REDDIT_BASE_API_ENDPOINT + "/save";
 
-    public static final String SUBMISSION_UNSAVE = REDDIT_BASE_API_ENDPOINT + "/unsave";
+    public static final String UNSAVE = REDDIT_BASE_API_ENDPOINT + "/unsave";
 
     public static final String SUBMISSION_COMMENTS = "/comments/%s.json?%s";
     
