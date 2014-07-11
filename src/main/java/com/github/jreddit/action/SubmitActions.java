@@ -44,6 +44,24 @@ public class SubmitActions implements ActorDriven {
     	this.user = new_actor;
     }
 
+    /**
+     * This function deletes a submission or comment.
+     *
+     * @param fullName Full name of the thing
+     * @param category Category name
+     *
+     * @throws ActionFailedException If the action failed
+     */
+    public boolean delete(String fullName) throws ActionFailedException {
+    	
+    	JSONObject object = (JSONObject) restClient.post(
+                "id=" + fullName + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.DELETE, user.getCookie()
+        );
+    	
+        return object.toJSONString().length() == 2;
+        
+    }
 
     /**
      * This function comments on this submission saying the comment specified in

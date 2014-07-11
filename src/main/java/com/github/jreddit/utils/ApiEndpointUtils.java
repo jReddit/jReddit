@@ -26,7 +26,7 @@ public class ApiEndpointUtils {
 
     public static final String MESSAGE_GET = "/message/%s.json";
     
-    /* Submission specific constants */
+    /* API functions */
     
     public static final String SUBMISSION_COMMENT = REDDIT_BASE_API_ENDPOINT + "/comment";
     
@@ -39,6 +39,14 @@ public class ApiEndpointUtils {
     public static final String SAVE = REDDIT_BASE_API_ENDPOINT + "/save";
 
     public static final String UNSAVE = REDDIT_BASE_API_ENDPOINT + "/unsave";
+    
+    public static final String HIDE = REDDIT_BASE_API_ENDPOINT + "/hide";
+    
+    public static final String UNHIDE = REDDIT_BASE_API_ENDPOINT + "/unhide";
+    
+    public static final String DELETE = REDDIT_BASE_API_ENDPOINT + "/delete";
+    
+    public static final String REPORT = REDDIT_BASE_API_ENDPOINT + "/report";
 
     public static final String SUBMISSION_COMMENTS = "/comments/%s.json?%s";
     

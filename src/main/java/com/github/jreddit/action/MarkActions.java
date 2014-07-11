@@ -95,6 +95,24 @@ public class MarkActions implements ActorDriven {
         return object.toJSONString().length() == 2;
         
     }
+    
+    /**
+     * This function reports a submission or comment to the moderator of the subreddit it is contained in.
+     * 
+     * @param fullName Full name of the thing
+     *
+     * @throws ActionFailedException If the action failed
+     */
+    public boolean report(String fullName) throws ActionFailedException {
+    	
+    	JSONObject object = (JSONObject) restClient.post(
+                "id=" + fullName + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.REPORT, user.getCookie()
+        );
+    	
+        return object.toJSONString().length() == 2;
+        
+    }
 
     /**
      * This function saves a submission or comment with the given full name.
@@ -131,14 +149,48 @@ public class MarkActions implements ActorDriven {
     }
     
     /**
+     * This function hides a submission or comment with the given full name.
+     * @param fullName Full name of the thing
+     *
+     * @throws ActionFailedException If the action failed
+     */
+    public boolean hide(String fullName) throws ActionFailedException {
+    	
+    	JSONObject object = (JSONObject) restClient.post(
+        		"id=" + fullName + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.HIDE, 
+                user.getCookie()
+        );
+    	
+        return object.toJSONString().length() == 2;
+        
+    }
+
+    /**
+     * This function unhide a submission or comment with the given full name.
+     * @param fullName Full name of the thing
+     *
+     * @throws ActionFailedException If the action failed
+     */
+    public boolean unhide(String fullName) throws ActionFailedException {
+    	JSONObject object = (JSONObject) restClient.post(
+        		"id=" + fullName + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.UNHIDE, 
+                user.getCookie()
+        );
+    	
+        return object.toJSONString().length() == 2;
+    }
+    
+    /**
      * Vote for a comment or submission with the given full name.
      * 
-     * @param dir 	Direction (precondition: either 1 or -1)
+     * @param dir 	Direction (precondition: either -1, 0 or 1)
      * @return Response from reddit.
      */
     public boolean vote(String fullName, int dir) throws ActionFailedException {
         
-    	if (dir != -1 || dir != 1) {
+    	if (dir < -1 || dir > 1) {
     		throw new IllegalArgumentException("Vote direction needs to be -1 or 1.");
     	}
     	
@@ -149,7 +201,7 @@ public class MarkActions implements ActorDriven {
                 ApiEndpointUtils.VOTE, 
                 user.getCookie()
          ).getResponseObject();
-    	
+    	System.out.println(object);
         return object.toJSONString().length() == 2;
     	
     }
