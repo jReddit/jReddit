@@ -201,7 +201,7 @@ public class MarkActions implements ActorDriven {
                 ApiEndpointUtils.VOTE, 
                 user.getCookie()
          ).getResponseObject();
-    	System.out.println(object);
+    	
         return object.toJSONString().length() == 2;
     	
     }
