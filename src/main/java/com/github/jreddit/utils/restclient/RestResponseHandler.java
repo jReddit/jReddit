@@ -22,7 +22,6 @@ public class RestResponseHandler implements ResponseHandler<Response> {
         this.jsonParser = jsonParser;
     }
 
-    @Override
     public Response handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
         try {
             return parse(response);
