@@ -36,7 +36,6 @@ public class Messages {
      * @param messageType <code>MessageType</code> instance, that determines the type of the message
      * @return list of messages based on passed method
      */
-    @SuppressWarnings("unchecked")
     public List<Message> getMessages(User user, int maxMessages, MessageType messageType) {
 
         List<Message> messages = null;

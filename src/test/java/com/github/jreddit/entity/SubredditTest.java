@@ -88,11 +88,26 @@ public class SubredditTest {
         assertEquals(s.isNSFW(), over18);
         assertEquals(s.getSubscribers(), subscribers);
         assertEquals(s.getDescription(), description);
-        assertEquals(s.getType(), subreddit_type);
-        
+        assertEquals(s.getSubredditType(), subreddit_type);
         
         // Possible tests to activate:
-        
+//        assertEquals(s.getSubmitTextHTML(), submit_text_html);
+//        assertEquals(s.isUserBanned(), user_is_banned);
+//        assertEquals(s.getSubmitText(), submit_text);
+//        assertEquals(s.getHeaderIMG(), header_img);
+//        assertEquals(s.getDescriptionHTML(), description_html);
+//        assertEquals(s.isUserModerator(), user_is_moderator);
+//        assertEquals(s.getHeaderTitle(), header_title);
+//        assertEquals(s.getSubmitLinkLabel(), submit_link_label);
+//        assertEquals(s.getAccountsActive(), accounts_active);
+//        assertEquals(s.getPublicTraffic(), public_traffic);
+//        assertEquals(s.getHeaderSize(), header_size);
+//        assertEquals(s.getSubmitTextLabel(), submit_text_label);
+//        assertEquals(s.isUserContributor(), user_is_contributor);
+//        assertEquals(s.getPublicDescription(), public_description);
+//        assertEquals(s.getCommentScoreHideMins(), comment_score_hide_mins, 0);
+//        assertEquals(s.getSubmissionType(), submission_type);
+//        assertEquals(s.isUserSubscriber(), user_is_subscriber);
         
 	}
 	
