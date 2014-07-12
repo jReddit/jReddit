@@ -42,7 +42,7 @@ public class JsonHelpers {
 	*
 	* @return JSON Object with Reddit User Info object structure and contents.
 	*/
-    public static JSONObject generateUserInfo(String username) {
+    public static JSONObject createUserInfo(String username) {
     
         JSONObject data = new JSONObject();
         data.put("comment_karma", 0L);

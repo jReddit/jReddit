@@ -9,11 +9,11 @@ package com.github.jreddit.retrieval.params;
  */
 public enum SubmissionSort {
 
-    HOT				("hot"), 
-    NEW				("new"), 
-    RISING			("rising"), 
-    CONTROVERSIAL	("controversial"), 
-    TOP				("top");
+    HOT("hot"), 
+    NEW("new"), 
+    RISING("rising"), 
+    CONTROVERSIAL("controversial"), 
+    TOP("top");
 
     private final String value;
 

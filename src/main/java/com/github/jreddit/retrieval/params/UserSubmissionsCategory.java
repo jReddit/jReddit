@@ -2,11 +2,11 @@ package com.github.jreddit.retrieval.params;
 
 public enum UserSubmissionsCategory {
 	
-    SUBMITTED		("submitted"), 
-    LIKED			("liked"), 
-    DISLIKED		("disliked"), 
-    HIDDEN			("hidden"),
-    SAVED			("saved");
+    SUBMITTED("submitted"), 
+    LIKED("liked"), 
+    DISLIKED("disliked"), 
+    HIDDEN("hidden"),
+    SAVED("saved");
 
     private final String value;
 

@@ -54,7 +54,7 @@ public class MarkActions implements ActorDriven {
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_MARK_AS_NSFW, 
                 user.getCookie()
-        );
+        ).getResponseObject();
     	
         return object.toJSONString().length() == 2;
         
@@ -72,7 +72,7 @@ public class MarkActions implements ActorDriven {
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SUBMISSION_UNMARK_AS_NSFW, 
                 user.getCookie()
-        );
+        ).getResponseObject();
     	
         return object.toJSONString().length() == 2;
     }
@@ -90,7 +90,7 @@ public class MarkActions implements ActorDriven {
     	JSONObject object = (JSONObject) restClient.post(
                 "category=" + category + "&id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SAVE, user.getCookie()
-        );
+        ).getResponseObject();
     	
         return object.toJSONString().length() == 2;
         
@@ -108,7 +108,7 @@ public class MarkActions implements ActorDriven {
     	JSONObject object = (JSONObject) restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.REPORT, user.getCookie()
-        );
+        ).getResponseObject();
     	
         return object.toJSONString().length() == 2;
         
@@ -126,7 +126,7 @@ public class MarkActions implements ActorDriven {
         		"id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.SAVE, 
                 user.getCookie()
-        );
+        ).getResponseObject();
     	
         return object.toJSONString().length() == 2;
         
@@ -143,7 +143,7 @@ public class MarkActions implements ActorDriven {
         		"id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.UNSAVE, 
                 user.getCookie()
-        );
+        ).getResponseObject();
     	
         return object.toJSONString().length() == 2;
     }
@@ -160,7 +160,7 @@ public class MarkActions implements ActorDriven {
         		"id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.HIDE, 
                 user.getCookie()
-        );
+        ).getResponseObject();
     	
         return object.toJSONString().length() == 2;
         
@@ -177,7 +177,7 @@ public class MarkActions implements ActorDriven {
         		"id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.UNHIDE, 
                 user.getCookie()
-        );
+        ).getResponseObject();
     	
         return object.toJSONString().length() == 2;
     }

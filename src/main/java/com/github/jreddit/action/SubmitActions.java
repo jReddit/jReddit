@@ -55,7 +55,7 @@ public class SubmitActions implements ActorDriven {
     	JSONObject object = (JSONObject) restClient.post(
                 "id=" + fullName + "&uh=" + user.getModhash(),
                 ApiEndpointUtils.DELETE, user.getCookie()
-        );
+        ).getResponseObject();
     	
         return object.toJSONString().length() == 2;
         

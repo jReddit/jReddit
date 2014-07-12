@@ -6,11 +6,11 @@ package com.github.jreddit.retrieval.params;
  */
 public enum SearchSort {
 
-    HOT			("hot"), 
-    RELEVANCE	("relevance"), 
-    NEW			("new"), 
-    TOP			("top"), 
-    COMMENTS	("comments");
+    HOT("hot"), 
+    RELEVANCE("relevance"), 
+    NEW("new"), 
+    TOP("top"), 
+    COMMENTS("comments");
 
     private final String value;
 

@@ -6,10 +6,10 @@ package com.github.jreddit.retrieval.params;
  */
 public enum UserOverviewSort {
 	
-    NEW			("new"), 
-    HOT			("hot"), 
-    TOP			("top"), 
-    COMMENTS	("controversial");
+    NEW("new"), 
+    HOT("hot"), 
+    TOP("top"), 
+    COMMENTS("controversial");
 
     private final String value;
 

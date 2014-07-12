@@ -6,12 +6,12 @@ package com.github.jreddit.retrieval.params;
  */
 public enum TimeSpan {
 
-    HOUR		("hour"), 
-    DAY			("day"), 
-    WEEK		("week"), 
-    MONTH		("month"), 
-    YEAR		("year"),
-    ALL			("all");
+    HOUR("hour"), 
+    DAY("day"), 
+    WEEK("week"), 
+    MONTH("month"), 
+    YEAR("year"),
+    ALL("all");
 
     private final String value;
 

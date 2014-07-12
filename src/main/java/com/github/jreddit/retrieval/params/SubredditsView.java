@@ -6,11 +6,11 @@ package com.github.jreddit.retrieval.params;
  */
 public enum SubredditsView {
 
-    NEW					("new"), 
-    POPULAR				("popular"), 
-    MINE_SUBSCRIBER		("mine/subscriber"), 
-    MINE_CONTRIBUTOR	("mine/contributor"), 
-    MINE_MODERATOR		("mine/moderator");
+    NEW("new"), 
+    POPULAR("popular"), 
+    MINE_SUBSCRIBER("mine/subscriber"), 
+    MINE_CONTRIBUTOR("mine/contributor"), 
+    MINE_MODERATOR("mine/moderator");
 
     private final String value;
 
