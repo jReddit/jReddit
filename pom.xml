@@ -61,6 +61,12 @@
                 <role>developer</role>
             </roles>
         </contributor>
+        <contributor>
+            <name>Simon Kassing</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </contributor>
     </contributors>
 
     <properties>

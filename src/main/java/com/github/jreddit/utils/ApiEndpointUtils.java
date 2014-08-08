@@ -1,5 +1,6 @@
 package com.github.jreddit.utils;
 
+
 /**
  * Some constants that are used for specifying Reddit API endpoints (example: /api/new_captcha)
  *
@@ -25,26 +26,34 @@ public class ApiEndpointUtils {
 
     public static final String MESSAGE_GET = "/message/%s.json";
     
-    /* Submission specific constants */
+    /* API functions */
     
-    public static final String SUBMISSION_COMMENT = REDDIT_BASE_API_ENDPOINT + "/comment";
+    public static final String COMMENT = REDDIT_BASE_API_ENDPOINT + "/comment";
     
     public static final String SUBMISSION_MARK_AS_NSFW = REDDIT_BASE_API_ENDPOINT + "/marknsfw";
     
     public static final String SUBMISSION_UNMARK_AS_NSFW = REDDIT_BASE_API_ENDPOINT + "/unmarknsfw";
     
-    public static final String SUBMISSION_VOTE = REDDIT_BASE_API_ENDPOINT + "/vote";
+    public static final String VOTE = REDDIT_BASE_API_ENDPOINT + "/vote";
 
-    public static final String SUBMISSION_SAVE = REDDIT_BASE_API_ENDPOINT + "/save";
+    public static final String SAVE = REDDIT_BASE_API_ENDPOINT + "/save";
 
-    public static final String SUBMISSION_UNSAVE = REDDIT_BASE_API_ENDPOINT + "/unsave";
+    public static final String UNSAVE = REDDIT_BASE_API_ENDPOINT + "/unsave";
+    
+    public static final String HIDE = REDDIT_BASE_API_ENDPOINT + "/hide";
+    
+    public static final String UNHIDE = REDDIT_BASE_API_ENDPOINT + "/unhide";
+    
+    public static final String DELETE = REDDIT_BASE_API_ENDPOINT + "/delete";
+    
+    public static final String REPORT = REDDIT_BASE_API_ENDPOINT + "/report";
 
-    public static final String SUBMISSION_HIDE = REDDIT_BASE_API_ENDPOINT + "/hide";
-
-    public static final String SUBMISSION_UNHIDE = REDDIT_BASE_API_ENDPOINT + "/unhide";
-
-    public static final String SUBMISSION_COMMENTS = "/r/%s/comments/%s.json?%s";
-
+    public static final String SUBMISSION_COMMENTS = "/comments/%s.json?%s";
+    
+    public static final String SUBMISSIONS_SEARCH = "/search.json?%s";
+    
+    public static final String SUBMISSIONS_GET = "/r/%s.json?%s";
+    
     /* User specific constants */
     
     public static final String USER_LOGIN = REDDIT_BASE_API_ENDPOINT + "/login/%s";
@@ -69,8 +78,8 @@ public class ApiEndpointUtils {
 
     public static final String SUBREDDITS = "/subreddits.json";
 
-    public static final String SUBREDDITS_GET = "/subreddits/%s.json";
+    public static final String SUBREDDITS_GET = "/subreddits/%s.json?%s";
     
-    public static final String SUBMISSIONS = "/r/%s/.json";
+    public static final String SUBREDDITS_SEARCH = "/subreddits/search.json?%s";
 
 }

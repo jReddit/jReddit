@@ -7,7 +7,9 @@ package com.github.jreddit.exception;
  */
 public class InvalidURIException extends Exception {
 
-    public InvalidURIException() {
+	private static final long serialVersionUID = 2470850982592085993L;
+	
+	public InvalidURIException() {
         super();
     }
 

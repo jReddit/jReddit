@@ -14,17 +14,14 @@ public class UtilResponse implements Response {
         this.statusCode = statusCode;
     }
 
-    @Override
     public int getStatusCode() {
         return statusCode;
     }
 
-    @Override
     public Object getResponseObject() {
         return responseObject;
     }
 
-    @Override
     public String getResponseText() {
         return responseText;
     }

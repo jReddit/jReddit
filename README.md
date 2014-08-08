@@ -22,70 +22,48 @@ Send in a pull request with the test and I'll be happy to merge! :-)
 
 ### Examples
 
-Upvote every submission on the frontpage of a subreddit
+Connect a user
+```java
+// Initialize REST Client
+RestClient restClient = new HttpRestClient();
+restClient.setUserAgent("bot/1.0 by name");
+
+// Connect the user 
+User user = new User(restClient, "username", "password");
+try {
+	user.connect();
+} catch (Exception e) {
+	e.printStackTrace();
+}
+```
+
+Retrieve top 100 submissions of /r/programming
 
 ```java
-import com.github.jreddit.submissions.Submission;
-import com.github.jreddit.submissions.Submissions;
-import com.github.jreddit.user.User;
+// Handle to Submissions, which offers the basic API submission functionality
+Submissions subms = new Submissions(restClient, user);
 
-public class Test {
-    public static void main(String[] args) throws Exception {
-        User user = new User("username", "password");
-        user.connect();
+// Retrieve submissions of a submission
+List<Submission> submissionsSubreddit = subms.ofSubreddit("programming", SubmissionSort.TOP, -1, 100, null, null, true);
 
-        for (Submission submission : Submissions.getSubmissions("programming",
-                Submissions.Popularity.HOT, Submissions.Page.FRONTPAGE, user)) {
-            submission.upVote();
-        }
-    }
-}
 ```
 
 Submit a link and self post
 
 ```java
 
-import com.github.jreddit.user.User;
-	
-public class Test {
-    public static void main(String[] args) throws Exception {
-        User user = new User("username", "password");
-        user.connect();
-	
-        user.submitLink(
-                "Oracle V Google judge is a programmer!",
-                "http://www.i-programmer.info/news/193-android/4224-oracle-v-google-judge-is-a-programmer.html",
-                "programming");
-        user.submitSelfPost("What's the difference between a duck?",
-                "One of its legs are both the same!", "funny");
-    }
-}
-```
+// Handle to SubmitActions, which offers the basic API functionality to submit comments and posts
+SubmitActions submitActions = new SubmitActions(restClient, user);
 
-List all submissions made by user called `USERNAME_OF_OTHER_USER`
-
-```java
-import java.util.List;
-import com.github.jreddit.submissions.Submission;
-import com.github.jreddit.user.User;
-	
-/**
- * @author Benjamin Jakobus
- */
-public class Test {
-    public static void main(String[] args) throws Exception {
-        User user = new User("username", "password");
-        user.connect();
-
-        List<Submission> submissions = User.submissions("USERNAME_OF_OTHER_USER");
-        // To list hidden submissions, user User.hidden("...");
-	
-        for (Submission s : submissions) {
-            // Print info here
-        }
-    }
-}
+// Submit a link
+submitActions.submitLink(
+        "Oracle V Google judge is a programmer!",
+        "http://www.i-programmer.info/news/193-android/4224-oracle-v-google-judge-is-a-programmer.html",
+        "programming");
+        
+// Submit a self post
+submitActions.submitSelfPost("What's the difference between a duck?",
+        "One of its legs are both the same!", "funny");
 ```
 
 Send a message to another user
