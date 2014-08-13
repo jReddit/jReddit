@@ -158,7 +158,6 @@ public class Submissions implements ActorDriven {
     	// Format parameters
     	String params = "";
     	
-    	params = ParamFormatter.addParameter(params, "sort", sort);
     	params = ParamFormatter.addParameter(params, "count", count);
     	params = ParamFormatter.addParameter(params, "limit", limit);
     	params = ParamFormatter.addParameter(params, "after", after);
@@ -166,7 +165,7 @@ public class Submissions implements ActorDriven {
     	params = ParamFormatter.addParameter(params, "show", show);
     	
         // Retrieve submissions from the given URL
-        return parse(String.format(ApiEndpointUtils.SUBMISSIONS_GET, subreddit, params));
+        return parse(String.format(ApiEndpointUtils.SUBMISSIONS_GET, subreddit, sort, params));
         
     }
     
@@ -174,7 +173,7 @@ public class Submissions implements ActorDriven {
      * Gets all the submissions of a particular subreddit using the given parameters.
      * 
      * @param subreddit			Name of the reddit (e.g. "funny")
-     * @param sort				Sorting method
+     * @param sort				Sorting method, hot default
      * @param count				Count at which the submissions are started being numbered
      * @param limit				Maximum amount of submissions that can be returned (0-100, 25 default (see Reddit API))
      * @param after				The submission after which needs to be retrieved
@@ -190,7 +189,7 @@ public class Submissions implements ActorDriven {
     	
     	return ofSubreddit(
     			subreddit, 
-    			(sort != null) ? sort.value() : "",
+    			(sort != null) ? sort.value() : "hot",
     			String.valueOf(count),
     			String.valueOf(limit),
     			(after != null) ? after.getFullName() : "",
