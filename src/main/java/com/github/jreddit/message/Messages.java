@@ -123,6 +123,21 @@ public class Messages {
             System.err.println("Error marking message: " + fullName + " as unread");
         }
     }
+    
+    /**
+     * Block a user via inbox
+     *
+     * @param fullName Full name of the <code>User</code> to mark as unread. The full name is a combination of the
+     *                 <code>Kind</code> and ID of the User
+     * @param user     Reddit user that blocks the User
+     */
+    public void block(String fullName, User user) {
+        try {
+            restClient.post("id=" + fullName + "&uh=" + user.getModhash(), ApiEndpointUtils.BLOCK, user.getCookie());
+        } catch (Exception e) {
+            System.err.println("Error blocking: " + fullName);
+        }
+    }
 
     /**
      * Builds a list of Messages from the passed array of children.
