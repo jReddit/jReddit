@@ -127,9 +127,9 @@ public class Messages {
     /**
      * Block a user via inbox
      *
-     * @param fullName Full name of the <code>User</code> to mark as unread. The full name is a combination of the
+     * @param fullName Full name of the <code>User</code> to block. The full name is a combination of the
      *                 <code>Kind</code> and ID of the User
-     * @param user     Reddit user that blocks the User
+     * @param user     Reddit user blocking the User
      */
     public void block(String fullName, User user) {
         try {
