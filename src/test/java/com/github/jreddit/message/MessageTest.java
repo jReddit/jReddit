@@ -114,7 +114,13 @@ public class MessageTest {
 
         verify(restClient).post("id=" + "messageName" + "&uh=" + user.getModhash(), ApiEndpointUtils.MESSAGE_READ, user.getCookie());
     }
+    
+    @Test
+    public void blockUser() {
+        underTest.block("userName", user);
 
+        verify(restClient).post("id=" + "userName" + "&uh=" + user.getModhash(), ApiEndpointUtils.BLOCK, user.getCookie());
+    }
 
     private String veryLongSubject() {
         return StringUtils.rightPad("Title", 100, '*');
