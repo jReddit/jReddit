@@ -123,7 +123,7 @@ public class SubmissionsRetrievalTest {
     public void testSubredditSubmissions() {
     	
     	// Stub REST client methods
-    	String url = "/r/" + REDDIT_NAME + ".json?&sort=new&limit=50";
+    	String url = "/r/" + REDDIT_NAME + "/new.json?limit=50";
         when(restClient.get(url, COOKIE)).thenReturn(normalResponse);
         when(user.getCookie()).thenReturn(COOKIE);
 
