@@ -26,6 +26,8 @@ public class ApiEndpointUtils {
 
     public static final String MESSAGE_GET = "/message/%s.json";
     
+    public static final String BLOCK = REDDIT_BASE_API_ENDPOINT + "/block";
+    
     /* API functions */
     
     public static final String COMMENT = REDDIT_BASE_API_ENDPOINT + "/comment";
