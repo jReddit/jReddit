@@ -33,9 +33,14 @@ public class RestResponseHandler implements ResponseHandler<Response> {
     }
 
     private Response parse(HttpResponse httpResponse) throws IOException, ParseException {
-        InputStream responseStream = httpResponse.getEntity().getContent();
-        String content = IOUtils.toString(responseStream, "UTF-8");
-        Object responseObject = jsonParser.parse(content);
-        return new RestResponse(content, responseObject, httpResponse);
+        InputStream responseStream = null;
+        try{
+            responseStream = httpResponse.getEntity().getContent();
+            String content = IOUtils.toString(responseStream, "UTF-8");
+            Object responseObject = jsonParser.parse(content);
+            return new RestResponse(content, responseObject, httpResponse);
+        }finally{
+            IOUtils.closeQuietly(responseStream);
+        }
     }
 }
