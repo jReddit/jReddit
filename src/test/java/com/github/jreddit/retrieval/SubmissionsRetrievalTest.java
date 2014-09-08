@@ -32,6 +32,7 @@ import com.github.jreddit.retrieval.params.UserOverviewSort;
 import com.github.jreddit.retrieval.params.UserSubmissionsCategory;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.RedditConstants;
+import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 
 /**
@@ -123,7 +124,7 @@ public class SubmissionsRetrievalTest {
     public void testSubredditSubmissions() {
     	
     	// Stub REST client methods
-    	String url = "/r/" + REDDIT_NAME + ".json?&sort=new&limit=50";
+    	String url = "/r/" + REDDIT_NAME + "/new.json?&limit=50";
         when(restClient.get(url, COOKIE)).thenReturn(normalResponse);
         when(user.getCookie()).thenReturn(COOKIE);
 

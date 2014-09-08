@@ -54,7 +54,7 @@ public class ApiEndpointUtils {
     
     public static final String SUBMISSIONS_SEARCH = "/search.json?%s";
     
-    public static final String SUBMISSIONS_GET = "/r/%s.json?%s";
+    public static final String SUBMISSIONS_GET = "/r/%s/%s.json?%s";
     
     /* User specific constants */
     
