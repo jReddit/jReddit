@@ -488,7 +488,7 @@ public class Submission extends Thing {
     
     @Override
     public boolean equals(Object other) {
-    	return (other instanceof Submission && this.getFullName().equals(((Comment) other).getFullName()));
+    	return (other instanceof Submission && this.getFullName().equals(((Submission) other).getFullName()));
     }
 
 	public int compareTo(Thing o) {
