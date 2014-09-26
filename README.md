@@ -18,7 +18,12 @@ Personally, I would suggest reading through the source code to understand the ge
 Send in a pull request with the test and I'll be happy to merge! :-)
 
 ### Dependencies
-[JSON-simple](http://code.google.com/p/json-simple/)
+1. [JSON-simple](http://code.google.com/p/json-simple/)
+
+2. [Apache HttpComponents](https://hc.apache.org/)
+
+3. [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
+
 
 ### Examples
 
