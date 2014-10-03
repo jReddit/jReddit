@@ -85,6 +85,28 @@ public class SubmitActions implements ActorDriven {
     }
     
     /**
+     * This function submits a message to the specified live thread.
+     * 
+     * @param liveThread ID of the live thread to submit to.
+     * @param message The message to submit.
+     */
+    public boolean postToLive(String liveThread, String message) {
+    	
+		JSONObject object = (JSONObject) restClient.post(
+				"api_type=json&body=" + message + "&uh=" + user.getModhash(),
+				String.format(ApiEndpointUtils.LIVE_THREAD, liveThread),
+				user.getCookie()
+		).getResponseObject();
+		
+		 if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+	            System.err.println("User is required for the comment action.");
+	            return false;
+	        } else {
+	            return true;
+	        }
+    }
+    
+    /**
      * This function submits a link to the specified subreddit.
      * Requires authentication.
      *
