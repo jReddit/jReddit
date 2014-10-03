@@ -86,6 +86,8 @@ public class ApiEndpointUtils {
     
     /* Live Thread specific constants */
     
-    public static final String LIVE_THREAD = REDDIT_BASE_API_ENDPOINT + "/live/%s/update";
+    public static final String LIVE_THREAD_CREATE = REDDIT_BASE_API_ENDPOINT + "/live/create";
+    
+    public static final String LIVE_THREAD_UPDATE = REDDIT_BASE_API_ENDPOINT + "/live/%s/update";
 
 }

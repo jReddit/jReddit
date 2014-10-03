@@ -85,25 +85,48 @@ public class SubmitActions implements ActorDriven {
     }
     
     /**
-     * This function submits a message to the specified live thread.
+     * This function creates a live thread.
+     * 
+     * @param title The title of the live thread.
+     * @param description The title of the live thread.
+     * @return
+     */
+    public boolean createLive(String title, String description) {
+    	
+    	JSONObject object = (JSONObject) restClient.post(
+				"api_type=json&title=" + title + "&description=" + description + "&uh=" + user.getModhash(),
+				ApiEndpointUtils.LIVE_THREAD_CREATE,
+				user.getCookie()
+		).getResponseObject();
+		
+		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+            System.err.println("User is required for the comment action.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * This function updates the specified live thread.
      * 
      * @param liveThread ID of the live thread to submit to.
      * @param message The message to submit.
      */
-    public boolean postToLive(String liveThread, String message) {
+    public boolean updateLive(String liveThread, String message) {
     	
 		JSONObject object = (JSONObject) restClient.post(
 				"api_type=json&body=" + message + "&uh=" + user.getModhash(),
-				String.format(ApiEndpointUtils.LIVE_THREAD, liveThread),
+				String.format(ApiEndpointUtils.LIVE_THREAD_UPDATE, liveThread),
 				user.getCookie()
 		).getResponseObject();
 		
-		 if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-	            System.err.println("User is required for the comment action.");
-	            return false;
-	        } else {
-	            return true;
-	        }
+		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+            System.err.println("User is required for the comment action.");
+            return false;
+        } else {
+            return true;
+        }
     }
     
     /**
