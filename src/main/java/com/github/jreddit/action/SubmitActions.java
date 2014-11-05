@@ -76,7 +76,7 @@ public class SubmitActions implements ActorDriven {
         ).getResponseObject();
 
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-            System.err.println("User is required for the comment action.");
+            System.err.println("User submission failed: please login first.");
             return false;
         } else {
             return true;
@@ -89,7 +89,6 @@ public class SubmitActions implements ActorDriven {
      * 
      * @param title The title of the live thread.
      * @param description The title of the live thread.
-     * @return
      */
     public boolean createLive(String title, String description) {
     	
@@ -100,7 +99,7 @@ public class SubmitActions implements ActorDriven {
 		).getResponseObject();
 		
 		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-            System.err.println("User is required for the comment action.");
+            System.err.println("User submission failed: please login first.");
             return false;
         } else {
             return true;
@@ -122,7 +121,7 @@ public class SubmitActions implements ActorDriven {
 		).getResponseObject();
 		
 		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-            System.err.println("User is required for the comment action.");
+            System.err.println("User submission failed: please login first.");
             return false;
         } else {
             return true;
