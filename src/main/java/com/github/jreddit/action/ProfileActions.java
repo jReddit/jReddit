@@ -147,4 +147,19 @@ public class ProfileActions implements ActorDriven {
         return data != null ? new UserInfo(data) : null;
     }
     
+    public Response delete(Boolean confirm, String message, String password) throws ActionFailedException {
+    	
+    	// Format parameters
+    	String params = 
+    			"api_type=json"
+    			+ "&confirm=" + confirm + 
+    			"&delete_message=" + message 
+    				+ "&passwd=" + password 
+    					+ "&uh=" + user.getModhash() 
+    						+ "&user=" + user.getUsername();
+    	
+    	// Post request
+    	return restClient.post(params, ApiEndpointUtils.USER_DELETE, user.getCookie());
+    }
+    
 }
