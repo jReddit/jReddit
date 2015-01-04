@@ -139,10 +139,13 @@ public class FlairActions implements ActorDriven {
     }
 
     /**
-     * This deletes the given flair template in the given subreddit<br><br>
+     * This deletes the given flair template in the given subreddit
+     * <br>
+     * Private due to deprecation. The method should not be used.<br><br>
      * <p/>
      * 'https://www.reddit.com/dev/api#POST_api_deleteflairtemplate'
      * <p/>
+     * <code>
      * <table>
      * <tr>
      * <td>api_type</td>
@@ -161,8 +164,10 @@ public class FlairActions implements ActorDriven {
      * @param flairTemplateID The flair template ID.
      * @param subreddit       The subreddit to delete the flair on.
      * @return Response The response of the request
+     * @deprecated Currently not working - do not use.
      */
-    public Response deleteFlairTemplate(String flairTemplateID, String subreddit) {
+    @Deprecated
+    private Response deleteFlairTemplate(String flairTemplateID, String subreddit) {
         //Format the required parameters
         String params = ""
                 + "api_type=" + "json"
@@ -327,7 +332,7 @@ public class FlairActions implements ActorDriven {
     }
 
     /**
-     * This method will list the flairs between the after and before post ids.
+     * This method will list the flairs.
      * <br>
      * Private due to deprecation. The method should not be used.
      * <br><br>
