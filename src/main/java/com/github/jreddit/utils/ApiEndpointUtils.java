@@ -55,6 +55,28 @@ public class ApiEndpointUtils {
     public static final String SUBMISSIONS_SEARCH = "/search.json?%s";
     
     public static final String SUBMISSIONS_GET = "/r/%s/%s.json?%s";
+
+    /* Flair specific constants */
+
+    public static final String USER_DELETE_SUBREDDIT_FLAIR = "/r/%s/api/deleteflair";
+
+    public static final String CLEAR_SUBREDDIT_FLAIR_TEMPLATES = "/r/%s/api/clearflairtemplates";
+
+    public static final String DELETE_SUBREDDIT_FLAIR_TEMPLATE = "/r/%s/api/deleteflairtemplate";
+
+    public static final String FLAIR = "/r/%s/api/flair";
+
+    public static final String FLAIR_CONFIG = "/r/%s/api/flairconfig";
+
+    public static final String FLAIR_LIST = "/r/%s/api/flairlist";
+
+    public static final String FLAIR_SELECTOR = "/r/%s/api/flairselector";
+
+    public static final String FLAIR_TEMPLATE = "/r/%s/api/flairtemplate";
+
+    public static final String SELECT_FLAIR = "/r/%s/api/selectflair";
+
+    public static final String FLAIR_ENABLED = "/r/%s/api/setflairenabled";
     
     /* User specific constants */
     
