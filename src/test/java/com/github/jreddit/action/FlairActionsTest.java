@@ -13,20 +13,25 @@ import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by Ryan on 04/01/2015.
+ * JUnit testing for the FlairActions class.
  *
- * @author Ryan
+ * @author Ryan Delaney (Vitineth)
  * @since 04/01/2015
  */
 public class FlairActionsTest {
 
     private User user;
     public static final String COOKIE = "cookie";
-    public static final String REDDIT_NAME = "all";
+    public static final String SUBREDDIT_NAME = "TestSubreddit";
     public static final String USERNAME = "TestUser";
+    public static final String FLAIR_CSS_CLASS = "flair-css";
+    public static final String FLAIR_TEMPLATE_ID = "flairTemplateID";
+    public static final String FLAIR_TEXT = "TestFlair";
+    public static final String FLAIR_SUBMISSION_ID = "t3_SubmID";
+    public static final String FLAIR_POSITION = "left";
+
     private FlairActions subject;
     private RestClient restClient;
-    private Response response;
     private Response desiredResponse;
 
     @Before
@@ -44,7 +49,7 @@ public class FlairActionsTest {
     @Test
     public void testSetUserFlair() {
         when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
-        subject.flair("red", null, "Tridentac", "Blueprinter", "myblueprints");
+        subject.flair(FLAIR_CSS_CLASS, null, USERNAME, FLAIR_TEXT, SUBREDDIT_NAME);
         verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
@@ -54,7 +59,7 @@ public class FlairActionsTest {
     @Test
     public void testSetLinkFlair() {
         when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
-        subject.flair("red", "t3_2r86db", null, "Blueprinter", "myblueprints");
+        subject.flair(FLAIR_CSS_CLASS, FLAIR_SUBMISSION_ID, null, FLAIR_TEXT, SUBREDDIT_NAME);
         verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
@@ -65,7 +70,7 @@ public class FlairActionsTest {
     public void testRemoveUserFlair() {
 
         when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
-        subject.deleteFlair("Tridentac", "myblueprints");
+        subject.deleteFlair(USERNAME, SUBREDDIT_NAME);
         verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
@@ -75,7 +80,7 @@ public class FlairActionsTest {
     @Test
     public void testRemoveUserFlairTemplates() {
         when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
-        subject.clearFlairTemplates("USER_FLAIR", "myblueprints");
+        subject.clearFlairTemplates("USER_FLAIR", SUBREDDIT_NAME);
         verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
@@ -85,7 +90,7 @@ public class FlairActionsTest {
     @Test
     public void testRemoveLinkFlairTemplates() {
         when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
-        subject.clearFlairTemplates("LINK_FLAIR", "myblueprints");
+        subject.clearFlairTemplates("LINK_FLAIR", SUBREDDIT_NAME);
         verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
@@ -95,7 +100,7 @@ public class FlairActionsTest {
     @Test
     public void testSetFlairConfigs() {
         when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
-        subject.flairConfig(true, "left", false, "right", true, "myblueprints");
+        subject.flairConfig(true, FLAIR_POSITION, false, FLAIR_POSITION, true, SUBREDDIT_NAME);
         verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
@@ -105,7 +110,7 @@ public class FlairActionsTest {
     @Test
     public void testAddFlairTemplate() {
         when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
-        subject.flairTemplate("blueteam", "BLUE-TAG", "USER_FLAIR", "Blue Team", false, "myblueprints");
+        subject.flairTemplate(FLAIR_CSS_CLASS, FLAIR_TEMPLATE_ID, "USER_FLAIR", FLAIR_TEXT, false, SUBREDDIT_NAME);
         verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
@@ -115,7 +120,7 @@ public class FlairActionsTest {
     @Test
     public void testSelectFlair() {
         when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
-        subject.selectFlair("BLUE-TAG", null, "Vitineth", "Blue team", "myblueprints");
+        subject.selectFlair(FLAIR_TEMPLATE_ID, null, USERNAME, FLAIR_TEXT, SUBREDDIT_NAME);
         verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
@@ -125,7 +130,7 @@ public class FlairActionsTest {
     @Test
     public void testSetFlairEnabled() {
         when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
-        subject.setFlairEnabled(true, "myblueprints");
+        subject.setFlairEnabled(true, SUBREDDIT_NAME);
         verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
