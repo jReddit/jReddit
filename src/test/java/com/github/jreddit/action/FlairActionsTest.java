@@ -1,23 +1,16 @@
 package com.github.jreddit.action;
 
 import com.github.jreddit.entity.User;
-import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 import com.github.jreddit.utils.restclient.RestResponse;
-import examples.Authentication;
 import org.apache.http.HttpResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Ryan on 04/01/2015.
@@ -27,130 +20,113 @@ import static org.mockito.Mockito.mock;
  */
 public class FlairActionsTest {
 
+    private User user;
+    public static final String COOKIE = "cookie";
+    public static final String REDDIT_NAME = "all";
+    public static final String USERNAME = "TestUser";
     private FlairActions subject;
+    private RestClient restClient;
     private Response response;
     private Response desiredResponse;
 
-    /**
-     * Mock depended classes and stub if necessary.
-     *
-     * @throws Exception
-     */
     @Before
-    public void setup() throws Exception {
-        RestClient restClient = new HttpRestClient();
-        restClient.setUserAgent("FlairTesterClass/1.0 by name");
-
-        User user = new User(restClient, Authentication.getUsername(), Authentication.getPassword());
-        try {
-            user.connect();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        } catch (ParseException e1) {
-            e1.printStackTrace();
-        }
-
-        desiredResponse = new RestResponse("{\"json\": {\"errors\": []}}", (JSONObject) JSONValue.parse("{\"json\": {\"errors\": []}}"), mock(HttpResponse.class));
+    public void setUp() {
+        user = mock(User.class);
+        when(user.getCookie()).thenReturn(COOKIE);
+        restClient = mock(RestClient.class);
         subject = new FlairActions(restClient, user);
+        desiredResponse = new RestResponse("{\"json\": {\"errors\": []}}", (JSONObject) JSONValue.parse("{\"json\": {\"errors\": []}}"), mock(HttpResponse.class));
     }
 
     /**
-     * Succesfully get user information.
+     * Test for setting the users flair
      */
     @Test
     public void testSetUserFlair() {
-        response = subject.flair("red", null, "Tridentac", "Blueprinter", "myblueprints");
-        assertNotNull(response);
-        assertEquals(desiredResponse.getResponseText(), response.getResponseText());
-        assertEquals(desiredResponse.getResponseObject(), response.getResponseObject());
+        when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
+        subject.flair("red", null, "Tridentac", "Blueprinter", "myblueprints");
+        verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
     /**
-     * Successfully get the information about a user.
+     * Test for setting a links flair
      */
     @Test
     public void testSetLinkFlair() {
-        response = subject.flair("red", "t3_2r86db", null, "Blueprinter", "myblueprints");
-        assertNotNull(response);
-        assertEquals(desiredResponse.getResponseText(), response.getResponseText());
-        assertEquals(desiredResponse.getResponseObject(), response.getResponseObject());
+        when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
+        subject.flair("red", "t3_2r86db", null, "Blueprinter", "myblueprints");
+        verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
     /**
-     * Successfully get the information about a user.
+     * Test for removing a users flair
      */
     @Test
     public void testRemoveUserFlair() {
-        response = subject.deleteFlair("Tridentac", "myblueprints");
-        assertNotNull(response);
-        assertEquals(desiredResponse.getResponseText(), response.getResponseText());
-        assertEquals(desiredResponse.getResponseObject(), response.getResponseObject());
+
+        when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
+        subject.deleteFlair("Tridentac", "myblueprints");
+        verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
     /**
-     * Successfully get the information about a user.
+     * Test for removing all user flair templates.
      */
     @Test
     public void testRemoveUserFlairTemplates() {
-        response = subject.clearFlairTemplates("USER_FLAIR", "myblueprints");
-        assertNotNull(response);
-        assertEquals(desiredResponse.getResponseText(), response.getResponseText());
-        assertEquals(desiredResponse.getResponseObject(), response.getResponseObject());
+        when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
+        subject.clearFlairTemplates("USER_FLAIR", "myblueprints");
+        verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
     /**
-     * Successfully get the information about a user.
+     * Test for removing all link flair templates.
      */
     @Test
     public void testRemoveLinkFlairTemplates() {
-        response = subject.clearFlairTemplates("LINK_FLAIR", "myblueprints");
-        assertNotNull(response);
-        assertEquals(desiredResponse.getResponseText(), response.getResponseText());
-        assertEquals(desiredResponse.getResponseObject(), response.getResponseObject());
+        when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
+        subject.clearFlairTemplates("LINK_FLAIR", "myblueprints");
+        verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
     /**
-     * Successfully get the information about a user.
+     * Test for setting a subreddits flair configs
      */
     @Test
     public void testSetFlairConfigs() {
-        response = subject.flairConfig(true, "left", false, "right", true, "myblueprints");
-        assertNotNull(response);
-        assertEquals(desiredResponse.getResponseText(), response.getResponseText());
-        assertEquals(desiredResponse.getResponseObject(), response.getResponseObject());
+        when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
+        subject.flairConfig(true, "left", false, "right", true, "myblueprints");
+        verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
     /**
-     * Successfully get the information about a user.
+     * Test for adding a flair template
      */
     @Test
     public void testAddFlairTemplate() {
-        response = subject.flairTemplate("blueteam", "BLUE-TAG", "USER_FLAIR", "Blue Team", false, "myblueprints");
-        assertNotNull(response);
-        assertEquals(desiredResponse.getResponseText(), response.getResponseText());
-        assertEquals(desiredResponse.getResponseObject(), response.getResponseObject());
+        when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
+        subject.flairTemplate("blueteam", "BLUE-TAG", "USER_FLAIR", "Blue Team", false, "myblueprints");
+        verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
     /**
-     * Successfully get the information about a user.
+     * Test for selecting a users flair
      */
     @Test
     public void testSelectFlair() {
-        response = subject.selectFlair("BLUE-TAG", null, "Vitineth", "Blue team", "myblueprints");
-        assertNotNull(response);
-        assertEquals(desiredResponse.getResponseText(), response.getResponseText());
-        assertEquals(desiredResponse.getResponseObject(), response.getResponseObject());
+        when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
+        subject.selectFlair("BLUE-TAG", null, "Vitineth", "Blue team", "myblueprints");
+        verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
     /**
-     * Successfully get the information about a user.
+     * Test for setting fairs as enabled.
      */
     @Test
     public void testSetFlairEnabled() {
-        response = subject.setFlairEnabled(true, "myblueprints");
-        assertNotNull(response);
-        assertEquals(desiredResponse.getResponseText(), response.getResponseText());
-        assertEquals(desiredResponse.getResponseObject(), response.getResponseObject());
+        when(restClient.post(anyString(), anyString(), eq(COOKIE))).thenReturn(desiredResponse);
+        subject.setFlairEnabled(true, "myblueprints");
+        verify(restClient, times(1)).post(anyString(), anyString(), eq(COOKIE));
     }
 
 
