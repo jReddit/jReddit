@@ -32,8 +32,6 @@ public class FlairExample {
         //Create the flair actions controlled
         FlairActions flairActions = new FlairActions(restClient, user);
 
-        System.out.println(flairActions.flair("red", null, "Vitineth", "Test", "myblueprints").getStatusCode());
-
         //Add the flair 'Blueprinter' to the post 't3_2r86db' in the subreddit 'myblueprints' with the css class 'red'
         System.out.println(flairActions.flair("red", "t3_2r86db", null, "Blueprinter", "myblueprints").getStatusCode());
 
