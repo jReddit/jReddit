@@ -27,14 +27,7 @@ import static org.mockito.Mockito.mock;
  */
 public class FlairActionsTest {
 
-    public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
-    public static final String COOKIE = "cookie";
-    public static final String MOD_HASH = "modHash";
-    public static final String UNKNOWN_USERNAME = "unknownUsername";
-    private User user;
     private FlairActions subject;
-    private RestClient restClient;
     private Response response;
     private Response desiredResponse;
 
