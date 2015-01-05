@@ -20,6 +20,7 @@ import com.github.jreddit.utils.restclient.RestClient;
  * @author Evin Ugur
  * @author Andrei Sfat
  * @author Simon Kassing
+ * @author Dinc Ciftci
  */
 public class ProfileActions implements ActorDriven {
 
@@ -160,6 +161,55 @@ public class ProfileActions implements ActorDriven {
     	
     	// Post request
     	return restClient.post(params, ApiEndpointUtils.USER_DELETE, user.getCookie());
+    }
+    
+    /**
+     * Creates a new account.
+     * 
+     * @param username      A valid, unused, username
+     * @param email               A valid e-mail address (can be empty)
+     * @param newPassword       The account's password
+     * @param copyPassword  should be same as newPassword (for validation)
+     * @param captcha_iden  the identifier of the CAPTCHA challenge (not necessarily required)
+     * @param captcha_sol   the user's response to the CAPTCHA challenge (required if there was a CAPTCHA challenge)
+     * @throws ActionFailedException        If the action failed
+     */
+    public Response register(String username, String email, String newPassword, String copyPassword, String captcha_iden, String captcha_sol) throws ActionFailedException {
+        
+        // Format parameters
+        String params = 
+                "api_type=json"
+                + "&captcha=" + captcha_sol 
+                  +"&email=" + email 
+                    + "&iden=" + captcha_iden
+                      + "&passwd=" + newPassword
+                        + "&passwd2=" + copyPassword 
+                          + "&user=" + username;    
+    
+        // Post request
+         
+                
+        Response result = restClient.post(params, ApiEndpointUtils.USER_REGISTER, "");//no user, no cookie
+        JSONObject object = (JSONObject) result.getResponseObject();
+        
+
+        if (object.toJSONString().contains("BAD_CAPTCHA")) {        
+          System.err.println("Wrong captcha!");               
+        } 
+        else if (object.toJSONString().contains("RATELIMIT")) {
+          System.err.println("User creation failed: you are doing that too much.");        
+        } 
+        else if (object.toJSONString().contains("USERNAME_TAKEN")) {    
+          System.err.println("User creation failed: that username is already taken.");          
+        } 
+        else if (object.toJSONString().contains("BAD_PASSWORD_MATCH")) {
+          System.err.println("User creation failed: passwords do not match."); 
+          
+        } else {        
+          this.user = new User(this.restClient, username, newPassword);
+        }
+        
+        return result;
     }
     
 }
