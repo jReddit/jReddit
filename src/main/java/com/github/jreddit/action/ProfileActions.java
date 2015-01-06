@@ -148,6 +148,15 @@ public class ProfileActions implements ActorDriven {
         return data != null ? new UserInfo(data) : null;
     }
     
+    /**
+     * Deletes the reddit account.
+     * Requires authentication.
+     * 
+     * @param confirm   Confirmation by the user
+     * @param message   Optional message explaining the reason for the account's deletion
+     * @param password  Account's password
+     * @throws ActionFailedException        If the action failed
+     */
     public Response delete(Boolean confirm, String message, String password) throws ActionFailedException {
     	
     	// Format parameters
