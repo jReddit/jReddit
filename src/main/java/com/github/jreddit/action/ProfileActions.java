@@ -141,6 +141,9 @@ public class ProfileActions implements ActorDriven {
     public UserInfo about(String username) throws ActionFailedException {
 
         // Send GET request to get the account overview
+      
+        if(username == "[deleted]")
+          throw new ActionFailedException("There is no information associated with the username [deleted]");
         JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null).getResponseObject();
         JSONObject data = (JSONObject) object.get("data");
 
