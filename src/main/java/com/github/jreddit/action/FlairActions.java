@@ -127,7 +127,7 @@ public class FlairActions {
         }
         //Format the required parameters
         String params = ""
-                + "api_type=" + "json"
+                + "api_type=json"
                 + "&uh=" + user.getModhash()
                 + "&flair_type=" + type;
 
@@ -167,7 +167,7 @@ public class FlairActions {
     private Response deleteFlairTemplate(String flairTemplateID, String subreddit) {
         //Format the required parameters
         String params = ""
-                + "api_type=" + "json"
+                + "api_type=json"
                 + "&uh=" + user.getModhash()
                 + "&flair_template_id=" + flairTemplateID;
 
@@ -241,7 +241,7 @@ public class FlairActions {
         }
 
         String params = ""
-                + "api_type=" + "json"
+                + "api_type=json"
                 + "&uh=" + user.getModhash()
                 + (cssClass != null ? "&css_class=" + cssClass : "")
                 + (link != null ? "&link=" + link : "")
@@ -317,7 +317,7 @@ public class FlairActions {
             return response;
         }
         String params = ""
-                + "api_type=" + "json"
+                + "api_type=json"
                 + "&uh=" + user.getModhash()
                 + "&flair_enabled=" + flairEnabled
                 + "&flair_position=" + flairPosition
@@ -482,7 +482,7 @@ public class FlairActions {
             return response;
         }
         String params = ""
-                + "api_type=" + "json"
+                + "api_type=json"
                 + "&uh=" + user.getModhash()
                 + (link != null ? "&link=" + link : "")
                 + (username != null ? "&name=" + username : "");
@@ -562,7 +562,7 @@ public class FlairActions {
             text = text.substring(0, 64);
         }
         String params = ""
-                + "api_type=" + "json"
+                + "api_type=json"
                 + "&uh=" + user.getModhash()
                 + (cssClass != null ? "&css_class=" + cssClass : "")
                 + "&flair_template_id=" + flairTemplateID
@@ -624,7 +624,7 @@ public class FlairActions {
             text = text.substring(0, 64);
         }
         String params = ""
-                + "api_type=" + "json"
+                + "api_type=json"
                 + "&uh=" + user.getModhash()
                 + "&flair_template_id=" + flairTemplateID
                 + "&link=" + link
@@ -661,7 +661,7 @@ public class FlairActions {
      */
     public Response setFlairEnabled(boolean flairEnabled, String subreddit) {
         String params = ""
-                + "api_type=" + "json"
+                + "api_type=json"
                 + "&uh=" + user.getModhash()
                 + "&flair_enabled=" + flairEnabled;
 
