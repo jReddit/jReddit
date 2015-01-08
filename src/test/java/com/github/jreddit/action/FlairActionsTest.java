@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import static org.mockito.Mockito.*;
 
+
 /**
  * JUnit testing for the FlairActions class.
  *
@@ -20,7 +21,6 @@ import static org.mockito.Mockito.*;
  */
 public class FlairActionsTest {
 
-    private User user;
     public static final String COOKIE = "cookie";
     public static final String SUBREDDIT_NAME = "TestSubreddit";
     public static final String USERNAME = "TestUser";
@@ -29,7 +29,7 @@ public class FlairActionsTest {
     public static final String FLAIR_TEXT = "TestFlair";
     public static final String FLAIR_SUBMISSION_ID = "t3_SubmID";
     public static final String FLAIR_POSITION = "left";
-
+    private User user;
     private FlairActions subject;
     private RestClient restClient;
     private Response desiredResponse;

@@ -1,7 +1,6 @@
 package com.github.jreddit.action;
 
 import com.github.jreddit.entity.User;
-import com.github.jreddit.retrieval.ActorDriven;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
@@ -10,9 +9,8 @@ import com.github.jreddit.utils.restclient.RestClient;
  * Flair actions for posts and users
  *
  * @author Ryan Delaney (Vitineth)
- * @since 03/01/2015
  */
-public class FlairActions implements ActorDriven {
+public class FlairActions {
 
     private final RestClient restClient;
     private User user;
@@ -24,28 +22,27 @@ public class FlairActions implements ActorDriven {
      */
     public FlairActions(RestClient restClient) {
         this.restClient = restClient;
-        this.user = null;
     }
 
     /**
      * Constructor.
      *
      * @param restClient REST Client instance
-     * @param actor      User instance
+     * @param user      User instance
      */
-    public FlairActions(RestClient restClient, User actor) {
+    public FlairActions(RestClient restClient, User user) {
         this.restClient = restClient;
-        this.user = actor;
+        this.user = user;
     }
 
     /**
      * Switch the current user for the new user who will
-     * be used when invoking retrieval requests.
+     * be used when invoking flair requests.
      *
-     * @param new_actor New user
+     * @param newUser New user
      */
-    public void switchActor(User new_actor) {
-        this.user = new_actor;
+    public void changeUser(User newUser) {
+        this.user = newUser;
     }
 
     /**
@@ -75,7 +72,7 @@ public class FlairActions implements ActorDriven {
     public Response deleteFlair(String username, String subreddit) {
         //Format the required parameters
         String params = ""
-                + "api_type=" + "json"
+                + "api_type=json"
                 + "&uh=" + user.getModhash()
                 + "&name=" + username;
 
