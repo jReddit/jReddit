@@ -142,8 +142,11 @@ public class ProfileActions implements ActorDriven {
 
         // Send GET request to get the account overview
       
-        if(username == "[deleted]")
-          throw new ActionFailedException("There is no information associated with the username [deleted]");
+        if(username.equals("[deleted]"))
+        {
+          throw new ActionFailedException("There is no information associated with the username [deleted]");          
+        }
+
         JSONObject object = (JSONObject) restClient.get(String.format(ApiEndpointUtils.USER_ABOUT, username), null).getResponseObject();
         JSONObject data = (JSONObject) object.get("data");
 
@@ -179,8 +182,8 @@ public class ProfileActions implements ActorDriven {
      * Creates a new account.
      * 
      * @param username      A valid, unused, username
-     * @param email               A valid e-mail address (can be empty)
-     * @param newPassword       The account's password
+     * @param email         A valid e-mail address (can be empty)
+     * @param newPassword   The account's password
      * @param copyPassword  should be same as newPassword (for validation)
      * @param captcha_iden  the identifier of the CAPTCHA challenge (not necessarily required)
      * @param captcha_sol   the user's response to the CAPTCHA challenge (required if there was a CAPTCHA challenge)
