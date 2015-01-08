@@ -34,7 +34,7 @@ public class UserInfo {
     private Boolean hasMail;
 
     // Indicates whether the user has verified the email address
-    private boolean hasVerifiedEmail;
+    private Boolean hasVerifiedEmail;
 
     // Whether the user is a gold member
     private boolean isGold;
@@ -137,11 +137,11 @@ public class UserInfo {
         this.hasMail = hasMail;
     }
 
-    public boolean isHasVerifiedEmail() {
+    public Boolean isHasVerifiedEmail() {
         return hasVerifiedEmail;
     }
 
-    public void setHasVerifiedEmail(boolean hasVerifiedEmail) {
+    public void setHasVerifiedEmail(Boolean hasVerifiedEmail) {
         this.hasVerifiedEmail = hasVerifiedEmail;
     }
 

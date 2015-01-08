@@ -26,13 +26,35 @@ Usage:
 // Assuming user is a connected User instance:
 user.submitLink("Github","http://www.github.com","technology");
 ```
+#### POST /api/delete_user
+Usage:
+
+```java
+//assuming PA is a ProfileActions instance
+PA.delete(true, "I don't want to user reddit anymore", "userspassword");
+```
+#### POST /api/update
+Usage:
+
+```java
+//assuming PA is a ProfileActions instance
+PA.update("userspassword", "mynewemail@provider.com", "");
+```
+#### POST /api/register
+Usage:
+
+```java
+//assuming PA is a ProfileActions instance, and restClient is a RestClient instance
+Captcha cp = new Captcha(restClient);
+String myIdentifier = cp.newCaptcha(new User(restClient, null, null));
+//...ask the user to solve captcha here, store result in the String mySolution
+PA.register("coolusername273", "", "securePassword22", "securePassword22", myIdentifier, mySolution);
+```
 
 #### To be implemented:
 
 * POST /api/clear_sessions
-* POST /api/delete_user
-* POST /api/register
-* POST /api/update
+
 
 ## apps
 
@@ -84,16 +106,16 @@ boolean needsCaptcha = captcha.needsCaptcha(user);
 Example usage:
 
 ```java
-// Assuming subm is a valid, initialized Submission instance:
-subm.comment("Some comment");
+// Assuming subm is a valid, initialized Submission instance, and SA is a SubmitActions instance
+SA.comment(subm.getFullName(), "Some comment");
 ```
 #### POST /api/vote
 Example usage:
 
 ```java
-// Assuming subm is a valid, initialized Submission instance:
-subm.upVote();
-subm.downVote();
+// Assuming subm is a valid, initialized Submission instance, and MA is a MarkActions instance
+MA.vote(subm.getFullName(), 1); //upvote
+MA.vote(subm.getFullName(), -1); //downvote
 ```
 
 #### POST /api/marknsfw
@@ -101,9 +123,9 @@ subm.downVote();
 Example usage:
 
 ```java
-// Assuming subm is a valid, initialized Submission instance:
-subm.markNSFW();
-subm.unmarkNSFW();
+// Assuming subm is a valid, initialized Submission instance, and MA is a MarkActions instance
+MA.markNSFW(subm.getFullName());
+MA.unmarkNSFW(subm.getFullName());
 ```
 
 ### POST /api/save
@@ -111,22 +133,30 @@ subm.unmarkNSFW();
 Example usage:
 
 ```java
-// Assuming subm is a valid, initialized Submission instance:
-subm.save();
-subm.save("Category");
-subm.unsave();
+// Assuming subm is a valid, initialized Submission instance, and MA is a MarkActions instance
+MA.save(subm.getFullName());
+MA.save(subm.getFullName(), "Category");
+MA.unsave(subm.getFullName());
 ```
 
 ### POST /api/hide
 ### POST /api/unhide
 
-    // Assuming subm is a valid, initialize Submission instance:
-    subm.hide();
-    subm.unhide();
+```java
+// Assuming subm is a valid, initialized Submission instance, and MA is a MarkActions instance
+MA.hide(subm.getFullName());
+MA.unhide(subm.getFullName());
+```
 
+#### POST /api/del
+Example usage:
+
+```java
+// Assuming subm is a valid, initialized Submission instance, and SA is a SubmitActions instance
+SA.delete(subm.getFullName());
+```
 #### To be implemented:
 
-* POST /api/del
 * POST /api/editusertext
 * GET /api/info
 * POST /api/morechildren
