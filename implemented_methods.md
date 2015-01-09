@@ -150,6 +150,23 @@ List<Comment> commentsFromArticle = comments.commentsFromArticle("subreddit", "a
 * GET /random
 * GET /top
 
+## live threads
+
+#### POST /api/live/create
+
+```java
+// Assuming SA is a SubmitActions instance
+SA.createLive("Thread title.", "Thread description.");
+```
+
+#### POST /api/live/thread/update
+
+```java
+// Assuming SA is a SubmitActions instance
+SA.updateLive("Thread id.", "Update message.");
+// TODO: LiveThread object so the user doesn't need to know the thread id.
+```
+
 ## private messages
 #### POST /api/compose
 Example usage:
