@@ -17,22 +17,6 @@ At the moment, jReddit can be included in your project using Maven
 ### What can it do?
 jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, send and receive messages and notifications among other things.
 
-### What's next for jReddit?
-The plan is to implement every feature documented [here](http://www.reddit.com/dev/api). To see which methods have been implemented, and which have not, see [this file](https://github.com/karan/jReddit/blob/master/implemented_methods.md).
-
-### How to contribute?
-Personally, I would suggest reading through the source code to understand the general structure and standards used. Then check the [implemented_methods.md](https://github.com/karan/jReddit/blob/master/implemented_methods.md) file to see which methods have not yet been implemented. Choose the ones you'd like to contribute to. After you write the method (and maybe commit it?), write a test to see if it works fine and as expected. Then make sure other tests are working too and your code does not break anty other method.
-
-Send in a pull request with the test and I'll be happy to merge! :-)
-
-### Dependencies
-1. [JSON-simple](http://code.google.com/p/json-simple/)
-
-2. [Apache HttpComponents](https://hc.apache.org/)
-
-3. [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
-
-
 ### Examples
 
 Connect a user
@@ -104,3 +88,18 @@ public class ComposeTest {
     }
 }
 ```
+
+### What's next for jReddit?
+The plan is to implement every feature documented [here](http://www.reddit.com/dev/api). To see which methods have been implemented, and which have not, see [this file](https://github.com/karan/jReddit/blob/master/implemented_methods.md).
+
+### How to contribute?
+Personally, I would suggest reading through the source code to understand the general structure and standards used. Then check the [implemented_methods.md](https://github.com/karan/jReddit/blob/master/implemented_methods.md) file to see which methods have not yet been implemented. Choose the ones you'd like to contribute to. After you write the method (and maybe commit it?), write a test to see if it works fine and as expected. Then make sure other tests are working too and your code does not break anty other method.
+
+Send in a pull request with the test and I'll be happy to merge! :-)
+
+### Dependencies
+1. [JSON-simple](http://code.google.com/p/json-simple/)
+
+2. [Apache HttpComponents](https://hc.apache.org/)
+
+3. [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
