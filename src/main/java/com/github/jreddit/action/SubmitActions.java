@@ -76,12 +76,56 @@ public class SubmitActions implements ActorDriven {
         ).getResponseObject();
 
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-            System.err.println("User is required for the comment action.");
+            System.err.println("User submission failed: please login first.");
             return false;
         } else {
             return true;
         }
         
+    }
+    
+    /**
+     * This function creates a live thread.
+     * 
+     * @param title The title of the live thread.
+     * @param description The title of the live thread.
+     */
+    public boolean createLive(String title, String description) {
+    	
+    	JSONObject object = (JSONObject) restClient.post(
+				"api_type=json&title=" + title + "&description=" + description + "&uh=" + user.getModhash(),
+				ApiEndpointUtils.LIVE_THREAD_CREATE,
+				user.getCookie()
+		).getResponseObject();
+		
+		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+            System.err.println("User submission failed: please login first.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * This function updates the specified live thread.
+     * 
+     * @param liveThread ID of the live thread to submit to.
+     * @param message The message to submit.
+     */
+    public boolean updateLive(String liveThread, String message) {
+    	
+		JSONObject object = (JSONObject) restClient.post(
+				"api_type=json&body=" + message + "&uh=" + user.getModhash(),
+				String.format(ApiEndpointUtils.LIVE_THREAD_UPDATE, liveThread),
+				user.getCookie()
+		).getResponseObject();
+		
+		if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+            System.err.println("User submission failed: please login first.");
+            return false;
+        } else {
+            return true;
+        }
     }
     
     /**

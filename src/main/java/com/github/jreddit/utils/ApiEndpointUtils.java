@@ -109,5 +109,11 @@ public class ApiEndpointUtils {
     public static final String SUBREDDITS_GET = "/subreddits/%s.json?%s";
     
     public static final String SUBREDDITS_SEARCH = "/subreddits/search.json?%s";
+    
+    /* Live Thread specific constants */
+    
+    public static final String LIVE_THREAD_CREATE = REDDIT_BASE_API_ENDPOINT + "/live/create";
+    
+    public static final String LIVE_THREAD_UPDATE = REDDIT_BASE_API_ENDPOINT + "/live/%s/update";
 
 }
