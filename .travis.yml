@@ -3,10 +3,6 @@ language: java
 notifications:
     email: false
 
-branches:
-    only:
-        - master
-
 addons:
   coverity_scan:
     project:
