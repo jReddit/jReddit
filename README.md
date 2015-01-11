@@ -3,6 +3,10 @@ jReddit
 
 [![Build Status](https://travis-ci.org/karan/jReddit.png?branch=master)](https://travis-ci.org/karan/jReddit)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.jreddit/jreddit/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.jreddit/jreddit)
+<a href="https://scan.coverity.com/projects/3890">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/3890/badge.svg"/>
+</a>
 
 ### What is jReddit?
 jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour. Taken over for further development and maintainence by [Karan Goel](http://www.goel.im).
