@@ -1,20 +1,8 @@
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "a+D6mm0LxvO1py0V0ZYql+7Rysqqz4Sk4ZHf48bZXX9iA47vqxNTrfKD5HOutH6h/poJXZe5XbNxZq7f0g5JtsinRjSGv9QawcuTQPLF7FUSZC6bDYyRi1I+ABJRJJkWKo8IPcuWZLTWXuz+0EWXnHEDARHE5V/rR11MK7TEPYc="
-
 language: java
 
 notifications:
     email: false
 
-addons:
-  coverity_scan:
-    project:
-      name: "karan/jReddit"
-      description: "Build submitted via Travis CI"
-    notification_email: sfatandrei@gmail.com
-    build_command_prepend: "mvn clean"
-    build_command:   "mvn -DskipTests=true compile"
-    branch_pattern: coverity_scan
+branches:
+    only:
+        - master
