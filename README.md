@@ -7,13 +7,22 @@ jReddit
 ### What is jReddit?
 jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour. Taken over for further development and maintainence by [Karan Goel](http://www.goel.im).
 ### How to use jReddit?
-At the moment, jReddit can be included in your project using Maven 
+At the moment, jReddit can be included in your project using:
+
+#### Maven
 ```
 <dependency>
         <groupId>com.github.jreddit</groupId>
         <artifactId>jreddit</artifactId>
         <version>1.0.2</version>
 </dependency>
+```
+
+#### Gradle
+```
+dependencies {
+    compile group: 'com.github.jreddit', name: 'jreddit', version: '1.0.2'
+}
 ```
 ### What can it do?
 jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, send and receive messages and notifications among other things.
