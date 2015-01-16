@@ -6,3 +6,6 @@ notifications:
 branches:
     only:
         - master
+
+after_success:
+- ./gradlew cobertura coveralls
