@@ -81,6 +81,8 @@
         <nexus.staging.maven.plugin.version>1.6</nexus.staging.maven.plugin.version>
         <maven.release.plugin.version>2.1</maven.release.plugin.version>
         <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
+        <org.eluder.coveralls.version>3.0.1</org.eluder.coveralls.version>
+        <org.codehaus.mojo.cobertura.maven.plugin.version>2.6</org.codehaus.mojo.cobertura.maven.plugin.version>
     </properties>
 
     <profiles>
@@ -203,6 +205,17 @@
                     <stagingProfileId>3ebea71aace18d</stagingProfileId>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${org.codehaus.mojo.cobertura.maven.plugin.version}</version>
+                <configuration>
+                    <format>xml</format>
+                    <maxmem>256m</maxmem>
+                    <!-- aggregated reports for multi-module projects -->
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -244,6 +257,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-io</artifactId>
             <version>${org.apache.commons.io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
+            <version>${org.eluder.coveralls.version}</version>
         </dependency>
     </dependencies>
 </project>
