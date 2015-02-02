@@ -147,7 +147,7 @@ public class User {
     }
 
     /**
-     * This function returns all the subreddits the user is subscribed to.
+     * This function returns all the subreddits the user is a moderator of.
      * @return A list of subreddit objects
      * @throws RetrievalFailedException    If retrieval of subreddits fails
      * @throws RedditError
