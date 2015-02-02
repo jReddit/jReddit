@@ -92,7 +92,7 @@ public class ApiEndpointUtils {
 
     public static final String USER_GET_CONTRIBUTED_TO = "/subreddits/mine/contributor.json";
 
-    public static final String USER_GET_MODERATOR_OF = "/subreddits/mine/contributor.json";
+    public static final String USER_GET_MODERATOR_OF = "/subreddits/mine/moderator.json";
 
     public static final String USER_SUBMISSIONS_INTERACTION = "/user/%s/%s.json?%s";
 
