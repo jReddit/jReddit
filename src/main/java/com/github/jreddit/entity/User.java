@@ -25,6 +25,7 @@ import com.github.jreddit.retrieval.Subreddits;
  * @author Evin Ugur
  * @author Andrei Sfat
  * @author Simon Kassing
+ * @author Marc Leef
  */
 public class User {
 
@@ -114,53 +115,53 @@ public class User {
 
     /**
      * This function returns all the subreddits the user is subscribed to.
+     * @param limit leave 0 for max number
      * @return A list of subreddit objects
      * @throws RetrievalFailedException    If retrieval of subreddits fails
      * @throws RedditError
      */
-    public List<Subreddit> getSubscribed() throws RetrievalFailedException, RedditError {
+    public List<Subreddit> getSubscribed(int limit) throws RetrievalFailedException, RedditError {
         if (this.getCookie() == null || this.getModhash() == null) {
             System.err.printf("Please invoke the connect method in order to login the user");
             return null;
         }
         Subreddits sub = new Subreddits(restClient, this);
 
-        // Automatically returns maximum allowed number of objects, should this be a parameter?
-        return sub.parse(ApiEndpointUtils.USER_GET_SUBSCRIBED + "?&limit=100");
+        return sub.parse(ApiEndpointUtils.USER_GET_SUBSCRIBED + (limit == 0 ? "?&limit=100" : "?&limit=" + limit));
     }
 
     /**
      * This function returns all the subreddits the user is an approved contributor to.
+     * @param limit leave 0 for max number
      * @return A list of subreddit objects
      * @throws RetrievalFailedException    If retrieval of subreddits fails
      * @throws RedditError
      */
-    public List<Subreddit> getContributedTo() throws RetrievalFailedException, RedditError {
+    public List<Subreddit> getContributedTo(int limit) throws RetrievalFailedException, RedditError {
         if (this.getCookie() == null || this.getModhash() == null) {
             System.err.printf("Please invoke the connect method in order to login the user");
             return null;
         }
         Subreddits sub = new Subreddits(restClient, this);
 
-        // Automatically returns maximum allowed number of objects, should this be a parameter?
-        return sub.parse(ApiEndpointUtils.USER_GET_CONTRIBUTED_TO + "?&limit=100");
+        return sub.parse(ApiEndpointUtils.USER_GET_CONTRIBUTED_TO + (limit == 0 ? "?&limit=100" : "?&limit=" + limit));
     }
 
     /**
      * This function returns all the subreddits the user is a moderator of.
+     * @param limit leave 0 for max number
      * @return A list of subreddit objects
      * @throws RetrievalFailedException    If retrieval of subreddits fails
      * @throws RedditError
      */
-    public List<Subreddit> getModeratorOf() throws RetrievalFailedException, RedditError {
+    public List<Subreddit> getModeratorOf(int limit) throws RetrievalFailedException, RedditError {
         if (this.getCookie() == null || this.getModhash() == null) {
             System.err.printf("Please invoke the connect method in order to login the user");
             return null;
         }
         Subreddits sub = new Subreddits(restClient, this);
 
-        // Automatically returns maximum allowed number of objects, should this be a parameter?
-        return sub.parse(ApiEndpointUtils.USER_GET_MODERATOR_OF + "?&limit=100");
+        return sub.parse(ApiEndpointUtils.USER_GET_MODERATOR_OF + (limit == 0 ? "?&limit=100" : "?&limit=" + limit));
     }
 
 }
