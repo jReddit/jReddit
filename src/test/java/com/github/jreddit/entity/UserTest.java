@@ -1,6 +1,5 @@
 package com.github.jreddit.entity;
 
-import static com.github.jreddit.testsupport.JsonHelpers.createSubreddit;
 import static com.github.jreddit.testsupport.JsonHelpers.redditListing;
 import static com.github.jreddit.testsupport.JsonHelpers.userLoginResponse;
 import static org.junit.Assert.assertEquals;
@@ -9,7 +8,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.github.jreddit.testsupport.JsonHelpers;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
