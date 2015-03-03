@@ -216,4 +216,40 @@ public class SubmitActions implements ActorDriven {
     	
     }
     
+    /**
+     * This function edits the text of a comment or submission (self). Requires
+     * authentication.
+     *
+     * @param text The new text for the comment or selfpost
+     * @param fullname The fullname of the submission or comment
+     * @return Whether the edit succeeded
+     * @throws ActionFailedException If the action failed
+     */
+    public boolean editUserText(String fullname, String text) throws ActionFailedException {
+
+        JSONObject object = (JSONObject) restClient.post(
+                "thing_id=" + fullname + "&text=" + text + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.EDITUSERTEXT,
+                user.getCookie()
+        ).getResponseObject();
+
+        if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+            System.err.println("User is required for this action.");
+            return false;
+        } else if (object.toJSONString().contains(".error.NOT_AUTHOR")) {
+            System.err.println("User is not the author of this thing.");
+            return false;
+        } else if (object.toJSONString().contains(".error.TOO_LONG")) {
+            System.err.println("The text is too long.");
+            return false;
+        } else if (object.toJSONString().contains(".error.NO_TEXT")) {
+            System.err.println("Missing text.");
+            return false;
+
+        } else {
+            return true;
+        }
+
+    }
+    
 }
