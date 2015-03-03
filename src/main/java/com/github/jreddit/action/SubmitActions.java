@@ -234,7 +234,7 @@ public class SubmitActions implements ActorDriven {
         ).getResponseObject();
 
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
-            System.err.println("User is required for the comment action.");
+            System.err.println("User is required for this action.");
             return false;
         } else if (object.toJSONString().contains(".error.NOT_AUTHOR")) {
             System.err.println("User is not the author of this thing.");
