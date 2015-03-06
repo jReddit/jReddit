@@ -184,29 +184,31 @@ public class SubmitActions implements ActorDriven {
         
     	// Make the request
     	JSONObject object = (JSONObject) restClient.post(params,ApiEndpointUtils.USER_SUBMIT, user.getCookie()).getResponseObject();
+		
+		String responseAsString = object.toJSONString();
     	
         // User required
-        if (object.toJSONString().contains(".error.USER_REQUIRED")) {
+        if (responseAsString.contains(".error.USER_REQUIRED")) {
         	
             System.err.println("User submission failed: please login first.");
             return false;
             
         } // Rate limit exceeded
-        else if (object.toJSONString().contains(".error.RATELIMIT.field-ratelimit")) {
+        else if (responseAsString.contains(".error.RATELIMIT.field-ratelimit")) {
         	
             System.err.println("User submission failed: you are doing that too much.");
             return false;
             
         } // Already submitted link
-        else if (object.toJSONString().contains(".error.ALREADY_SUB.field-url")) {
+        else if (responseAsString.contains(".error.ALREADY_SUB.field-url")) {
         	
             System.err.println("User submission failed: that link has already been submitted.");
             return false;
             
         } // Captcha problem
-        else if (object.toJSONString().contains(".error.BAD_CAPTCHA.field-captcha")) {
+        else if (responseAsString.contains(".error.BAD_CAPTCHA.field-captcha")) {
         	
-            System.err.println("User submission failed: the catpcha field was incorrect.");
+            System.err.println("User submission failed: the captcha field was incorrect.");
             return false;
             
         }
@@ -214,6 +216,44 @@ public class SubmitActions implements ActorDriven {
             return true;
         }
     	
+    }
+    
+    /**
+     * This function edits the text of a comment or submission (self). Requires
+     * authentication.
+     *
+     * @param text The new text for the comment or selfpost
+     * @param fullname The fullname of the submission or comment
+     * @return Whether the edit succeeded
+     * @throws ActionFailedException If the action failed
+     */
+    public boolean editUserText(String fullname, String text) throws ActionFailedException {
+
+        JSONObject object = (JSONObject) restClient.post(
+                "thing_id=" + fullname + "&text=" + text + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.EDITUSERTEXT,
+                user.getCookie()
+        ).getResponseObject();
+        
+        String responseAsString = object.toJSONString();
+
+        if (responseAsString.contains(".error.USER_REQUIRED")) {
+            System.err.println("User is required for this action.");
+            return false;
+        } else if (responseAsString.contains(".error.NOT_AUTHOR")) {
+            System.err.println("User is not the author of this thing.");
+            return false;
+        } else if (responseAsString.contains(".error.TOO_LONG")) {
+            System.err.println("The text is too long.");
+            return false;
+        } else if (responseAsString.contains(".error.NO_TEXT")) {
+            System.err.println("Missing text.");
+            return false;
+
+        } else {
+            return true;
+        }
+
     }
     
 }

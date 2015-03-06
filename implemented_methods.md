@@ -226,9 +226,18 @@ Example usage:
 // Assuming subm is a valid, initialized Submission instance, and SA is a SubmitActions instance
 SA.delete(subm.getFullName());
 ```
+
+#### POST /api/editusertext
+
+```java
+// Assuming subm is a valid, initialized Submission instance, and SA is a SubmitActions instance
+SA.editUserText(subm.getFullName(),"new text");
+// Assuming comment is a valid, initialized Comment instance, and SA is a SubmitActions instance
+SA.editUserText(comment.getFullName(),"new text");
+```
+
 #### To be implemented:
 
-* POST /api/editusertext
 * GET /api/info
 * POST /api/morechildren
 * POST /api/report
