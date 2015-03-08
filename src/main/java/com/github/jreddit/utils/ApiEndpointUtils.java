@@ -48,7 +48,7 @@ public class ApiEndpointUtils {
     
     public static final String UNHIDE = REDDIT_BASE_API_ENDPOINT + "/unhide";
     
-    public static final String DELETE = REDDIT_BASE_API_ENDPOINT + "/delete";
+    public static final String DELETE = REDDIT_BASE_API_ENDPOINT + "/del";
     
     public static final String REPORT = REDDIT_BASE_API_ENDPOINT + "/report";
 
