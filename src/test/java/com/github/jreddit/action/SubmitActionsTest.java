@@ -19,6 +19,8 @@ import com.github.jreddit.utils.restclient.RestResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.apache.http.HttpResponse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SubmitActionsTest {
 
@@ -73,7 +75,7 @@ public class SubmitActionsTest {
                 .thenReturn(responseEmpty);
 
         // Delete thing succesfully
-        assertEquals(submitAction.delete("fullname"), true);
+        assertTrue(submitAction.delete("fullname"));
     }
 
     /**
@@ -90,7 +92,7 @@ public class SubmitActionsTest {
                 .thenReturn(responseEmpty);
 
         // Comment succesfully
-        assertEquals(submitAction.comment("fullname", "text"), true);
+        assertTrue(submitAction.comment("fullname", "text"));
     }
 
     /**
@@ -112,7 +114,7 @@ public class SubmitActionsTest {
         // Attempt to comment
         boolean res = submitAction.comment("fullname", "text");
         assertEquals(errorOutput.toString().contains("User submission failed: please login first."), true);
-        assertEquals(res, false);
+        assertFalse(res);
     }
 
     /**
@@ -135,7 +137,7 @@ public class SubmitActionsTest {
         // Fail the creation of a live thread
         boolean res = submitAction.createLive("title", "description");
         assertEquals(errorOutput.toString().contains("User submission failed: please login first."), true);
-        assertEquals(res, false);
+        assertFalse(res);
     }
 
     /**
@@ -154,7 +156,7 @@ public class SubmitActionsTest {
 
         // Test succesfull creation of a live thread
         boolean res = submitAction.createLive("title", "description");
-        assertEquals(res, true);
+        assertTrue(res);
     }
 
     /**
@@ -176,7 +178,7 @@ public class SubmitActionsTest {
         // Attempt the update
         boolean res = submitAction.updateLive("liveThread", "message");
         assertEquals(errorOutput.toString().contains("User submission failed: please login first."), true);
-        assertEquals(res, false);
+        assertFalse(res);
     }
 
     /**
@@ -194,7 +196,7 @@ public class SubmitActionsTest {
 
         // Test updating a live thread
         boolean res = submitAction.updateLive("liveThread", "message");
-        assertEquals(res, true);
+        assertTrue(res);
     }
 
     /**
@@ -215,7 +217,7 @@ public class SubmitActionsTest {
         // Test submitting a link
         boolean res = submitAction.submitLink("title", "http://link", "subreddit",
                 "captchaid", "solution");
-        assertEquals(res, true);
+        assertTrue(res);
     }
 
     /**
@@ -236,7 +238,7 @@ public class SubmitActionsTest {
         // Test submitting a SelfPost
         boolean res = submitAction.submitSelfPost("title", "text", "subreddit",
                 "captchaid", "solution");
-        assertEquals(res, true);
+        assertTrue(res);
     }
 
     /**
@@ -262,7 +264,7 @@ public class SubmitActionsTest {
         boolean res = submitAction.submitSelfPost("title", "text", "subreddit",
                 "captchaid", "solution");
         assertEquals(errorOutput.toString().contains("User submission failed: please login first."), true);
-        assertEquals(res, false);
+        assertFalse(res);
     }
 
     /**
@@ -281,7 +283,7 @@ public class SubmitActionsTest {
 
         // Test succesfull edit
         boolean res = submitAction.editUserText("fullname", "text");
-        assertEquals(res, true);
+        assertTrue(res);
 
     }
 
@@ -306,7 +308,7 @@ public class SubmitActionsTest {
         // Attempt the edit
         boolean res = submitAction.editUserText("fullname", "text");
         assertEquals(errorOutput.toString().contains("User is not the author of this thing."), true);
-        assertEquals(res, false);
+        assertFalse(res);
 
     }
 
