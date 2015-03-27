@@ -78,6 +78,10 @@ public class SubmitActions implements ActorDriven {
         if (object.toJSONString().contains(".error.USER_REQUIRED")) {
             System.err.println("User submission failed: please login first.");
             return false;
+        } 
+        else if(object.toJSONString().contains(".error.RATELIMIT.field-ratelimit")){
+            System.err.println("User submission failed: You need to wait before posting again");
+            return false;
         } else {
             return true;
         }
