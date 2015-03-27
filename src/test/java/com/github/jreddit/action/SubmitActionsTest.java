@@ -118,7 +118,7 @@ public class SubmitActionsTest {
 
         // Attempt to comment
         boolean res = submitAction.comment("fullname", "text");
-        assertEquals(errorOutput.toString().contains("User submission failed: please login first."), true);
+        assertTrue(errorOutput.toString().contains("User submission failed: please login first."));
         assertFalse(res);
     }
     
@@ -140,7 +140,7 @@ public class SubmitActionsTest {
 
         // Attempt to comment
         boolean res = submitAction.comment("fullname", "text");
-        assertEquals(errorOutput.toString().contains("User submission failed: You need to wait before posting again"), true);
+        assertTrue(errorOutput.toString().contains("User submission failed: You need to wait before posting again"));
         assertFalse(res);
     }
 
