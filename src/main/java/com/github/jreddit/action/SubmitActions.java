@@ -80,8 +80,8 @@ public class SubmitActions implements ActorDriven {
             return false;
         } 
         else if(object.toJSONString().contains(".error.RATELIMIT.field-ratelimit")){
-        	System.err.println("User submission failed: You need to wait before posting again");
-        	return false;
+            System.err.println("User submission failed: You need to wait before posting again");
+            return false;
         } else {
             return true;
         }
