@@ -33,6 +33,7 @@ public class SubmitActionsTest {
     private User user;
     private Response responseNotAuthor;
     private Response responseUserRequired;
+    private Response responseTenMinutesLimit;
     private Response responseEmpty;
 
     @Rule
@@ -56,6 +57,10 @@ public class SubmitActionsTest {
         errorObject = new JSONObject();
         errorObject.put("call", ".error.USER_REQUIRED");
         responseUserRequired = new RestResponse("test", errorObject, mock(HttpResponse.class));
+        
+        errorObject = new JSONObject();
+        errorObject.put("call", ".error.RATELIMIT.field-ratelimit");
+        responseTenMinutesLimit = new RestResponse("test", errorObject, mock(HttpResponse.class));
 
         errorObject = new JSONObject();
         responseEmpty = new RestResponse("", errorObject, mock(HttpResponse.class));
@@ -114,6 +119,28 @@ public class SubmitActionsTest {
         // Attempt to comment
         boolean res = submitAction.comment("fullname", "text");
         assertEquals(errorOutput.toString().contains("User submission failed: please login first."), true);
+        assertFalse(res);
+    }
+    
+    /**
+     * Test commenting within 10 minutes from last comment.
+     */
+    @Test
+    public void testCommentTenMinutesLimit() {
+        // Stub REST client methods
+        when(user.getModhash()).thenReturn(MODHASH);
+        when(user.getCookie()).thenReturn(COOKIE);
+        when(restClient.post("thing_id=" + "fullname" + "&text=" + "text"
+                + "&uh=" + user.getModhash(),
+                ApiEndpointUtils.COMMENT, user.getCookie()))
+                .thenReturn(responseTenMinutesLimit);
+        // Save System.err.println output to variable
+        ByteArrayOutputStream errorOutput = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(errorOutput));
+
+        // Attempt to comment
+        boolean res = submitAction.comment("fullname", "text");
+        assertEquals(errorOutput.toString().contains("User submission failed: You need to wait before posting again"), true);
         assertFalse(res);
     }
 
