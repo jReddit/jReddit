@@ -100,6 +100,9 @@ public class ComposeTest {
 }
 ```
 
+### Other examples
+You can find other examples [here](https://github.com/karan/jReddit/tree/master/src/main/java/examples)
+
 ### What's next for jReddit?
 The plan is to implement every feature documented [here](http://www.reddit.com/dev/api). To see which methods have been implemented, and which have not, see [this file](https://github.com/karan/jReddit/blob/master/implemented_methods.md).
 
