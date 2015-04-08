@@ -72,7 +72,6 @@ public class Subreddits implements ActorDriven {
     /**
      * Parses a JSON feed from the Reddit (URL) into a nice list of Subreddit objects.
      * 
-     * @param user 	User
      * @param url 	URL
      * @return 		Listing of submissions
      */
@@ -99,16 +98,15 @@ public class Subreddits implements ActorDriven {
 	            
 	            // Make sure it is of the correct kind
 	            String kind = safeJsonToString(data.get("kind"));
-	            if (kind.equals(Kind.SUBREDDIT.value())) {
-	            	
-	            	// Create and add subreddit
-		            data = ((JSONObject) data.get("data"));
-		            subreddits.add(new Subreddit(data));
-	            
-	            }
-	            
-	        }
-        
+				if (kind != null) {
+					if (kind.equals(Kind.SUBREDDIT.value())) {
+
+                        // Create and add subreddit
+                        data = ((JSONObject) data.get("data"));
+                        subreddits.add(new Subreddit(data));
+                    }
+				}
+			}
         } else {
         	System.err.println("Cannot cast to JSON Object: '" + response.toString() + "'");
         }

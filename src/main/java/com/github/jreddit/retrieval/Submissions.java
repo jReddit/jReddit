@@ -109,17 +109,17 @@ public class Submissions implements ActorDriven {
 	            
 	            // Make sure it is of the correct kind
 	            String kind = safeJsonToString(data.get("kind"));
-	            if (kind.equals(Kind.LINK.value())) {
-	            	
-	            	// Create and add submission
-		            data = ((JSONObject) data.get("data"));
-		            submission = new Submission(data);
-		            submission.setUser(user);
-		            submissions.add(submission);
-	            
-	            }
-	            
-	        }
+				if (kind != null) {
+					if (kind.equals(Kind.LINK.value())) {
+
+                        // Create and add submission
+                        data = ((JSONObject) data.get("data"));
+                        submission = new Submission(data);
+                        submission.setUser(user);
+                        submissions.add(submission);
+                    }
+				}
+			}
         
         } else {
         	System.err.println("Cannot cast to JSON Object: '" + response.toString() + "'");
@@ -142,7 +142,7 @@ public class Submissions implements ActorDriven {
      * @param limit				Maximum amount of submissions that can be returned (0-100, 25 default (see Reddit API))
      * @param after				The submission after which needs to be retrieved
      * @param before			The submission before which needs to be retrieved
-     * @param show_all			Show all (disables filters such as "hide links that I have voted on")
+     * @param show				Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
     protected List<Submission> ofSubreddit(String subreddit, String sort, String count, String limit, String after, String before, String show) throws RetrievalFailedException, RedditError {
@@ -212,7 +212,7 @@ public class Submissions implements ActorDriven {
      * @param limit				Maximum amount of submissions that can be returned (0-100, 25 default (see Reddit API))
      * @param after				The submission after which needs to be retrieved
      * @param before			The submission before which needs to be retrieved
-     * @param show_all			Show all (disables filters such as "hide links that I have voted on")
+     * @param show				Show all (disables filters such as "hide links that I have voted on")
      * @return 					The linked list containing submissions
      */
     protected List<Submission> search(String query, String syntax, String sort, String time, String count, String limit, String after, String before, String show) throws RetrievalFailedException, RedditError {
@@ -283,7 +283,6 @@ public class Submissions implements ActorDriven {
      * @param username	 		Username of the user you want to retrieve from.
      * @param category    		(Optional, set null/empty if not used) Category in the user overview to retrieve submissions from
      * @param sort	    		(Optional, set null/empty if not used) Sorting method.
-     * @param time		 		(Optional, set null/empty is not used) Time window
      * @param count        		(Optional, set null/empty if not used) Number at which the counter starts
      * @param limit        		(Optional, set null/empty if not used) Integer representing the maximum number of comments to return
      * @param after				(Optional, set null/empty if not used) After which comment to retrieve
@@ -315,12 +314,11 @@ public class Submissions implements ActorDriven {
      * @param username	 		Username of the user you want to retrieve from.
      * @param category    		Category in the user overview to retrieve submissions from
      * @param sort	    		(Optional, set null if not used) Sorting method.
-     * @param time		 		(Optional, set null is not used) Time window
      * @param count        		(Optional, set -1 if not used) Number at which the counter starts
      * @param limit        		(Optional, set -1 if not used) Integer representing the maximum number of comments to return
      * @param after				(Optional, set null if not used) After which comment to retrieve
      * @param before			(Optional, set null if not used) Before which comment to retrieve
-     * @param show				(Optional, set false if not used) Show parameter ('given' is only acceptable value)
+     * @param show_given		(Optional, set false if not used) Show parameter ('given' is only acceptable value)
      * 
      * @return Submissions of a user.
      */
@@ -340,7 +338,7 @@ public class Submissions implements ActorDriven {
     	
     	return ofUser(
     			username,
-    			(category != null) ? category.value() : "",
+				category.value(),
     			(sort != null) ? sort.value() : "",
     			String.valueOf(count),
     			String.valueOf(limit),

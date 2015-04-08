@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -20,6 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.json.simple.parser.ParseException;
 
 import com.github.jreddit.exception.RetrievalFailedException;
@@ -45,14 +45,14 @@ public class HttpRestClient implements RestClient {
 	 * Response handler instance.
 	 */
 	private final ResponseHandler<Response> responseHandler;
-	
+
 	/**
 	 * Global request configuration.
 	 */
 	private final RequestConfig globalConfig = RequestConfig.custom()
 			.setCookieSpec(CookieSpecs.IGNORE_COOKIES)
 			.setConnectionRequestTimeout(10000).build();
-	
+
 	/**
 	 * Default User Agent
 	 */
@@ -153,7 +153,7 @@ public class HttpRestClient implements RestClient {
 	}
 
 	public Response post(HttpPostMethodBuilder postMethodBuilder, List<NameValuePair> params) throws IOException, ParseException {
-		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
+		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, HTTP.UTF_8);
 
 		// Assign user agent
 		postMethodBuilder.withUserAgent(userAgent);

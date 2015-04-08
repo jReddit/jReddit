@@ -96,7 +96,6 @@ public class ExtendedSubmissions {
     /**
      * Get submissions from the specified subreddit, as the specified user, using the given sorting method.
      * 
-     * @param user			User
      * @param redditName 	The subreddit at which submissions you want to retrieve submissions.
      * @param sort			Subreddit sorting method
      * @return <code>List</code> of submissions on the subreddit.
@@ -203,10 +202,9 @@ public class ExtendedSubmissions {
     /**
      * Get submissions from the specified user.
      * 
-     * @param query 			Search query
-     * @param category			Category
+     * @param username 			Username
+     * @param category			UserSubmissionsCategory
      * @param sort				Search sorting method (e.g. new or top)
-     * @param time				Search time (e.g. day or all)
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
      * @param after				Submission after which the submissions need to be fetched.
      * @return					List of the submissions
@@ -262,12 +260,10 @@ public class ExtendedSubmissions {
     /**
      * Get submissions from the specified user.
      * 
-     * @param query 			Search query
-     * @param category			Category
+     * @param username 			Username
+     * @param category			UserSubmissionsCategory
      * @param sort				Search sorting method (e.g. new or top)
-     * @param time				Search time (e.g. day or all)
      * @param amount			Desired amount which will be attempted. No guarantee! See request limits.
-     * @param after				Submission after which the submissions need to be fetched.
      * @return					List of the submissions
      */
     public List<Submission> ofUser(String username, UserSubmissionsCategory category, UserOverviewSort sort, int amount) {

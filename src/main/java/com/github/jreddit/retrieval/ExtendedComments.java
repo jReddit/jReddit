@@ -23,7 +23,6 @@ public class ExtendedComments {
      * The result is maximum amount_first_depth * RedditConstants.MAX_LIMIT_COMMENTS
      * Which can be quite alot (e.g. 500x500 = 250000 comments)
      *
-     * @param user					(Optional, set null if not used) The user as whom to retrieve the comments
      * @param submissionId 			Submission ID36 identifier
      * @param sort  				(Optional, set null if not used) CommentSort enum indicating the type of sorting to be applied (e.g. HOT, NEW, TOP, etc)
      * @param amount_first_depth	(Optional, set -1 if not used) Integer representing the amount of first depth comments to retrieve
@@ -64,7 +63,6 @@ public class ExtendedComments {
     /**
      * Get the comment list of the given user (username).
      *
-     * @param user				(Optional, set null if not used) The user as whom to retrieve the comments
      * @param username	 		Username of the user you want to retrieve from.
      * @param sort	    		(Optional, set null if not used) Sorting method.
      * @param time		 		(Optional, set null is not used) Time window
