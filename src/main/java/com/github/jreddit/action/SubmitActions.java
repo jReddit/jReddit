@@ -46,7 +46,6 @@ public class SubmitActions implements ActorDriven {
      * This function deletes a submission or comment.
      *
      * @param fullName Full name of the thing
-     * @param category Category name
      *
      * @throws ActionFailedException If the action failed
      */
@@ -64,7 +63,7 @@ public class SubmitActions implements ActorDriven {
     /**
      * This function comments on a submission or comment with the given full name.
      *
-     * @param fullName Full name of the submission or comment
+     * @param fullname Full name of the submission or comment
      * @param text The text to comment (can include markdown)
      */
     public boolean comment(String fullname, String text) throws ActionFailedException {

@@ -101,18 +101,19 @@ public class Comments implements ActorDriven {
 	            
 	            // Make sure it is of the correct kind
 	            String kind = safeJsonToString(data.get("kind"));
-	            if (kind.equals(Kind.COMMENT.value())) {
-	            	
-	            	// Contents of the comment
-	            	data = ((JSONObject) data.get("data"));
-	            	
-		            // Create and add the new comment
-		            comment = new Comment(data);
-		            comments.add(comment);
-		            
-	            }
+				if (kind != null) {
+					if (kind.equals(Kind.COMMENT.value())) {
 
-	        }
+                        // Contents of the comment
+                        data = ((JSONObject) data.get("data"));
+
+                        // Create and add the new comment
+                        comment = new Comment(data);
+                        comments.add(comment);
+
+                    }
+				}
+			}
         
         } else {
         	throw new IllegalArgumentException("Parsing failed because JSON is not from a shallow comment listing.");
@@ -128,7 +129,6 @@ public class Comments implements ActorDriven {
      * maintaining the order. This parses all comments that are defined with their associated values,
      * those that fall outside the (default) limit are omitted.
      * 
-     * @param user		User
      * @param url		URL for the request
      * 
      * @return Parsed list of comments.
@@ -180,33 +180,35 @@ public class Comments implements ActorDriven {
             
             // Make sure it is of the correct kind
             String kind = safeJsonToString(data.get("kind"));
-            if (kind.equals(Kind.COMMENT.value())) {
-            	
-            	// Contents of the comment
-            	data = ((JSONObject) data.get("data"));
-            	
-	            // Create and add the new comment
-	            comment = new Comment(data);
-	            comments.add(comment);
-	            
-	            Object o = data.get("replies");
-	            if (o instanceof JSONObject) {
-	            	
-	            	// Dig towards the replies
-	            	JSONObject replies = (JSONObject) o;
-	            	parseRecursive(comment.getReplies(), replies);
+			if (kind != null) {
+				if (kind.equals(Kind.COMMENT.value())) {
 
-	            }
-	            
-            } else if (kind.equals(Kind.MORE.value())) {
-            	
-	            //data = (JSONObject) data.get("data");
-	            //JSONArray children = (JSONArray) data.get("children");
-	            //System.out.println("\t+ More children: " + children);
-	            
-            }
+                    // Contents of the comment
+                    data = ((JSONObject) data.get("data"));
 
-        }
+                    // Create and add the new comment
+                    comment = new Comment(data);
+                    comments.add(comment);
+
+                    Object o = data.get("replies");
+                    if (o instanceof JSONObject) {
+
+                        // Dig towards the replies
+                        JSONObject replies = (JSONObject) o;
+                        parseRecursive(comment.getReplies(), replies);
+
+                    }
+
+                } else if (kind.equals(Kind.MORE.value())) {
+
+                    //data = (JSONObject) data.get("data");
+                    //JSONArray children = (JSONArray) data.get("children");
+                    //System.out.println("\t+ More children: " + children);
+
+                }
+			}
+
+		}
         
     }
     

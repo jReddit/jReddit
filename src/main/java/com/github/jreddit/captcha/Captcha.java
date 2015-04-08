@@ -21,8 +21,7 @@ public class Captcha {
 
     /**
      * Constructor.
-     * @param restClient
-     * @param captchaDownloader
+     * @param restClient RestClient
      */
     public Captcha(RestClient restClient) {
         this.restClient = restClient;

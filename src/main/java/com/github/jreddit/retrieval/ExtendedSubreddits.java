@@ -72,7 +72,6 @@ public class ExtendedSubreddits {
      * Search for the subreddit as the given user, using the given query, for the given amount.
      * This concatenates several requests to reach the amount.
      * 
-     * @param user		User
      * @param query		Query (only simple, Reddit does not yet support field search for subreddits)
      * @param amount	Amount to retrieve (result <= amount)
      * @return 			List of subreddits matching the search query
@@ -169,7 +168,6 @@ public class ExtendedSubreddits {
     /**
      * Get a Subreddit by its name as a given user.
      *
-     * @param user			User
      * @param subredditName Name of the subreddit to retrieve
      * @return Subreddit object representing the desired subreddit, or NULL if it does not exist
      */
