@@ -10,7 +10,7 @@
 
     <groupId>com.github.jreddit</groupId>
     <artifactId>jreddit</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <name>jReddit</name>
     <description>jReddit is a wrapper for the Reddit API written in Java.</description>
     <url>https://github.com/karan/jReddit</url>
