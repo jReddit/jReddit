@@ -15,14 +15,14 @@ At the moment, jReddit can be included in your project using:
 <dependency>
         <groupId>com.github.jreddit</groupId>
         <artifactId>jreddit</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
 </dependency>
 ```
 
 #### Gradle
 ```
 dependencies {
-    compile group: 'com.github.jreddit', name: 'jreddit', version: '1.0.2'
+    compile group: 'com.github.jreddit', name: 'jreddit', version: '1.0.3'
 }
 ```
 ### What can it do?
