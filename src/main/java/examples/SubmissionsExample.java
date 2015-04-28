@@ -54,12 +54,16 @@ public class SubmissionsExample {
 			System.out.println("\n============== Basic subreddit submissions ==============");
 			List<Submission> submissionsSubreddit = subms.ofSubreddit("flowers", SubmissionSort.TOP, -1, 100, null, null, true);
 			printSubmissionsList(submissionsSubreddit);
-			
-			// Search for submissions
+
+            System.out.println("\n============== Basic main page submissions ==============");
+            List<Submission> hotSubmissions = subms.parse("/hot.json");
+            printSubmissionsList(hotSubmissions);
+
+            // Search for submissions
 			System.out.println("\n============== Basic search submissions ==============");
 			List<Submission> submissionsSearch = subms.search("flowers", null, null, TimeSpan.MONTH, -1, 100, null, null, true);
 			printSubmissionsList(submissionsSearch);
-			
+
 			// Retrieve submissions of a user
 			System.out.println("\n============== Basic user submissions ==============");
 			List<Submission> submissionsUser = subms.ofUser("Unidan", UserSubmissionsCategory.SUBMITTED, UserOverviewSort.TOP, -1, 100, null, null, true);
