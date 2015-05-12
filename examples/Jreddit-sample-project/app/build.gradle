@@ -38,7 +38,6 @@ android {
 }
 
 dependencies {
-    // TODO 1.0.3 is not released yet
     compile('com.github.jreddit:jreddit:1.0.3') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude module: 'junit'
