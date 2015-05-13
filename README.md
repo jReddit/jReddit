@@ -1,7 +1,7 @@
 jReddit
 =====
 
-[![Build Status](https://travis-ci.org/karan/jReddit.png?branch=master)](https://travis-ci.org/karan/jReddit)
+[![Build Status](https://travis-ci.org/jReddit/jReddit.png?branch=master)](https://travis-ci.org/jReddit/jReddit)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.jreddit/jreddit/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.jreddit/jreddit)
 [![Coverage Status](https://coveralls.io/repos/karan/jReddit/badge.svg)](https://coveralls.io/r/karan/jReddit)
 
