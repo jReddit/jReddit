@@ -100,21 +100,25 @@ public class ComposeTest {
 }
 ```
 
-## Possibility to configure ```RestClient```
-# Normal instantiation
-There are 2 implementation at the moment for ```RestClient```
-1. ```HttpRestClient```
-2. ```PoliteHttpRestClient``` \\ recommended restClient since Reddit API has a limitation to make only 1 request every 2 seconds.
+# Possibility to configure RestClient
+### Normal instantiation
 
-# Through ```RestClientFactory```
+There are 2 implementation at the moment for ```RestClient```
+
+* ```HttpRestClient```
+* ```PoliteHttpRestClient``` *recommended RestClient since Reddit API has a limitation to make only 1 request every 2 seconds.*
+
+### Through RestClientFactory
+
 Factory and utility class to easily instantiate ```RestClient```.
 Available methods:
-1. ```newHttpRestClient()```
-2. ```newHttpRestClient(HttpClient)```
-3. ```newPoliteHttpRestClient()```
-4. ```newPoliteHttpRestClient(HttpClient)```
-5. ```newProxyHttpClient(hostname, port)```
-6. ```newProxyHttpClient(hostname, port, scheme)```
+
+* ```newHttpRestClient()```
+* ```newHttpRestClient(HttpClient)```
+* ```newPoliteHttpRestClient()```
+* ```newPoliteHttpRestClient(HttpClient)```
+* ```newProxyHttpClient(hostname, port)```
+* ```newProxyHttpClient(hostname, port, scheme)```
 
 ### Other examples
 ## Java 
