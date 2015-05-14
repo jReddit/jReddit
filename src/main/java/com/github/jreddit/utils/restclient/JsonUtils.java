@@ -1,6 +1,10 @@
 package com.github.jreddit.utils.restclient;
 
-public class JsonUtils {
+public final class JsonUtils {
+
+    private JsonUtils() {
+        // forbid creating JsonUtils instance
+    }
 
     /**
      * Safely converts an object into string (used because sometimes JSONObject's get() method returns null).

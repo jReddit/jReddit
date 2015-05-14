@@ -10,7 +10,7 @@ public interface RestClient {
      *
      * @return <code>Response</code> an object conforming to the Response interface
      */
-    public Response get(String urlPath, String cookie);
+    Response get(String urlPath, String cookie);
 
     /**
      * Perform a post request to the Url specified using the cookie specified
@@ -21,7 +21,7 @@ public interface RestClient {
      *
      * @return <code>Response</code> an object conforming to the Response interface
      */
-    public Response post(String apiParams, String urlPath, String cookie);
+    Response post(String apiParams, String urlPath, String cookie);
 
 
     /**
@@ -29,5 +29,5 @@ public interface RestClient {
      *
      * @param agent the string to be used as the userAgent
      */
-    public void setUserAgent(String agent);
+    void setUserAgent(String agent);
 }
