@@ -1,9 +1,9 @@
 jReddit
 =====
 
-[![Build Status](https://travis-ci.org/karan/jReddit.png?branch=master)](https://travis-ci.org/karan/jReddit)
+[![Build Status](https://travis-ci.org/jReddit/jReddit.png?branch=master)](https://travis-ci.org/jReddit/jReddit)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.jreddit/jreddit/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.jreddit/jreddit)
-[![Coverage Status](https://coveralls.io/repos/karan/jReddit/badge.svg)](https://coveralls.io/r/karan/jReddit)
+[![Coverage Status](https://coveralls.io/repos/jReddit/jReddit/badge.svg)](https://coveralls.io/r/jReddit/jReddit)
 
 ### What is jReddit?
 jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour. Taken over for further development and maintainence by [Karan Goel](http://www.goel.im).
@@ -101,7 +101,11 @@ public class ComposeTest {
 ```
 
 ### Other examples
+## Java 
 You can find other examples [here](https://github.com/karan/jReddit/tree/master/src/main/java/examples)
+## Android
+You can find a small example of how to integrate jReddit in an Android application [here](https://github.com/jReddit/jReddit/tree/master/examples/Jreddit-sample-project)
+
 
 ### What's next for jReddit?
 The plan is to implement every feature documented [here](http://www.reddit.com/dev/api). To see which methods have been implemented, and which have not, see [this file](https://github.com/karan/jReddit/blob/master/implemented_methods.md).
