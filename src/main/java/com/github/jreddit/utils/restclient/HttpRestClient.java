@@ -170,10 +170,11 @@ public class HttpRestClient implements RestClient {
             String[] valuePairs = apiParams.split("&");
             for (String valuePair : valuePairs) {
                 String[] nameValue = valuePair.split("=");
-                if (nameValue.length == 1)//there is no cookie if we are not signed in
+                if (nameValue.length == 1) { //there is no cookie if we are not signed in
                     params.add(new BasicNameValuePair(nameValue[0], ""));
-                else
+                } else {
                     params.add(new BasicNameValuePair(nameValue[0], nameValue[1]));
+                }
             }
         }
         return params;
