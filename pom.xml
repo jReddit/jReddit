@@ -258,10 +258,18 @@
             <artifactId>commons-io</artifactId>
             <version>${org.apache.commons.io.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.eluder.coveralls</groupId>
             <artifactId>coveralls-maven-plugin</artifactId>
             <version>${org.eluder.coveralls.version}</version>
         </dependency>
+        
+		<dependency>
+			<groupId>org.apache.oltu.oauth2</groupId>
+			<artifactId>org.apache.oltu.oauth2.client</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+        
     </dependencies>
 </project>
