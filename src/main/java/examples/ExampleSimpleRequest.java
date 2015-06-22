@@ -7,12 +7,12 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.json.simple.parser.ParseException;
 
-import com.github.jreddit.app.RedditApp;
-import com.github.jreddit.app.RedditInstalledApp;
-import com.github.jreddit.oauth.RedditClient;
-import com.github.jreddit.oauth.RedditHttpClient;
 import com.github.jreddit.oauth.RedditOAuthAgent;
 import com.github.jreddit.oauth.RedditToken;
+import com.github.jreddit.oauth.app.RedditApp;
+import com.github.jreddit.oauth.app.RedditInstalledApp;
+import com.github.jreddit.oauth.client.RedditClient;
+import com.github.jreddit.oauth.client.RedditHttpClient;
 import com.github.jreddit.parser.SubmissionsParser;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.request.listing.SubmissionsOfSubredditRequest;

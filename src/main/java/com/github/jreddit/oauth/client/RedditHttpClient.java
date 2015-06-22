@@ -1,4 +1,4 @@
-package com.github.jreddit.oauth;
+package com.github.jreddit.oauth.client;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
+import com.github.jreddit.oauth.RedditToken;
 import com.github.jreddit.request.RedditGetRequest;
 import com.github.jreddit.request.RedditPostRequest;
 

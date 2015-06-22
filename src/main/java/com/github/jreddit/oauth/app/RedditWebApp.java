@@ -1,4 +1,4 @@
-package com.github.jreddit.app;
+package com.github.jreddit.oauth.app;
 
 public class RedditWebApp extends RedditApp {
 

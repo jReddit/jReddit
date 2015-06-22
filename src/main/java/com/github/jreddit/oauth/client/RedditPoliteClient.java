@@ -1,5 +1,6 @@
-package com.github.jreddit.oauth;
+package com.github.jreddit.oauth.client;
 
+import com.github.jreddit.oauth.RedditToken;
 import com.github.jreddit.request.RedditGetRequest;
 import com.github.jreddit.request.RedditPostRequest;
 
