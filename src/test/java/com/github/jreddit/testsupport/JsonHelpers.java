@@ -5,7 +5,7 @@ import static java.util.Collections.addAll;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.github.jreddit.entity.Kind;
+import com.github.jreddit.parser.entity.Kind;
 
 @SuppressWarnings("unchecked") //JSONSimple is not great..
 public class JsonHelpers {

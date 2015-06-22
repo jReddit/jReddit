@@ -8,17 +8,21 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
 import static org.junit.Assert.assertEquals;
 
-import com.github.jreddit.entity.User;
-import com.github.jreddit.utils.ApiEndpointUtils;
+import com.github.jreddit.deprecated.SubmitActions;
+import com.github.jreddit.parser.entity.User;
+import com.github.jreddit.request.util.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 import com.github.jreddit.utils.restclient.RestResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
 import org.apache.http.HttpResponse;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

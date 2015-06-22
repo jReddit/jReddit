@@ -1,7 +1,9 @@
 package com.github.jreddit.message;
 
-import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.entity.User;
+import com.github.jreddit.deprecated.message.Message;
+import com.github.jreddit.deprecated.message.Messages;
+import com.github.jreddit.parser.entity.User;
+import com.github.jreddit.request.util.ApiEndpointUtils;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
@@ -14,10 +16,10 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.github.jreddit.message.MessageType.*;
-import static com.github.jreddit.message.Messages.ALL_MESSAGES;
+import static com.github.jreddit.deprecated.message.MessageType.*;
+import static com.github.jreddit.deprecated.message.Messages.ALL_MESSAGES;
+import static com.github.jreddit.request.util.ApiEndpointUtils.MESSAGE_GET;
 import static com.github.jreddit.testsupport.JsonHelpers.*;
-import static com.github.jreddit.utils.ApiEndpointUtils.MESSAGE_GET;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 

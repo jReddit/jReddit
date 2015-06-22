@@ -1,9 +1,11 @@
 package com.github.jreddit.action;
 
-import com.github.jreddit.entity.User;
+import com.github.jreddit.deprecated.FlairActions;
+import com.github.jreddit.parser.entity.User;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 import com.github.jreddit.utils.restclient.RestResponse;
+
 import org.apache.http.HttpResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;

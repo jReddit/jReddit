@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
+import com.github.jreddit.parser.entity.Kind;
+import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.testsupport.JsonHelpers;
 
 /**

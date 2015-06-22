@@ -17,9 +17,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.github.jreddit.entity.User;
+import com.github.jreddit.deprecated.Captcha;
+import com.github.jreddit.deprecated.CaptchaDownloader;
+import com.github.jreddit.parser.entity.User;
+import com.github.jreddit.request.util.ApiEndpointUtils;
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 

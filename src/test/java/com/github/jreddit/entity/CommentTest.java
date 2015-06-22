@@ -3,6 +3,8 @@ package com.github.jreddit.entity;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
+import com.github.jreddit.parser.entity.Comment;
+
 import static org.junit.Assert.assertEquals;
 
 public class CommentTest {

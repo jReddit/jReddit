@@ -13,10 +13,11 @@ import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.jreddit.entity.User;
-import com.github.jreddit.entity.UserInfo;
+import com.github.jreddit.deprecated.ProfileActions;
+import com.github.jreddit.parser.entity.User;
+import com.github.jreddit.parser.entity.UserInfo;
+import com.github.jreddit.request.util.ApiEndpointUtils;
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.Response;
 import com.github.jreddit.utils.restclient.RestClient;
 

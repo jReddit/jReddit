@@ -6,6 +6,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
+import com.github.jreddit.parser.entity.Kind;
+import com.github.jreddit.parser.entity.Subreddit;
 import com.github.jreddit.testsupport.JsonHelpers;
 
 public class SubredditTest {

@@ -9,9 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.github.jreddit.entity.User;
+import com.github.jreddit.deprecated.MarkActions;
+import com.github.jreddit.parser.entity.User;
+import com.github.jreddit.request.util.ApiEndpointUtils;
 import com.github.jreddit.testsupport.UtilResponse;
-import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.RestClient;
 
 public class MarkActionsTest {
