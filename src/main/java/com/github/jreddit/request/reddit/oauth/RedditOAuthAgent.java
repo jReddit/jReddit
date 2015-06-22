@@ -1,6 +1,8 @@
 package com.github.jreddit.request.reddit.oauth;
 
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.oltu.oauth2.client.OAuthClient;
@@ -14,7 +16,8 @@ import org.apache.oltu.oauth2.common.message.types.GrantType;
 
 import com.github.jreddit.request.reddit.app.RedditApp;
 import com.github.jreddit.request.reddit.oauth.param.RedditDuration;
-import com.github.jreddit.request.reddit.oauth.param.RedditScope;
+import com.github.jreddit.request.reddit.oauth.param.RedditScopeBuilder;
+import com.github.jreddit.request.reddit.request.KeyValueFormatter;
 
 /**
  * Thread-safe reddit OAuth agent.<br>
@@ -26,6 +29,9 @@ import com.github.jreddit.request.reddit.oauth.param.RedditScope;
  * @author Simon Kassing
  */
 public class RedditOAuthAgent {
+	
+	/** Reddit authorization endpoint. */
+	public static final String REDDIT_AUTHORIZE = "https://www.reddit.com/api/v1/authorize?";
 	
 	/** Grant type for an installed client (weirdly enough a URI). */
     public static final String GRANT_TYPE_INSTALLED_CLIENT = "https://oauth.reddit.com/grants/installed_client";
@@ -41,19 +47,6 @@ public class RedditOAuthAgent {
 	
 	/** Reddit application. */
 	private RedditApp redditApp;
-    
-    /*
-	OAuthClientRequest request = OAuthClientRequest
-            .tokenProvider(OAuthProviderType.REDDIT)
-            .setGrantType(GrantType.AUTHORIZATION_CODE)
-            
-            .setClientId(CLIENT_ID)
-            .setClientSecret(CLIENT_SECRET)
-            .setRedirectURI(REDIRECT_URI)
-            .setParameter("duration", PERMANENT_ACCESS ? "permanent" : "temporary")
-            .setScope("scope", PERMANENT_ACCESS ? "permanent" : "temporary")
-            .buildQueryMessage();
-     */
     
     /**
      * Constructor for a Reddit OAuth agent.
@@ -77,16 +70,27 @@ public class RedditOAuthAgent {
      * The user will, after authorization, receive a <i>code</i>. This can be turned into
      * a <i>RedditToken</i> using {@link #token(String)}.
      * 
-     * @param scope Authorization scope
+     * @param scopeBuilder Authorization scope builder
      * @param duration Duration that the token can last
      * 
      * @return The URI users need to visit and retrieve the <i>code</i> from
      * 
      * @see {@link #token(String)} for converting the <i>code</i> into a usable <i>RedditToken</i>
      */
-    public synchronized String generateCodeFlowURI(RedditScope scope, RedditDuration duration) {
-    	// TODO: URI formatting
-    	return "";
+    public synchronized String generateCodeFlowURI(RedditScopeBuilder scopeBuilder, RedditDuration duration) {
+    	
+    	// Set parameters
+    	Map<String, String> params = new HashMap<String, String>();
+    	params.put("client_id", redditApp.getClientID());
+    	params.put("response_type", "code");
+    	params.put("state", UUID.randomUUID().toString());
+    	params.put("redirect_uri", redditApp.getRedirectURI());
+    	params.put("duration", duration.value());
+    	params.put("scope", scopeBuilder.build());
+    	
+    	// Create URI
+    	return REDDIT_AUTHORIZE + KeyValueFormatter.format(params);
+    	
     }
     
     /**
@@ -96,15 +100,25 @@ public class RedditOAuthAgent {
      * The user will, after authorization, receive token information. This can be turned into
      * a <i>RedditToken</i> using {@link #tokenFromInfo(String)}.
      * 
-     * @param scope Authorization scope
+     * @param scopeBuilder Authorization scope builder
      * 
      * @return The URI users need to visit and retrieve the <i>token information</i> from
      * 
      * @see {@link #tokenFromInfo(String)} for converting the <i>token information</i> into <i>RedditToken</i>
      */
-    public synchronized String generateImplicitFlowURI(RedditScope scope) {
-    	// TODO: URI formatting
-    	return "";
+    public synchronized String generateImplicitFlowURI(RedditScopeBuilder scopeBuilder) {
+    	
+    	// Set parameters
+    	Map<String, String> params = new HashMap<String, String>();
+    	params.put("client_id", redditApp.getClientID());
+    	params.put("response_type", "token");
+    	params.put("state", UUID.randomUUID().toString());
+    	params.put("redirect_uri", redditApp.getRedirectURI());
+    	params.put("scope", scopeBuilder.build());
+    	
+    	// Create URI
+    	return REDDIT_AUTHORIZE + KeyValueFormatter.format(params);
+    	
     }
     
     /**
@@ -263,13 +277,44 @@ public class RedditOAuthAgent {
         
 	}
 	
-	public synchronized RedditToken tokenFromInfo(String accessToken, String tokenType, String expiressIn, String scope, String state) {
-		// TODO: Fill in
-		return new RedditToken(null);
+	/**
+	 * Generate a token from information received using the <i>implicit grant flow</i>.<br>
+	 * <br>
+	 * <b>WARNING:</b> The expiration of the token is no longer very accurate. There is a delay
+	 * between the user receiving the token, and inputting it into this function. Beware that the
+	 * token might expire earlier than that the token reports it to.
+	 * 
+	 * @param accessToken Access token
+	 * @param tokenType Token type (commonly "bearer")
+	 * @param expiresIn Expires in (seconds)
+	 * @param scope Scope
+	 * 
+	 * @return <i>RedditToken</i> generated using the given information.
+	 */
+	public synchronized RedditToken tokenFromInfo(String accessToken, String tokenType, long expiresIn, String scope) {
+		return new RedditToken(accessToken, tokenType, expiresIn, scope);
 	}
 	
-	public boolean revoke(RedditToken token, boolean accessTokenOnly) {
+	/**
+	 * Revocation of a <i>RedditToken</i>.<br>
+	 * <br>
+	 * Be sure to not use the token after
+	 * calling this function, as its state pertaining its validity (e.g. scope, 
+	 * expiration, refreshability) is no longer valid when it is revoked.<br>
+	 * <br>
+	 * <i>Note: Per RFC 7009, this request will return a success (204) response even if the passed in token was never valid.</i>
+	 * 
+	 * @param token <i>RedditToken</i> to revoke
+	 * @param revokeAccessTokenOnly Whether to only revoke the access token, or both
+	 * 
+	 * @return Whether the token is no longer valid
+	 */
+	public boolean revoke(RedditToken token, boolean revokeAccessTokenOnly) {
 		// TODO: Implement
+		// https://www.reddit.com/api/v1/revoke_token
+		// In POST data: token=TOKEN&token_type_hint=TOKEN_TYPE
+		// TOKEN_TYPE: refresh_token or access_token
+		// 
 		return true;
 	}
 	

@@ -40,18 +40,39 @@ public class RedditToken {
 	/** Time at which the token expires (seconds since UNIX epoch). */
 	private long expiration;
 	
+	/** How long the token was valid starting from its creation (in seconds). */
+	private long expirationSpan;
+	
 	/**
 	 * Constructor.
 	 * 
 	 * @param token Access token
 	 * @param expiresIn Time before token expires
 	 */
-	public RedditToken(OAuthJSONAccessTokenResponse token) {
+	protected RedditToken(OAuthJSONAccessTokenResponse token) {
 		this.accessToken = token.getAccessToken();
 		this.refreshToken = token.getRefreshToken();
 		this.expiration = currentTimeSeconds() + token.getExpiresIn();
+		this.expirationSpan = token.getExpiresIn();
 		this.scopes = new RedditTokenScopes(token.getScope());
 		this.tokenType = token.getParam(PARAM_TOKEN_TYPE);
+	}
+	
+	/**
+	 * Reddit token constructor with specific parameters.
+	 * 
+	 * @param accessToken Access token
+	 * @param tokenType Type of token (commonly "bearer")
+	 * @param expiresIn Expires in (seconds)
+	 * @param scope Scope
+	 */
+	protected RedditToken(String accessToken, String tokenType, long expiresIn, String scope) {
+		this.accessToken = accessToken;
+		this.refreshToken = null;
+		this.expiration = currentTimeSeconds() + expiresIn;
+		this.expirationSpan = expiresIn;
+		this.scopes = new RedditTokenScopes(scope);
+		this.tokenType = tokenType;
 	}
 	
 	/**
@@ -143,6 +164,15 @@ public class RedditToken {
 	 */
 	public boolean willExpireIn(long seconds) {
 		return currentTimeSeconds() + seconds > expiration;
+	}
+	
+	/**
+	 * Retrieve the original expiration span of the token starting from its creation.
+	 * 
+	 * @return Expiration span (in seconds)
+	 */
+	public long getExpirationSpan() {
+		return expirationSpan;
 	}
 	
 	/**
