@@ -2,7 +2,7 @@ package com.github.jreddit.request.reddit.request;
 
 import com.github.jreddit.request.reddit.request.param.SubredditsView;
 
-public class SubredditsGetRequest extends SubredditsRequest {
+public class SubredditsGetRequest extends ListingRequest {
 	
 	/** Required field: view of the subreddits. */
 	private SubredditsView view;

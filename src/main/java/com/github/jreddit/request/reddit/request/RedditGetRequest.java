@@ -2,15 +2,8 @@ package com.github.jreddit.request.reddit.request;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-/**
- * Abstract class for requests.
- * 
- * @author Simon Kassing
- *
- */
-public abstract class RedditRequest {
+public abstract class RedditGetRequest {
 
 	/** Mapping of all request parameters. */
 	private Map<String, String> parameters;
@@ -18,7 +11,7 @@ public abstract class RedditRequest {
 	/**
 	 * Default constructor.
 	 */
-	public RedditRequest() {
+	public RedditGetRequest() {
 		parameters = new HashMap<String, String>();
 	}
 	
@@ -34,35 +27,12 @@ public abstract class RedditRequest {
 	}
 	
 	/**
-	 * Generate the parameters to be added to an URL.
+	 * Generate the query parameters to be added to an URL.
 	 * 
 	 * @return Parameters (e.g. "limit=100&sort=top")
 	 */
 	protected String generateParameters() {
-		
-		// Key set
-		Set<String> keys = parameters.keySet();
-		
-		// Iterate over keys
-		String paramsString = "";
-		boolean start = true;
-		for (String key : keys) {
-			
-			// Add separation ampersand
-			if (!start) {
-				paramsString = paramsString.concat("&");
-			} else {
-				start = false;
-			}
-			
-			// Add key-value pair
-			paramsString = paramsString.concat(key + "=" + parameters.get(key));
-			
-		}
-		
-		// Return final parameters
-		return paramsString;
-		
+		return KeyValueFormatter.format(parameters);
 	}
 	
 	/**

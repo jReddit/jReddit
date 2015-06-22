@@ -11,7 +11,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.util.EntityUtils;
 
-import com.github.jreddit.request.reddit.request.RedditRequest;
+import com.github.jreddit.request.reddit.request.RedditGetRequest;
+import com.github.jreddit.request.reddit.request.RedditPostRequest;
 
 public class RedditHttpClient extends RedditClient {
 
@@ -26,7 +27,7 @@ public class RedditHttpClient extends RedditClient {
 	}
 	
 	@Override
-	public String post(RedditToken rToken, RedditRequest redditRequest) {
+	public String post(RedditToken rToken, RedditPostRequest redditRequest) {
 		
 	    try {
 	    	
@@ -58,7 +59,7 @@ public class RedditHttpClient extends RedditClient {
 	}
 	
 	@Override
-	public String get(RedditToken rToken, RedditRequest redditRequest) {
+	public String get(RedditToken rToken, RedditGetRequest redditRequest) {
 		
 	    try {
 	    	

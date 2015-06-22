@@ -1,6 +1,7 @@
 package com.github.jreddit.request.reddit.oauth;
 
-import com.github.jreddit.request.reddit.request.RedditRequest;
+import com.github.jreddit.request.reddit.request.RedditGetRequest;
+import com.github.jreddit.request.reddit.request.RedditPostRequest;
 
 public class RedditPoliteClient extends RedditClient {
 	
@@ -12,12 +13,12 @@ public class RedditPoliteClient extends RedditClient {
 	}
 
 	@Override
-	public String post(RedditToken rToken, RedditRequest request) {
+	public String post(RedditToken rToken, RedditPostRequest request) {
 		return redditClient.post(rToken, request);
 	}
 
 	@Override
-	public String get(RedditToken rToken, RedditRequest request) {
+	public String get(RedditToken rToken, RedditGetRequest request) {
 		return redditClient.get(rToken, request);
 	}
 }
