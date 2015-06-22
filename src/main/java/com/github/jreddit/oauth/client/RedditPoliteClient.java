@@ -4,13 +4,24 @@ import com.github.jreddit.oauth.RedditToken;
 import com.github.jreddit.request.RedditGetRequest;
 import com.github.jreddit.request.RedditPostRequest;
 
+/**
+ * Wrapper for any reddit client, which makes it <i>polite</i>.
+ * Polite means that it will only send requests in an interval,
+ * and does not overload reddit. It will also mean you will get
+ * less denial messages from reddit *hint* *hint*.
+ * 
+ * @author Simon Kassing
+ */
 public class RedditPoliteClient extends RedditClient {
 	
 	/** Wrapped reddit client. */
 	RedditClient redditClient;
 	
     /** Waiting time in milliseconds. */
-    private static final long WAIT_TIME = 1000L;
+    private static final long DEFAULT_INTERVAL = 1000L;
+    
+    /** Default interval in milliseconds. */
+    private long interval;
 
     /** Last time a request was made. */
     private long lastReqTime = 0;
@@ -21,7 +32,18 @@ public class RedditPoliteClient extends RedditClient {
      * @param redditClient Reddit client to wrap
      */
 	public RedditPoliteClient(RedditClient redditClient) {
+		this(redditClient, DEFAULT_INTERVAL);
+	}
+	
+    /**
+     * Polite wrapper around the reddit client with configurable time.
+     * 
+     * @param redditClient Reddit client to wrap
+     * @param interval Interval in milliseconds
+     */
+	public RedditPoliteClient(RedditClient redditClient, long interval) {
 		this.redditClient = redditClient;
+		this.interval = interval;
 	}
 
 	@Override
@@ -56,12 +78,12 @@ public class RedditPoliteClient extends RedditClient {
         long elapsed = System.currentTimeMillis() - lastReqTime;
 
         // If enough time has elapsed, no need to wait
-        if (elapsed >= WAIT_TIME) {
+        if (elapsed >= interval) {
         	return;
         }
 
         // If not enough time was elapsed, wait the remainder
-        long toWait = WAIT_TIME - elapsed;
+        long toWait = interval - elapsed;
         try {
             Thread.sleep(toWait);
         } catch (InterruptedException e) {
