@@ -38,7 +38,7 @@ public class ExampleContinuousRequests {
 		RedditOAuthAgent agent = new RedditOAuthAgent(userAgent, redditApp);	
 		
 		// Create request executor 
-		RedditClient client = new RedditHttpClient(HttpClientBuilder.create().build());
+		RedditClient client = new RedditHttpClient(userAgent, HttpClientBuilder.create().build());
 		
 		/********************************************
 		 * Perform requests in a loop

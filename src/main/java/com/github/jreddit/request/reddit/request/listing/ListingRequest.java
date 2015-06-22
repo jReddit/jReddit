@@ -1,13 +1,14 @@
-package com.github.jreddit.request.reddit.request;
+package com.github.jreddit.request.reddit.request.listing;
 
 import com.github.jreddit.entity.Subreddit;
+import com.github.jreddit.request.reddit.request.RedditGetRequest;
 
 public abstract class ListingRequest extends RedditGetRequest {
 
 	/**
 	 * 
 	 * @param count
-	 * @return
+	 * @return This request
 	 */
 	public ListingRequest setCount(int count) {
 		this.addParameter("count", String.valueOf(count));
@@ -17,7 +18,7 @@ public abstract class ListingRequest extends RedditGetRequest {
 	/**
 	 * 
 	 * @param limit
-	 * @return
+	 * @return This request
 	 */
 	public ListingRequest setLimit(int limit) {
 		this.addParameter("limit", String.valueOf(limit));
@@ -27,7 +28,7 @@ public abstract class ListingRequest extends RedditGetRequest {
 	/**
 	 * 
 	 * @param after
-	 * @return
+	 * @return This request
 	 */
 	public ListingRequest setAfter(Subreddit after) {
 		this.addParameter("after", after.getFullName());
@@ -37,7 +38,7 @@ public abstract class ListingRequest extends RedditGetRequest {
 	/**
 	 * 
 	 * @param before
-	 * @return
+	 * @return This request
 	 */
 	public ListingRequest setBefore(Subreddit before) {
 		this.addParameter("before", before.getFullName());

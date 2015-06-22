@@ -7,16 +7,16 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.json.simple.parser.ParseException;
 
-import com.github.jreddit.entity.Subreddit;
+import com.github.jreddit.entity.Submission;
 import com.github.jreddit.request.reddit.app.RedditApp;
 import com.github.jreddit.request.reddit.app.RedditInstalledApp;
 import com.github.jreddit.request.reddit.oauth.RedditClient;
 import com.github.jreddit.request.reddit.oauth.RedditHttpClient;
 import com.github.jreddit.request.reddit.oauth.RedditOAuthAgent;
 import com.github.jreddit.request.reddit.oauth.RedditToken;
-import com.github.jreddit.request.reddit.parser.SubredditsParser;
-import com.github.jreddit.request.reddit.request.SubredditsGetRequest;
-import com.github.jreddit.request.reddit.request.param.SubredditsView;
+import com.github.jreddit.request.reddit.parser.SubmissionsParser;
+import com.github.jreddit.request.reddit.request.listing.SubmissionsOfSubredditRequest;
+import com.github.jreddit.request.reddit.request.param.SubmissionSort;
 
 public class ExampleSimpleRequest {
 
@@ -34,22 +34,22 @@ public class ExampleSimpleRequest {
 		RedditOAuthAgent agent = new RedditOAuthAgent(userAgent, redditApp);	
 		
 		// Create request executor 
-		RedditClient client = new RedditHttpClient(HttpClientBuilder.create().build());
+		RedditClient client = new RedditHttpClient(userAgent, HttpClientBuilder.create().build());
 		
 		// Create token (will be valid for 1 hour)
 		RedditToken token = agent.tokenAppOnly(false);
 
 		// Create parser for request
-		SubredditsParser parser = new SubredditsParser();
-		
+		SubmissionsParser parser = new SubmissionsParser();
+
 		// Create the request
-		SubredditsGetRequest request = (SubredditsGetRequest) new SubredditsGetRequest(SubredditsView.NEW).setLimit(100);
+		SubmissionsOfSubredditRequest request = (SubmissionsOfSubredditRequest) new SubmissionsOfSubredditRequest("programming", SubmissionSort.HOT).setLimit(100);
 
 		// Perform and parse request, and store parsed result
-		List<Subreddit> subreddits = parser.parse(client.get(token, request));
+		List<Submission> submissions = parser.parse(client.get(token, request));
 		
 		// Now print out the result (don't care about formatting)
-		System.out.println(subreddits);
+		System.out.println(submissions);
 
 	}
 	

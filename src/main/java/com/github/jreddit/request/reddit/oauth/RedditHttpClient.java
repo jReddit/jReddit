@@ -16,13 +16,18 @@ import com.github.jreddit.request.reddit.request.RedditPostRequest;
 
 public class RedditHttpClient extends RedditClient {
 
+	/** User agent. */
+	private String userAgent;
+	
+	/** HTTP Client. */
 	private HttpClient httpClient;
 	
 	/**
 	 * 
 	 * @param httpClient
 	 */
-	public RedditHttpClient(HttpClient httpClient) {
+	public RedditHttpClient(String userAgent, HttpClient httpClient) {
+		this.userAgent = userAgent;
 		this.httpClient = httpClient;
 	}
 	
@@ -37,6 +42,9 @@ public class RedditHttpClient extends RedditClient {
 	        
 	        // Add authorization
 	        addAuthorization(request, rToken);
+	        
+	        // Add user agent
+	        addUserAgent(request);
 	        
 	        // Attempt to do execute request
 	        HttpResponse response = httpClient.execute(request);
@@ -69,6 +77,9 @@ public class RedditHttpClient extends RedditClient {
 	        // Add authorization
 	        addAuthorization(request, rToken);
 	        
+	        // Add user agent
+	        addUserAgent(request);
+	        
 	        // Attempt to do execute request
 	        HttpResponse response = httpClient.execute(request);//, context
 	        
@@ -97,6 +108,15 @@ public class RedditHttpClient extends RedditClient {
 	 */
 	private void addAuthorization(HttpRequest request, RedditToken rToken) {
 		request.addHeader("Authorization", rToken.getTokenType() + " " + rToken.getAccessToken());
+	}
+	
+	/**
+	 * Add user agent to the HTTP request.
+	 * 
+	 * @param request HTTP request
+	 */
+	private void addUserAgent(HttpRequest request) {
+		request.addHeader("User-Agent", userAgent);
 	}
 
 }
