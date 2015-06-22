@@ -9,6 +9,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
 import com.github.jreddit.request.reddit.request.RedditGetRequest;
@@ -23,8 +24,10 @@ public class RedditHttpClient extends RedditClient {
 	private HttpClient httpClient;
 	
 	/**
+	 * Constructor.
 	 * 
-	 * @param httpClient
+	 * @param userAgent User agent of your application
+	 * @param httpClient HTTP client to use for the requests
 	 */
 	public RedditHttpClient(String userAgent, HttpClient httpClient) {
 		this.userAgent = userAgent;
@@ -38,7 +41,9 @@ public class RedditHttpClient extends RedditClient {
 	    	
 	    	// Create post request
 	        HttpPost request = new HttpPost(OAUTH_API_DOMAIN + redditRequest.generateRedditURI());
-	        // TODO: Add parameters to body
+
+	        // Add parameters to body
+	        request.setEntity(new StringEntity(redditRequest.generateBody()));
 	        
 	        // Add authorization
 	        addAuthorization(request, rToken);

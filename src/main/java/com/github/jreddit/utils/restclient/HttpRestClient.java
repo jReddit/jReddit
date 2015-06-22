@@ -108,7 +108,7 @@ public class HttpRestClient implements RestClient {
         return response;
     }
 
-    private Response post(String apiParams, String urlPath, String cookie) {
+    public Response post(String apiParams, String urlPath, String cookie) {
 
         try {
             Response result = post(

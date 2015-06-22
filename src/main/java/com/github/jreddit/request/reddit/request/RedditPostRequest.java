@@ -50,10 +50,19 @@ public abstract class RedditPostRequest {
 	
 	/**
 	 * Generate the URI of the request.
-	 * Be sure to call {@link #generateParameters()} to add the parameters to the end of the URL.
+	 * Be sure to call {@link #generateParameters()} in your implementation to add the parameters to the end of the URL.
 	 * 
 	 * @return Reddit Uniform Resource Identifier (e.g. "/usr/endpoint?limit=100&sort=top")
 	 */
 	abstract public String generateRedditURI();
+	
+	/**
+	 * Generate the body for a POST request using the POST parameters.
+
+	 * @return Body (e.g. "limit=100&sort=top")
+	 */
+	public String generateBody() {
+		return generateBodyParameters();
+	}
 	
 }
