@@ -1,4 +1,4 @@
-package com.github.jreddit.request;
+package com.github.jreddit.request.reddit.request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Set;
  * @author Simon Kassing
  *
  */
-public abstract class Request {
+public abstract class RedditRequest {
 
 	/** Mapping of all request parameters. */
 	private Map<String, String> parameters;
@@ -18,7 +18,7 @@ public abstract class Request {
 	/**
 	 * Default constructor.
 	 */
-	public Request() {
+	public RedditRequest() {
 		parameters = new HashMap<String, String>();
 	}
 	
@@ -66,11 +66,11 @@ public abstract class Request {
 	}
 	
 	/**
-	 * Generate the URL of the request.
+	 * Generate the URI of the request.
 	 * Be sure to call {@link #generateParameters()} to add the parameters to the end of the URL.
 	 * 
-	 * @return Uniform Resource Locator (e.g. "http://www.example.com/usr/endpoint?limit=100&sort=top")
+	 * @return Reddit Uniform Resource Identifier (e.g. "/usr/endpoint?limit=100&sort=top")
 	 */
-	abstract public String generateURL();
+	abstract public String generateRedditURI();
 	
 }

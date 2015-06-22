@@ -9,13 +9,13 @@ import com.github.jreddit.entity.Submission;
 import com.github.jreddit.entity.User;
 import com.github.jreddit.exception.RedditError;
 import com.github.jreddit.exception.RetrievalFailedException;
+import com.github.jreddit.request.reddit.request.param.SearchSort;
+import com.github.jreddit.request.reddit.request.param.SubmissionSort;
+import com.github.jreddit.request.reddit.request.param.TimeSpan;
+import com.github.jreddit.request.reddit.request.param.UserOverviewSort;
+import com.github.jreddit.request.reddit.request.param.UserSubmissionsCategory;
 import com.github.jreddit.retrieval.ExtendedSubmissions;
 import com.github.jreddit.retrieval.Submissions;
-import com.github.jreddit.retrieval.params.SubmissionSort;
-import com.github.jreddit.retrieval.params.SearchSort;
-import com.github.jreddit.retrieval.params.TimeSpan;
-import com.github.jreddit.retrieval.params.UserOverviewSort;
-import com.github.jreddit.retrieval.params.UserSubmissionsCategory;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
 

@@ -21,7 +21,7 @@ public interface RestClient {
      *
      * @return <code>Response</code> an object conforming to the Response interface
      */
-    Response post(String apiParams, String urlPath, String cookie);
+    public Response post(String apiParams, String urlPath, String cookie);
 
 
     /**

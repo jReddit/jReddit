@@ -1,4 +1,4 @@
-package com.github.jreddit.retrieval.params;
+package com.github.jreddit.request.reddit.request.param;
 
 /**
  * Enum to represent comment sorts on Reddit. You see these on a page that lists comments.

@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.github.jreddit.entity.Comment;
-import com.github.jreddit.retrieval.params.CommentSort;
-import com.github.jreddit.retrieval.params.TimeSpan;
-import com.github.jreddit.retrieval.params.UserOverviewSort;
+import com.github.jreddit.request.reddit.request.param.CommentSort;
+import com.github.jreddit.request.reddit.request.param.TimeSpan;
+import com.github.jreddit.request.reddit.request.param.UserOverviewSort;
 import com.github.jreddit.utils.RedditConstants;
 
 public class ExtendedComments {

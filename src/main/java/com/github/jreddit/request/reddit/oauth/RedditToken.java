@@ -2,6 +2,24 @@ package com.github.jreddit.request.reddit.oauth;
 
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 
+import com.github.jreddit.request.reddit.oauth.param.RedditScope;
+import com.github.jreddit.request.reddit.oauth.param.RedditTokenScopes;
+
+/**
+ * OAuth2 token wrapper for reddit.<br>
+ * <br>
+ * This class wraps the information received from reddit following
+ * the request for a token.<br>
+ * A token has three dimensions:
+ * <ul>
+ * <li><b>scope:</b> what can it be used for?
+ * <li><b>expiration:</b> how long can it be used?
+ * <li><b>refreshable:</b> can its duration be prolonged?
+ * </ul>
+ * 
+ * @author Simon Kassing
+ *
+ */
 public class RedditToken {
 
 	/** Token type parameter. */
@@ -13,17 +31,8 @@ public class RedditToken {
 	/** Refresh token. */
 	private String refreshToken;
 	
-	/** 
-	 * Comma-separated list of scopes. 
-	 * 
-	 * Possible scopes (15-06-2015): 
-	 * identity, edit, flair, history, modconfig, 
-	 * modflair, modlog, modposts, modwiki, mysubreddits, 
-	 * privatemessages, read, report, save, submit, 
-	 * subscribe, vote, wikiedit, wikiread 
-	 * 
-	*/
-	private String scope;
+	/** Manager of the scopes that this token applies to. */
+	private RedditTokenScopes scopes;
 	
 	/** Token type. Only value possible (15-06-2015): bearer */
 	private String tokenType;
@@ -40,8 +49,8 @@ public class RedditToken {
 	public RedditToken(OAuthJSONAccessTokenResponse token) {
 		this.accessToken = token.getAccessToken();
 		this.refreshToken = token.getRefreshToken();
-		this.expiration = (System.currentTimeMillis() / 1000) + token.getExpiresIn();
-		this.scope = token.getScope();
+		this.expiration = currentTimeSeconds() + token.getExpiresIn();
+		this.scopes = new RedditTokenScopes(token.getScope());
 		this.tokenType = token.getParam(PARAM_TOKEN_TYPE);
 	}
 	
@@ -52,8 +61,8 @@ public class RedditToken {
 	 */
 	public void refresh(OAuthJSONAccessTokenResponse token) {
 		this.accessToken = token.getAccessToken();
-		this.expiration = (System.currentTimeMillis() / 1000) + token.getExpiresIn();
-		this.scope = token.getScope();
+		this.expiration = currentTimeSeconds() + token.getExpiresIn();
+		this.scopes = new RedditTokenScopes(token.getScope());
 		this.tokenType = token.getParam(PARAM_TOKEN_TYPE);
 	}
 
@@ -76,21 +85,26 @@ public class RedditToken {
 	}
 
 	/**
-	 * Retrieve whether the token is still valid (before its expiration time).
+	 * Retrieve whether the token is expired.
 	 * 
-	 * @return Is the token still valid?
+	 * @return Is the token expired?
 	 */
-	public boolean isStillValid() {
-		return expiration > System.currentTimeMillis();
+	public boolean isExpired() {
+		return expiration < currentTimeSeconds();
 	}
 	
 	/**
-	 * Retrieve the scope.
+	 * Check whether this token possess this particular authorization scope.
+	 * If it does not support the scope, it means that the token does
+	 * not have approval from the user to perform the actions belonging to 
+	 * that scope.
 	 * 
-	 * @return Comma-separated list of scopes (e.g. "identify,flair,report")
+	 * @param scope Reddit scope
+	 * 
+	 * @return Does this token support this scope?
 	 */
-	public String getScope() {
-		return scope;
+	public boolean hasScope(RedditScope scope) {
+		return this.scopes.has(scope);
 	}
 	
 	/**
@@ -117,7 +131,29 @@ public class RedditToken {
 	 * @return Can the token be refreshed?
 	 */
 	public boolean isRefreshable() {
-		return this.isStillValid() && this.getRefreshToken() != null;
+		return !this.isExpired() && this.getRefreshToken() != null;
+	}
+	
+	/**
+	 * Check whether this token will expire within the given time frame (given in seconds).
+	 * 
+	 * @param seconds Amount of seconds
+	 * 
+	 * @return Will the token expire within the given time frame?
+	 */
+	public boolean willExpireIn(long seconds) {
+		return currentTimeSeconds() + seconds > expiration;
+	}
+	
+	/**
+	 * Retrieve the current time in seconds.
+	 * 
+	 * Uses <i>System.currentTimeMillis()</i>.
+	 * 
+	 * @return Current time in seconds.
+	 */
+	private static long currentTimeSeconds() {
+		return System.currentTimeMillis() / (long) 1000;
 	}
 	
 }

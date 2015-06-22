@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.github.jreddit.entity.Subreddit;
-import com.github.jreddit.retrieval.params.SubredditsView;
+import com.github.jreddit.request.reddit.request.param.SubredditsView;
 import com.github.jreddit.utils.RedditConstants;
 
 public class ExtendedSubreddits {

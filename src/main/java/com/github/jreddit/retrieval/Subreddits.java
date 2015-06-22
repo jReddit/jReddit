@@ -16,7 +16,7 @@ import com.github.jreddit.entity.Subreddit;
 import com.github.jreddit.entity.User;
 import com.github.jreddit.exception.RedditError;
 import com.github.jreddit.exception.RetrievalFailedException;
-import com.github.jreddit.retrieval.params.SubredditsView;
+import com.github.jreddit.request.reddit.request.param.SubredditsView;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.ParamFormatter;
 import com.github.jreddit.utils.restclient.RestClient;

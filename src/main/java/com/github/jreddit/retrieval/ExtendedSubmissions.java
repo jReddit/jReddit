@@ -5,12 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.github.jreddit.entity.Submission;
-import com.github.jreddit.retrieval.params.QuerySyntax;
-import com.github.jreddit.retrieval.params.SearchSort;
-import com.github.jreddit.retrieval.params.SubmissionSort;
-import com.github.jreddit.retrieval.params.TimeSpan;
-import com.github.jreddit.retrieval.params.UserOverviewSort;
-import com.github.jreddit.retrieval.params.UserSubmissionsCategory;
+import com.github.jreddit.request.reddit.request.param.QuerySyntax;
+import com.github.jreddit.request.reddit.request.param.SearchSort;
+import com.github.jreddit.request.reddit.request.param.SubmissionSort;
+import com.github.jreddit.request.reddit.request.param.TimeSpan;
+import com.github.jreddit.request.reddit.request.param.UserOverviewSort;
+import com.github.jreddit.request.reddit.request.param.UserSubmissionsCategory;
 import com.github.jreddit.utils.RedditConstants;
 
 public class ExtendedSubmissions {

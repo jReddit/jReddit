@@ -1,8 +1,8 @@
-package com.github.jreddit.request;
+package com.github.jreddit.request.reddit.request;
 
 import com.github.jreddit.entity.Subreddit;
 
-public abstract class SubredditsRequest extends Request {
+public abstract class SubredditsRequest extends RedditRequest {
 
 	/**
 	 * 

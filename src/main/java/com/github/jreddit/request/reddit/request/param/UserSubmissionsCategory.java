@@ -1,4 +1,4 @@
-package com.github.jreddit.retrieval.params;
+package com.github.jreddit.request.reddit.request.param;
 
 public enum UserSubmissionsCategory {
 	

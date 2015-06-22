@@ -13,14 +13,17 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 
 import com.github.jreddit.request.reddit.app.RedditApp;
+import com.github.jreddit.request.reddit.oauth.param.RedditDuration;
+import com.github.jreddit.request.reddit.oauth.param.RedditScope;
 
 /**
- * Thread-safe reddit OAuth agent.
- * 
- * Communicates with reddit to retrieve tokens.
+ * Thread-safe reddit OAuth agent.<br>
+ * <br>
+ * Communicates with reddit to retrieve tokens, and converts them
+ * into {@link RedditToken}s, which are used internally by jReddit. This class
+ * supports both the <i>code grant flow</i> and <i>implicit grant flow</i>.
  * 
  * @author Simon Kassing
- *
  */
 public class RedditOAuthAgent {
 	
@@ -65,6 +68,43 @@ public class RedditOAuthAgent {
     	// Initialize OAuthClient with custom HTTPClient under the hood
     	this.oAuthClient = new OAuthClient(new URLConnectionClient());
     	
+    }
+    
+    /**
+     * Generate the <i>code flow</i> Uniform Resource Locator (URI) for a
+     * reddit user to authorize your application.<br>
+     * <br>
+     * The user will, after authorization, receive a <i>code</i>. This can be turned into
+     * a <i>RedditToken</i> using {@link #token(String)}.
+     * 
+     * @param scope Authorization scope
+     * @param duration Duration that the token can last
+     * 
+     * @return The URI users need to visit and retrieve the <i>code</i> from
+     * 
+     * @see {@link #token(String)} for converting the <i>code</i> into a usable <i>RedditToken</i>
+     */
+    public synchronized String generateCodeFlowURI(RedditScope scope, RedditDuration duration) {
+    	// TODO: URI formatting
+    	return "";
+    }
+    
+    /**
+     * Generate the <i>implicit flow</i> Uniform Resource Locator (URI) for a
+     * reddit user to authorize your application.<br>
+     * <br>
+     * The user will, after authorization, receive token information. This can be turned into
+     * a <i>RedditToken</i> using {@link #tokenFromInfo(String)}.
+     * 
+     * @param scope Authorization scope
+     * 
+     * @return The URI users need to visit and retrieve the <i>token information</i> from
+     * 
+     * @see {@link #tokenFromInfo(String)} for converting the <i>token information</i> into <i>RedditToken</i>
+     */
+    public synchronized String generateImplicitFlowURI(RedditScope scope) {
+    	// TODO: URI formatting
+    	return "";
     }
     
     /**
@@ -221,6 +261,16 @@ public class RedditOAuthAgent {
         // Return a wrapper controlled by jReddit
         return new RedditToken(oAuthClient.accessToken(request));
         
+	}
+	
+	public synchronized RedditToken tokenFromInfo(String accessToken, String tokenType, String expiressIn, String scope, String state) {
+		// TODO: Fill in
+		return new RedditToken(null);
+	}
+	
+	public boolean revoke(RedditToken token, boolean accessTokenOnly) {
+		// TODO: Implement
+		return true;
 	}
 	
 }

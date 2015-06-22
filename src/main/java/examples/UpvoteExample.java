@@ -7,8 +7,8 @@ import com.github.jreddit.entity.Submission;
 import com.github.jreddit.entity.User;
 import com.github.jreddit.exception.RedditError;
 import com.github.jreddit.exception.RetrievalFailedException;
+import com.github.jreddit.request.reddit.request.param.SubmissionSort;
 import com.github.jreddit.retrieval.Submissions;
-import com.github.jreddit.retrieval.params.SubmissionSort;
 import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
 

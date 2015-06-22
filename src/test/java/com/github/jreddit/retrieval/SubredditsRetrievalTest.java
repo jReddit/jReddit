@@ -19,7 +19,7 @@ import org.junit.rules.ExpectedException;
 import com.github.jreddit.entity.Subreddit;
 import com.github.jreddit.entity.User;
 import com.github.jreddit.exception.RetrievalFailedException;
-import com.github.jreddit.retrieval.params.SubredditsView;
+import com.github.jreddit.request.reddit.request.param.SubredditsView;
 import com.github.jreddit.testsupport.JsonHelpers;
 import com.github.jreddit.testsupport.UtilResponse;
 import com.github.jreddit.utils.restclient.RestClient;
