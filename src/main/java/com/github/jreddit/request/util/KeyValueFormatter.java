@@ -2,6 +2,7 @@ package com.github.jreddit.request.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,6 +60,17 @@ public class KeyValueFormatter {
 		// Return final parameter string
 		return paramsString;
 		
+	}
+	
+	public static String formatCommaSeparatedList(List<String> list) {
+		String stringList = "";
+		for (String s : list) {
+			stringList += s + ",";
+		}
+		if (stringList.length() > 0) {
+			stringList = stringList.substring(0, stringList.length() - 1);
+		}
+		return stringList;
 	}
 	
 }

@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.json.simple.JSONObject;
 
+import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
+
 /**
  * A Reddit comment. Contains the edited timestamp, the body
  *
@@ -17,7 +19,7 @@ import org.json.simple.JSONObject;
  * @author Raul Rene Lepsa
  * @author Simon Kassing
  */
-public class Comment extends Thing {
+public class Comment extends CommentTreeElement {
 
     private String author;			// Username of the author
     private String parentId;		// Parent identifier

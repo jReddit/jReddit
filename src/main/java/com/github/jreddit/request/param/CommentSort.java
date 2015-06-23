@@ -9,13 +9,12 @@ package com.github.jreddit.request.param;
  */
 public enum CommentSort {
 
+	CONFIDENCE("confidence"),
     NEW("new"), 
-    HOT("hot"), 
     TOP("top"), 
     CONTROVERSIAL("controversial"), 
     OLD("old"), 
-    RANDOM("random"), 
-    CONFIDENCE("confidence");
+    QA("qa");
 
     private final String value;
 

@@ -8,6 +8,10 @@ public class RedditError extends Exception {
 		super("Request to reddit failed (null response)");
 	}
 	
+	public RedditError(String custom) {
+		super("Request to reddit failed (" + custom + ")");
+	}
+	
 	public RedditError(int errorCode) {
 		super("Request to reddit failed (HTTP error code: " + errorCode + ")");
 	}

@@ -16,10 +16,10 @@ import com.github.jreddit.parser.entity.Kind;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.request.error.RedditError;
 
-public class SubmissionsParser extends RedditParser {
+public class SubmissionsListingParser extends RedditListingParser {
 	
 	/** Logger for this class. */
-	final static Logger LOGGER = LoggerFactory.getLogger(SubmissionsParser.class);
+	final static Logger LOGGER = LoggerFactory.getLogger(SubmissionsListingParser.class);
 	
 	/** JSON parser. */
 	private JSONParser jsonParser;
@@ -27,7 +27,7 @@ public class SubmissionsParser extends RedditParser {
 	/**
 	 * Constructor.
 	 */
-	public SubmissionsParser() {
+	public SubmissionsListingParser() {
 		jsonParser = new JSONParser();
 	}
 	
@@ -48,11 +48,11 @@ public class SubmissionsParser extends RedditParser {
         // Send request to reddit server via REST client
         Object response = jsonParser.parse(jsonText);
         
+        // Check for reddit error, can throw a RedditError
+        validate(response);
+        
         // Cast to a JSON object
         JSONObject object = (JSONObject) response;
-        
-        // Check for reddit error, can throw a RedditError
-        validate(object);
         
         // Get the array of children
         JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");

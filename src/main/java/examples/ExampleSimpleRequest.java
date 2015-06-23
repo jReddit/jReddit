@@ -13,7 +13,7 @@ import com.github.jreddit.oauth.app.RedditApp;
 import com.github.jreddit.oauth.app.RedditInstalledApp;
 import com.github.jreddit.oauth.client.RedditClient;
 import com.github.jreddit.oauth.client.RedditHttpClient;
-import com.github.jreddit.parser.SubmissionsParser;
+import com.github.jreddit.parser.SubmissionsListingParser;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.request.error.RedditError;
 import com.github.jreddit.request.listing.submissions.SubmissionsOfSubredditRequest;
@@ -41,7 +41,7 @@ public class ExampleSimpleRequest {
 		RedditToken token = agent.tokenAppOnly(false);
 
 		// Create parser for request
-		SubmissionsParser parser = new SubmissionsParser();
+		SubmissionsListingParser parser = new SubmissionsListingParser();
 
 		// Create the request
 		SubmissionsOfSubredditRequest request = (SubmissionsOfSubredditRequest) new SubmissionsOfSubredditRequest("programming", SubmissionSort.HOT).setLimit(100);

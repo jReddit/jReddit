@@ -33,7 +33,9 @@ public abstract class RedditPostRequest {
 	}
 	
 	/**
-	 * Generate the query parameters to be added to an URI.
+	 * Generate the query parameters to be added to an URI.<br>
+	 * <br>
+	 * <i>Note: values are encoded.</i>
 	 * 
 	 * @return Query parameters (e.g. "limit=100&sort=top")
 	 */
@@ -42,7 +44,9 @@ public abstract class RedditPostRequest {
 	}
 	
 	/**
-	 * Generate the body parameters to be added.
+	 * Generate the body parameters to be added.<br>
+	 * <br>
+	 * 
 	 * 
 	 * @return Body parameters (e.g. "limit=100&sort=top")
 	 */

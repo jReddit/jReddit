@@ -1,6 +1,7 @@
 package com.github.jreddit.request.listing.submissions;
 
 import com.github.jreddit.request.listing.ListingRequest;
+import com.github.jreddit.request.param.TimeSpan;
 import com.github.jreddit.request.param.UserOverviewSort;
 import com.github.jreddit.request.param.UserSubmissionsCategory;
 
@@ -28,6 +29,11 @@ public class SubmissionsOfUserRequest extends ListingRequest {
 
 	public SubmissionsOfUserRequest setSort(UserOverviewSort sort) {
 		this.addParameter("sort", sort.value());
+		return this;
+	}
+	
+	public SubmissionsOfUserRequest setTime(TimeSpan time) {
+		this.addParameter("t", time.value());
 		return this;
 	}
 	

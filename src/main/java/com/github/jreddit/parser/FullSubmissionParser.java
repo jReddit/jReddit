@@ -9,27 +9,54 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.jreddit.parser.entity.Comment;
 import com.github.jreddit.parser.entity.Kind;
+import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
 import com.github.jreddit.request.error.RedditError;
 
-public class CommentsParser {
+public class FullSubmissionParser extends RedditListingParser {
 	// TODO: Refactor this
 
+	/** Logger for this class. */
+	final static Logger LOGGER = LoggerFactory.getLogger(FullSubmissionParser.class);
+	
+	/** JSON parser. */
 	private JSONParser jsonParser;
 	
-	public CommentsParser() {
+	/**
+	 * Constructor.
+	 */
+	public FullSubmissionParser() {
 		jsonParser = new JSONParser();
 	}
 	
-	public List<Comment> parse(String jsonText) throws ParseException, RedditError {
+	public List<Comment> parseSubmission(String jsonText) throws ParseException, RedditError {
+		// TODO: Create submission
+	}
+    	
+	
+	/**
+	 * Parse JSON received from reddit into a tree of comments.
+	 * This parser expects the JSON to be of a listing of submissions ('links').
+	 * 
+	 * @param jsonText JSON Text
+	 * @return Parsed list of submissions
+	 * 
+	 * @throws ParseException
+	 */
+	public List<Comment> parseCommentList(String jsonText) throws ParseException, RedditError {
     	
     	// List of submissions
-        List<Comment> comments = new LinkedList<Comment>();
+        List<CommentTreeElement> comments = new LinkedList<CommentTreeElement>();
         
         // Send request to reddit server via REST client
         Object response = jsonParser.parse(jsonText);
+        
+        
+        validate(response);
 
         if (response instanceof JSONArray) {
         	
@@ -51,7 +78,7 @@ public class CommentsParser {
      * @param comments 	List of comments
      * @param object	JSON Object
      */
-    protected void parseRecursive(List<Comment> comments, JSONObject object) throws RedditError {
+    protected void parseRecursive(List<CommentTreeElement> comments, JSONObject object) throws RedditError {
     	assert comments != null : "List of comments must be instantiated.";
     	assert object != null : "JSON Object must be instantiated.";
     	
@@ -60,7 +87,7 @@ public class CommentsParser {
         
         // Iterate over the submission results
         JSONObject data;
-        Comment comment;
+        CommentTreeElement comment;
         for (Object anArray : array) {
             data = (JSONObject) anArray;
             

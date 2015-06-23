@@ -17,7 +17,7 @@ public abstract class Thing implements Comparable<Thing> {
 		assert name.contains("_") : "A full name must contain an underscore.";
 		this.fullName = name;
 		String[] split = name.split("_");
-		this.kind = split[0];
+		this.kind = Kind.valueOf("split[0]");
 		this.identifier = split[1];
 	}
 	
@@ -26,7 +26,7 @@ public abstract class Thing implements Comparable<Thing> {
      * 
      * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names (section 'kind prefixes')</a>
      */
-    protected final String kind;
+    protected final Kind kind;
 
     /**
      * The identifier of this thing.
@@ -49,7 +49,7 @@ public abstract class Thing implements Comparable<Thing> {
      *
      * @see <a href="http://www.reddit.com/dev/api#fullnames">Reddit API Reference for full names (section 'kind prefixes')</a>
      */
-    public String getKind() {
+    public Kind getKind() {
         return kind;
     }
     
