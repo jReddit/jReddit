@@ -102,7 +102,7 @@ public class ProfileActions implements ActorDriven {
     	String params = 
     			"api_type=json"
     			+ "&curpass=" + currentPassword + 
-    			"&dest=http://reddit.com/" + (!email.equals("") ? "&email=" + email : "") + 
+    			"&dest=https://reddit.com/" + (!email.equals("") ? "&email=" + email : "") +
     			(!newPassword.equals("") ? "&newpass=" + newPassword + "&verpass=" + newPassword : "")
                 + "&uh=" + user.getModhash();
     	
