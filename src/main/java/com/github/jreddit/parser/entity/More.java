@@ -9,7 +9,7 @@ import org.json.simple.JSONObject;
 import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
 import com.github.jreddit.parser.util.JsonUtils;
 
-public class More extends CommentTreeElement {
+public class More extends Thing implements CommentTreeElement {
 
 	/** List of comment identifiers (ID36) that are his children. */
 	private List<String> children;

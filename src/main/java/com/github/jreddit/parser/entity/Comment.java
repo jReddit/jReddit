@@ -11,6 +11,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 
 import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
+import com.github.jreddit.parser.entity.imaginary.MixedListingElement;
 
 /**
  * A Reddit comment. Contains the edited timestamp, the body
@@ -19,7 +20,7 @@ import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
  * @author Raul Rene Lepsa
  * @author Simon Kassing
  */
-public class Comment extends CommentTreeElement {
+public class Comment extends Thing implements CommentTreeElement, MixedListingElement {
 
     private String author;			// Username of the author
     private String parentId;		// Parent identifier
@@ -33,7 +34,7 @@ public class Comment extends CommentTreeElement {
     private double created;         // Created timestamp
     private double createdUTC;      // Created UTC timestamp
     private Boolean hasReplies;		// If replies exist on reddit
-    private List<Comment> replies;  // Replies if retrieved
+    private List<CommentTreeElement> replies;  // Replies if retrieved
     private Integer gilded;        	// Amount of times the comment been gilded
     private Integer score;        	// Karma score
     private Integer upvotes;        // Number of upvotes that this body received
@@ -60,7 +61,7 @@ public class Comment extends CommentTreeElement {
             this.setCreated(safeJsonToDouble(obj.get("created")));
             this.setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
             hasReplies = (obj.get("replies") != null) ? !safeJsonToString(obj.get("replies")).isEmpty() : false;
-            this.replies = new LinkedList<Comment>();
+            this.replies = new LinkedList<CommentTreeElement>();
             this.setGilded(safeJsonToInteger(obj.get("gilded")));
             this.setScore(safeJsonToInteger(obj.get("score")));
             this.setUpvotes(safeJsonToInteger(obj.get("ups")));
@@ -90,11 +91,11 @@ public class Comment extends CommentTreeElement {
      * If the comment is retrieved recursively, this might have the replies.
      * @return Replies
      */
-    public List<Comment> getReplies() {
+    public List<CommentTreeElement> getReplies() {
     	return this.replies;
     }
     
-    public void setReplies(List<Comment> replies) {
+    public void setReplies(List<CommentTreeElement> replies) {
     	this.replies = replies;
     }
     

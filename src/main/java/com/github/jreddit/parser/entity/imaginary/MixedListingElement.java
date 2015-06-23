@@ -1,5 +1,6 @@
 package com.github.jreddit.parser.entity.imaginary;
 
-public class MixedListingElement {
 
+public interface MixedListingElement {
+	// Empty
 }

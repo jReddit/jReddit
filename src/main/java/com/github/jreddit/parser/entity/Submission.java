@@ -7,6 +7,8 @@ import static com.github.jreddit.parser.util.JsonUtils.safeJsonToString;
 
 import org.json.simple.JSONObject;
 
+import com.github.jreddit.parser.entity.imaginary.MixedListingElement;
+
 
 /**
  * This class represents a vote on a link submission on Reddit.
@@ -18,7 +20,7 @@ import org.json.simple.JSONObject;
  * @author Danny Tsegai
  * @author Simon Kassing
  */
-public class Submission extends Thing {
+public class Submission extends Thing implements MixedListingElement {
 
     private String url;
     private String permalink;
