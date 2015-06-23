@@ -11,11 +11,11 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.github.jreddit.exception.RedditError;
 import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.parser.entity.Kind;
 import com.github.jreddit.parser.entity.Subreddit;
 import com.github.jreddit.parser.entity.User;
+import com.github.jreddit.request.error.RedditError;
 import com.github.jreddit.request.param.SubredditsView;
 import com.github.jreddit.request.util.ApiEndpointUtils;
 import com.github.jreddit.utils.ParamFormatter;

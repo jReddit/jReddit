@@ -21,10 +21,10 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.github.jreddit.deprecated.Submissions;
-import com.github.jreddit.exception.RedditError;
 import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.parser.entity.User;
+import com.github.jreddit.request.error.RedditError;
 import com.github.jreddit.request.param.QuerySyntax;
 import com.github.jreddit.request.param.SearchSort;
 import com.github.jreddit.request.param.SubmissionSort;

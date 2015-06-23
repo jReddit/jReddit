@@ -10,13 +10,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.github.jreddit.exception.RedditError;
-import com.github.jreddit.exception.RetrievalFailedException;
 import com.github.jreddit.parser.entity.Comment;
 import com.github.jreddit.parser.entity.Kind;
+import com.github.jreddit.request.error.RedditError;
 
 public class CommentsParser {
-
+	// TODO: Refactor this
 
 	private JSONParser jsonParser;
 	
@@ -24,7 +23,7 @@ public class CommentsParser {
 		jsonParser = new JSONParser();
 	}
 	
-	public List<Comment> parse(String jsonText) throws ParseException {
+	public List<Comment> parse(String jsonText) throws ParseException, RedditError {
     	
     	// List of submissions
         List<Comment> comments = new LinkedList<Comment>();
@@ -52,7 +51,7 @@ public class CommentsParser {
      * @param comments 	List of comments
      * @param object	JSON Object
      */
-    protected void parseRecursive(List<Comment> comments, JSONObject object) throws RetrievalFailedException, RedditError {
+    protected void parseRecursive(List<Comment> comments, JSONObject object) throws RedditError {
     	assert comments != null : "List of comments must be instantiated.";
     	assert object != null : "JSON Object must be instantiated.";
     	

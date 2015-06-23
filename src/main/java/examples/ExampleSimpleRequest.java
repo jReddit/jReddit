@@ -15,12 +15,13 @@ import com.github.jreddit.oauth.client.RedditClient;
 import com.github.jreddit.oauth.client.RedditHttpClient;
 import com.github.jreddit.parser.SubmissionsParser;
 import com.github.jreddit.parser.entity.Submission;
+import com.github.jreddit.request.error.RedditError;
 import com.github.jreddit.request.listing.SubmissionsOfSubredditRequest;
 import com.github.jreddit.request.param.SubmissionSort;
 
 public class ExampleSimpleRequest {
 
-	public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException {
+	public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException, RedditError {
 
 		// Information about the app
 		String userAgent = "jReddit: Reddit API Wrapper for Java";

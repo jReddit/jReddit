@@ -1,4 +1,4 @@
-package com.github.jreddit.exception;
+package com.github.jreddit.deprecated;
 
 /**
  * Indicates that the requested URI path is invalid

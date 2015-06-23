@@ -83,6 +83,7 @@
         <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
         <org.eluder.coveralls.version>3.0.1</org.eluder.coveralls.version>
         <org.codehaus.mojo.cobertura.maven.plugin.version>2.6</org.codehaus.mojo.cobertura.maven.plugin.version>
+        <slf4jVersion>1.7.12</slf4jVersion>
     </properties>
 
     <profiles>
@@ -270,6 +271,18 @@
 			<artifactId>org.apache.oltu.oauth2.client</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4jVersion}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4jVersion}</version>
+		</dependency> 
         
     </dependencies>
 </project>

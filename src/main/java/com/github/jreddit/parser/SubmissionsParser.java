@@ -9,57 +9,70 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.github.jreddit.exception.RedditError;
 import com.github.jreddit.parser.entity.Kind;
 import com.github.jreddit.parser.entity.Submission;
+import com.github.jreddit.request.error.RedditError;
 
-public class SubmissionsParser {
-
+public class SubmissionsParser extends RedditParser {
+	
+	/** Logger for this class. */
+	final static Logger LOGGER = LoggerFactory.getLogger(SubmissionsParser.class);
+	
+	/** JSON parser. */
 	private JSONParser jsonParser;
 	
+	/**
+	 * Constructor.
+	 */
 	public SubmissionsParser() {
 		jsonParser = new JSONParser();
 	}
 	
-	public List<Submission> parse(String jsonText) throws ParseException {
+	/**
+	 * Parse JSON received from reddit into a list of submissions.
+	 * This parser expects the JSON to be of a listing of submissions ('links').
+	 * 
+	 * @param jsonText JSON Text
+	 * @return Parsed list of submissions
+	 * 
+	 * @throws ParseException
+	 */
+	public List<Submission> parse(String jsonText) throws ParseException, RedditError {
+		
     	// List of submissions
         List<Submission> submissions = new LinkedList<Submission>();
         
         // Send request to reddit server via REST client
         Object response = jsonParser.parse(jsonText);
         
-        if (response instanceof JSONObject) {
-        	
-	        JSONObject object = (JSONObject) response;
-	        if (object.get("error") != null) {
-	        	throw new RedditError("Response contained error code " + object.get("error") + ".");
-	        }
-	        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
-
-	        // Iterate over the submission results
-	        JSONObject data;
-	        Submission submission;
-	        for (Object anArray : array) {
-	            data = (JSONObject) anArray;
-	            
-	            // Make sure it is of the correct kind
-	            String kind = safeJsonToString(data.get("kind"));
-				if (kind != null) {
-					if (kind.equals(Kind.LINK.value())) {
-
-                        // Create and add submission
-                        data = ((JSONObject) data.get("data"));
-                        submission = new Submission(data);
-                        // TODO: What is this: submission.setUser(user);
-                        submissions.add(submission);
-                    }
-				}
-			}
+        // Cast to a JSON object
+        JSONObject object = (JSONObject) response;
         
-        } else {
-        	System.err.println("Cannot cast to JSON Object: '" + response.toString() + "'");
-        }
+        // Check for reddit error, can throw a RedditError
+        validate(object);
+        
+        // Get the array of children
+        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get("children");
+
+        // Iterate over array of children
+        for (Object element : array) {
+        	
+        	// Get the element
+        	JSONObject data = (JSONObject) element;
+            
+            // Make sure it is of the correct kind
+            String kind = safeJsonToString(data.get("kind"));
+			if (kind != null && kind.equals(Kind.LINK.value())) {
+
+				// Add submission
+				submissions.add(new Submission(((JSONObject) data.get("data"))));
+                
+			}
+			
+		}
 
         // Finally return list of submissions 
         return submissions;

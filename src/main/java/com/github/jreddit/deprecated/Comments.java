@@ -9,11 +9,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.github.jreddit.exception.RetrievalFailedException;
-import com.github.jreddit.exception.RedditError;
 import com.github.jreddit.parser.entity.Comment;
 import com.github.jreddit.parser.entity.Kind;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.parser.entity.User;
+import com.github.jreddit.request.error.RedditError;
 import com.github.jreddit.request.param.CommentSort;
 import com.github.jreddit.request.param.TimeSpan;
 import com.github.jreddit.request.param.UserOverviewSort;

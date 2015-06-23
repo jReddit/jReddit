@@ -1,5 +1,8 @@
 package com.github.jreddit.oauth.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.jreddit.oauth.RedditToken;
 import com.github.jreddit.request.RedditGetRequest;
 import com.github.jreddit.request.RedditPostRequest;
@@ -14,10 +17,13 @@ import com.github.jreddit.request.RedditPostRequest;
  */
 public class RedditPoliteClient extends RedditClient {
 	
+	/** Logger for this class. */
+	final static Logger LOGGER = LoggerFactory.getLogger(RedditPoliteClient.class);
+	
 	/** Wrapped reddit client. */
 	RedditClient redditClient;
 	
-    /** Waiting time in milliseconds. */
+    /** Default interval in milliseconds (1 per second). */
     private static final long DEFAULT_INTERVAL = 1000L;
     
     /** Default interval in milliseconds. */
@@ -86,8 +92,8 @@ public class RedditPoliteClient extends RedditClient {
         long toWait = interval - elapsed;
         try {
             Thread.sleep(toWait);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException ie) {
+        	LOGGER.warn("Interrupted Exception thrown while politely waiting for interval", ie);
         }
         
     }

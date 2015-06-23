@@ -9,14 +9,23 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.jreddit.parser.entity.Kind;
 import com.github.jreddit.parser.entity.Subreddit;
 
 public class SubredditsParser {
-
+	
+	/** Logger for this class. */
+	final static Logger LOGGER = LoggerFactory.getLogger(SubredditsParser.class);
+	
+	/** JSON parser. */
 	private JSONParser jsonParser;
 	
+	/**
+	 * Constructor.
+	 */
 	public SubredditsParser() {
 		jsonParser = new JSONParser();
 	}

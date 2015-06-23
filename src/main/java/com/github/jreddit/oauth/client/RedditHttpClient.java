@@ -11,13 +11,25 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.jreddit.oauth.RedditToken;
 import com.github.jreddit.request.RedditGetRequest;
 import com.github.jreddit.request.RedditPostRequest;
 
+/**
+ * HTTP client implementation for a <i>RedditClient</i>.
+ * 
+ * @author Simon Kassing
+ * 
+ * @see RedditClient
+ */
 public class RedditHttpClient extends RedditClient {
 
+	/** Logger for this class. */
+	final static Logger LOGGER = LoggerFactory.getLogger(RedditHttpClient.class);
+	
 	/** User agent. */
 	private String userAgent;
 	
@@ -61,11 +73,11 @@ public class RedditHttpClient extends RedditClient {
 	        }
 	        
 	    } catch (UnsupportedEncodingException uee) {
-	    	//LOGGER.log(Level.SEVERE, "Unsupported Encoding Exception thrown", uee);
+	    	LOGGER.warn("Unsupported Encoding Exception thrown in POST request", uee);
 	    } catch (ClientProtocolException cpe) {
-	    	//LOGGER.log(Level.SEVERE, "Client Protocol Exception thrown", cpe);
+	    	LOGGER.warn("Client Protocol Exception thrown in POST request", cpe);
 	    } catch (IOException ioe) {
-	    	//LOGGER.log(Level.WARNING, "I/O Exception thrown", ioe);
+	    	LOGGER.warn("I/O Exception thrown in POST request", ioe);
 	    }
 	    
 	    return null;
@@ -95,11 +107,11 @@ public class RedditHttpClient extends RedditClient {
 	        }
 	        
 	    } catch (UnsupportedEncodingException uee) {
-	    	//LOGGER.log(Level.SEVERE, "Unsupported Encoding Exception thrown", uee);
+	    	LOGGER.warn("Unsupported Encoding Exception thrown in GET request", uee);
 	    } catch (ClientProtocolException cpe) {
-	    	//LOGGER.log(Level.SEVERE, "Client Protocol Exception thrown", cpe);
+	    	LOGGER.warn("Client Protocol Exception thrown in GET request", cpe);
 	    } catch (IOException ioe) {
-	    	//LOGGER.log(Level.WARNING, "I/O Exception thrown", ioe);
+	    	LOGGER.warn("I/O Exception thrown in GET request", ioe);
 	    }
 	    
 	    return null;
