@@ -1,5 +1,6 @@
-package com.github.jreddit.request.listing;
+package com.github.jreddit.request.listing.subreddits;
 
+import com.github.jreddit.request.listing.ListingRequest;
 import com.github.jreddit.request.param.SubredditsView;
 
 public class SubredditsOfUserRequest extends ListingRequest {

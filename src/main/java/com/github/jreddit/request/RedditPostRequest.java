@@ -38,16 +38,16 @@ public abstract class RedditPostRequest {
 	 * @return Query parameters (e.g. "limit=100&sort=top")
 	 */
 	protected String generateQueryParameters() {
-		return KeyValueFormatter.format(queryParameters);
+		return KeyValueFormatter.format(queryParameters, true);
 	}
 	
 	/**
-	 * Generate the body parameters to be added\.
+	 * Generate the body parameters to be added.
 	 * 
 	 * @return Body parameters (e.g. "limit=100&sort=top")
 	 */
 	protected String generateBodyParameters() {
-		return KeyValueFormatter.format(bodyParameters);
+		return KeyValueFormatter.format(bodyParameters, true);
 	}
 	
 	/**

@@ -1,5 +1,6 @@
-package com.github.jreddit.request.listing;
+package com.github.jreddit.request.listing.submissions;
 
+import com.github.jreddit.request.listing.ListingRequest;
 import com.github.jreddit.request.param.SubmissionSort;
 
 public class SubmissionsOfSubredditRequest extends ListingRequest {

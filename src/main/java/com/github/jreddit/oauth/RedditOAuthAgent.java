@@ -89,7 +89,7 @@ public class RedditOAuthAgent {
     	params.put("scope", scopeBuilder.build());
     	
     	// Create URI
-    	return REDDIT_AUTHORIZE + KeyValueFormatter.format(params);
+    	return REDDIT_AUTHORIZE + KeyValueFormatter.format(params, true);
     	
     }
     
@@ -117,7 +117,7 @@ public class RedditOAuthAgent {
     	params.put("scope", scopeBuilder.build());
     	
     	// Create URI
-    	return REDDIT_AUTHORIZE + KeyValueFormatter.format(params);
+    	return REDDIT_AUTHORIZE + KeyValueFormatter.format(params, true);
     	
     }
     

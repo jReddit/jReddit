@@ -1,11 +1,28 @@
 package com.github.jreddit.request.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class KeyValueFormatter {
 
-	public static String format(Map<String, String> keyValueParameters) {
+	/** Logger for this class. */
+	final static Logger LOGGER = LoggerFactory.getLogger(KeyValueFormatter.class);
+	
+	/**
+	 * Format a mapping of key-value pairs to a string, separating key from value using an
+	 * equals (=) sign, and separating pairs using an ampersand (&) sign.
+	 * 
+	 * @param keyValueParameters Mapping of key-value pairs
+	 * @param encodeUTF8 Whether or not it should be encoded in UTF-8
+	 * 
+	 * @return Formatted string of key-value pairs (e.g. "a=1&b=something")
+	 */
+	public static String format(Map<String, String> keyValueParameters, boolean encodeUTF8) {
 		
 		// Key set
 		Set<String> keys = keyValueParameters.keySet();
@@ -22,12 +39,24 @@ public class KeyValueFormatter {
 				start = false;
 			}
 			
-			// Add key-value pair
-			paramsString = paramsString.concat(key + "=" + keyValueParameters.get(key));
+			// Retrieve value
+			String value = keyValueParameters.get(key);
 			
+			// Encode key
+			if (encodeUTF8) {
+				try {
+					value = URLEncoder.encode(value, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					LOGGER.warn("Unsupported Encoding Exception thrown when encoding value", e);
+				}
+			}
+			
+			// Add key-value pair
+			paramsString = paramsString.concat(key + "=" + value);
+
 		}
 		
-		// Return final parameters
+		// Return final parameter string
 		return paramsString;
 		
 	}

@@ -34,7 +34,7 @@ public abstract class RedditGetRequest {
 	 * @return Parameters (e.g. "limit=100&sort=top")
 	 */
 	protected String generateParameters() {
-		return KeyValueFormatter.format(parameters);
+		return KeyValueFormatter.format(parameters, true);
 	}
 	
 	/**

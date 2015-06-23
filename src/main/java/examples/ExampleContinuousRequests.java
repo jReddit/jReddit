@@ -15,7 +15,7 @@ import com.github.jreddit.oauth.client.RedditClient;
 import com.github.jreddit.oauth.client.RedditHttpClient;
 import com.github.jreddit.parser.SubredditsParser;
 import com.github.jreddit.parser.entity.Subreddit;
-import com.github.jreddit.request.listing.SubredditsOfUserRequest;
+import com.github.jreddit.request.listing.subreddits.SubredditsOfUserRequest;
 import com.github.jreddit.request.param.SubredditsView;
 
 public class ExampleContinuousRequests {

@@ -64,6 +64,9 @@ public class RedditHttpClient extends RedditClient {
 	        // Add user agent
 	        addUserAgent(request);
 	        
+	        // Add content type
+	        request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+	        
 	        // Attempt to do execute request
 	        HttpResponse response = httpClient.execute(request);
 	        
@@ -97,9 +100,9 @@ public class RedditHttpClient extends RedditClient {
 	        
 	        // Add user agent
 	        addUserAgent(request);
-	        
+
 	        // Attempt to do execute request
-	        HttpResponse response = httpClient.execute(request);//, context
+	        HttpResponse response = httpClient.execute(request);
 	        
 	        // Return response if successful
 	        if (response != null) {

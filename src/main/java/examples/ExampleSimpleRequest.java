@@ -16,7 +16,7 @@ import com.github.jreddit.oauth.client.RedditHttpClient;
 import com.github.jreddit.parser.SubmissionsParser;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.request.error.RedditError;
-import com.github.jreddit.request.listing.SubmissionsOfSubredditRequest;
+import com.github.jreddit.request.listing.submissions.SubmissionsOfSubredditRequest;
 import com.github.jreddit.request.param.SubmissionSort;
 
 public class ExampleSimpleRequest {
