@@ -5,7 +5,7 @@ import com.github.jreddit.request.RedditPostRequest;
 public class DeleteFlairRequest extends RedditPostRequest {
 	
 	/** Endpoint format. */
-	private static final String ENDPOINT_FORMAT = "/deleteflair?";
+	private static final String ENDPOINT_FORMAT = "/api/deleteflair.json?";
 
 	public DeleteFlairRequest(String username) {
 		this.addBodyParameter("name", username);

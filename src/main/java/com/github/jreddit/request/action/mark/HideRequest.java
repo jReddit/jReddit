@@ -6,7 +6,7 @@ import com.github.jreddit.request.action.MarkActionRequest;
 public class HideRequest extends MarkActionRequest {
 	
 	/** Endpoint format. */
-	private static final String ENDPOINT_FORMAT = "/hide?";
+	private static final String ENDPOINT_FORMAT = "/api/hide.json?";
 
 	public HideRequest(String fullname) {
 		super(fullname);

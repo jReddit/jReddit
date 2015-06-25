@@ -6,7 +6,7 @@ import com.github.jreddit.request.action.MarkActionRequest;
 public class SaveRequest extends MarkActionRequest {
 	
 	/** Endpoint format. */
-	private static final String ENDPOINT_FORMAT = "/save?";
+	private static final String ENDPOINT_FORMAT = "/api/save.json?";
 
 	public SaveRequest(String fullname) {
 		super(fullname);
