@@ -17,7 +17,7 @@ public abstract class Thing implements Comparable<Thing> {
 		assert name.contains("_") : "A full name must contain an underscore.";
 		this.fullName = name;
 		String[] split = name.split("_");
-		this.kind = Kind.valueOf("split[0]");
+		this.kind = Kind.match(split[0]);
 		this.identifier = split[1];
 	}
 	

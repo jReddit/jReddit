@@ -9,12 +9,18 @@ import org.json.simple.JSONObject;
 import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
 import com.github.jreddit.parser.util.JsonUtils;
 
+/**
+ * MORE entity. Can only exist in a comment tree, and thus
+ * implements the <i>CommenTreeElement</i> interface.
+ * 
+ * @author Simon Kassing
+ */
 public class More extends Thing implements CommentTreeElement {
 
 	/** List of comment identifiers (ID36) that are his children. */
 	private List<String> children;
 	
-	/** How many comments are hiding underneath this "More". */
+	/** Counting number assigned by reddit (does not tell much in a comment tree). */
 	private int count;
 	
 	/** Parent comment fullname. */
@@ -26,10 +32,10 @@ public class More extends Thing implements CommentTreeElement {
 	 * @param obj JSON object
 	 */
     public More(JSONObject obj) {
-    	super(Kind.MORE.value() + "_");
+    	super(Kind.MORE.value() + "_NONE");
     	
     	// The obj.get("name") and obj.get("id") are neglected, as these
-    	// are already included in the children array.
+    	// are already implicitly included in the children array.
     	
     	// Retrieve count from JSON
     	this.count = JsonUtils.safeJsonToInteger(obj.get("count"));
@@ -39,7 +45,7 @@ public class More extends Thing implements CommentTreeElement {
     	
     	// Iterate over children
     	this.children = new ArrayList<String>();
-    	JSONArray children = (JSONArray) obj.get("parent_id");
+    	JSONArray children = (JSONArray) obj.get("children");
     	for (Object child : children) {
     		this.children.add((String) child);
     	}
@@ -56,12 +62,21 @@ public class More extends Thing implements CommentTreeElement {
 	}
 
 	/**
-	 * Retrieve the count (how many comments are hiding underneath this "More").
+	 * Retrieve the counting number assigned by reddit (does not tell much in this case).
 	 * 
-	 * @return The count
+	 * @return The counting number
 	 */
 	public int getCount() {
 		return count;
+	}
+	
+	/**
+	 * Retrieve how many children (comments) the MORE hides.
+	 * 
+	 * @return How many comments the more hides ({@link #getChildren()}'s size)
+	 */
+	public int getChildrenSize() {
+		return children.size();
 	}
 
 	/**
@@ -81,6 +96,11 @@ public class More extends Thing implements CommentTreeElement {
 			return ((More) o).getChildren().equals(this.getChildren()) ? 0 : -1;
 		}
 		
+	}
+	
+	@Override
+	public String toString() {
+		return "More()<" + this.getChildrenSize() + " more directly underneath>";
 	}
 	
 }

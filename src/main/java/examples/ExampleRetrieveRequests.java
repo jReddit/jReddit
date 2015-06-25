@@ -14,20 +14,36 @@ import com.github.jreddit.oauth.app.RedditInstalledApp;
 import com.github.jreddit.oauth.client.RedditClient;
 import com.github.jreddit.oauth.client.RedditHttpClient;
 import com.github.jreddit.oauth.client.RedditPoliteClient;
-import com.github.jreddit.parser.SubmissionsListingParser;
+import com.github.jreddit.parser.entity.More;
 import com.github.jreddit.parser.entity.Submission;
+import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
+import com.github.jreddit.parser.entity.imaginary.FullSubmission;
+import com.github.jreddit.parser.entity.imaginary.MixedListingElement;
+import com.github.jreddit.parser.listing.CommentsMoreParser;
+import com.github.jreddit.parser.listing.MixedListingParser;
+import com.github.jreddit.parser.listing.SubmissionsListingParser;
+import com.github.jreddit.parser.single.FullSubmissionParser;
+import com.github.jreddit.parser.util.CommentTreeUtils;
 import com.github.jreddit.request.error.RedditError;
-import com.github.jreddit.request.listing.submissions.SubmissionsOfSubredditRequest;
-import com.github.jreddit.request.listing.submissions.SubmissionsOfUserRequest;
-import com.github.jreddit.request.param.SubmissionSort;
-import com.github.jreddit.request.param.UserSubmissionsCategory;
+import com.github.jreddit.request.retrieval.comments.MoreCommentsRequest;
+import com.github.jreddit.request.retrieval.mixed.FullSubmissionRequest;
+import com.github.jreddit.request.retrieval.mixed.MixedOfUserRequest;
+import com.github.jreddit.request.retrieval.param.SubmissionSort;
+import com.github.jreddit.request.retrieval.param.TimeSpan;
+import com.github.jreddit.request.retrieval.param.UserMixedCategory;
+import com.github.jreddit.request.retrieval.param.UserOverviewSort;
+import com.github.jreddit.request.retrieval.param.UserSubmissionsCategory;
+import com.github.jreddit.request.retrieval.submissions.SubmissionsOfSubredditRequest;
+import com.github.jreddit.request.retrieval.submissions.SubmissionsOfUserRequest;
 
 public class ExampleRetrieveRequests {
 
 	public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException, RedditError {
 		ExampleRetrieveRequests example = new ExampleRetrieveRequests();
-		example.exampleSubmissionsOfSubreddit();
-		example.exampleSubmissionsOfUser();
+		//example.exampleSubmissionsOfSubreddit();
+		//example.exampleSubmissionsOfUser();
+		//example.exampleMixedOfUser();
+		example.exampleFullSubmission();
 	}
 
 	// Information about the app
@@ -88,6 +104,67 @@ public class ExampleRetrieveRequests {
 		
 		// Now print out the result (don't care about formatting)
 		System.out.println(submissions);
+
+	}
+	
+	public void exampleMixedOfUser() throws RedditError, ParseException, OAuthSystemException, OAuthProblemException {
+		
+		// Create token (will be valid for 1 hour)
+		RedditToken token = agent.tokenAppOnly(false);
+		
+		// Create parser for request
+		MixedListingParser parser = new MixedListingParser();
+
+		// Create the request
+		MixedOfUserRequest request = (MixedOfUserRequest) new MixedOfUserRequest("jRedditBot", UserMixedCategory.OVERVIEW)
+																.setSort(UserOverviewSort.TOP)
+																.setTime(TimeSpan.ALL);
+
+		// Perform and parse request, and store parsed result
+		List<MixedListingElement> elements = parser.parse(client.get(token, request));
+		
+		// Now print out the result (don't care about formatting)
+		System.out.println(elements);
+
+	}
+	
+	public void exampleFullSubmission() throws RedditError, ParseException, OAuthSystemException, OAuthProblemException {
+		
+		// Create token (will be valid for 1 hour)
+		RedditToken token = agent.tokenAppOnly(false);
+		
+		// Create parser for request
+		FullSubmissionParser parser = new FullSubmissionParser();
+
+		// Create the request
+		FullSubmissionRequest request = (FullSubmissionRequest) new FullSubmissionRequest("2np694").setDepth(1);
+
+		// Perform and parse request, and store parsed result
+		FullSubmission fullSubmission = parser.parse(client.get(token, request));
+		
+		// Now print out the result of the submission (don't care about formatting)
+		Submission s = fullSubmission.getSubmission();
+		System.out.println(s);
+		
+		// Now print out the result of the comment tree (don't care about formatting)
+		System.out.println(CommentTreeUtils.printCommentTree(fullSubmission.getCommentTree()));
+		
+		// Flatten the tree
+		List<CommentTreeElement> flat = CommentTreeUtils.flattenCommentTree(fullSubmission.getCommentTree());
+		
+		// Retrieve ALL comments hiding behind MOREs
+		for (CommentTreeElement e : flat) {
+			if (e instanceof More) {
+				
+				// Create the request for more comments
+				MoreCommentsRequest requestMore = (MoreCommentsRequest) new MoreCommentsRequest(s.getFullName(), ((More) e).getChildren());
+				
+				// Perform and parse request, and store parsed result
+				CommentsMoreParser parserMore = new CommentsMoreParser();
+				System.out.println(parserMore.parse(client.get(token, requestMore)));
+				
+			}
+		}
 
 	}
 	

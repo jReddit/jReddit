@@ -13,11 +13,11 @@ import com.github.jreddit.oauth.app.RedditApp;
 import com.github.jreddit.oauth.app.RedditInstalledApp;
 import com.github.jreddit.oauth.client.RedditClient;
 import com.github.jreddit.oauth.client.RedditHttpClient;
-import com.github.jreddit.parser.SubmissionsListingParser;
 import com.github.jreddit.parser.entity.Submission;
+import com.github.jreddit.parser.listing.SubmissionsListingParser;
 import com.github.jreddit.request.error.RedditError;
-import com.github.jreddit.request.listing.submissions.SubmissionsOfSubredditRequest;
-import com.github.jreddit.request.param.SubmissionSort;
+import com.github.jreddit.request.retrieval.param.SubmissionSort;
+import com.github.jreddit.request.retrieval.submissions.SubmissionsOfSubredditRequest;
 
 public class ExampleSimpleRequest {
 

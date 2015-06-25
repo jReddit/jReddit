@@ -25,4 +25,20 @@ public enum Kind {
         return value;
     }
     
+    /**
+     * Match a string with its respective kind.
+     * 
+     * @param t String kind (e.g. "t1" or "t5")
+     * 
+     * @return Match kind (null, it not found)
+     */
+    public static Kind match(String t) {
+    	for (Kind k : Kind.values()) {
+    		if (k.value().equals(t)) {
+    			return k;
+    		}
+    	}
+    	return null;
+    }
+    
 }

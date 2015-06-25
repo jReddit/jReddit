@@ -22,7 +22,7 @@ public abstract class RedditPostRequest {
 	}
 	
 	/**
-	 * Add a parameter to the request.
+	 * Add a parameter to the query of the request.
 	 * If the key of the parameter already exists, the previous value will be overwritten.
 	 * 
 	 * @param key Key of the parameter (e.g. "limit")
@@ -30,6 +30,17 @@ public abstract class RedditPostRequest {
 	 */
 	protected void addQueryParameter(String key, String value) {
 		queryParameters.put(key, value);
+	}
+	
+	/**
+	 * Add a parameter to the body of the request.
+	 * If the key of the parameter already exists, the previous value will be overwritten.
+	 * 
+	 * @param key Key of the parameter (e.g. "id")
+	 * @param value Value of the parameter (e.g. "dajkjsf8")
+	 */
+	protected void addBodyParameter(String key, String value) {
+		bodyParameters.put(key, value);
 	}
 	
 	/**

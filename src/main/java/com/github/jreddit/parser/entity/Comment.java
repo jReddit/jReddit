@@ -5,7 +5,6 @@ import static com.github.jreddit.parser.util.JsonUtils.safeJsonToDouble;
 import static com.github.jreddit.parser.util.JsonUtils.safeJsonToInteger;
 import static com.github.jreddit.parser.util.JsonUtils.safeJsonToString;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -33,7 +32,6 @@ public class Comment extends Thing implements CommentTreeElement, MixedListingEl
     private Boolean edited;         // Edited timestamp
     private double created;         // Created timestamp
     private double createdUTC;      // Created UTC timestamp
-    private Boolean hasReplies;		// If replies exist on reddit
     private List<CommentTreeElement> replies;  // Replies if retrieved
     private Integer gilded;        	// Amount of times the comment been gilded
     private Integer score;        	// Karma score
@@ -60,8 +58,6 @@ public class Comment extends Thing implements CommentTreeElement, MixedListingEl
             this.setEdited(safeJsonToBoolean(obj.get("edited")));
             this.setCreated(safeJsonToDouble(obj.get("created")));
             this.setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
-            hasReplies = (obj.get("replies") != null) ? !safeJsonToString(obj.get("replies")).isEmpty() : false;
-            this.replies = new LinkedList<CommentTreeElement>();
             this.setGilded(safeJsonToInteger(obj.get("gilded")));
             this.setScore(safeJsonToInteger(obj.get("score")));
             this.setUpvotes(safeJsonToInteger(obj.get("ups")));
@@ -80,38 +76,37 @@ public class Comment extends Thing implements CommentTreeElement, MixedListingEl
     }
     
     /**
-     * Add a reply to this comment.
-     * @param c Reply comment
-     */
-    public void addReply(Comment c) {
-    	this.replies.add(c);
-    }
-    
-    /**
-     * If the comment is retrieved recursively, this might have the replies.
-     * @return Replies
+     * Retrieve the replies of this comment.
+     * 
+     * @return Replies (will <i>always</i> initialized, and empty if there are no replies)
      */
     public List<CommentTreeElement> getReplies() {
     	return this.replies;
     }
     
+    /**
+     * Set the replies of this comment.
+     * 
+     * @param replies Comment tree of replies
+     */
     public void setReplies(List<CommentTreeElement> replies) {
     	this.replies = replies;
     }
-    
-    /**
-     * Return whether the comment has replies, this is only set if the comment
-     * is retrieved recursively.
-     * @return Whether there are replies on Reddit for this comment
-     */
-    public Boolean hasRepliesSomewhere() {
-    	return hasReplies;
-    }
 
+    /**
+     * Retrieve the username of the author.
+     * 
+     * @return Username of the author
+     */
     public String getAuthor() {
         return author;
     }
 
+    /**
+     * Set the username of the author
+     * 
+     * @param author Username of the author
+     */
     public void setAuthor(String author) {
         this.author = author;
     }

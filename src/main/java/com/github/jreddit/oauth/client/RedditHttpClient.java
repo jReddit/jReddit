@@ -94,7 +94,7 @@ public class RedditHttpClient extends RedditClient {
 	    	
 	    	// Create post request
 	        HttpGet request = new HttpGet(OAUTH_API_DOMAIN + redditRequest.generateRedditURI());
-	       
+
 	        // Add authorization
 	        addAuthorization(request, rToken);
 	        

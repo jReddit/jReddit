@@ -15,7 +15,7 @@ public abstract class RedditClient {
 	 * @param rToken Reddit token
 	 * @param request Reddit POST request
 	 * 
-	 * @return Response from reddit (raw)
+	 * @return Response from reddit (raw), if failed <i>null</i>
 	 */
 	public abstract String post(RedditToken rToken, RedditPostRequest request);
 	
@@ -25,7 +25,7 @@ public abstract class RedditClient {
 	 * @param rToken Reddit token
 	 * @param request Reddit GET request
 	 * 
-	 * @return Response from reddit (raw)
+	 * @return Response from reddit (raw), if failed <i>null</i>
 	 */
 	public abstract String get(RedditToken rToken, RedditGetRequest request);
 	

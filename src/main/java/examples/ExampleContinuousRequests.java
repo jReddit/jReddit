@@ -13,14 +13,15 @@ import com.github.jreddit.oauth.app.RedditApp;
 import com.github.jreddit.oauth.app.RedditInstalledApp;
 import com.github.jreddit.oauth.client.RedditClient;
 import com.github.jreddit.oauth.client.RedditHttpClient;
-import com.github.jreddit.parser.SubredditsListingParser;
 import com.github.jreddit.parser.entity.Subreddit;
-import com.github.jreddit.request.listing.subreddits.SubredditsOfUserRequest;
-import com.github.jreddit.request.param.SubredditsView;
+import com.github.jreddit.parser.listing.SubredditsListingParser;
+import com.github.jreddit.request.error.RedditError;
+import com.github.jreddit.request.retrieval.param.SubredditsView;
+import com.github.jreddit.request.retrieval.subreddits.SubredditsOfUserRequest;
 
 public class ExampleContinuousRequests {
 
-	public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException {
+	public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException, RedditError {
 
 		/********************************************
 		 * Initialization

@@ -3,7 +3,7 @@ package com.github.jreddit.oauth;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 
 import com.github.jreddit.oauth.param.RedditScope;
-import com.github.jreddit.oauth.param.RedditTokenScopes;
+import com.github.jreddit.oauth.param.RedditTokenScopesTest;
 
 /**
  * OAuth2 token wrapper for reddit.<br>
@@ -32,7 +32,7 @@ public class RedditToken {
 	private String refreshToken;
 	
 	/** Manager of the scopes that this token applies to. */
-	private RedditTokenScopes scopes;
+	private RedditTokenScopesTest scopes;
 	
 	/** Token type. Only value possible (15-06-2015): bearer */
 	private String tokenType;
@@ -54,7 +54,7 @@ public class RedditToken {
 		this.refreshToken = token.getRefreshToken();
 		this.expiration = currentTimeSeconds() + token.getExpiresIn();
 		this.expirationSpan = token.getExpiresIn();
-		this.scopes = new RedditTokenScopes(token.getScope());
+		this.scopes = new RedditTokenScopesTest(token.getScope());
 		this.tokenType = token.getParam(PARAM_TOKEN_TYPE);
 	}
 	
@@ -71,7 +71,7 @@ public class RedditToken {
 		this.refreshToken = null;
 		this.expiration = currentTimeSeconds() + expiresIn;
 		this.expirationSpan = expiresIn;
-		this.scopes = new RedditTokenScopes(scope);
+		this.scopes = new RedditTokenScopesTest(scope);
 		this.tokenType = tokenType;
 	}
 	
@@ -83,7 +83,7 @@ public class RedditToken {
 	public void refresh(OAuthJSONAccessTokenResponse token) {
 		this.accessToken = token.getAccessToken();
 		this.expiration = currentTimeSeconds() + token.getExpiresIn();
-		this.scopes = new RedditTokenScopes(token.getScope());
+		this.scopes = new RedditTokenScopesTest(token.getScope());
 		this.tokenType = token.getParam(PARAM_TOKEN_TYPE);
 	}
 
