@@ -103,23 +103,15 @@ public class Subreddit extends Thing {
     public Subreddit(JSONObject obj) {
     	super(safeJsonToString(obj.get("name")));
     	
-        try {
-        	
-            setDisplayName(safeJsonToString(obj.get("display_name")));
-            setTitle(safeJsonToString(obj.get("title")));
-            setURL(safeJsonToString(obj.get("url")));
-            setCreated(safeJsonToDouble(obj.get("created")));
-            setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
-            setNSFW(safeJsonToBoolean(obj.get("over_18")));
-            setSubscribers(safeJsonToLong(obj.get("subscribers")));
-            setDescription(safeJsonToString(obj.get("description")));
-            setSubredditType(safeJsonToString(obj.get("subreddit_type")));
-            
-            
-        } catch (Exception e) {
-        	e.printStackTrace();
-            System.err.println("Error creating Subreddit");
-        }
+        setDisplayName(safeJsonToString(obj.get("display_name")));
+        setTitle(safeJsonToString(obj.get("title")));
+        setURL(safeJsonToString(obj.get("url")));
+        setCreated(safeJsonToDouble(obj.get("created")));
+        setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
+        setNSFW(safeJsonToBoolean(obj.get("over_18")));
+        setSubscribers(safeJsonToLong(obj.get("subscribers")));
+        setDescription(safeJsonToString(obj.get("description")));
+        setSubredditType(safeJsonToString(obj.get("subreddit_type")));
         
     }
     

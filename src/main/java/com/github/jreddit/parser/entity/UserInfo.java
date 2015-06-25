@@ -57,6 +57,7 @@ public class UserInfo {
     }
 
     public UserInfo(JSONObject info) {
+    	
         setHasMail((Boolean) info.get("has_mail"));
         setHasModMail((Boolean) info.get("has_mod_mail"));
         setCommentKarma((Long) info.get("comment_karma"));
@@ -71,6 +72,7 @@ public class UserInfo {
         setOver18((Boolean) info.get("over_18"));
         setCreated((Double) info.get("created"));
         setName((String) info.get("name"));
+        
     }
 
     public String getId() {

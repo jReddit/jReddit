@@ -50,28 +50,21 @@ public class Comment extends Thing implements CommentTreeElement, MixedListingEl
     public Comment(JSONObject obj) {
     	super(safeJsonToString(obj.get("name")));
     	
-        try {
-        	
-            this.setAuthor(safeJsonToString(obj.get("author")));
-            this.setParentId(safeJsonToString(obj.get("parent_id")));
-            this.setBody(safeJsonToString(obj.get("body")));
-            this.setEdited(safeJsonToBoolean(obj.get("edited")));
-            this.setCreated(safeJsonToDouble(obj.get("created")));
-            this.setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
-            this.setGilded(safeJsonToInteger(obj.get("gilded")));
-            this.setScore(safeJsonToInteger(obj.get("score")));
-            this.setUpvotes(safeJsonToInteger(obj.get("ups")));
-            this.setDownvotes(safeJsonToInteger(obj.get("downs")));
-            this.setSubreddit(safeJsonToString(obj.get("subreddit")));
-            this.setSubredditId(safeJsonToString(obj.get("subreddit_id")));
-            this.setLinkId(safeJsonToString(obj.get("link_id")));
-            this.setBodyHTML(safeJsonToString(obj.get("body_html")));
-            this.setScoreHidden(safeJsonToBoolean(obj.get("score_hidden")));
-            
-        } catch (Exception e) {
-        	e.printStackTrace();
-        	throw new IllegalArgumentException("JSON Object could not be parsed into a Comment. Provide a JSON Object with a valid structure.");
-        }
+        this.setAuthor(safeJsonToString(obj.get("author")));
+        this.setParentId(safeJsonToString(obj.get("parent_id")));
+        this.setBody(safeJsonToString(obj.get("body")));
+        this.setEdited(safeJsonToBoolean(obj.get("edited")));
+        this.setCreated(safeJsonToDouble(obj.get("created")));
+        this.setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
+        this.setGilded(safeJsonToInteger(obj.get("gilded")));
+        this.setScore(safeJsonToInteger(obj.get("score")));
+        this.setUpvotes(safeJsonToInteger(obj.get("ups")));
+        this.setDownvotes(safeJsonToInteger(obj.get("downs")));
+        this.setSubreddit(safeJsonToString(obj.get("subreddit")));
+        this.setSubredditId(safeJsonToString(obj.get("subreddit_id")));
+        this.setLinkId(safeJsonToString(obj.get("link_id")));
+        this.setBodyHTML(safeJsonToString(obj.get("body_html")));
+        this.setScoreHidden(safeJsonToBoolean(obj.get("score_hidden")));
 
     }
     
