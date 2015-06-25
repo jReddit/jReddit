@@ -110,44 +110,38 @@ public class Submission extends Thing implements MixedListingElement {
     public Submission(JSONObject obj) {
     	super(safeJsonToString(obj.get("name")));
 
-        try {
-        	
-            setURL(safeJsonToString(obj.get("url")));
-            setPermalink(safeJsonToString(obj.get("permalink")));
-            setAuthor(safeJsonToString(obj.get("author")));
-            setTitle(safeJsonToString(obj.get("title")));
-            setSubreddit(safeJsonToString(obj.get("subreddit")));
-            setSubredditId(safeJsonToString(obj.get("subreddit_id")));
-            setThumbnail(safeJsonToString(obj.get("thumbnail")));
-            
-            setSelftext(safeJsonToString(obj.get("selftext")));
-            setSelftextHTML(safeJsonToString(obj.get("selftext_html")));
-            setDomain(safeJsonToString(obj.get("domain")));
-            setBannedBy(safeJsonToString(obj.get("banned_by")));
-            setApprovedBy(safeJsonToString(obj.get("approved_by")));
-            
-            setGilded(safeJsonToLong(obj.get("gilded")));
-            setCommentCount(safeJsonToLong(obj.get("num_comments")));
-            setReportCount(safeJsonToLong(obj.get("num_reports")));
-            setScore(safeJsonToLong(obj.get("score")));
-            setUpVotes(safeJsonToLong(obj.get("ups")));
-            setDownVotes(safeJsonToLong(obj.get("downs")));
-            
-            setCreated(safeJsonToDouble(obj.get("created")));
-            setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
-            
-            setVisited(safeJsonToBoolean(obj.get("visited")));
-            setSelf(safeJsonToBoolean(obj.get("self")));
-            setSaved(safeJsonToBoolean(obj.get("saved")));
-            setEdited(safeJsonToBoolean(obj.get("edited")));
-            setStickied(safeJsonToBoolean(obj.get("stickied")));
-            setNSFW(safeJsonToBoolean(obj.get("over_18")));
-            setHidden(safeJsonToBoolean(obj.get("hidden")));
-            setClicked(safeJsonToBoolean(obj.get("clicked")));
-
-        } catch (Exception e) {
-            System.err.println("Error creating Submission");
-        }
+        setURL(safeJsonToString(obj.get("url")));
+        setPermalink(safeJsonToString(obj.get("permalink")));
+        setAuthor(safeJsonToString(obj.get("author")));
+        setTitle(safeJsonToString(obj.get("title")));
+        setSubreddit(safeJsonToString(obj.get("subreddit")));
+        setSubredditId(safeJsonToString(obj.get("subreddit_id")));
+        setThumbnail(safeJsonToString(obj.get("thumbnail")));
+        
+        setSelftext(safeJsonToString(obj.get("selftext")));
+        setSelftextHTML(safeJsonToString(obj.get("selftext_html")));
+        setDomain(safeJsonToString(obj.get("domain")));
+        setBannedBy(safeJsonToString(obj.get("banned_by")));
+        setApprovedBy(safeJsonToString(obj.get("approved_by")));
+        
+        setGilded(safeJsonToLong(obj.get("gilded")));
+        setCommentCount(safeJsonToLong(obj.get("num_comments")));
+        setReportCount(safeJsonToLong(obj.get("num_reports")));
+        setScore(safeJsonToLong(obj.get("score")));
+        setUpVotes(safeJsonToLong(obj.get("ups")));
+        setDownVotes(safeJsonToLong(obj.get("downs")));
+        
+        setCreated(safeJsonToDouble(obj.get("created")));
+        setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
+        
+        setVisited(safeJsonToBoolean(obj.get("visited")));
+        setSelf(safeJsonToBoolean(obj.get("self")));
+        setSaved(safeJsonToBoolean(obj.get("saved")));
+        setEdited(safeJsonToBoolean(obj.get("edited")));
+        setStickied(safeJsonToBoolean(obj.get("stickied")));
+        setNSFW(safeJsonToBoolean(obj.get("over_18")));
+        setHidden(safeJsonToBoolean(obj.get("hidden")));
+        setClicked(safeJsonToBoolean(obj.get("clicked")));
         
     }
 

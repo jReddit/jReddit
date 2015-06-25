@@ -1,4 +1,6 @@
-package com.github.jreddit.deprecated.message;
+package com.github.jreddit.parser.entity;
+
+import org.json.simple.JSONObject;
 
 /**
  * Encapsulates the private messages.
@@ -6,9 +8,31 @@ package com.github.jreddit.deprecated.message;
  *
  * @author Karan Goel
  * @author Raul Rene Lepsa
+ * @author Simon Kassing
  */
 public class Message {
 
+	public Message(JSONObject jsonObject) {
+		
+        this.setBody(jsonObject.get("body").toString());
+        this.setComment(Boolean.valueOf(jsonObject.get("was_comment").toString()));
+        this.setFullName(jsonObject.get("name").toString());
+        if (jsonObject.get("author") == null)
+        {
+        	this.setAuthor("reddit");
+        } else {
+        	this.setAuthor(jsonObject.get("author").toString());
+        }
+        this.setCreated(jsonObject.get("created").toString());
+        this.setRecipient(jsonObject.get("dest").toString());
+        this.setCreatedUTC(jsonObject.get("created_utc").toString());
+        this.setBodyHtml(jsonObject.get("body_html").toString());
+        this.setSubject(jsonObject.get("subject").toString());
+        this.setContext(jsonObject.get("context").toString());
+        this.setId(jsonObject.get("id").toString());
+        
+	}
+	
     // The ID of this message
     private String id;
 

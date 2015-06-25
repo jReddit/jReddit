@@ -1,4 +1,4 @@
-package com.github.jreddit.deprecated.message;
+package com.github.jreddit.parser.entity;
 
 /**
  * Deal with different types of messages
