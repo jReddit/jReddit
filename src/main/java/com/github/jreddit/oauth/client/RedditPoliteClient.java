@@ -18,10 +18,10 @@ import com.github.jreddit.request.RedditPostRequest;
 public class RedditPoliteClient extends RedditClient {
 	
 	/** Logger for this class. */
-	final static Logger LOGGER = LoggerFactory.getLogger(RedditPoliteClient.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(RedditPoliteClient.class);
 	
 	/** Wrapped reddit client. */
-	RedditClient redditClient;
+	private RedditClient redditClient;
 	
     /** Default interval in milliseconds (1 per second). */
     private static final long DEFAULT_INTERVAL = 1000L;

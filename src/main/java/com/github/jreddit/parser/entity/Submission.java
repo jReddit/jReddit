@@ -21,7 +21,7 @@ import com.github.jreddit.parser.entity.imaginary.MixedListingElement;
  * @author Simon Kassing
  */
 public class Submission extends Thing implements MixedListingElement {
-
+    
     private String url;
     private String permalink;
     private String author;

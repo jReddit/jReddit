@@ -27,18 +27,11 @@ import com.github.jreddit.request.RedditPostRequest;
  */
 public class RedditHttpClient extends RedditClient {
 
-	/** Logger for this class. */
-	final static Logger LOGGER = LoggerFactory.getLogger(RedditHttpClient.class);
-	
-	/** User agent. */
-	private String userAgent;
-	
-	/** HTTP Client. */
-	private HttpClient httpClient;
+    private final static Logger LOGGER = LoggerFactory.getLogger(RedditHttpClient.class);
+    private final String userAgent;
+    private final HttpClient httpClient;
 	
 	/**
-	 * Constructor.
-	 * 
 	 * @param userAgent User agent of your application
 	 * @param httpClient HTTP client to use for the requests
 	 */
@@ -92,7 +85,7 @@ public class RedditHttpClient extends RedditClient {
 		
 	    try {
 	    	
-	    	// Create post request
+	    	// Create get request
 	        HttpGet request = new HttpGet(OAUTH_API_DOMAIN + redditRequest.generateRedditURI());
 
 	        // Add authorization

@@ -26,13 +26,15 @@ public class RedditListingParser {
 	final static Logger LOGGER = LoggerFactory.getLogger(SubmissionsListingParser.class);
 	
 	/** JSON parser. */
-	protected JSONParser jsonParser;
+	protected static final JSONParser JSON_PARSER = new JSONParser();
+	
+	private Kind[] kinds;
 	
 	/**
 	 * Constructor.
 	 */
-	public RedditListingParser() {
-		jsonParser = new JSONParser();
+	public RedditListingParser(Kind[] kinds) {
+		this.kinds = kinds;
 	}
 	
 	/**
@@ -102,7 +104,7 @@ public class RedditListingParser {
         List<Thing> things = new LinkedList<Thing>();
         
         // Send request to reddit server via REST client
-        Object response = jsonParser.parse(jsonText);
+        Object response = JSON_PARSER.parse(jsonText);
         
         // Check for reddit error, can throw a RedditError
         validate(response);
@@ -121,30 +123,52 @@ public class RedditListingParser {
         	JSONObject data = (JSONObject) element;
             
             // Make sure it is of the correct kind
-            String kind = safeJsonToString(data.get("kind"));
+            String kindData = safeJsonToString(data.get("kind"));
+            Object objData = data.get("data");
             
             // If no kind is given
-            if (kind == null) {
-            	LOGGER.warn("Could not detect kind in a reddit listing element, skipping it.");
-            	
-            // For a comment
-            } else if (kind.equals(Kind.COMMENT.value())) { 
-            	things.add(new Comment(((JSONObject) data.get("data"))));
+            if (kindData == null) {
+                
+            } else if (objData == null || !(objData instanceof JSONObject)) {
+                
+            } else {
+                things.add())
+            }
+
+                
+                if (kind == Kind.COMMENT) { 
+                	things.add(new Comment(((JSONObject) data.get("data"))));
+                
+                // For a submission
+                } else if (kind.equals(Kind.LINK.value())) {
+                	things.add(new Submission(((JSONObject) data.get("data"))));
+                
+                // For a subreddit
+                } else if (kind.equals(Kind.SUBREDDIT.value())) { 
+                	things.add(new Subreddit(((JSONObject) data.get("data"))));
+                }
             
-            // For a submission
-            } else if (kind.equals(Kind.LINK.value())) {
-            	things.add(new Submission(((JSONObject) data.get("data"))));
-            
-            // For a subreddit
-            } else if (kind.equals(Kind.SUBREDDIT.value())) { 
-            	things.add(new Subreddit(((JSONObject) data.get("data"))));
+            } else {
+                LOGGER.warn("Could not detect kind in a reddit listing element, skipping it.");
             }
 			
 		}
-
+	    
+	    
         // Finally return list of submissions 
         return things;
-        
 	}
+
+
+
+
+    private Thing parseThing(String kindString, JSONObject data) {
+        Kind kind = Kind.match(kindString);
+        
+        switch (kind) {
+        case COMMENT:
+            
+        }
+    }
 
 }
