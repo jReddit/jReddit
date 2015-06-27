@@ -11,7 +11,7 @@ import com.github.jreddit.parser.entity.Comment;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.parser.entity.Thing;
 import com.github.jreddit.parser.entity.imaginary.MixedListingElement;
-import com.github.jreddit.request.error.RedditException;
+import com.github.jreddit.parser.exception.RedditParseException;
 
 /**
  * Parser for a listing that has both submissions and comments mixed together.
@@ -33,7 +33,7 @@ public class MixedListingParser extends RedditListingParser {
      * 
      * @throws ParseException
      */
-    public List<MixedListingElement> parse(String jsonText) throws ParseException, RedditException {
+    public List<MixedListingElement> parse(String jsonText) throws RedditParseException {
         
         // Parse to a list of things
         List<Thing> things = this.parseGeneric(jsonText);

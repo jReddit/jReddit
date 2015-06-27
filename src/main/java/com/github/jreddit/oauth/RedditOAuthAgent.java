@@ -15,6 +15,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 
 import com.github.jreddit.oauth.app.RedditApp;
+import com.github.jreddit.oauth.exception.RedditOAuthException;
 import com.github.jreddit.oauth.param.RedditDuration;
 import com.github.jreddit.oauth.param.RedditScopeBuilder;
 import com.github.jreddit.request.util.KeyValueFormatter;
@@ -159,26 +160,34 @@ public class RedditOAuthAgent {
      * @throws OAuthSystemException
      * @throws OAuthProblemException
      */
-    public synchronized RedditToken token(String code) throws OAuthSystemException, OAuthProblemException {
+    public synchronized RedditToken token(String code) throws RedditOAuthException {
         
-        // Set general values of the request
-        OAuthClientRequest request = OAuthClientRequest
-            .tokenProvider(OAuthProviderType.REDDIT)
-            .setGrantType(GrantType.AUTHORIZATION_CODE)
-            .setClientId(redditApp.getClientID())
-            .setClientSecret(redditApp.getClientSecret())
-            .setRedirectURI(redditApp.getRedirectURI())
-            .setParameter("code", code)
-            .buildBodyMessage();
+        try {
         
-        // Add the user agent
-        addUserAgent(request);
+            // Set general values of the request
+            OAuthClientRequest request = OAuthClientRequest
+                .tokenProvider(OAuthProviderType.REDDIT)
+                .setGrantType(GrantType.AUTHORIZATION_CODE)
+                .setClientId(redditApp.getClientID())
+                .setClientSecret(redditApp.getClientSecret())
+                .setRedirectURI(redditApp.getRedirectURI())
+                .setParameter("code", code)
+                .buildBodyMessage();
+            
+            // Add the user agent
+            addUserAgent(request);
+            
+            // Add basic authentication
+            addBasicAuthentication(request, redditApp);
+            
+            // Return a wrapper controlled by jReddit
+            return new RedditToken(oAuthClient.accessToken(request));
         
-        // Add basic authentication
-        addBasicAuthentication(request, redditApp);
-        
-        // Return a wrapper controlled by jReddit
-        return new RedditToken(oAuthClient.accessToken(request));
+        } catch (OAuthSystemException oase) {
+            throw new RedditOAuthException(oase);
+        } catch (OAuthProblemException oape) {
+            throw new RedditOAuthException(oape);
+        }
 
     }
     
@@ -200,34 +209,43 @@ public class RedditOAuthAgent {
      * 
      * @see RedditToken#isRefreshable()
      */
-    public synchronized boolean refreshToken(RedditToken rToken) throws OAuthSystemException, OAuthProblemException {
+    public synchronized boolean refreshToken(RedditToken rToken) throws RedditOAuthException {
         
-        // Check whether the token can be refreshed
-        if (rToken.isRefreshable()) {
+        try {
+            
+            // Check whether the token can be refreshed
+            if (rToken.isRefreshable()) {
+            
+                // Set general values of the request
+                OAuthClientRequest request = OAuthClientRequest
+                    .tokenProvider(OAuthProviderType.REDDIT)
+                    .setGrantType(GrantType.REFRESH_TOKEN)
+                    .setRefreshToken(rToken.getRefreshToken())
+                    .buildBodyMessage();
+                
+                // Add the user agent
+                addUserAgent(request);
+                
+                // Add basic authentication
+                addBasicAuthentication(request, redditApp);
+                
+                // Return a wrapper controlled by jReddit
+                rToken.refresh(oAuthClient.accessToken(request));
+                
+                return true;
+            
+            } else {
+                
+                // The token cannot be refreshed
+                return false;
+                
+            }
         
-            // Set general values of the request
-            OAuthClientRequest request = OAuthClientRequest
-                .tokenProvider(OAuthProviderType.REDDIT)
-                .setGrantType(GrantType.REFRESH_TOKEN)
-                .setRefreshToken(rToken.getRefreshToken())
-                .buildBodyMessage();
-            
-            // Add the user agent
-            addUserAgent(request);
-            
-            // Add basic authentication
-            addBasicAuthentication(request, redditApp);
-            
-            // Return a wrapper controlled by jReddit
-            rToken.refresh(oAuthClient.accessToken(request));
-            
-            return true;
         
-        } else {
-            
-            // The token cannot be refreshed
-            return false;
-            
+        } catch (OAuthSystemException oase) {
+            throw new RedditOAuthException(oase);
+        } catch (OAuthProblemException oape) {
+            throw new RedditOAuthException(oape);
         }
         
     }
@@ -249,31 +267,39 @@ public class RedditOAuthAgent {
      * @throws OAuthSystemException
      * @throws OAuthProblemException
      */
-    public synchronized RedditToken tokenAppOnly(boolean confidential) throws OAuthSystemException, OAuthProblemException {
+    public synchronized RedditToken tokenAppOnly(boolean confidential) throws RedditOAuthException {
         
-        // Set general values of the request
-        TokenRequestBuilder builder = OAuthClientRequest
-            .tokenProvider(OAuthProviderType.REDDIT)
-            .setParameter("grant_type", confidential ? GRANT_TYPE_CLIENT_CREDENTIALS : GRANT_TYPE_INSTALLED_CLIENT)
-            .setClientId(redditApp.getClientID())
-            .setClientSecret(redditApp.getClientSecret());
+        try {
         
-        // If it is not acting on behalf of a unique client, a (unique as possible) device identifier must be generated:
-        if (!confidential) {
-            builder = builder.setParameter("device_id", UUID.randomUUID().toString());
+            // Set general values of the request
+            TokenRequestBuilder builder = OAuthClientRequest
+                .tokenProvider(OAuthProviderType.REDDIT)
+                .setParameter("grant_type", confidential ? GRANT_TYPE_CLIENT_CREDENTIALS : GRANT_TYPE_INSTALLED_CLIENT)
+                .setClientId(redditApp.getClientID())
+                .setClientSecret(redditApp.getClientSecret());
+            
+            // If it is not acting on behalf of a unique client, a (unique as possible) device identifier must be generated:
+            if (!confidential) {
+                builder = builder.setParameter("device_id", UUID.randomUUID().toString());
+            }
+            
+            // Build the request
+            OAuthClientRequest request = builder.buildBodyMessage();
+            
+            // Add the user agent
+            addUserAgent(request);
+            
+            // Add basic authentication
+            addBasicAuthentication(request, redditApp);
+            
+            // Return a wrapper controlled by jReddit
+            return new RedditToken(oAuthClient.accessToken(request));
+            
+        } catch (OAuthSystemException oase) {
+            throw new RedditOAuthException(oase);
+        } catch (OAuthProblemException oape) {
+            throw new RedditOAuthException(oape);
         }
-        
-        // Build the request
-        OAuthClientRequest request = builder.buildBodyMessage();
-        
-        // Add the user agent
-        addUserAgent(request);
-        
-        // Add basic authentication
-        addBasicAuthentication(request, redditApp);
-        
-        // Return a wrapper controlled by jReddit
-        return new RedditToken(oAuthClient.accessToken(request));
         
     }
     

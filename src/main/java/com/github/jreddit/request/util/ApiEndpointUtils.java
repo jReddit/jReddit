@@ -8,6 +8,10 @@ package com.github.jreddit.request.util;
  */
 public class ApiEndpointUtils {
 
+    private ApiEndpointUtils() {
+        // Introduced to forbid instantiation
+    }
+    
     public static final String REDDIT_BASE_URL = "http://www.reddit.com";
 
     public static final String REDDIT_BASE_API_ENDPOINT = "/api";

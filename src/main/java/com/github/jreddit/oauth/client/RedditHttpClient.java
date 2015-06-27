@@ -104,7 +104,7 @@ public class RedditHttpClient extends RedditClient {
             
             // Return response if successful
             if (response != null) {
-                return EntityUtils.toString(response.getEntity());
+                return EntityUtils.toString(response.getEntity(), "UTF-8");
             }
             
         } catch (UnsupportedEncodingException uee) {

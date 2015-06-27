@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.parser.entity.Thing;
-import com.github.jreddit.request.error.RedditException;
+import com.github.jreddit.parser.exception.RedditParseException;
 
 public class SubmissionsListingParser extends RedditListingParser {
     
@@ -24,7 +24,7 @@ public class SubmissionsListingParser extends RedditListingParser {
      * 
      * @throws ParseException
      */
-    public List<Submission> parse(String jsonText) throws ParseException, RedditException {
+    public List<Submission> parse(String jsonText) throws RedditParseException {
         
         // Parse to a list of things
         List<Thing> things = this.parseGeneric(jsonText);

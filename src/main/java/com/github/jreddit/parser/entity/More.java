@@ -45,9 +45,9 @@ public class More extends Thing implements CommentTreeElement {
         
         // Iterate over children
         this.children = new ArrayList<String>();
-        JSONArray children = (JSONArray) obj.get("children");
-        for (Object child : children) {
-            this.children.add((String) child);
+        JSONArray jsonChildren = (JSONArray) obj.get("children");
+        for (Object child : jsonChildren) {
+            this.children.add(JsonUtils.safeJsonToString(child));
         }
         
     }

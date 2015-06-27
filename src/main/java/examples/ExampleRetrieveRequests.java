@@ -3,9 +3,6 @@ package examples;
 import java.util.List;
 
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
-import org.json.simple.parser.ParseException;
 
 import com.github.jreddit.oauth.RedditOAuthAgent;
 import com.github.jreddit.oauth.RedditToken;
@@ -14,17 +11,18 @@ import com.github.jreddit.oauth.app.RedditInstalledApp;
 import com.github.jreddit.oauth.client.RedditClient;
 import com.github.jreddit.oauth.client.RedditHttpClient;
 import com.github.jreddit.oauth.client.RedditPoliteClient;
+import com.github.jreddit.oauth.exception.RedditOAuthException;
 import com.github.jreddit.parser.entity.More;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
 import com.github.jreddit.parser.entity.imaginary.FullSubmission;
 import com.github.jreddit.parser.entity.imaginary.MixedListingElement;
+import com.github.jreddit.parser.exception.RedditParseException;
 import com.github.jreddit.parser.listing.CommentsMoreParser;
 import com.github.jreddit.parser.listing.MixedListingParser;
 import com.github.jreddit.parser.listing.SubmissionsListingParser;
 import com.github.jreddit.parser.single.FullSubmissionParser;
 import com.github.jreddit.parser.util.CommentTreeUtils;
-import com.github.jreddit.request.error.RedditException;
 import com.github.jreddit.request.retrieval.comments.MoreCommentsRequest;
 import com.github.jreddit.request.retrieval.mixed.FullSubmissionRequest;
 import com.github.jreddit.request.retrieval.mixed.MixedOfUserRequest;
@@ -48,7 +46,7 @@ public class ExampleRetrieveRequests {
     private RedditOAuthAgent agent;
     private RedditClient client;
     
-    public ExampleRetrieveRequests() throws OAuthSystemException, OAuthProblemException {
+    public ExampleRetrieveRequests() throws RedditOAuthException {
         
         // Reddit application
         redditApp = new RedditInstalledApp(CLIENT_ID, REDIRECT_URI);
@@ -61,7 +59,7 @@ public class ExampleRetrieveRequests {
 
     }
     
-    public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException, RedditException {
+    public static void main(String[] args) throws RedditOAuthException, RedditParseException {
         ExampleRetrieveRequests example = new ExampleRetrieveRequests();
         //example.exampleSubmissionsOfSubreddit();
         //example.exampleSubmissionsOfUser();
@@ -69,7 +67,7 @@ public class ExampleRetrieveRequests {
         example.exampleFullSubmission();
     }
     
-    public void exampleSubmissionsOfSubreddit() throws RedditException, ParseException, OAuthSystemException, OAuthProblemException {
+    public void exampleSubmissionsOfSubreddit() throws RedditParseException, RedditOAuthException {
         
         // Create token (will be valid for 1 hour)
         RedditToken token = agent.tokenAppOnly(false);
@@ -88,7 +86,7 @@ public class ExampleRetrieveRequests {
 
     }
     
-    public void exampleSubmissionsOfUser() throws RedditException, ParseException, OAuthSystemException, OAuthProblemException {
+    public void exampleSubmissionsOfUser() throws RedditParseException, RedditOAuthException {
         
         // Create token (will be valid for 1 hour)
         RedditToken token = agent.tokenAppOnly(false);
@@ -107,7 +105,7 @@ public class ExampleRetrieveRequests {
 
     }
     
-    public void exampleMixedOfUser() throws RedditException, ParseException, OAuthSystemException, OAuthProblemException {
+    public void exampleMixedOfUser() throws RedditParseException, RedditOAuthException {
         
         // Create token (will be valid for 1 hour)
         RedditToken token = agent.tokenAppOnly(false);
@@ -128,7 +126,7 @@ public class ExampleRetrieveRequests {
 
     }
     
-    public void exampleFullSubmission() throws RedditException, ParseException, OAuthSystemException, OAuthProblemException {
+    public void exampleFullSubmission() throws RedditParseException, RedditOAuthException {
         
         // Create token (will be valid for 1 hour)
         RedditToken token = agent.tokenAppOnly(false);

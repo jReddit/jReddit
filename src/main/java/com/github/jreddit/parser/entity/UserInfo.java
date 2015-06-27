@@ -187,6 +187,7 @@ public class UserInfo {
         this.over18 = over18;
     }
     
+    @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
         String newLine = System.getProperty("line.separator");

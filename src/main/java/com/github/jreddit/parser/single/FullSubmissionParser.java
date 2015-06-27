@@ -16,20 +16,12 @@ import com.github.jreddit.parser.entity.More;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
 import com.github.jreddit.parser.entity.imaginary.FullSubmission;
+import com.github.jreddit.parser.exception.RedditParseException;
 import com.github.jreddit.parser.util.JsonUtils;
-import com.github.jreddit.request.error.RedditException;
 
 public class FullSubmissionParser {
 
-    /** JSON parser. */
-    private JSONParser jsonParser;
-    
-    /**
-     * Constructor.
-     */
-    public FullSubmissionParser() {
-        jsonParser = new JSONParser();
-    }    
+    protected static final JSONParser JSON_PARSER = new JSONParser();
     
     /**
      * Parse JSON received from reddit into a full submission.
@@ -40,24 +32,30 @@ public class FullSubmissionParser {
      * 
      * @throws ParseException
      */
-    public FullSubmission parse(String jsonText) throws ParseException, RedditException {
+    public FullSubmission parse(String jsonText) throws RedditParseException {
         
-        // Parse JSON text
-        Object response = jsonParser.parse(jsonText);
+        try {
         
-        // Validate response
-        validate(response);
-
-        // Create submission (casting with JSON is horrible)
-        JSONObject main = (JSONObject) ((JSONArray) response).get(0);
-        Submission submission = new Submission((JSONObject) ((JSONObject) ((JSONArray)((JSONObject) main.get("data")).get("children")).get(0)).get("data"));
-         
-        // Create comment tree
-        JSONObject mainTree =  (JSONObject) ((JSONArray) response).get(1);
-        List<CommentTreeElement> commentTree = parseRecursive(mainTree);
+            // Parse JSON text
+            Object response = JSON_PARSER.parse(jsonText);
         
-        // Return the set of submission and its comment tree
-        return new FullSubmission(submission,  commentTree);
+            // Validate response
+            validate(response);
+    
+            // Create submission (casting with JSON is horrible)
+            JSONObject main = (JSONObject) ((JSONArray) response).get(0);
+            Submission submission = new Submission((JSONObject) ((JSONObject) ((JSONArray)((JSONObject) main.get("data")).get("children")).get(0)).get("data"));
+             
+            // Create comment tree
+            JSONObject mainTree =  (JSONObject) ((JSONArray) response).get(1);
+            List<CommentTreeElement> commentTree = parseRecursive(mainTree);
+            
+            // Return the set of submission and its comment tree
+            return new FullSubmission(submission,  commentTree);
+        
+        } catch (ParseException pe) {
+            throw new RedditParseException(pe);
+        }
         
     }
     
@@ -69,7 +67,7 @@ public class FullSubmissionParser {
      * @param comments     List of comments
      * @param object    JSON Object
      */
-    protected List<CommentTreeElement> parseRecursive(JSONObject main) throws RedditException {
+    protected List<CommentTreeElement> parseRecursive(JSONObject main) throws RedditParseException {
 
         List<CommentTreeElement> commentTree = new ArrayList<CommentTreeElement>();
         
@@ -124,13 +122,13 @@ public class FullSubmissionParser {
      * 
      * @param response Object from the JSON parser
      * 
-     * @throws RedditException If the JSON is in incorrect format
+     * @throws RedditRequestException If the JSON is in incorrect format
      */
-    public void validate(Object response) throws RedditException {
+    public void validate(Object response) throws RedditParseException {
         
         // Check for null
         if (response == null) {
-            throw new RedditException();
+            throw new RedditParseException();
         }
         
         // Check it is a JSON response
@@ -141,16 +139,16 @@ public class FullSubmissionParser {
             
             // Check for error
             if (jsonResponse.get("error") != null) {
-                throw new RedditException(JsonUtils.safeJsonToInteger(jsonResponse.get("error")));
+                throw new RedditParseException(JsonUtils.safeJsonToInteger(jsonResponse.get("error")));
             } else {
-                throw new RedditException("invalid json format, started with object (should start with array)");
+                throw new RedditParseException("invalid json format, started with object (should start with array)");
             }
         
         }
         
         // It must start with an array
         if (!(response instanceof JSONArray)) {
-            throw new RedditException("invalid json format, did not start with array");
+            throw new RedditParseException("invalid json format, did not start with array");
         }
         
     }

@@ -17,8 +17,8 @@ import com.github.jreddit.parser.entity.Kind;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.parser.entity.Subreddit;
 import com.github.jreddit.parser.entity.Thing;
+import com.github.jreddit.parser.exception.RedditParseException;
 import com.github.jreddit.parser.util.JsonUtils;
-import com.github.jreddit.request.error.RedditException;
 
 public class RedditListingParser {
     
@@ -31,18 +31,18 @@ public class RedditListingParser {
      * 
      * @param response Object returned by JSON parser
      * 
-     * @throws RedditException If the response is not valid listing of reddit things
+     * @throws RedditRequestException If the response is not valid listing of reddit things
      */
-    public void validate(Object response) throws RedditException {
+    public void validate(Object response) throws RedditParseException {
         
         // Check for null
         if (response == null) {
-            throw new RedditException();
+            throw new RedditParseException();
         }
         
         // Check it is a JSON response
         if (!(response instanceof JSONObject)) {
-            throw new RedditException("not a JSON response");
+            throw new RedditParseException("not a JSON response");
         }
         
         // Cast to JSON object
@@ -50,13 +50,13 @@ public class RedditListingParser {
         
         // Check for error
         if (jsonResponse.get("error") != null) {
-            throw new RedditException(JsonUtils.safeJsonToInteger(jsonResponse.get("error")));
+            throw new RedditParseException(JsonUtils.safeJsonToInteger(jsonResponse.get("error")));
         }
         
         // Check that data exists
         if (jsonResponse.get("data") == null) {
             System.out.println(jsonResponse.toJSONString());
-            throw new RedditException("data is missing");
+            throw new RedditParseException("data is missing from listing");
         }
         
     }
@@ -71,7 +71,7 @@ public class RedditListingParser {
      * 
      * @throws ParseException
      */
-    public List<Thing> parseGeneric(String jsonText) throws ParseException, RedditException {
+    public List<Thing> parseGeneric(String jsonText) throws RedditParseException {
         return parseGeneric(jsonText, "children");
     }
     
@@ -90,63 +90,69 @@ public class RedditListingParser {
      * 
      * @throws ParseException
      */
-    public List<Thing> parseGeneric(String jsonText, String listingName) throws ParseException, RedditException {
+    public List<Thing> parseGeneric(String jsonText, String listingName) throws RedditParseException {
         
-        // List of submissions
-        List<Thing> things = new LinkedList<Thing>();
+        try {
         
-        // Send request to reddit server via REST client
-        Object response = JSON_PARSER.parse(jsonText);
-        
-        // Check for reddit error, can throw a RedditError
-        validate(response);
-        
-        // Cast to a JSON object
-        JSONObject object = (JSONObject) response;
-        
-        // Get the array of children
-        JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get(listingName);
-
-        // Iterate over array of children
-        for (Object element : array) {
+            // List of submissions
+            List<Thing> things = new LinkedList<Thing>();
             
-            // Get the element
-            JSONObject data = (JSONObject) element;
+            // Send request to reddit server via REST client
+            Object response = JSON_PARSER.parse(jsonText);
             
-            // Make sure it is of the correct kind
-            String kindData = safeJsonToString(data.get("kind"));
-            Object objData = data.get("data");
+            // Check for reddit error, can throw a RedditError
+            validate(response);
             
-            // If no kind is given
-            if (kindData == null) {
-                LOGGER.warn("Kind data missing, skipping it.");
+            // Cast to a JSON object
+            JSONObject object = (JSONObject) response;
+            
+            // Get the array of children
+            JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get(listingName);
+    
+            // Iterate over array of children
+            for (Object element : array) {
                 
-            // If no data is given
-            } else if (objData == null || !(objData instanceof JSONObject)) {
-                LOGGER.warn("Object data missing, skipping it.");
+                // Get the element
+                JSONObject data = (JSONObject) element;
                 
-            } else {
+                // Make sure it is of the correct kind
+                String kindData = safeJsonToString(data.get("kind"));
+                Object objData = data.get("data");
                 
-                // Attempt to match
-                Kind kind = Kind.match(kindData);
-                
-                // Parse the thing
-                Thing thing = parseThing(kind, ((JSONObject) data.get("data")));
-                
-                // Show warning if failed
-                if (thing == null) {
-                    LOGGER.warn("Encountered invalid kind for a listing (" + kindData + "), skipping it.");
-
+                // If no kind is given
+                if (kindData == null) {
+                    LOGGER.warn("Kind data missing, skipping it.");
+                    
+                // If no data is given
+                } else if (objData == null || !(objData instanceof JSONObject)) {
+                    LOGGER.warn("Object data missing, skipping it.");
+                    
                 } else {
-                    things.add(thing);
+                    
+                    // Attempt to match
+                    Kind kind = Kind.match(kindData);
+                    
+                    // Parse the thing
+                    Thing thing = parseThing(kind, ((JSONObject) data.get("data")));
+                    
+                    // Show warning if failed
+                    if (thing == null) {
+                        LOGGER.warn("Encountered invalid kind for a listing (" + kindData + "), skipping it.");
+    
+                    } else {
+                        things.add(thing);
+                    }
+                    
                 }
                 
             }
             
-        }
+            // Finally return list of submissions 
+            return things;
         
-        // Finally return list of submissions 
-        return things;
+        } catch (ParseException pe) {
+            throw new RedditParseException(pe);
+        }
         
     }
     

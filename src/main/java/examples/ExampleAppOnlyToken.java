@@ -1,17 +1,16 @@
 package examples;
 
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.json.simple.parser.ParseException;
 
 import com.github.jreddit.oauth.RedditOAuthAgent;
 import com.github.jreddit.oauth.RedditToken;
 import com.github.jreddit.oauth.app.RedditApp;
 import com.github.jreddit.oauth.app.RedditInstalledApp;
+import com.github.jreddit.oauth.exception.RedditOAuthException;
 
 public class ExampleAppOnlyToken {
 
-    public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException {
+    public static void main(String[] args) throws RedditOAuthException, ParseException {
 
         // Information about the app
         String userAgent = "jReddit: Reddit API Wrapper for Java";

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jreddit.parser.entity.Comment;
 import com.github.jreddit.parser.entity.Thing;
-import com.github.jreddit.request.error.RedditException;
+import com.github.jreddit.parser.exception.RedditParseException;
 
 public class CommentsListingParser extends RedditListingParser {
 
@@ -26,10 +26,9 @@ public class CommentsListingParser extends RedditListingParser {
      * @return Parsed list of comments
      * 
      * @throws ParseException
-     * @throws RedditException
+     * @throws RedditRequestException
      */
-    public List<Comment> parse(String jsonText) throws ParseException, RedditException {
-        
+    public List<Comment> parse(String jsonText) throws RedditParseException {
         
         // Parse to a list of things
         List<Thing> things = this.parseGeneric(jsonText);

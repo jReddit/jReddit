@@ -57,7 +57,7 @@ public abstract class RedditPostRequest {
     /**
      * Generate the body parameters to be added.<br>
      * <br>
-     * 
+     * <i>Note: values are encoded.</i>
      * 
      * @return Body parameters (e.g. "limit=100&sort=top")
      */
