@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jreddit.parser.entity.Comment;
 import com.github.jreddit.parser.entity.Kind;
+import com.github.jreddit.parser.entity.More;
 import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.parser.entity.Subreddit;
 import com.github.jreddit.parser.entity.Thing;
@@ -22,7 +23,7 @@ import com.github.jreddit.parser.util.JsonUtils;
 
 public class RedditListingParser {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(SubmissionsListingParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedditListingParser.class);
     
     protected static final JSONParser JSON_PARSER = new JSONParser();
     
@@ -64,7 +65,7 @@ public class RedditListingParser {
     /**
      * Parse JSON received from reddit into a list of things.
      * This parser expects the JSON to be of a listing of things, and supports 
-     * the following things: <i>Comment</i>, <i>Submission</i>, and <i>Subreddit</i>.
+     * the following things: <i>More</i>, <i>Comment</i>, <i>Submission</i>, and <i>Subreddit</i>.
      * 
      * @param jsonText JSON Text
      * @return Parsed list of things
@@ -78,7 +79,7 @@ public class RedditListingParser {
     /**
      * Parse JSON received from reddit into a list of things.
      * This parser expects the JSON to be of a listing of things, and supports 
-     * the following things: <i>Comment</i>, <i>Submission</i>, and <i>Subreddit</i>.<br>
+     * the following things: <i>More</i>, <i>Comment</i>, <i>Submission</i>, and <i>Subreddit</i>.<br>
      * <br>
      * <i>Note: if it encounters an invalid element (e.g. missing kind or data), it will
      * log a warning using SLF4J and would return null.</i>
@@ -176,6 +177,10 @@ public class RedditListingParser {
         // For a subreddit
         } else if (kind == Kind.SUBREDDIT) { 
             return new Subreddit(data);
+          
+        // For a more
+        } else if (kind == Kind.MORE) { 
+            return new More(data);
             
         // In all other cases (null, or of a different type)
         } else {

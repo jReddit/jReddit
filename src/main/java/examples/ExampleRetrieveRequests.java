@@ -61,9 +61,9 @@ public class ExampleRetrieveRequests {
     
     public static void main(String[] args) throws RedditOAuthException, RedditParseException {
         ExampleRetrieveRequests example = new ExampleRetrieveRequests();
-        //example.exampleSubmissionsOfSubreddit();
-        //example.exampleSubmissionsOfUser();
-        //example.exampleMixedOfUser();
+        example.exampleSubmissionsOfSubreddit();
+        example.exampleSubmissionsOfUser();
+        example.exampleMixedOfUser();
         example.exampleFullSubmission();
     }
     

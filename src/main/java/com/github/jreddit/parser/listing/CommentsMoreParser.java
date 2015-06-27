@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jreddit.parser.entity.Comment;
+import com.github.jreddit.parser.entity.More;
 import com.github.jreddit.parser.entity.Thing;
+import com.github.jreddit.parser.entity.imaginary.CommentTreeElement;
 import com.github.jreddit.parser.exception.RedditParseException;
 
 public class CommentsMoreParser extends RedditListingParser {
@@ -21,10 +23,10 @@ public class CommentsMoreParser extends RedditListingParser {
     
     
     /**
-     * Parse JSON received from reddit into a list of comments.
-     * This parser expects the JSON to be of a listing of comments.<br>
+     * Parse JSON received from reddit into a list of new additional comment tree elements.
+     * This parser expects the JSON to be of a listing of comments and more's.<br>
      * <br>
-     * <i>Note: this parsing can only be performed on listings of comments, not on
+     * <i>Note: this parsing can only be performed on listings of comments and more's, not on
      * a comment tree of a submission.</i>
      * 
      * @param jsonText JSON Text
@@ -33,15 +35,15 @@ public class CommentsMoreParser extends RedditListingParser {
      * @throws ParseException
      * @throws RedditRequestException
      */
-    public List<Comment> parse(String jsonText) throws RedditParseException {
+    public List<CommentTreeElement> parse(String jsonText) throws RedditParseException {
         
         try {
             
             // Move to the main object
             JSONObject main = ((JSONObject) ((JSONObject) JSON_PARSER.parse(jsonText)).get("json"));
             
-            // List of comment and submission mixed elements
-            List<Comment> comments = new LinkedList<Comment>();
+            // List of comment and more mixed elements
+            List<CommentTreeElement> elements = new LinkedList<CommentTreeElement>();
     
             // If the main has data (it can happen that it does not, when no comments identifiers were passed along)
             if (main.get("data") != null) {
@@ -53,7 +55,9 @@ public class CommentsMoreParser extends RedditListingParser {
                 for (Thing t : things) {
                     
                     if (t instanceof Comment) {
-                        comments.add((Comment) t);
+                        elements.add((Comment) t);
+                    } else if (t instanceof More) {
+                        elements.add((More) t);
                     } else {
                         LOGGER.warn("Encountered an unexpected reddit thing (" + t.getKind().value() + "), skipping it.");
                     }
@@ -62,8 +66,8 @@ public class CommentsMoreParser extends RedditListingParser {
             
             }
             
-            // Return resulting comments list
-            return comments;
+            // Return resulting element list
+            return elements;
         
         } catch (ParseException pe) {
             throw new RedditParseException(pe);
