@@ -8,5 +8,4 @@ lib/
 target/
 .prefs
 .settings/
-src/main/java/examples/er
-authentication.txt
+sonar-project.properties

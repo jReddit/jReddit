@@ -13,28 +13,28 @@ package com.github.jreddit.oauth.param;
  */
 public enum RedditScope {
 
-	IDENTITY("identity"), 
-	EDIT("edit"), 
-	FLAIR("flair"), 
-	HISTORY("history"),  
-	MODCONFIG("modconfig"),  
-	MODFLAIR("modflair"), 
-	MODLOG("modlog"), 
-	MODPOSTS("modposts"),  
-	MODWIKI("modwiki"), 
-	MYSUBREDDITS("mysubreddits"), 
-	PRIVATEMESSAGE("privatemessages"),  
-	READ("read"), 
-	REPORT("report"),  
-	SAVE("save"), 
-	SUBMIT("submit"),  
-	SUBSCRIBE("subscribe"),  
-	VOTE("vote"), 
-	WIKIEDIT("wikiedit"),  
-	WIKIREAD("wikiread");
-	
-	protected static final String SEPARATOR = ",";
-	
+    IDENTITY("identity"), 
+    EDIT("edit"), 
+    FLAIR("flair"), 
+    HISTORY("history"),  
+    MODCONFIG("modconfig"),  
+    MODFLAIR("modflair"), 
+    MODLOG("modlog"), 
+    MODPOSTS("modposts"),  
+    MODWIKI("modwiki"), 
+    MYSUBREDDITS("mysubreddits"), 
+    PRIVATEMESSAGE("privatemessages"),  
+    READ("read"), 
+    REPORT("report"),  
+    SAVE("save"), 
+    SUBMIT("submit"),  
+    SUBSCRIBE("subscribe"),  
+    VOTE("vote"), 
+    WIKIEDIT("wikiedit"),  
+    WIKIREAD("wikiread");
+    
+    protected static final String SEPARATOR = ",";
+    
     private final String value;
 
     RedditScope(String value) {

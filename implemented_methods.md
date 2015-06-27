@@ -309,7 +309,7 @@ Example usage:
 // Assuming user is a connected User instance:
 List<Message> unread = new Messages().getMessages(user, Messages.ALL_MESSAGES, MessageType.UNREAD);
 ```
-	
+    
 #### POST /api/read_message
 Example usage:
     

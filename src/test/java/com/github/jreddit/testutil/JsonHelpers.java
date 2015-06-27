@@ -11,14 +11,14 @@ import com.github.jreddit.parser.entity.Kind;
 public class JsonHelpers {
 
     /**
-	* Create a JSON Object which has the structure and contents
-	* of the User Login response
-	*
-	* @param cookie Cookie
-	* @param modHash Modulo hash of the session identifier
-	*
-	* @return JSON Object with Reddit User Login object structure and contents.
-	*/
+    * Create a JSON Object which has the structure and contents
+    * of the User Login response
+    *
+    * @param cookie Cookie
+    * @param modHash Modulo hash of the session identifier
+    *
+    * @return JSON Object with Reddit User Login object structure and contents.
+    */
     public static JSONObject userLoginResponse(String cookie, String modHash) {
         JSONObject data = new JSONObject();
         data.put("cookie", cookie);
@@ -35,13 +35,13 @@ public class JsonHelpers {
     }
 
     /**
-	* Create a JSON Object which has the structure and contents
-	* of a User Info object.
-	*
-	* @param username Username
-	*
-	* @return JSON Object with Reddit User Info object structure and contents.
-	*/
+    * Create a JSON Object which has the structure and contents
+    * of a User Info object.
+    *
+    * @param username Username
+    *
+    * @return JSON Object with Reddit User Info object structure and contents.
+    */
     public static JSONObject createUserInfo(String username) {
     
         JSONObject data = new JSONObject();
@@ -68,13 +68,13 @@ public class JsonHelpers {
     }
 
     /**
-	* Create a JSON Object which has the structure and contents
-	* of a User About object.
-	*
-	* @param username Username
-	*
-	* @return JSON Object with Reddit User About object structure and contents.
-	*/
+    * Create a JSON Object which has the structure and contents
+    * of a User About object.
+    *
+    * @param username Username
+    *
+    * @return JSON Object with Reddit User About object structure and contents.
+    */
     public static JSONObject createUserAbout(String username) {
     
         JSONObject data = new JSONObject();
@@ -97,11 +97,11 @@ public class JsonHelpers {
     }
 
     /**
-	* Create a Reddit Listing JSON Object.
-	*
-	* @param children Children of the object
-	* @return
-	*/
+    * Create a Reddit Listing JSON Object.
+    *
+    * @param children Children of the object
+    * @return
+    */
     public static JSONObject redditListing(JSONObject... children) {
         JSONObject data = new JSONObject();
         data.put("after", null);
@@ -117,12 +117,12 @@ public class JsonHelpers {
     }
 
     /**
-	 * Create a JSON Reddit error object.
-	 *
-	 * @param error_code
-	 *            Error code
-	 * @return Reddit Error JSON object
-	 */
+     * Create a JSON Reddit error object.
+     *
+     * @param error_code
+     *            Error code
+     * @return Reddit Error JSON object
+     */
     public static JSONObject createRedditError(int error_code) {
      JSONObject data = new JSONObject();
      data.put("error", error_code);
@@ -130,17 +130,17 @@ public class JsonHelpers {
     }
 
     /**
-	* Create a JSON Object which has the structure and contents
-	* of a Reddit Message object.
-	*
-	* @param author Author
-	* @param messageId Identifier
-	* @param parentId Parent identifier
-	* @param newFlag Whether it is new
-	* @param wasComment Whether it was a comment
-	*
-	* @return JSON Object with Reddit Message object structure and contents.
-	*/
+    * Create a JSON Object which has the structure and contents
+    * of a Reddit Message object.
+    *
+    * @param author Author
+    * @param messageId Identifier
+    * @param parentId Parent identifier
+    * @param newFlag Whether it is new
+    * @param wasComment Whether it was a comment
+    *
+    * @return JSON Object with Reddit Message object structure and contents.
+    */
     public static JSONObject createMessage(String author, String messageId, String parentId, boolean newFlag, boolean wasComment) {
     
         JSONObject data = new JSONObject();
@@ -171,16 +171,16 @@ public class JsonHelpers {
     }
 
     /**
-	* Create a JSON Object which has the structure and contents
-	* of a Reddit Comment object.
-	*
-	* @param fullName Full name of the comment
-	* @param id Identifier of the comment
-	* @param parentId Identifier of the parent
-	* @param author Name of the author
-	*
-	* @return JSON Object with Reddit Comment object structure and contents.
-	*/
+    * Create a JSON Object which has the structure and contents
+    * of a Reddit Comment object.
+    *
+    * @param fullName Full name of the comment
+    * @param id Identifier of the comment
+    * @param parentId Identifier of the parent
+    * @param author Name of the author
+    *
+    * @return JSON Object with Reddit Comment object structure and contents.
+    */
     public static JSONObject createComment(String fullName, String id, String parentId, String author, String body, JSONObject replies) {
     
         JSONObject data = new JSONObject();
@@ -221,16 +221,16 @@ public class JsonHelpers {
     }
 
     /**
-	* Create a JSON Object which has the structure and contents
-	* of a Reddit Submission object.
-	*
-	* @param redditObjId Object identifier
-	* @param nsfw Whether it is Not Suited For Work
-	* @param media Media object
-	* @param mediaEmbed Media embed object
-	*
-	* @return JSON Object with Reddit Submission object structure and contents.
-	*/
+    * Create a JSON Object which has the structure and contents
+    * of a Reddit Submission object.
+    *
+    * @param redditObjId Object identifier
+    * @param nsfw Whether it is Not Suited For Work
+    * @param media Media object
+    * @param mediaEmbed Media embed object
+    *
+    * @return JSON Object with Reddit Submission object structure and contents.
+    */
     public static JSONObject createSubmission(String redditObjId, boolean nsfw, JSONObject media, JSONObject mediaEmbed) {
     
         JSONObject submission = new JSONObject();
@@ -284,15 +284,15 @@ public class JsonHelpers {
     }
     
     /**
-	* Create a JSON Object which has the structure and contents
-	* of a Reddit Subreddit object.
-	*
-	* @param displayName Display name
-	* @param redditObjName Full name
-	* @param redditObjId Identifier
-	*
-	* @return JSON Object with Reddit Subreddit object structure and contents.
-	*/
+    * Create a JSON Object which has the structure and contents
+    * of a Reddit Subreddit object.
+    *
+    * @param displayName Display name
+    * @param redditObjName Full name
+    * @param redditObjId Identifier
+    *
+    * @return JSON Object with Reddit Subreddit object structure and contents.
+    */
     public static JSONObject createSubreddit(String displayName, String redditObjName, String redditObjId) {
     
         JSONObject subreddit = new JSONObject();
@@ -334,11 +334,11 @@ public class JsonHelpers {
     }
 
     /**
-	* Create a JSON Object which has the structure and contents
-	* of a Reddit media object.
-	*
-	* @return JSON Object with Reddit Media object structure and contents.
-	*/
+    * Create a JSON Object which has the structure and contents
+    * of a Reddit media object.
+    *
+    * @return JSON Object with Reddit Media object structure and contents.
+    */
     public static JSONObject createMediaObject() {
         JSONObject oembed = new JSONObject();
         oembed.put("author_name", "Imgur");
@@ -363,11 +363,11 @@ public class JsonHelpers {
     }
 
     /**
-	* Create a JSON Object which has the structure and contents
-	* of a embed Reddit media object.
-	*
-	* @return JSON Object with emebed Reddit Media object structure and contents.
-	*/
+    * Create a JSON Object which has the structure and contents
+    * of a embed Reddit media object.
+    *
+    * @return JSON Object with emebed Reddit Media object structure and contents.
+    */
     public static JSONObject createMediaEmbedObject() {
         JSONObject mediaEmbedObject = new JSONObject();
         mediaEmbedObject.put("content", "&lt;iframe class=\"embedly-embed\" src=\"//cdn.embedly.com/widgets/media.html?src=http%3A%2F%2Fimgur.com%2Fa%2FPs7Ta%2Fembed&amp;url=http%3A%2F%2Fimgur.com%2Fa%2FPs7Ta%3F&amp;image=http%3A%2F%2Fi.imgur.com%2FtSrCkSB.jpg&amp;key=2aa3c4d5f3de4f5b9120b660ad850dc9&amp;type=text%2Fhtml&amp;schema=imgur\" width=\"550\" height=\"550\" scrolling=\"no\" frameborder=\"0\" allowfullscreen&gt;&lt;/iframe&gt;");
@@ -378,11 +378,11 @@ public class JsonHelpers {
     }
     
     /**
-	* Create an JSON array with the given objects as content.
-	*
-	* @param args Objects
-	* @return JSON array with the given objects in it
-	*/
+    * Create an JSON array with the given objects as content.
+    *
+    * @param args Objects
+    * @return JSON array with the given objects in it
+    */
     public static JSONArray jsonArrayOf(Object... args) {
         JSONArray array = new JSONArray();
         addAll(array, args);
@@ -390,9 +390,9 @@ public class JsonHelpers {
     }
 
     /**
-	* Create an empty JSON array.
-	* @return An empty JSON array
-	*/
+    * Create an empty JSON array.
+    * @return An empty JSON array
+    */
     public static JSONArray emptyJsonArray() {
         return new JSONArray();
     }

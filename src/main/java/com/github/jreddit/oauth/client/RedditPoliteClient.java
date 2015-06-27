@@ -16,13 +16,13 @@ import com.github.jreddit.request.RedditPostRequest;
  * @author Simon Kassing
  */
 public class RedditPoliteClient extends RedditClient {
-	
-	/** Logger for this class. */
-	private final static Logger LOGGER = LoggerFactory.getLogger(RedditPoliteClient.class);
-	
-	/** Wrapped reddit client. */
-	private RedditClient redditClient;
-	
+    
+    /** Logger for this class. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedditPoliteClient.class);
+    
+    /** Wrapped reddit client. */
+    private RedditClient redditClient;
+    
     /** Default interval in milliseconds (1 per second). */
     private static final long DEFAULT_INTERVAL = 1000L;
     
@@ -37,40 +37,40 @@ public class RedditPoliteClient extends RedditClient {
      * 
      * @param redditClient Reddit client to wrap
      */
-	public RedditPoliteClient(RedditClient redditClient) {
-		this(redditClient, DEFAULT_INTERVAL);
-	}
-	
+    public RedditPoliteClient(RedditClient redditClient) {
+        this(redditClient, DEFAULT_INTERVAL);
+    }
+    
     /**
      * Polite wrapper around the reddit client with configurable time.
      * 
      * @param redditClient Reddit client to wrap
      * @param interval Interval in milliseconds
      */
-	public RedditPoliteClient(RedditClient redditClient, long interval) {
-		this.redditClient = redditClient;
-		this.interval = interval;
-	}
+    public RedditPoliteClient(RedditClient redditClient, long interval) {
+        this.redditClient = redditClient;
+        this.interval = interval;
+    }
 
-	@Override
-	public String post(RedditToken rToken, RedditPostRequest request) {
+    @Override
+    public String post(RedditToken rToken, RedditPostRequest request) {
         waitIfNeeded();
-		String result = redditClient.post(rToken, request);
-		noteTime();
-		return result;
-	}
+        String result = redditClient.post(rToken, request);
+        noteTime();
+        return result;
+    }
 
-	@Override
-	public String get(RedditToken rToken, RedditGetRequest request) {
+    @Override
+    public String get(RedditToken rToken, RedditGetRequest request) {
         waitIfNeeded();
-		String result = redditClient.get(rToken, request);
-		noteTime();
-		return result;
-	}
-	
-	/**
-	 * Note the current time.
-	 */
+        String result = redditClient.get(rToken, request);
+        noteTime();
+        return result;
+    }
+    
+    /**
+     * Note the current time.
+     */
     private void noteTime() {
         lastReqTime = System.currentTimeMillis();
     }
@@ -85,7 +85,7 @@ public class RedditPoliteClient extends RedditClient {
 
         // If enough time has elapsed, no need to wait
         if (elapsed >= interval) {
-        	return;
+            return;
         }
 
         // If not enough time was elapsed, wait the remainder
@@ -93,9 +93,9 @@ public class RedditPoliteClient extends RedditClient {
         try {
             Thread.sleep(toWait);
         } catch (InterruptedException ie) {
-        	LOGGER.warn("Interrupted Exception thrown while politely waiting for interval", ie);
+            LOGGER.warn("Interrupted Exception thrown while politely waiting for remainder of interval", ie);
         }
         
     }
-	
+    
 }

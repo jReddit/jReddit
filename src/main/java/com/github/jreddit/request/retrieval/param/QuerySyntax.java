@@ -6,9 +6,9 @@ package com.github.jreddit.request.retrieval.param;
  */
 public enum QuerySyntax {
 
-    CLOUDSEARCH			("cloudsearch"), 
-    LUCENE				("lucene"), 
-    PLAIN				("plain");
+    CLOUDSEARCH            ("cloudsearch"), 
+    LUCENE                ("lucene"), 
+    PLAIN                ("plain");
 
     private final String value;
 

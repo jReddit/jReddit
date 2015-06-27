@@ -11,9 +11,9 @@ package com.github.jreddit.oauth.param;
  */
 public enum RedditDuration {
 
-	PERMANENT("permanent"),
-	TEMPORARY("temporary");
-	
+    PERMANENT("permanent"),
+    TEMPORARY("temporary");
+    
     private final String value;
 
     RedditDuration(String value) {
@@ -23,5 +23,5 @@ public enum RedditDuration {
     public String value() {
         return this.value;
     }
-	
+    
 }

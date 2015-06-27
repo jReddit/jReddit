@@ -11,28 +11,7 @@ import org.json.simple.JSONObject;
  * @author Simon Kassing
  */
 public class Message {
-
-	public Message(JSONObject jsonObject) {
-		
-        this.setBody(jsonObject.get("body").toString());
-        this.setComment(Boolean.valueOf(jsonObject.get("was_comment").toString()));
-        this.setFullName(jsonObject.get("name").toString());
-        if (jsonObject.get("author") == null)
-        {
-        	this.setAuthor("reddit");
-        } else {
-        	this.setAuthor(jsonObject.get("author").toString());
-        }
-        this.setCreated(jsonObject.get("created").toString());
-        this.setRecipient(jsonObject.get("dest").toString());
-        this.setCreatedUTC(jsonObject.get("created_utc").toString());
-        this.setBodyHtml(jsonObject.get("body_html").toString());
-        this.setSubject(jsonObject.get("subject").toString());
-        this.setContext(jsonObject.get("context").toString());
-        this.setId(jsonObject.get("id").toString());
-        
-	}
-	
+    
     // The ID of this message
     private String id;
 
@@ -45,30 +24,51 @@ public class Message {
     // Recipient of the message
     private String recipient;
 
-	// The body of the message
-	private String body;
+    // The body of the message
+    private String body;
 
     // HTML version of the Body
     private String bodyHtml;
 
-	// If the message was a comment or not
-	private boolean isComment;
+    // If the message was a comment or not
+    private boolean isComment;
 
     // If it is a comment, it has a parent
     private String parentId;
-	
-	// Timestamp of when the message was created
-	private String created;
+    
+    // Timestamp of when the message was created
+    private String created;
 
-	// UTC timestamp of when the message was created
-	private String createdUTC;
-		
-	// The content of the message
-	private String context;
-	
-	// The subject of the message
-	private String subject;
+    // UTC timestamp of when the message was created
+    private String createdUTC;
+        
+    // The content of the message
+    private String context;
+    
+    // The subject of the message
+    private String subject;
 
+    public Message(JSONObject jsonObject) {
+        
+        this.setBody(jsonObject.get("body").toString());
+        this.setComment(Boolean.valueOf(jsonObject.get("was_comment").toString()));
+        this.setFullName(jsonObject.get("name").toString());
+        if (jsonObject.get("author") == null)
+        {
+            this.setAuthor("reddit");
+        } else {
+            this.setAuthor(jsonObject.get("author").toString());
+        }
+        this.setCreated(jsonObject.get("created").toString());
+        this.setRecipient(jsonObject.get("dest").toString());
+        this.setCreatedUTC(jsonObject.get("created_utc").toString());
+        this.setBodyHtml(jsonObject.get("body_html").toString());
+        this.setSubject(jsonObject.get("subject").toString());
+        this.setContext(jsonObject.get("context").toString());
+        this.setId(jsonObject.get("id").toString());
+        
+    }
+    
     public String getId() {
         return id;
     }

@@ -1,7 +1,7 @@
 package com.github.jreddit.request.retrieval.param;
 
 public enum UserMixedCategory {
-	
+    
     OVERVIEW("overview"), 
     GILDED_RECEIVED("gilded"), 
     GILDED_GIVEN("gilded/given"), 

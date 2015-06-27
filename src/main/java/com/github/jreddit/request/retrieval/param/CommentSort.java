@@ -9,7 +9,7 @@ package com.github.jreddit.request.retrieval.param;
  */
 public enum CommentSort {
 
-	CONFIDENCE("confidence"),
+    CONFIDENCE("confidence"),
     NEW("new"), 
     TOP("top"), 
     CONTROVERSIAL("controversial"), 

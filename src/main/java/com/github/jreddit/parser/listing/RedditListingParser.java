@@ -18,89 +18,81 @@ import com.github.jreddit.parser.entity.Submission;
 import com.github.jreddit.parser.entity.Subreddit;
 import com.github.jreddit.parser.entity.Thing;
 import com.github.jreddit.parser.util.JsonUtils;
-import com.github.jreddit.request.error.RedditError;
+import com.github.jreddit.request.error.RedditException;
 
 public class RedditListingParser {
-	
-	/** Logger for this class. */
-	final static Logger LOGGER = LoggerFactory.getLogger(SubmissionsListingParser.class);
-	
-	/** JSON parser. */
-	protected static final JSONParser JSON_PARSER = new JSONParser();
-	
-	private Kind[] kinds;
-	
-	/**
-	 * Constructor.
-	 */
-	public RedditListingParser(Kind[] kinds) {
-		this.kinds = kinds;
-	}
-	
-	/**
-	 * Validate that it is indeed the starting of a listing of reddit things.
-	 * 
-	 * @param response Object returned by JSON parser
-	 * 
-	 * @throws RedditError If the response is not valid listing of reddit things
-	 */
-	public void validate(Object response) throws RedditError {
-		
-		// Check for null
-		if (response == null) {
-			throw new RedditError();
-		}
-		
-		// Check it is a JSON response
-		if (!(response instanceof JSONObject)) {
-			throw new RedditError("not a JSON response");
-		}
-		
-		// Cast to JSON object
-		JSONObject jsonResponse = ((JSONObject) response);
-		
-		// Check for error
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmissionsListingParser.class);
+    
+    protected static final JSONParser JSON_PARSER = new JSONParser();
+    
+    /**
+     * Validate that it is indeed the starting of a listing of reddit things.
+     * 
+     * @param response Object returned by JSON parser
+     * 
+     * @throws RedditException If the response is not valid listing of reddit things
+     */
+    public void validate(Object response) throws RedditException {
+        
+        // Check for null
+        if (response == null) {
+            throw new RedditException();
+        }
+        
+        // Check it is a JSON response
+        if (!(response instanceof JSONObject)) {
+            throw new RedditException("not a JSON response");
+        }
+        
+        // Cast to JSON object
+        JSONObject jsonResponse = ((JSONObject) response);
+        
+        // Check for error
         if (jsonResponse.get("error") != null) {
-        	throw new RedditError(JsonUtils.safeJsonToInteger(jsonResponse.get("error")));
+            throw new RedditException(JsonUtils.safeJsonToInteger(jsonResponse.get("error")));
         }
         
-		// Check that data exists
+        // Check that data exists
         if (jsonResponse.get("data") == null) {
-        	System.out.println(jsonResponse.toJSONString());
-        	throw new RedditError("data is missing");
+            System.out.println(jsonResponse.toJSONString());
+            throw new RedditException("data is missing");
         }
         
-	}
-	
-	/**
-	 * Parse JSON received from reddit into a list of things.
-	 * This parser expects the JSON to be of a listing of things, and supports 
-	 * the following things: <i>Comment</i>, <i>Submission</i>, and <i>Subreddit</i>.
-	 * 
-	 * @param jsonText JSON Text
-	 * @return Parsed list of things
-	 * 
-	 * @throws ParseException
-	 */
-	public List<Thing> parseGeneric(String jsonText) throws ParseException, RedditError {
-		return parseGeneric(jsonText, "children");
-	}
-	
-	/**
-	 * Parse JSON received from reddit into a list of things.
-	 * This parser expects the JSON to be of a listing of things, and supports 
-	 * the following things: <i>Comment</i>, <i>Submission</i>, and <i>Subreddit</i>.
-	 * 
-	 * @param jsonText JSON Text
-	 * @param listingName Name of the listing name within the data
-	 * 
-	 * @return Parsed list of things
-	 * 
-	 * @throws ParseException
-	 */
-	public List<Thing> parseGeneric(String jsonText, String listingName) throws ParseException, RedditError {
-		
-    	// List of submissions
+    }
+    
+    /**
+     * Parse JSON received from reddit into a list of things.
+     * This parser expects the JSON to be of a listing of things, and supports 
+     * the following things: <i>Comment</i>, <i>Submission</i>, and <i>Subreddit</i>.
+     * 
+     * @param jsonText JSON Text
+     * @return Parsed list of things
+     * 
+     * @throws ParseException
+     */
+    public List<Thing> parseGeneric(String jsonText) throws ParseException, RedditException {
+        return parseGeneric(jsonText, "children");
+    }
+    
+    /**
+     * Parse JSON received from reddit into a list of things.
+     * This parser expects the JSON to be of a listing of things, and supports 
+     * the following things: <i>Comment</i>, <i>Submission</i>, and <i>Subreddit</i>.<br>
+     * <br>
+     * <i>Note: if it encounters an invalid element (e.g. missing kind or data), it will
+     * log a warning using SLF4J and would return null.</i>
+     * 
+     * @param jsonText JSON Text
+     * @param listingName Name of the listing name within the data
+     * 
+     * @return Parsed list of things
+     * 
+     * @throws ParseException
+     */
+    public List<Thing> parseGeneric(String jsonText, String listingName) throws ParseException, RedditException {
+        
+        // List of submissions
         List<Thing> things = new LinkedList<Thing>();
         
         // Send request to reddit server via REST client
@@ -112,15 +104,14 @@ public class RedditListingParser {
         // Cast to a JSON object
         JSONObject object = (JSONObject) response;
         
-        // Get the array of children'
-        System.out.println(object.toJSONString());
+        // Get the array of children
         JSONArray array = (JSONArray) ((JSONObject) object.get("data")).get(listingName);
 
         // Iterate over array of children
         for (Object element : array) {
-        	
-        	// Get the element
-        	JSONObject data = (JSONObject) element;
+            
+            // Get the element
+            JSONObject data = (JSONObject) element;
             
             // Make sure it is of the correct kind
             String kindData = safeJsonToString(data.get("kind"));
@@ -128,47 +119,65 @@ public class RedditListingParser {
             
             // If no kind is given
             if (kindData == null) {
+                LOGGER.warn("Kind data missing, skipping it.");
                 
+            // If no data is given
             } else if (objData == null || !(objData instanceof JSONObject)) {
+                LOGGER.warn("Object data missing, skipping it.");
                 
             } else {
-                things.add())
-            }
+                
+                // Attempt to match
+                Kind kind = Kind.match(kindData);
+                
+                // Parse the thing
+                Thing thing = parseThing(kind, ((JSONObject) data.get("data")));
+                
+                // Show warning if failed
+                if (thing == null) {
+                    LOGGER.warn("Encountered invalid kind for a listing (" + kindData + "), skipping it.");
 
-                
-                if (kind == Kind.COMMENT) { 
-                	things.add(new Comment(((JSONObject) data.get("data"))));
-                
-                // For a submission
-                } else if (kind.equals(Kind.LINK.value())) {
-                	things.add(new Submission(((JSONObject) data.get("data"))));
-                
-                // For a subreddit
-                } else if (kind.equals(Kind.SUBREDDIT.value())) { 
-                	things.add(new Subreddit(((JSONObject) data.get("data"))));
+                } else {
+                    things.add(thing);
                 }
-            
-            } else {
-                LOGGER.warn("Could not detect kind in a reddit listing element, skipping it.");
+                
             }
-			
-		}
-	    
-	    
-        // Finally return list of submissions 
-        return things;
-	}
-
-
-
-
-    private Thing parseThing(String kindString, JSONObject data) {
-        Kind kind = Kind.match(kindString);
-        
-        switch (kind) {
-        case COMMENT:
             
         }
+        
+        // Finally return list of submissions 
+        return things;
+        
     }
+    
+    /**
+     * Parse the data into a thing if possible.
+     * 
+     * @param kind Kind of data
+     * @param data Data for the thing
+     * @return The thing generated from the data, if failed <i>null</i>
+     */
+    private Thing parseThing(Kind kind, JSONObject data) {
+        
+        // For a comment
+        if (kind == Kind.COMMENT) { 
+            return new Comment(data);
+            
+        // For a submission
+        } else if (kind == Kind.LINK) {
+            return new Submission(data);
+        
+        // For a subreddit
+        } else if (kind == Kind.SUBREDDIT) { 
+            return new Subreddit(data);
+            
+        // In all other cases (null, or of a different type)
+        } else {
+            return null;
+        }
+        
+    }
+
+
 
 }

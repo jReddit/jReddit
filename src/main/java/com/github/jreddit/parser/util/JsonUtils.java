@@ -13,7 +13,7 @@ public final class JsonUtils {
      * @return The string.
      */
     public static String safeJsonToString(Object obj) {
-        return (obj == null ? null : obj.toString());
+        return obj == null ? null : obj.toString();
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.github.jreddit.request.retrieval.param;
 
 public enum UserSubmissionsCategory {
-	
+    
     SUBMITTED("submitted"), 
     UPVOTED("upvoted"), 
     DOWNVOTED("downvoted"), 

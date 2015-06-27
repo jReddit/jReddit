@@ -9,41 +9,41 @@ import static org.junit.Assert.assertEquals;
 
 public class CommentTest {
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testAllCommentFields() {
-		
-		// Field values
-		String subreddit_id = "SubrID";
-		String banned_by = null;
-		String subreddit = "SubredditName";
-		String likes = null;
-		String replies = "";
-		boolean saved = false;
-		String id = "CommID";
-		String kind = "t1";
-		long gilded = 0;
-		String author = "author";
-		String parent_id = "ParID";
-		long score = 2;
-		String approved_by = null;
-		long controversiality = 0;
-		String body = "comment body";
-		boolean edited = false;
-		String author_flair_css_class = null;
-		long downs = 0;
-		String body_html = "&lt;div&gt;" + body + "&lt;/div&gt;";
-		String link_id = "LinkIdentifier";
-		boolean score_hidden = false;
-		String name = kind + "_" + id;
-		double created = 1404969798.0;
-		String author_flair_text = null;
-		double created_utc = 1404940998.0;
-		long ups = 2;
-		String num_reports = null;
-		String distinguished = null;
-		
-		// Create JSON Object
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testAllCommentFields() {
+        
+        // Field values
+        String subreddit_id = "SubrID";
+        String banned_by = null;
+        String subreddit = "SubredditName";
+        String likes = null;
+        String replies = "";
+        boolean saved = false;
+        String id = "CommID";
+        String kind = "t1";
+        long gilded = 0;
+        String author = "author";
+        String parent_id = "ParID";
+        long score = 2;
+        String approved_by = null;
+        long controversiality = 0;
+        String body = "comment body";
+        boolean edited = false;
+        String author_flair_css_class = null;
+        long downs = 0;
+        String body_html = "&lt;div&gt;" + body + "&lt;/div&gt;";
+        String link_id = "LinkIdentifier";
+        boolean score_hidden = false;
+        String name = kind + "_" + id;
+        double created = 1404969798.0;
+        String author_flair_text = null;
+        double created_utc = 1404940998.0;
+        long ups = 2;
+        String num_reports = null;
+        String distinguished = null;
+        
+        // Create JSON Object
         JSONObject data = new JSONObject();
         data.put("subreddit_id", subreddit_id);
         data.put("banned_by", banned_by);
@@ -86,7 +86,7 @@ public class CommentTest {
         assertEquals(c.getEdited(), edited);
         assertEquals(c.getGilded(), gilded, 0);
         assertEquals(c.getIdentifier(), id);
-        assertEquals(c.getKind(), kind);
+       // assertEquals(c.getKind(), kind);
         assertEquals(c.getParentId(), parent_id);
         assertEquals(c.getScore(), score, 0);
         assertEquals(c.getUpvotes(), ups, 0);
@@ -105,6 +105,6 @@ public class CommentTest {
 //        assertEquals(c.getNumReports(), num_reports);
 //        assertEquals(c.getDistinguised(), distinguished);
         
-	}
-	
+    }
+    
 }

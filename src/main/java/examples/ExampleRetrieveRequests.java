@@ -24,7 +24,7 @@ import com.github.jreddit.parser.listing.MixedListingParser;
 import com.github.jreddit.parser.listing.SubmissionsListingParser;
 import com.github.jreddit.parser.single.FullSubmissionParser;
 import com.github.jreddit.parser.util.CommentTreeUtils;
-import com.github.jreddit.request.error.RedditError;
+import com.github.jreddit.request.error.RedditException;
 import com.github.jreddit.request.retrieval.comments.MoreCommentsRequest;
 import com.github.jreddit.request.retrieval.mixed.FullSubmissionRequest;
 import com.github.jreddit.request.retrieval.mixed.MixedOfUserRequest;
@@ -38,134 +38,134 @@ import com.github.jreddit.request.retrieval.submissions.SubmissionsOfUserRequest
 
 public class ExampleRetrieveRequests {
 
-	public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException, RedditError {
-		ExampleRetrieveRequests example = new ExampleRetrieveRequests();
-		//example.exampleSubmissionsOfSubreddit();
-		//example.exampleSubmissionsOfUser();
-		//example.exampleMixedOfUser();
-		example.exampleFullSubmission();
-	}
+    // Information about the app
+    public static final String USER_AGENT = "jReddit: Reddit API Wrapper for Java";
+    public static final String CLIENT_ID = "PfnhLt3VahLrbg";
+    public static final String REDIRECT_URI = "https://github.com/snkas/jReddit";
+    
+    // Variables
+    private RedditApp redditApp;
+    private RedditOAuthAgent agent;
+    private RedditClient client;
+    
+    public ExampleRetrieveRequests() throws OAuthSystemException, OAuthProblemException {
+        
+        // Reddit application
+        redditApp = new RedditInstalledApp(CLIENT_ID, REDIRECT_URI);
+        
+        // Create OAuth agent
+        agent = new RedditOAuthAgent(USER_AGENT, redditApp);    
+        
+        // Create client
+        client = new RedditPoliteClient(new RedditHttpClient(USER_AGENT, HttpClientBuilder.create().build()));
 
-	// Information about the app
-	public static final String USER_AGENT = "jReddit: Reddit API Wrapper for Java";
-	public static final String CLIENT_ID = "PfnhLt3VahLrbg";
-	public static final String REDIRECT_URI = "https://github.com/snkas/jReddit";
-	
-	// Variables
-	private RedditApp redditApp;
-	private RedditOAuthAgent agent;
-	private RedditClient client;
-	
-	public ExampleRetrieveRequests() throws OAuthSystemException, OAuthProblemException {
-		
-		// Reddit application
-		redditApp = new RedditInstalledApp(CLIENT_ID, REDIRECT_URI);
-		
-		// Create OAuth agent
-		agent = new RedditOAuthAgent(USER_AGENT, redditApp);	
-		
-		// Create client
-		client = new RedditPoliteClient(new RedditHttpClient(USER_AGENT, HttpClientBuilder.create().build()));
+    }
+    
+    public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException, RedditException {
+        ExampleRetrieveRequests example = new ExampleRetrieveRequests();
+        //example.exampleSubmissionsOfSubreddit();
+        //example.exampleSubmissionsOfUser();
+        //example.exampleMixedOfUser();
+        example.exampleFullSubmission();
+    }
+    
+    public void exampleSubmissionsOfSubreddit() throws RedditException, ParseException, OAuthSystemException, OAuthProblemException {
+        
+        // Create token (will be valid for 1 hour)
+        RedditToken token = agent.tokenAppOnly(false);
+        
+        // Create parser for request
+        SubmissionsListingParser parser = new SubmissionsListingParser();
 
-	}
-	
-	public void exampleSubmissionsOfSubreddit() throws RedditError, ParseException, OAuthSystemException, OAuthProblemException {
-		
-		// Create token (will be valid for 1 hour)
-		RedditToken token = agent.tokenAppOnly(false);
-		
-		// Create parser for request
-		SubmissionsListingParser parser = new SubmissionsListingParser();
+        // Create the request
+        SubmissionsOfSubredditRequest request = (SubmissionsOfSubredditRequest) new SubmissionsOfSubredditRequest("programming", SubmissionSort.HOT).setLimit(100);
 
-		// Create the request
-		SubmissionsOfSubredditRequest request = (SubmissionsOfSubredditRequest) new SubmissionsOfSubredditRequest("programming", SubmissionSort.HOT).setLimit(100);
+        // Perform and parse request, and store parsed result
+        List<Submission> submissions = parser.parse(client.get(token, request));
+        
+        // Now print out the result (don't care about formatting)
+        System.out.println(submissions);
 
-		// Perform and parse request, and store parsed result
-		List<Submission> submissions = parser.parse(client.get(token, request));
-		
-		// Now print out the result (don't care about formatting)
-		System.out.println(submissions);
+    }
+    
+    public void exampleSubmissionsOfUser() throws RedditException, ParseException, OAuthSystemException, OAuthProblemException {
+        
+        // Create token (will be valid for 1 hour)
+        RedditToken token = agent.tokenAppOnly(false);
+        
+        // Create parser for request
+        SubmissionsListingParser parser = new SubmissionsListingParser();
 
-	}
-	
-	public void exampleSubmissionsOfUser() throws RedditError, ParseException, OAuthSystemException, OAuthProblemException {
-		
-		// Create token (will be valid for 1 hour)
-		RedditToken token = agent.tokenAppOnly(false);
-		
-		// Create parser for request
-		SubmissionsListingParser parser = new SubmissionsListingParser();
+        // Create the request
+        SubmissionsOfUserRequest request = new SubmissionsOfUserRequest("jRedditBot", UserSubmissionsCategory.SUBMITTED);
 
-		// Create the request
-		SubmissionsOfUserRequest request = (SubmissionsOfUserRequest) new SubmissionsOfUserRequest("jRedditBot", UserSubmissionsCategory.SUBMITTED);
+        // Perform and parse request, and store parsed result
+        List<Submission> submissions = parser.parse(client.get(token, request));
+        
+        // Now print out the result (don't care about formatting)
+        System.out.println(submissions);
 
-		// Perform and parse request, and store parsed result
-		List<Submission> submissions = parser.parse(client.get(token, request));
-		
-		// Now print out the result (don't care about formatting)
-		System.out.println(submissions);
+    }
+    
+    public void exampleMixedOfUser() throws RedditException, ParseException, OAuthSystemException, OAuthProblemException {
+        
+        // Create token (will be valid for 1 hour)
+        RedditToken token = agent.tokenAppOnly(false);
+        
+        // Create parser for request
+        MixedListingParser parser = new MixedListingParser();
 
-	}
-	
-	public void exampleMixedOfUser() throws RedditError, ParseException, OAuthSystemException, OAuthProblemException {
-		
-		// Create token (will be valid for 1 hour)
-		RedditToken token = agent.tokenAppOnly(false);
-		
-		// Create parser for request
-		MixedListingParser parser = new MixedListingParser();
+        // Create the request
+        MixedOfUserRequest request = new MixedOfUserRequest("jRedditBot", UserMixedCategory.OVERVIEW)
+                                                        .setSort(UserOverviewSort.TOP)
+                                                        .setTime(TimeSpan.ALL);
 
-		// Create the request
-		MixedOfUserRequest request = (MixedOfUserRequest) new MixedOfUserRequest("jRedditBot", UserMixedCategory.OVERVIEW)
-																.setSort(UserOverviewSort.TOP)
-																.setTime(TimeSpan.ALL);
+        // Perform and parse request, and store parsed result
+        List<MixedListingElement> elements = parser.parse(client.get(token, request));
+        
+        // Now print out the result (don't care about formatting)
+        System.out.println(elements);
 
-		// Perform and parse request, and store parsed result
-		List<MixedListingElement> elements = parser.parse(client.get(token, request));
-		
-		// Now print out the result (don't care about formatting)
-		System.out.println(elements);
+    }
+    
+    public void exampleFullSubmission() throws RedditException, ParseException, OAuthSystemException, OAuthProblemException {
+        
+        // Create token (will be valid for 1 hour)
+        RedditToken token = agent.tokenAppOnly(false);
+        
+        // Create parser for request
+        FullSubmissionParser parser = new FullSubmissionParser();
 
-	}
-	
-	public void exampleFullSubmission() throws RedditError, ParseException, OAuthSystemException, OAuthProblemException {
-		
-		// Create token (will be valid for 1 hour)
-		RedditToken token = agent.tokenAppOnly(false);
-		
-		// Create parser for request
-		FullSubmissionParser parser = new FullSubmissionParser();
+        // Create the request
+        FullSubmissionRequest request = new FullSubmissionRequest("2np694").setDepth(1);
 
-		// Create the request
-		FullSubmissionRequest request = (FullSubmissionRequest) new FullSubmissionRequest("2np694").setDepth(1);
+        // Perform and parse request, and store parsed result
+        FullSubmission fullSubmission = parser.parse(client.get(token, request));
+        
+        // Now print out the result of the submission (don't care about formatting)
+        Submission s = fullSubmission.getSubmission();
+        System.out.println(s);
+        
+        // Now print out the result of the comment tree (don't care about formatting)
+        System.out.println(CommentTreeUtils.printCommentTree(fullSubmission.getCommentTree()));
+        
+        // Flatten the tree
+        List<CommentTreeElement> flat = CommentTreeUtils.flattenCommentTree(fullSubmission.getCommentTree());
+        
+        // Retrieve ALL comments hiding behind MOREs
+        for (CommentTreeElement e : flat) {
+            if (e instanceof More) {
+                
+                // Create the request for more comments
+                MoreCommentsRequest requestMore = new MoreCommentsRequest(s.getFullName(), ((More) e).getChildren());
+                
+                // Perform and parse request, and store parsed result
+                CommentsMoreParser parserMore = new CommentsMoreParser();
+                System.out.println(parserMore.parse(client.get(token, requestMore)));
+                
+            }
+        }
 
-		// Perform and parse request, and store parsed result
-		FullSubmission fullSubmission = parser.parse(client.get(token, request));
-		
-		// Now print out the result of the submission (don't care about formatting)
-		Submission s = fullSubmission.getSubmission();
-		System.out.println(s);
-		
-		// Now print out the result of the comment tree (don't care about formatting)
-		System.out.println(CommentTreeUtils.printCommentTree(fullSubmission.getCommentTree()));
-		
-		// Flatten the tree
-		List<CommentTreeElement> flat = CommentTreeUtils.flattenCommentTree(fullSubmission.getCommentTree());
-		
-		// Retrieve ALL comments hiding behind MOREs
-		for (CommentTreeElement e : flat) {
-			if (e instanceof More) {
-				
-				// Create the request for more comments
-				MoreCommentsRequest requestMore = (MoreCommentsRequest) new MoreCommentsRequest(s.getFullName(), ((More) e).getChildren());
-				
-				// Perform and parse request, and store parsed result
-				CommentsMoreParser parserMore = new CommentsMoreParser();
-				System.out.println(parserMore.parse(client.get(token, requestMore)));
-				
-			}
-		}
-
-	}
-	
+    }
+    
 }

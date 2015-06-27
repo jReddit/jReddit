@@ -103,7 +103,7 @@ public class ApiEndpointUtils {
     public static final String USER_INFO = REDDIT_BASE_API_ENDPOINT + "/me.json";
     
     public static final String USER_UPDATE = REDDIT_BASE_API_ENDPOINT + "/update";
-	
+    
     public static final String USER_DELETE = REDDIT_BASE_API_ENDPOINT + "/delete_user";
     
     public static final String USER_REGISTER = REDDIT_BASE_API_ENDPOINT + "/register";

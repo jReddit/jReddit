@@ -33,12 +33,12 @@ public enum Kind {
      * @return Match kind (null, it not found)
      */
     public static Kind match(String t) {
-    	for (Kind k : Kind.values()) {
-    		if (k.value().equals(t)) {
-    			return k;
-    		}
-    	}
-    	return null;
+        for (Kind k : Kind.values()) {
+            if (k.value().equals(t)) {
+                return k;
+            }
+        }
+        return null;
     }
     
 }

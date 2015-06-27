@@ -28,7 +28,7 @@
         </license>
     </licenses>
 
-	<!-- Git repository connection -->
+    <!-- Git repository connection -->
     <scm>
         <url>https://github.com/karan/jReddit</url>
         <connection>scm:git:git://github.com/karan/jReddit.git</connection>
@@ -71,7 +71,7 @@
 
     <properties>
     
-    	<!-- Encoding -->
+        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <!-- Versions of dependencies -->
@@ -228,10 +228,10 @@
         </plugins>
     </build>
 
-	<!-- Project functional dependencies -->
+    <!-- Project functional dependencies -->
     <dependencies>
 
-		<!-- Unit testing framework (test only) -->
+        <!-- Unit testing framework (test only) -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -239,7 +239,7 @@
             <scope>test</scope>
         </dependency>
 
-		<!-- Mocking framework (test only) -->
+        <!-- Mocking framework (test only) -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -247,7 +247,7 @@
             <scope>test</scope>
         </dependency>
         
-		<!-- Why would we need this?
+        <!-- Why would we need this?
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -260,26 +260,26 @@
             <version>${org.apache.commons.io.version}</version>
         </dependency>-->
     
-    	<!-- JSON parsing -->
+        <!-- JSON parsing -->
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>${com.googlecode.jsonsimple.version}</version>
         </dependency>
         
-		<!-- HTTP(s) protocol support -->
+        <!-- HTTP(s) protocol support -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${org.apache.httpcomponents.httpclient.version}</version>
         </dependency>
 
-		<!-- OAuth2 protocol support -->
-		<dependency>
-			<groupId>org.apache.oltu.oauth2</groupId>
-			<artifactId>org.apache.oltu.oauth2.client</artifactId>
-			<version>${org.apache.oltu.oauth2.client.version}</version>
-		</dependency>
+        <!-- OAuth2 protocol support -->
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
+            <version>${org.apache.oltu.oauth2.client.version}</version>
+        </dependency>
 
         <!-- Submitting Java coverage reports to Coveralls web service -->
         <dependency>
@@ -288,19 +288,19 @@
             <version>${org.eluder.coveralls.version}</version>
         </dependency>
         
-		<!-- Universal logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${org.slf4j.version}</version>
-		</dependency>
-		
-		<!-- Logging console implementation -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>${org.slf4j.version}</version>
-		</dependency> 
+        <!-- Universal logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        
+        <!-- Logging console implementation -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency> 
         
     </dependencies>
     

@@ -12,42 +12,42 @@ import com.github.jreddit.testutil.JsonHelpers;
 
 public class SubredditTest {
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testAllSubredditFields() {
-		
-		// Field values
-		String submit_text_html = null;
-		Boolean user_is_banned = null;
-		String id = "SubredditID";
-		String kind = Kind.SUBREDDIT.value();
-		String submit_text = "submit text for subreddit";
-		String display_name = "subredditDisplayName";
-		String header_img = "http://a.thumbs.redditmedia.com/yyL5sveWcgkCPKbr.png";
-		String description_html = "&lt;div&gt;HTML description for subreddit&lt;/d&gt;";
-		String title = "SubredditTitle";
-		Boolean over18 = false;
-		Boolean user_is_moderator = null;
-		String header_title = "Header title for subreddit";
-		String description = "Description for subreddit";
-		String submit_link_label = "Submit link label";
-		String accounts_active = null;
-		Boolean public_traffic = true;
-		JSONArray header_size = JsonHelpers.jsonArrayOf(160, 64);
-		long subscribers = 289252;
-		String submit_text_label = "Submit text label";
-		String name = kind + "_" + id;
-		double created = 1201242956.0;
-		String url = "/r/" + display_name;
-		double created_utc = 1201242956.0;
-		Boolean user_is_contributor = null;
-		String public_description = "Public description of subreddit";
-		long comment_score_hide_mins = 0;
-		String subreddit_type = "public";
-		String submission_type = "any";
-		Boolean user_is_subscriber = null;
-		
-		// Create JSON Object
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testAllSubredditFields() {
+        
+        // Field values
+        String submit_text_html = null;
+        Boolean user_is_banned = null;
+        String id = "SubredditID";
+        String kind = Kind.SUBREDDIT.value();
+        String submit_text = "submit text for subreddit";
+        String display_name = "subredditDisplayName";
+        String header_img = "http://a.thumbs.redditmedia.com/yyL5sveWcgkCPKbr.png";
+        String description_html = "&lt;div&gt;HTML description for subreddit&lt;/d&gt;";
+        String title = "SubredditTitle";
+        Boolean over18 = false;
+        Boolean user_is_moderator = null;
+        String header_title = "Header title for subreddit";
+        String description = "Description for subreddit";
+        String submit_link_label = "Submit link label";
+        String accounts_active = null;
+        Boolean public_traffic = true;
+        JSONArray header_size = JsonHelpers.jsonArrayOf(160, 64);
+        long subscribers = 289252;
+        String submit_text_label = "Submit text label";
+        String name = kind + "_" + id;
+        double created = 1201242956.0;
+        String url = "/r/" + display_name;
+        double created_utc = 1201242956.0;
+        Boolean user_is_contributor = null;
+        String public_description = "Public description of subreddit";
+        long comment_score_hide_mins = 0;
+        String subreddit_type = "public";
+        String submission_type = "any";
+        Boolean user_is_subscriber = null;
+        
+        // Create JSON Object
         JSONObject data = new JSONObject();
         data.put("submit_text_html", submit_text_html);
         data.put("user_is_banned", user_is_banned);
@@ -111,6 +111,6 @@ public class SubredditTest {
 //        assertEquals(s.getSubmissionType(), submission_type);
 //        assertEquals(s.isUserSubscriber(), user_is_subscriber);
         
-	}
-	
+    }
+    
 }

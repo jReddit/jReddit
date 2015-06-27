@@ -5,7 +5,7 @@ package com.github.jreddit.request.retrieval.param;
  * @author Simon Kassing
  */
 public enum UserOverviewSort {
-	
+    
     NEW("new"), 
     HOT("hot"), 
     TOP("top"), 

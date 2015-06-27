@@ -57,7 +57,7 @@ public class UserInfo {
     }
 
     public UserInfo(JSONObject info) {
-    	
+        
         setHasMail((Boolean) info.get("has_mail"));
         setHasModMail((Boolean) info.get("has_mod_mail"));
         setCommentKarma((Long) info.get("comment_karma"));
@@ -188,24 +188,24 @@ public class UserInfo {
     }
     
     public String toString() {
-    	StringBuilder result = new StringBuilder();
-    	String newLine = System.getProperty("line.separator");
-    	
-    	result.append("id: ").append(id).append(newLine)
-    		  .append("name: ").append(name).append(newLine)
-    		  .append("modhash: ").append(modhash).append(newLine)
-    		  .append("commentKarma: ").append(commentKarma).append(newLine)
-    		  .append("linkKarma: ").append(linkKarma).append(newLine)
-    		  .append("isModerator: ").append(isMod).append(newLine)
-    		  .append("hasModMail: ").append(hasModMail).append(newLine)
-    		  .append("hasMail: ").append(hasMail).append(newLine)
-    		  .append("hasVerifiedEmail: ").append(hasVerifiedEmail).append(newLine)
-    		  .append("isGold: ").append(isGold).append(newLine)
-    		  .append("Created: ").append(created).append(newLine)
-    		  .append("CreatedUTC: ").append(createdUTC).append(newLine)
-    		  .append("isFriend: ").append(isFriend).append(newLine)
-    		  .append("over18: ").append(over18);
-    	
-    	return result.toString();
+        StringBuilder result = new StringBuilder();
+        String newLine = System.getProperty("line.separator");
+        
+        result.append("id: ").append(id).append(newLine)
+              .append("name: ").append(name).append(newLine)
+              .append("modhash: ").append(modhash).append(newLine)
+              .append("commentKarma: ").append(commentKarma).append(newLine)
+              .append("linkKarma: ").append(linkKarma).append(newLine)
+              .append("isModerator: ").append(isMod).append(newLine)
+              .append("hasModMail: ").append(hasModMail).append(newLine)
+              .append("hasMail: ").append(hasMail).append(newLine)
+              .append("hasVerifiedEmail: ").append(hasVerifiedEmail).append(newLine)
+              .append("isGold: ").append(isGold).append(newLine)
+              .append("Created: ").append(created).append(newLine)
+              .append("CreatedUTC: ").append(createdUTC).append(newLine)
+              .append("isFriend: ").append(isFriend).append(newLine)
+              .append("over18: ").append(over18);
+        
+        return result.toString();
     }
 }

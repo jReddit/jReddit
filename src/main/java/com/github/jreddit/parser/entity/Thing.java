@@ -9,18 +9,6 @@ package com.github.jreddit.parser.entity;
  */
 public abstract class Thing implements Comparable<Thing> {
     
-	/**
-	 * Constructor. Must be called.
-	 * @param name Full name of the thing
-	 */
-	public Thing(String name) {
-		assert name.contains("_") : "A full name must contain an underscore.";
-		this.fullName = name;
-		String[] split = name.split("_");
-		this.kind = Kind.match(split[0]);
-		this.identifier = split[1];
-	}
-	
     /**
      * The kind of this thing.
      * 
@@ -43,6 +31,18 @@ public abstract class Thing implements Comparable<Thing> {
      */
     protected final String fullName;
 
+    /**
+     * Constructor. Must be called.
+     * @param name Full name of the thing
+     */
+    public Thing(String name) {
+        assert name.contains("_") : "A full name must contain an underscore.";
+        this.fullName = name;
+        String[] split = name.split("_");
+        this.kind = Kind.match(split[0]);
+        this.identifier = split[1];
+    }
+    
     /**
      * Retrieve the kind of this thing.
      * Example: t3 indicates a kind 3 (a link).
