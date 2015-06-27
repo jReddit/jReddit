@@ -12,17 +12,19 @@ public class FullSubmissionRequest extends RedditGetRequest {
     private String submissionIdentifier;
     
     /**
-     * @param subreddit Submission ID36 identifier (e.g. "dfjIuf")
+     * @param submissionIdentifier Submission ID36 identifier (e.g. "dfjIuf")
+     *
+     * @see {@link FullSubmissionRequest(Submission)} is preferred over this constructor
      */
     public FullSubmissionRequest(String submissionIdentifier) {
         this.submissionIdentifier = submissionIdentifier;
     }
     
     /**
-     * @param subreddit Submission ID36 identifier (e.g. "dfjIuf")
+     * @param submission Submission ID36 identifier (e.g. "dfjIuf")
      */
     public FullSubmissionRequest(Submission submission) {
-        this.submissionIdentifier = submission.getIdentifier();
+        this(submission.getIdentifier());
     }
 
     public FullSubmissionRequest setSort(CommentSort sort) {

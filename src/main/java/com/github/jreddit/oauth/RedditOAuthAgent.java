@@ -32,36 +32,61 @@ import com.github.jreddit.request.util.KeyValueFormatter;
 public class RedditOAuthAgent {
     
     /** Reddit authorization endpoint. */
-    public static final String REDDIT_AUTHORIZE = "https://www.reddit.com/api/v1/authorize?";
+    private static final String REDDIT_AUTHORIZE = "https://www.reddit.com/api/v1/authorize?";
     
     /** Grant type for an installed client (weirdly enough a URI). */
-    public static final String GRANT_TYPE_INSTALLED_CLIENT = "https://oauth.reddit.com/grants/installed_client";
+    private static final String GRANT_TYPE_INSTALLED_CLIENT = "https://oauth.reddit.com/grants/installed_client";
     
     /** Grant type for client credentials (described in OAuth2 standard). */
-    public static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
+    private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
+    
+    /* Parameter keys */
+    private static final String PARAM_CLIENT_ID = "client_id";
+    private static final String PARAM_RESPONSE_TYPE = "response_type";
+    private static final String PARAM_STATE = "state";
+    private static final String PARAM_REDIRECT_URI = "redirect_uri";
+    private static final String PARAM_DURATION = "duration";
+    private static final String PARAM_SCOPE = "scope";
+    private static final String PARAM_GRANT_TYPE = "grant_type";
+    private static final String PARAM_CODE = "code";
+    private static final String PARAM_DEVICE_ID = "device_id";
+    
+    /* Header keys */
+    private static final String HEADER_USER_AGENT = "User-Agent";
+    private static final String HEADER_AUTHORIZATION = "Authorization";
     
     /** User agent. */
     private final String userAgent;
     
-    /** OAuth2 client. */
+    /** OAuth2 client for OAuth related requests. */
     private OAuthClient oAuthClient;
     
     /** Reddit application. */
     private RedditApp redditApp;
     
     /**
-     * Constructor for a Reddit OAuth agent.
+     * Constructor for a Reddit OAuth agent.<br>
+     * <br>
+     * A default Apache OAuthClient will be made to perform the OAuth communication.
      * 
      * @param userAgent User agent for your application (e.g. "jReddit: Reddit API Wrapper for Java")
      * @param redditApp Reddit application
      */
     public RedditOAuthAgent(String userAgent, RedditApp redditApp) {
+        this(userAgent, redditApp, new OAuthClient(new URLConnectionClient()));
+    }
+    
+    /**
+     * Constructor for a Reddit OAuth agent.
+     * 
+     * @param userAgent User agent for your application (e.g. "jReddit: Reddit API Wrapper for Java")
+     * @param redditApp Reddit application
+     * @param oAuthClient Apache OAuth2 client
+     */
+    public RedditOAuthAgent(String userAgent, RedditApp redditApp, OAuthClient oAuthClient) {
         this.userAgent = userAgent;
         this.redditApp = redditApp;
-        
-        // Initialize OAuthClient with custom HTTPClient under the hood
-        this.oAuthClient = new OAuthClient(new URLConnectionClient());
-        
+        this.oAuthClient = oAuthClient;
     }
     
     /**
@@ -71,7 +96,7 @@ public class RedditOAuthAgent {
      * The user will, after authorization, receive a <i>code</i>. This can be turned into
      * a <i>RedditToken</i> using {@link #token(String)}.
      * 
-     * @param scopeBuilder Authorization scope builder
+     * @param scopeBuilder Authorization scope builder (must not be <i>null</i>)
      * @param duration Duration that the token can last
      * 
      * @return The URI users need to visit and retrieve the <i>code</i> from
@@ -82,12 +107,12 @@ public class RedditOAuthAgent {
         
         // Set parameters
         Map<String, String> params = new HashMap<String, String>();
-        params.put("client_id", redditApp.getClientID());
-        params.put("response_type", "code");
-        params.put("state", UUID.randomUUID().toString());
-        params.put("redirect_uri", redditApp.getRedirectURI());
-        params.put("duration", duration.value());
-        params.put("scope", scopeBuilder.build());
+        params.put(PARAM_CLIENT_ID, redditApp.getClientID());
+        params.put(PARAM_RESPONSE_TYPE, "code");
+        params.put(PARAM_STATE, UUID.randomUUID().toString());
+        params.put(PARAM_REDIRECT_URI, redditApp.getRedirectURI());
+        params.put(PARAM_DURATION, duration.value());
+        params.put(PARAM_SCOPE, scopeBuilder.build());
         
         // Create URI
         return REDDIT_AUTHORIZE + KeyValueFormatter.format(params, true);
@@ -99,23 +124,24 @@ public class RedditOAuthAgent {
      * reddit user to authorize your application.<br>
      * <br>
      * The user will, after authorization, receive token information. This can be turned into
-     * a <i>RedditToken</i> using {@link #tokenFromInfo(String)}.
+     * a <i>RedditToken</i> using {@link #tokenFromInfo(String, String, long, String)}.
      * 
-     * @param scopeBuilder Authorization scope builder
+     * @param scopeBuilder Authorization scope builder (must not be <i>null</i>)
      * 
      * @return The URI users need to visit and retrieve the <i>token information</i> from
      * 
-     * @see {@link #tokenFromInfo(String)} for converting the <i>token information</i> into <i>RedditToken</i>
+     * @see {@link #tokenFromInfo(String, String, long, String)} for converting the
+     * <i>token information</i> into <i>RedditToken</i>
      */
     public synchronized String generateImplicitFlowURI(RedditScopeBuilder scopeBuilder) {
         
         // Set parameters
         Map<String, String> params = new HashMap<String, String>();
-        params.put("client_id", redditApp.getClientID());
-        params.put("response_type", "token");
-        params.put("state", UUID.randomUUID().toString());
-        params.put("redirect_uri", redditApp.getRedirectURI());
-        params.put("scope", scopeBuilder.build());
+        params.put(PARAM_CLIENT_ID, redditApp.getClientID());
+        params.put(PARAM_RESPONSE_TYPE, "token");
+        params.put(PARAM_STATE, UUID.randomUUID().toString());
+        params.put(PARAM_REDIRECT_URI, redditApp.getRedirectURI());
+        params.put(PARAM_SCOPE, scopeBuilder.build());
         
         // Create URI
         return REDDIT_AUTHORIZE + KeyValueFormatter.format(params, true);
@@ -128,7 +154,7 @@ public class RedditOAuthAgent {
      * @param request OAuth request
      */
     private void addUserAgent(OAuthClientRequest request) {
-        request.addHeader("User-Agent", userAgent);
+        request.addHeader(HEADER_USER_AGENT, userAgent);
     }
     
     /**
@@ -142,7 +168,7 @@ public class RedditOAuthAgent {
         String authString = app.getClientID() + ":" + app.getClientSecret();
         byte[] authEncBytes = Base64.getEncoder().encode(authString.getBytes());
         String authStringEnc = new String(authEncBytes);
-        request.addHeader("Authorization", "Basic " + authStringEnc);
+        request.addHeader(HEADER_AUTHORIZATION, "Basic " + authStringEnc);
     }
     
     /**
@@ -150,15 +176,13 @@ public class RedditOAuthAgent {
      * <br>
      * Retrieve a token for a specific user, meaning that the token is <u>coupled to a user</u>. 
      * After it has expired, the token will no longer work. You must either request a new
-     * token, or refresh it using {@link #refreshToken()}.
-     * 
-     * @param app Application
+     * token, or refresh it using {@link #refreshToken(RedditToken)}.
+     *
      * @param code One-time code received from the user, after manual authorization by that user
      * 
      * @return Token (associated with a user)
      * 
-     * @throws OAuthSystemException
-     * @throws OAuthProblemException
+     * @throws RedditOAuthException
      */
     public synchronized RedditToken token(String code) throws RedditOAuthException {
         
@@ -171,7 +195,7 @@ public class RedditOAuthAgent {
                 .setClientId(redditApp.getClientID())
                 .setClientSecret(redditApp.getClientSecret())
                 .setRedirectURI(redditApp.getRedirectURI())
-                .setParameter("code", code)
+                .setParameter(PARAM_CODE, code)
                 .buildBodyMessage();
             
             // Add the user agent
@@ -198,14 +222,12 @@ public class RedditOAuthAgent {
      * authorization and had their duration set to permanent. Tokens that do not have
      * a refresh_token with them or are expired, will not be able to be refreshed. 
      * In that case, a new one must be acquired. 
-     * 
-     * @param app Application
+     *
      * @param rToken Reddit token (which needs to be refreshed)
-     * 
+     *
      * @return Whether the token was successfully refreshed
      * 
-     * @throws OAuthSystemException
-     * @throws OAuthProblemException
+     * @throws RedditOAuthException
      * 
      * @see RedditToken#isRefreshable()
      */
@@ -258,14 +280,14 @@ public class RedditOAuthAgent {
      * <u>valid for a short period of time</u> (at the moment of writing: 1 hour).
      * After it has expired, the token will no longer work. You must request a <u>new</u>
      * token in that case. Refreshing an application-only token is not possible.
-     * 
-     * @param app Application
-     * @param confidential <i>True</i>: confidential clients (web apps / scripts) not acting on behalf of one or more logged out users. <i>False</i>: installed app types, and other apps acting on behalf of one or more logged out users.
+     *
+     * @param confidential <i>True</i>: confidential clients (web apps / scripts) not acting on
+     *                     behalf of one or more logged out users. <i>False</i>: installed app types,
+     *                     and other apps acting on behalf of one or more logged out users.
      * 
      * @return Token (not associated with a user)
      * 
-     * @throws OAuthSystemException
-     * @throws OAuthProblemException
+     * @throws RedditOAuthException
      */
     public synchronized RedditToken tokenAppOnly(boolean confidential) throws RedditOAuthException {
         
@@ -274,13 +296,13 @@ public class RedditOAuthAgent {
             // Set general values of the request
             TokenRequestBuilder builder = OAuthClientRequest
                 .tokenProvider(OAuthProviderType.REDDIT)
-                .setParameter("grant_type", confidential ? GRANT_TYPE_CLIENT_CREDENTIALS : GRANT_TYPE_INSTALLED_CLIENT)
+                .setParameter(PARAM_GRANT_TYPE, confidential ? GRANT_TYPE_CLIENT_CREDENTIALS : GRANT_TYPE_INSTALLED_CLIENT)
                 .setClientId(redditApp.getClientID())
                 .setClientSecret(redditApp.getClientSecret());
             
-            // If it is not acting on behalf of a unique client, a (unique as possible) device identifier must be generated:
+            // If it is not acting on behalf of a unique client, a unique device identifier must be generated:
             if (!confidential) {
-                builder = builder.setParameter("device_id", UUID.randomUUID().toString());
+                builder = builder.setParameter(PARAM_DEVICE_ID, UUID.randomUUID().toString());
             }
             
             // Build the request
@@ -328,7 +350,8 @@ public class RedditOAuthAgent {
      * calling this function, as its state pertaining its validity (e.g. scope, 
      * expiration, refreshability) is no longer valid when it is revoked.<br>
      * <br>
-     * <i>Note: Per RFC 7009, this request will return a success (204) response even if the passed in token was never valid.</i>
+     * <i>Note: Per RFC 7009, this request will return a success (204) response
+     * even if the passed in token was never valid.</i>
      * 
      * @param token <i>RedditToken</i> to revoke
      * @param revokeAccessTokenOnly Whether to only revoke the access token, or both

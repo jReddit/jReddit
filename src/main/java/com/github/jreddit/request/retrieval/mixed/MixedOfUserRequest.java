@@ -15,7 +15,7 @@ public class MixedOfUserRequest extends ListingRequest {
     
     /**
      * @param username Username of a user (e.g. "JohnM")
-     * @param sort Sorting method
+     * @param category Category of mixed things
      */
     public MixedOfUserRequest(String username, UserMixedCategory category) {
         this.username = username;
@@ -41,7 +41,7 @@ public class MixedOfUserRequest extends ListingRequest {
      * <br>
      * <i>Note: This only works for Overview, and then specifically for the top/controversial sorting method.</i>
      * 
-     * @param sort Sorting method
+     * @param time Time span
      * 
      * @return This builder
      */

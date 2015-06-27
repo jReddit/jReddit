@@ -67,7 +67,8 @@ public abstract class RedditPostRequest {
     
     /**
      * Generate the URI of the request.
-     * Be sure to call {@link #generateParameters()} in your implementation to add the parameters to the end of the URL.
+     * Be sure to call {@link #generateQueryParameters()} in your implementation
+     * to add the parameters to the end of the URL.
      * 
      * @return Reddit Uniform Resource Identifier (e.g. "/usr/endpoint?limit=100&sort=top")
      */

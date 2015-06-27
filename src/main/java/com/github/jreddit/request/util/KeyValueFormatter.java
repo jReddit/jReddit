@@ -66,15 +66,23 @@ public class KeyValueFormatter {
         
     }
     
+    /**
+     * Format a comma separated list of the given list.
+     * 
+     * @param list List of strings
+     * 
+     * @return Comma-separated list string (e.g. "a,b,c,d")
+     */
     public static String formatCommaSeparatedList(List<String> list) {
-        String stringList = "";
+        StringBuilder builder = new StringBuilder();
         for (String s : list) {
-            stringList += s + ",";
+            builder.append(s);
+            builder.append(",");
         }
-        if (stringList.length() > 0) {
-            stringList = stringList.substring(0, stringList.length() - 1);
+        if (builder.length() > 0) {
+            builder.substring(0, builder.length() - 1);
         }
-        return stringList;
+        return builder.toString();
     }
     
 }

@@ -30,7 +30,7 @@ public class ExampleAppOnlyToken {
         System.out.println("Refreshable: " + token.isRefreshable());
         System.out.println("Expired: " + token.isExpired());
         System.out.println("Expiration: " + token.getExpiration());
-        System.out.println("Will expire in 61 minutes: " + token.willExpireIn((long) 3560));
+        System.out.println("Will expire in 61 minutes: " + token.willExpireIn((long) 3660));
         System.out.println("Will expire in 59 minutes: " + token.willExpireIn((long) 3540));
 
     }

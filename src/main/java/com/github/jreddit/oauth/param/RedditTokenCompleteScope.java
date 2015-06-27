@@ -7,7 +7,7 @@ import java.util.Set;
  * Manager of the scopes a response from reddit returns.
  * Used by <i>RedditToken</i> to parse the list of scopes it receives.
  * 
- * @see RedditToken
+ * @see {@link com.github.jreddit.oauth.RedditToken}
  * 
  * @author Simon Kassing
  */

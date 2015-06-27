@@ -15,7 +15,7 @@ public class MoreCommentsRequest extends RedditGetRequest {
      * @param submissionFullname Fullname of the submission (e.g. "t3_dajdkjf")
      * @param commentIdentifiers List of comment ID36 identifiers (e.g. ["jdafid9", "jdafid10"])
      * 
-     * @see The function More#getChildren() is typically used to retrieve the 2nd parameter
+     * @see {@link com.github.jreddit.parser.entity.More#getChildren()} is typically used to retrieve the 2nd parameter
      */
     public MoreCommentsRequest(String submissionFullname, List<String> commentIdentifiers) {
         // Neglected optional "id" parameter, as it is only relevant for HTML

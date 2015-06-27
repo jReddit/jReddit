@@ -45,7 +45,7 @@ public class RedditScopeBuilder {
     
     /**
      * Add a scope to the builder. If the scope has already 
-     * been added, it will not be added again.
+     * been added, it will not be added double.
      * 
      * @param scope Reddit scope
      * 
@@ -53,6 +53,21 @@ public class RedditScopeBuilder {
      */
     public RedditScopeBuilder addScope(RedditScope scope) {
         scopes.add(scope);
+        return this;
+    }
+    
+    /**
+     * Add multiple scopes to the builder. If a scope has already 
+     * been added, it will not be added double.
+     * 
+     * @param scopes Multiple scopes
+     * 
+     * @return This builder
+     */
+    public RedditScopeBuilder addScopes(RedditScope... scopes) {
+        for (RedditScope scope : scopes) {
+            addScope(scope);
+        }
         return this;
     }
     
@@ -65,6 +80,20 @@ public class RedditScopeBuilder {
      */
     public RedditScopeBuilder removeScope(RedditScope scope) {
         scopes.remove(scope);
+        return this;
+    }
+    
+    /**
+     * Remove multiple scopes from the builder.
+     * 
+     * @param scopes Multiple scopes
+     * 
+     * @return This builder
+     */
+    public RedditScopeBuilder removeScopes(RedditScope... scopes) {
+        for (RedditScope scope : scopes) {
+            removeScope(scope);
+        }
         return this;
     }
     

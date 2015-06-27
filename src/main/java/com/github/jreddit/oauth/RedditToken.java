@@ -56,7 +56,7 @@ public class RedditToken {
     }
     
     /**
-     * Reddit token constructor with specific parameters.
+     * Reddit token constructor with specific user-provided parameters.
      * 
      * @param accessToken Access token
      * @param tokenType Type of token (commonly "bearer")
@@ -80,6 +80,7 @@ public class RedditToken {
     public void refresh(OAuthJSONAccessTokenResponse token) {
         this.accessToken = token.getAccessToken();
         this.expiration = currentTimeSeconds() + token.getExpiresIn();
+        this.expirationSpan = token.getExpiresIn();
         this.scopes = new RedditTokenCompleteScope(token.getScope());
         this.tokenType = token.getParam(PARAM_TOKEN_TYPE);
     }
