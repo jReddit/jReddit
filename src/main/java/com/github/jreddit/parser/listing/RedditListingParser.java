@@ -55,8 +55,7 @@ public class RedditListingParser {
         }
         
         // Check that data exists
-        if (jsonResponse.get("data") == null) {
-            System.out.println(jsonResponse.toJSONString());
+        if (jsonResponse.get("data") == null && jsonResponse.get("json") == null) {
             throw new RedditParseException("data is missing from listing");
         }
         

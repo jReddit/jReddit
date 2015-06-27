@@ -135,7 +135,7 @@ public class ExampleRetrieveRequests {
         FullSubmissionParser parser = new FullSubmissionParser();
 
         // Create the request
-        FullSubmissionRequest request = new FullSubmissionRequest("2np694").setDepth(1);
+        FullSubmissionRequest request = new FullSubmissionRequest("3bawqe").setDepth(1);
 
         // Perform and parse request, and store parsed result
         FullSubmission fullSubmission = parser.parse(client.get(token, request));

@@ -39,12 +39,18 @@ public class CommentsMoreParser extends RedditListingParser {
         
         try {
             
+            // Parse JSON response
+            Object response = JSON_PARSER.parse(jsonText);
+            
+            // Validate main
+            this.validate(response);
+            
             // Move to the main object
-            JSONObject main = ((JSONObject) ((JSONObject) JSON_PARSER.parse(jsonText)).get("json"));
+            JSONObject main = (JSONObject) ((JSONObject) response).get("json");
             
             // List of comment and more mixed elements
             List<CommentTreeElement> elements = new LinkedList<CommentTreeElement>();
-    
+            
             // If the main has data (it can happen that it does not, when no comments identifiers were passed along)
             if (main.get("data") != null) {
             

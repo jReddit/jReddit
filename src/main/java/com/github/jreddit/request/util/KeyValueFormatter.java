@@ -75,12 +75,11 @@ public class KeyValueFormatter {
      */
     public static String formatCommaSeparatedList(List<String> list) {
         StringBuilder builder = new StringBuilder();
-        for (String s : list) {
-            builder.append(s);
-            builder.append(",");
-        }
-        if (builder.length() > 0) {
-            builder.substring(0, builder.length() - 1);
+        for (int i = 0; i < list.size(); i++) {
+            if (i != 0) {
+                builder.append(",");
+            }
+            builder.append(list.get(i));
         }
         return builder.toString();
     }
