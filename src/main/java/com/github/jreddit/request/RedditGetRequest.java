@@ -15,7 +15,7 @@ public abstract class RedditGetRequest {
      */
     public RedditGetRequest() {
         parameters = new HashMap<String, String>();
-    }
+    } 
     
     /**
      * Add a parameter to the request.

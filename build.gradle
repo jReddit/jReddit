@@ -9,7 +9,7 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 group = 'com.github.jreddit'
-version = '1.0.3-SNAPSHOT'
+version = '1.0.4-SNAPSHOT'
 
 description = """jReddit"""
 

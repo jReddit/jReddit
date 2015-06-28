@@ -1,9 +1,10 @@
 package com.github.jreddit.oauth;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -166,8 +167,7 @@ public class RedditOAuthAgent {
      */
     private void addBasicAuthentication(OAuthClientRequest request, RedditApp app) {
         String authString = app.getClientID() + ":" + app.getClientSecret();
-        byte[] authEncBytes = Base64.getEncoder().encode(authString.getBytes());
-        String authStringEnc = new String(authEncBytes);
+        String authStringEnc = DatatypeConverter.printBase64Binary(authString.getBytes());
         request.addHeader(HEADER_AUTHORIZATION, "Basic " + authStringEnc);
     }
     

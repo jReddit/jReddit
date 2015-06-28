@@ -123,9 +123,8 @@
             </build>
         </profile>
         <profile>
-            <id>doclint-java8-disable</id>
             <activation>
-                <jdk>[1.8,)</jdk>
+                <jdk>[1.7,)</jdk>
             </activation>
             <build>
                 <plugins>
@@ -247,13 +246,14 @@
             <scope>test</scope>
         </dependency>
         
-        <!-- Why would we need this? -->
+        <!-- Commons validator -->
         <dependency>
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.1</version>
 			<scope>test</scope>
 		</dependency>
+
         <!-- 
         <dependency>
             <groupId>org.apache.commons</groupId>
