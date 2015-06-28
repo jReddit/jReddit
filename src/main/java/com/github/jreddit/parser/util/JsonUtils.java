@@ -1,7 +1,16 @@
 package com.github.jreddit.parser.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Safe utilities (not throwing exceptions) for the conversion of JSON
+ * data into basic types such as Integer, Boolean, Long, and Double.
+ */
 public final class JsonUtils {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
+    
     private JsonUtils() {
         // forbid creating JsonUtils instance
     }
@@ -23,12 +32,13 @@ public final class JsonUtils {
      * @return an Integer representing the integer value of the Object (null if the object cannot be converted to an Integer)
      */
     public static Integer safeJsonToInteger(Object obj) {
-        Integer intValue;
+        Integer intValue = null;
 
         try {
-            intValue = Integer.parseInt(safeJsonToString(obj));
+            String str = safeJsonToString(obj);
+            intValue = str != null ? Integer.parseInt(str) : null;
         } catch (NumberFormatException e) {
-            intValue = null;
+            LOGGER.warn("Safe JSON conversion to Integer failed", e);
         }
 
         return intValue;
@@ -41,12 +51,13 @@ public final class JsonUtils {
      * @return a Double representing the double value of the Object (null if the object cannot be converted to Double)
      */
     public static Double safeJsonToDouble(Object obj) {
-        Double doubleValue;
+        Double doubleValue = null;
 
         try {
-            doubleValue = Double.parseDouble(safeJsonToString(obj));
+            String str = safeJsonToString(obj);
+            doubleValue = str != null ? Double.parseDouble(str) : null;
         } catch (NumberFormatException e) {
-            doubleValue = null;
+            LOGGER.warn("Safe JSON conversion to Double failed", e);
         }
 
         return doubleValue;
@@ -57,17 +68,11 @@ public final class JsonUtils {
      * Safely converts an object into an boolean
      *
      * @param obj The object to convert.
-     * @return a Boolean representing the boolean value of the Object (null if the object cannot be converted to Boolean)
+     * @return a Boolean representing the boolean value of the Object (null only if the object was also null)
      */
     public static Boolean safeJsonToBoolean(Object obj) {
-        Boolean booleanValue;
-
-        try {
-            booleanValue = Boolean.parseBoolean(safeJsonToString(obj));
-        } catch (NumberFormatException e) {
-            booleanValue = null;
-        }
-
+        String str = safeJsonToString(obj);
+        Boolean booleanValue = str != null ? Boolean.parseBoolean(str) : null;
         return booleanValue;
     }
     
@@ -78,14 +83,16 @@ public final class JsonUtils {
      * @return a Long representing the long value of the Object (null if the object cannot be converted to Long)
      */
     public static Long safeJsonToLong(Object obj) {
-        Long longValue;
+        Long longValue = null;
 
         try {
-            longValue = Long.parseLong(safeJsonToString(obj));
+            String str = safeJsonToString(obj);
+            longValue = str != null ? Long.parseLong(str) : null;
         } catch (NumberFormatException e) {
-            longValue = null;
+            LOGGER.warn("Safe JSON conversion to Long failed", e);
         }
 
         return longValue;
     }
+    
 }

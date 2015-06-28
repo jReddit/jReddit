@@ -21,7 +21,7 @@ public class More extends Thing implements CommentTreeElement {
     private List<String> children;
     
     /** Counting number assigned by reddit (does not tell much in a comment tree). */
-    private int count;
+    private Integer count;
     
     /** Parent comment fullname. */
     private String parentId;
@@ -66,7 +66,7 @@ public class More extends Thing implements CommentTreeElement {
      * 
      * @return The counting number
      */
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
     

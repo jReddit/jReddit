@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 public class KeyValueFormatter {
 
-    /** Logger for this class. */
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyValueFormatter.class);
     
     private KeyValueFormatter() {
@@ -23,7 +22,7 @@ public class KeyValueFormatter {
      * equals (=) sign, and separating pairs using an ampersand (&) sign.
      * 
      * @param keyValueParameters Mapping of key-value pairs
-     * @param encodeUTF8 Whether or not it should be encoded in UTF-8
+     * @param encodeUTF8 Whether or not the values should be encoded in UTF-8
      * 
      * @return Formatted string of key-value pairs (e.g. "a=1&b=something")
      */

@@ -15,32 +15,18 @@ import org.json.simple.JSONObject;
  */
 public class Subreddit extends Thing {
     
-    // The subreddit's display name
     private String displayName;
-
-    // The subreddit's title
     private String title;
-
-    // The subreddit's URL
     private String url;
-
-    // Timestamp of when the subreddit was created
+    private String description;
+    private String subredditType;
+    
     private double created;
-
-    // UTC timestamp of when the subreddit was created
     private double createdUTC;
 
-    // Whether or not the subreddit is for over 18's
     private Boolean nsfw;
 
-    // The number of subscribers for this subreddit
-    private long subscribers;
-
-    // Description detailing the subreddit
-    private String description;
-    
-    // Type detailing whether it is public or private
-    private String subredditType;
+    private Long subscribers;
     
     // Other possible fields
     
@@ -108,88 +94,46 @@ public class Subreddit extends Thing {
         setURL(safeJsonToString(obj.get("url")));
         setCreated(safeJsonToDouble(obj.get("created")));
         setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
-        setNSFW(safeJsonToBoolean(obj.get("over_18")));
+        setNSFW(safeJsonToBoolean(obj.get("over18")));
         setSubscribers(safeJsonToLong(obj.get("subscribers")));
         setDescription(safeJsonToString(obj.get("description")));
         setSubredditType(safeJsonToString(obj.get("subreddit_type")));
         
     }
     
-    /**
-     * Sets the timestamp of when the subreddit was created.
-     *
-     * @param created Timestamp of when the subreddit was created.
-     */
-    public void setCreated(double created) {
+    private void setCreated(double created) {
         this.created = created;
     }
 
-    /**
-     * Sets the UTC timestamp of when the subreddit was created.
-     *
-     * @param createdUTC UTC timestamp of when the subreddit was created.
-     */
-    public void setCreatedUTC(double createdUTC) {
+    private void setCreatedUTC(double createdUTC) {
         this.createdUTC = createdUTC;
     }
 
-    /**
-     * Sets the description detailing the subreddit
-     *
-     * @param description Description detailing the subreddit.
-     */
-    public void setDescription(String description) {
+    private void setDescription(String description) {
         this.description = description;
     }
 
-    /**
-     * Sets the subreddit's display name.
-     *
-     * @param displayName The subreddit's display name.
-     */
-    public void setDisplayName(String displayName) {
+    private void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
-    /**
-     * Sets the flag of whether or not the subreddit is for over 18's.
-     *
-     * @param nsfw True if the subreddit is for over 18's; false if not.
-     */
-    public void setNSFW(Boolean nsfw) {
+    private void setNSFW(Boolean nsfw) {
         this.nsfw = nsfw;
     }
 
-    /**
-     * Sets the number of subscribers for this subreddit.
-     *
-     * @param subscribers The number of subscribers for this subreddit.
-     */
-    public void setSubscribers(long subscribers) {
+    private void setSubscribers(long subscribers) {
         this.subscribers = subscribers;
     }
 
-    /**
-     * Sets the subreddit's title.
-     *
-     * @param title The subreddit's title.
-     */
-    public void setTitle(String title) {
+    private void setTitle(String title) {
         this.title = title;
     }
 
-    /**
-     * Sets the subreddit's URL.
-     *
-     * @param url The subreddit's URL.
-     */
-    public void setURL(String url) {
+    private void setURL(String url) {
         this.url = url;
     }
 
     /**
-     * Returns the timestamp of when the subreddit was created.
-     *
      * @return Timestamp of when the subreddit was created.
      */
     public double getCreated() {
@@ -197,8 +141,6 @@ public class Subreddit extends Thing {
     }
 
     /**
-     * Returns the UTC timestamp of when the subreddit was created.
-     *
      * @return UTC timestamp of when the subreddit was created.
      */
     public double getCreatedUTC() {
@@ -206,8 +148,6 @@ public class Subreddit extends Thing {
     }
 
     /**
-     * Returns the description detailing the subreddit
-     *
      * @return Description detailing the subreddit.
      */
     public String getDescription() {
@@ -215,8 +155,6 @@ public class Subreddit extends Thing {
     }
 
     /**
-     * Returns the subreddit's display name.
-     *
      * @return The subreddit's display name.
      */
     public String getDisplayName() {
@@ -224,8 +162,6 @@ public class Subreddit extends Thing {
     }
 
     /**
-     * Returns the number of subscribers for this subreddit.
-     *
      * @return The number of subscribers for this subreddit.
      */
     public long getSubscribers() {
@@ -233,8 +169,6 @@ public class Subreddit extends Thing {
     }
 
     /**
-     * Returns the subreddit's title.
-     *
      * @return The subreddit's title.
      */
     public String getTitle() {
@@ -242,8 +176,6 @@ public class Subreddit extends Thing {
     }
 
     /**
-     * Returns the subreddit's URL.
-     *
      * @return The subreddit's URL.
      */
     public String getURL() {
@@ -251,14 +183,15 @@ public class Subreddit extends Thing {
     }
 
     /**
-     * Returns the flag of whether or not the subreddit is for over 18's.
-     *
-     * @return True if the subreddit is for over 18's; false if not.
+     * @return True if the subreddit is marked as containing adult content; false if not.
      */
     public Boolean isNSFW() {
         return nsfw;
     }
     
+    /**
+     * @return The type of subreddit (e.g. "private" or "public")
+     */
     public String getSubredditType() {
         return subredditType;
     }

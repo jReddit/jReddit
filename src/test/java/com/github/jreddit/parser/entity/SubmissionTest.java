@@ -62,7 +62,12 @@ public class SubmissionTest {
         Boolean visited = false;
         Long num_reports = null;
         String distinguished = null;
-                
+        String from = "t3_djjksjk";
+        String from_id = "djjksjk";
+        String from_kind = "t3";
+        String removal_reason = "Just because";
+        Double upvote_ratio = 0.89;
+             
         // Create JSON Object
         JSONObject data = new JSONObject();
         data.put("kind", kind);
@@ -106,21 +111,26 @@ public class SubmissionTest {
         data.put("visited", visited);
         data.put("num_reports", num_reports);
         data.put("distinguished", distinguished);
+        data.put("from", from);
+        data.put("from_id", from_id);
+        data.put("from_kind", from_kind);
+        data.put("removal_reason", removal_reason);
+        data.put("upvote_ratio", upvote_ratio);
         
         // Parse
         Submission s = new Submission(data);
         
         // Test data fields
-       // assertEquals(s.getKind(), kind);
+        assertEquals(s.getKind(), Kind.match(kind));
         assertEquals(s.getDomain(), domain);
         assertEquals(s.getBannedBy(), banned_by);
         //assertEquals(s.getMediaEmbed(), media_embed);
         assertEquals(s.getSubreddit(), subreddit);
         assertEquals(s.getSelftextHTML(), selftext_html);
         assertEquals(s.getSelftext(), selftext);
-        //assertEquals(s.getLikes(), likes);
+        assertEquals(s.getLikes(), likes);
         //assertEquals(s.getSecureMedia(), secure_media);
-        //assertEquals(s.getLinkFlairText(), link_flair_text);
+        assertEquals(s.getLinkFlairText(), link_flair_text);
         assertEquals(s.getIdentifier(), id);
         assertEquals(s.getGilded(), gilded);
         //assertEquals(s.getSecureMediaEmbed(), secure_media_embed);
@@ -135,8 +145,8 @@ public class SubmissionTest {
         assertEquals(s.getThumbnail(), thumbnail);
         assertEquals(s.getSubredditId(), subreddit_id);
         assertEquals(s.isEdited(), edited);
-        //assertEquals(s.getLinkFlairCSSClass(), link_flair_css_class);
-        //assertEquals(s.getAuthorFlairCSSClass(), author_flair_css_class);
+        assertEquals(s.getLinkFlairCSSClass(), link_flair_css_class);
+        assertEquals(s.getAuthorFlairCSSClass(), author_flair_css_class);
         assertEquals(s.getDownVotes(), downs);
         assertEquals(s.isSaved(), saved);
         assertEquals(s.isSelf(), is_self);
@@ -145,12 +155,18 @@ public class SubmissionTest {
         assertEquals(s.getFullName(), name);
         assertEquals(s.getCreated(), created, 0);
         assertEquals(s.getURL(), url);
-        //assertEquals(s.getAuthorFlairText(), author_flair_text);
+        assertEquals(s.getAuthorFlairText(), author_flair_text);
         assertEquals(s.getCreatedUTC(), created_utc, 0);
         assertEquals(s.getUpVotes(), ups);
         assertEquals(s.getCommentCount(), num_comments);
         assertEquals(s.isVisited(), visited);
-        assertEquals(s.getReportCount(), num_reports);//assertEquals(s.getDistinguished(), distinguished);
+        assertEquals(s.getReportCount(), num_reports);
+        assertEquals(s.getDistinguished(), distinguished);
+        assertEquals(s.getFrom(), from);
+        assertEquals(s.getFromId(), from_id);
+        assertEquals(s.getFromKind(), from_kind);
+        assertEquals(s.getRemovalReason(), removal_reason);
+        assertEquals(s.getUpvoteRatio(), upvote_ratio);
         
     }
     

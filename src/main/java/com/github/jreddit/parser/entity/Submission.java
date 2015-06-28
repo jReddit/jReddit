@@ -22,6 +22,7 @@ import com.github.jreddit.parser.entity.imaginary.MixedListingElement;
  */
 public class Submission extends Thing implements MixedListingElement {
     
+    /* All String values */
     private String url;
     private String permalink;
     private String author;
@@ -29,13 +30,22 @@ public class Submission extends Thing implements MixedListingElement {
     private String subreddit;
     private String subredditId;
     private String thumbnail;
-
     private String selftext;
     private String selftextHTML;
     private String domain;
     private String bannedBy;
     private String approvedBy;
+    private String authorFlairCSSClass;
+    private String linkFlairCSSClass;
+    private String authorFlairText;
+    private String linkFlairText;
+    private String distinguished;
+    private String from;
+    private String fromId;
+    private String removalReason;
+    private String fromKind;
     
+    /* All Long values */
     private Long gilded;
     private Long commentCount;
     private Long reportCount;
@@ -43,8 +53,12 @@ public class Submission extends Thing implements MixedListingElement {
     private Long upVotes;
     private Long downVotes;
 
+    /* All Double values */
     private Double created;
     private Double createdUTC;
+    private Double upvoteRatio;
+    
+    /* All Boolean values */
     private Boolean visited;
     private Boolean self;
     private Boolean saved;
@@ -53,12 +67,7 @@ public class Submission extends Thing implements MixedListingElement {
     private Boolean nsfw;
     private Boolean hidden;
     private Boolean clicked;
-    
-    // 
-    //private String likes;
-    //private String authorFlairCSSClass;
-    //private String linkFlairCSSClass;
-    //private String distinguished;
+    private Boolean likes;
 
     /**
      * Create a Submission from a JSONObject
@@ -75,12 +84,20 @@ public class Submission extends Thing implements MixedListingElement {
         setSubreddit(safeJsonToString(obj.get("subreddit")));
         setSubredditId(safeJsonToString(obj.get("subreddit_id")));
         setThumbnail(safeJsonToString(obj.get("thumbnail")));
-        
         setSelftext(safeJsonToString(obj.get("selftext")));
         setSelftextHTML(safeJsonToString(obj.get("selftext_html")));
         setDomain(safeJsonToString(obj.get("domain")));
         setBannedBy(safeJsonToString(obj.get("banned_by")));
         setApprovedBy(safeJsonToString(obj.get("approved_by")));
+        setAuthorFlairCSSClass(safeJsonToString(obj.get("author_flair_css_class")));
+        setLinkFlairCSSClass(safeJsonToString(obj.get("link_flair_css_class")));
+        setDistinguished(safeJsonToString(obj.get("distinguished")));
+        setAuthorFlairText(safeJsonToString(obj.get("author_flair_text")));
+        setLinkFlairText(safeJsonToString(obj.get("link_flair_text")));
+        setFrom(safeJsonToString(obj.get("from")));
+        setFromId(safeJsonToString(obj.get("from_id")));
+        setRemovalReason(safeJsonToString(obj.get("removal_reason")));
+        setFromKind(safeJsonToString(obj.get("from_kind")));
         
         setGilded(safeJsonToLong(obj.get("gilded")));
         setCommentCount(safeJsonToLong(obj.get("num_comments")));
@@ -91,57 +108,162 @@ public class Submission extends Thing implements MixedListingElement {
         
         setCreated(safeJsonToDouble(obj.get("created")));
         setCreatedUTC(safeJsonToDouble(obj.get("created_utc")));
+        setUpvoteRatio(safeJsonToDouble(obj.get("upvote_ratio")));
         
         setVisited(safeJsonToBoolean(obj.get("visited")));
-        setSelf(safeJsonToBoolean(obj.get("self")));
+        setSelf(safeJsonToBoolean(obj.get("is_self")));
         setSaved(safeJsonToBoolean(obj.get("saved")));
         setEdited(safeJsonToBoolean(obj.get("edited")));
         setStickied(safeJsonToBoolean(obj.get("stickied")));
         setNSFW(safeJsonToBoolean(obj.get("over_18")));
         setHidden(safeJsonToBoolean(obj.get("hidden")));
         setClicked(safeJsonToBoolean(obj.get("clicked")));
+        setLikes(safeJsonToBoolean(obj.get("likes")));
         
     }
     
+    public String getFromKind() {
+        return fromKind;
+    }
+
+    private void setFromKind(String fromKind) {
+        this.fromKind = fromKind;
+    }
+
+    public String getRemovalReason() {
+        return removalReason;
+    }
+
+    private void setRemovalReason(String removalReason) {
+        this.removalReason = removalReason;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    private void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getFromId() {
+        return fromId;
+    }
+
+    private void setFromId(String fromId) {
+        this.fromId = fromId;
+    }
+
     /**
-     * @return the approvedBy
+     * @return Up-vote ratio (total number of up-votes divided by total number of votes)
+     */
+    public Double getUpvoteRatio() {
+        return upvoteRatio;
+    }
+
+    private void setUpvoteRatio(Double upvoteRatio) {
+        this.upvoteRatio = upvoteRatio;
+    }
+
+
+    /**
+     * @return The CSS class of the author
+     */
+    public String getAuthorFlairCSSClass() {
+        return authorFlairCSSClass;
+    }
+
+    private void setAuthorFlairCSSClass(String authorFlairCSSClass) {
+        this.authorFlairCSSClass = authorFlairCSSClass;
+    }
+    
+    /**
+     * @return The text of the flair of the author
+     */
+    public String getAuthorFlairText() {
+        return authorFlairText;
+    }
+
+    private void setAuthorFlairText(String authorFlairText) {
+        this.authorFlairText = authorFlairText;
+    }
+
+
+    /**
+     * @return Flair text of the submission ('link')
+     */
+    public String getLinkFlairText() {
+        return linkFlairText;
+    }
+
+    private void setLinkFlairText(String linkFlairText) {
+        this.linkFlairText = linkFlairText;
+    }
+
+
+    /**
+     * @return The CSS class of the submission ('link') flair
+     */
+    public String getLinkFlairCSSClass() {
+        return linkFlairCSSClass;
+    }
+
+    private void setLinkFlairCSSClass(String linkFlairCSSClass) {
+        this.linkFlairCSSClass = linkFlairCSSClass;
+    }
+
+    /**
+     * @return Whether the post is distinguished (e.g. by a "moderator")
+     */
+    public String getDistinguished() {
+        return distinguished;
+    }
+
+    private void setDistinguished(String distinguished) {
+        this.distinguished = distinguished;
+    }
+
+    /**
+     * @return Whether the user that authenticated the retrieval of this submission upvoted it
+     */
+    public Boolean getLikes() {
+        return likes;
+    }
+
+    private void setLikes(Boolean likes) {
+        this.likes = likes;
+    }
+    
+    /**
+     * @return The username of the one that approved this submission to the subreddit it belongs to
      */
     public String getApprovedBy() {
         return approvedBy;
     }
 
-    /**
-     * @param approvedBy the approvedBy to set
-     */
-    public void setApprovedBy(String approvedBy) {
+    private void setApprovedBy(String approvedBy) {
         this.approvedBy = approvedBy;
     }
 
     /**
-     * @return the hidden
+     * @return Whether the user that authenticated the retrieval of this submission has hidden it
      */
     public Boolean isHidden() {
         return hidden;
     }
 
-    /**
-     * @param hidden the hidden to set
-     */
-    public void setHidden(Boolean hidden) {
+    private void setHidden(Boolean hidden) {
         this.hidden = hidden;
     }
 
     /**
-     * @return the clicked
+     * @return Whether the user that authenticated the retrieval of this submission has already clicked on it before
      */
     public Boolean isClicked() {
         return clicked;
     }
 
-    /**
-     * @param clicked the clicked to set
-     */
-    public void setClicked(Boolean clicked) {
+    private void setClicked(Boolean clicked) {
         this.clicked = clicked;
     }
 
@@ -149,10 +271,17 @@ public class Submission extends Thing implements MixedListingElement {
         this.upVotes = upVotes;
     }
 
-    public void setScore(Long score) {
+    /**
+     * @return The score (number of upvotes minus number of downvotes)
+     */
+    public Long getScore() {
+        return score;
+    }
+    
+    private void setScore(Long score) {
         this.score = score;
     }
-
+    
     public void setAuthor(String author) {
         this.author = author;
     }
@@ -205,9 +334,7 @@ public class Submission extends Thing implements MixedListingElement {
         return downVotes;
     }
 
-    public Long getScore() {
-        return score;
-    }
+
 
     public Double getCreatedUTC() {
         return createdUTC;
@@ -217,235 +344,182 @@ public class Submission extends Thing implements MixedListingElement {
         return author;
     }
 
+    /**
+     * @return Title of the submission
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * @return Subreddit name (e.g. "programming')
+     */
     public String getSubreddit() {
         return subreddit;
     }
-    
-    /**
-     * @return the url
-     */
-    public String getUrl() {
-        return url;
-    }
 
     /**
-     * @param url the url to set
-     */
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    /**
-     * @return the subredditId
+     * @return Subreddit ID36 identifier
      */
     public String getSubredditId() {
         return subredditId;
     }
 
-    /**
-     * @param subredditId the subredditId to set
-     */
     public void setSubredditId(String subredditId) {
         this.subredditId = subredditId;
     }
 
     /**
-     * @return the thumbnail
+     * @return Thumbnail image URL
      */
     public String getThumbnail() {
         return thumbnail;
     }
 
-    /**
-     * @param thumbnail the thumbnail to set
-     */
-    public void setThumbnail(String thumbnail) {
+    private void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
 
     /**
-     * @return the selftext
+     * @return The self text of the submission (written by the author)
      */
     public String getSelftext() {
         return selftext;
     }
 
-    /**
-     * @param selftext the selftext to set
-     */
-    public void setSelftext(String selftext) {
+    private void setSelftext(String selftext) {
         this.selftext = selftext;
     }
 
     /**
-     * @return the selftextHTML
+     * @return The self text of the submission in HTML (written by the author)
      */
     public String getSelftextHTML() {
         return selftextHTML;
     }
 
-    /**
-     * @param selftextHTML the selftextHTML to set
-     */
-    public void setSelftextHTML(String selftextHTML) {
+    private void setSelftextHTML(String selftextHTML) {
         this.selftextHTML = selftextHTML;
     }
 
     /**
-     * @return the domain
+     * @return The domain of the URL this submission links to
      */
     public String getDomain() {
         return domain;
     }
 
-    /**
-     * @param domain the domain to set
-     */
-    public void setDomain(String domain) {
+    private void setDomain(String domain) {
         this.domain = domain;
     }
 
     /**
-     * @return the bannedBy
+     * @return The username of the moderator that banned this submission
      */
     public String getBannedBy() {
         return bannedBy;
     }
 
-    /**
-     * @param bannedBy the bannedBy to set
-     */
-    public void setBannedBy(String bannedBy) {
+    private void setBannedBy(String bannedBy) {
         this.bannedBy = bannedBy;
     }
 
     /**
-     * @return the gilded
+     * @return Count of how many times this submission received gold ('was gilded')
      */
     public Long getGilded() {
         return gilded;
     }
 
-    /**
-     * @param gilded the gilded to set
-     */
-    public void setGilded(Long gilded) {
+    private void setGilded(Long gilded) {
         this.gilded = gilded;
     }
 
     /**
-     * @return the reportCount
+     * @return Count of how many times this submission was reported
      */
     public Long getReportCount() {
         return reportCount;
     }
 
-    /**
-     * @param reportCount the reportCount to set
-     */
-    public void setReportCount(Long reportCount) {
+    private void setReportCount(Long reportCount) {
         this.reportCount = reportCount;
     }
 
     /**
-     * @return the created
+     * @return The created time-stamp (ms since Unix epoch)
      */
     public Double getCreated() {
         return created;
     }
 
-    /**
-     * @param created the created to set
-     */
-    public void setCreated(Double created) {
+    private void setCreated(Double created) {
         this.created = created;
     }
 
     /**
-     * @return the visited
+     * @return Whether the user that authenticated the retrieval of this submission has already visited it before
      */
     public Boolean isVisited() {
         return visited;
     }
 
-    /**
-     * @param visited the visited to set
-     */
-    public void setVisited(Boolean visited) {
+    private void setVisited(Boolean visited) {
         this.visited = visited;
     }
 
     /**
-     * @return the self
+     * @return Whether it is a self post
      */
     public Boolean isSelf() {
         return self;
     }
 
-    /**
-     * @param self the self to set
-     */
-    public void setSelf(Boolean self) {
+    private void setSelf(Boolean self) {
         this.self = self;
     }
 
     /**
-     * @return the saved
+     * @return Whether the user that authenticated the retrieval of this submission has saved it
      */
     public Boolean isSaved() {
         return saved;
     }
 
-    /**
-     * @param saved the saved to set
-     */
-    public void setSaved(Boolean saved) {
+    private void setSaved(Boolean saved) {
         this.saved = saved;
     }
 
     /**
-     * @return the edited
+     * @return Whether the submission has been edited
      */
     public Boolean isEdited() {
         return edited;
     }
 
-    /**
-     * @param edited the edited to set
-     */
-    public void setEdited(Boolean edited) {
+    private void setEdited(Boolean edited) {
         this.edited = edited;
     }
 
     /**
-     * @return the stickied
+     * @return Whether the submission is sticked to the top of the subreddit
      */
     public Boolean isStickied() {
         return stickied;
     }
 
-    /**
-     * @param stickied the stickied to set
-     */
-    public void setStickied(Boolean stickied) {
+    private void setStickied(Boolean stickied) {
         this.stickied = stickied;
     }
 
     /**
-     * @return the nsfw
+     * @return Whether the post is Not Suited For Work (contains adult content)
      */
     public Boolean isNSFW() {
         return nsfw;
     }
 
-    /**
-     * @param nsfw the nsfw to set
-     */
-    public void setNSFW(Boolean nsfw) {
+    private void setNSFW(Boolean nsfw) {
         this.nsfw = nsfw;
     }
 

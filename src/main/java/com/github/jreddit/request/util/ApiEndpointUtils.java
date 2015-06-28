@@ -1,11 +1,11 @@
-package com.github.jreddit.request.util;
+/*package com.github.jreddit.request.util;
 
 
 /**
  * Some constants that are used for specifying Reddit API endpoints (example: /api/new_captcha)
  *
  * @author Andrei Sfat
- */
+ *
 public class ApiEndpointUtils {
 
     private ApiEndpointUtils() {
@@ -16,13 +16,13 @@ public class ApiEndpointUtils {
 
     public static final String REDDIT_BASE_API_ENDPOINT = "/api";
 
-    /* Captcha specific constants */
+    /* Captcha specific constants *
     
     public static final String CAPTCHA_NEW = REDDIT_BASE_API_ENDPOINT + "/new_captcha";
 
     public static final String CAPTCHA_NEEDS = REDDIT_BASE_API_ENDPOINT + "/needs_captcha.json";
     
-    /* Message specific constants */
+    /* Message specific constants *
     
     public static final String MESSAGE_COMPOSE = REDDIT_BASE_API_ENDPOINT + "/compose";
     
@@ -32,7 +32,7 @@ public class ApiEndpointUtils {
     
     public static final String BLOCK = REDDIT_BASE_API_ENDPOINT + "/block";
     
-    /* API functions */
+    /* API functions *
     
     public static final String COMMENT = REDDIT_BASE_API_ENDPOINT + "/comment";
     
@@ -62,7 +62,7 @@ public class ApiEndpointUtils {
     
     public static final String SUBMISSIONS_GET = "/r/%s/%s.json?%s";
 
-    /* Flair specific constants */
+    /* Flair specific constants *
 
     public static final String USER_DELETE_SUBREDDIT_FLAIR = "/r/%s/api/deleteflair";
 
@@ -84,7 +84,7 @@ public class ApiEndpointUtils {
 
     public static final String FLAIR_ENABLED = "/r/%s/api/setflairenabled";
     
-    /* User specific constants */
+    /* User specific constants *
     
     public static final String USER_LOGIN = REDDIT_BASE_API_ENDPOINT + "/login/%s";
     
@@ -112,7 +112,7 @@ public class ApiEndpointUtils {
     
     public static final String USER_REGISTER = REDDIT_BASE_API_ENDPOINT + "/register";
 
-    /* Subreddits specific constants */
+    /* Subreddits specific constants *
 
     public static final String SUBREDDITS = "/subreddits.json";
 
@@ -120,10 +120,10 @@ public class ApiEndpointUtils {
     
     public static final String SUBREDDITS_SEARCH = "/subreddits/search.json?%s";
     
-    /* Live Thread specific constants */
+    /* Live Thread specific constants *
     
     public static final String LIVE_THREAD_CREATE = REDDIT_BASE_API_ENDPOINT + "/live/create";
     
     public static final String LIVE_THREAD_UPDATE = REDDIT_BASE_API_ENDPOINT + "/live/%s/update";
 
-}
+}*/
