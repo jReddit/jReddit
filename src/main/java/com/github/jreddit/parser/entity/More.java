@@ -21,7 +21,7 @@ public class More extends Thing implements CommentTreeElement {
     private List<String> children;
     
     /** Counting number assigned by reddit (does not tell much in a comment tree). */
-    private Integer count;
+    private Long count;
     
     /** Parent comment fullname. */
     private String parentId;
@@ -38,7 +38,7 @@ public class More extends Thing implements CommentTreeElement {
         // are already implicitly included in the children array.
         
         // Retrieve count from JSON
-        this.count = JsonUtils.safeJsonToInteger(obj.get("count"));
+        this.count = JsonUtils.safeJsonToLong(obj.get("count"));
         
         // Retrieve parent identifier from JSON
         this.parentId = JsonUtils.safeJsonToString(obj.get("parent_id"));
@@ -66,7 +66,7 @@ public class More extends Thing implements CommentTreeElement {
      * 
      * @return The counting number
      */
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
     
