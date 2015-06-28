@@ -9,3 +9,5 @@ target/
 .prefs
 .settings/
 sonar-project.properties
+.gradle/
+build/
