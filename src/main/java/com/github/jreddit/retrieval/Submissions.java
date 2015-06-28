@@ -348,4 +348,37 @@ public class Submissions implements ActorDriven {
     	);
     }
 
+    /**
+     * Get submissions by name.
+     *
+     * @param names             An array of fullnames (e.g. t3_15bfi0)
+     */
+    protected List<Submission> byNames(String... names) {
+        // Don't need to specially format the parameters, as they aren't passed
+        // as usual query parameters, and instead just follow the endpoint. For
+        // example: reddit.com/by_id/t3_15bfi0,t3_15bfi1
+        StringBuilder paramsBuilder = new StringBuilder(normalize(names[0]));
+        for (int i=1; i<names.length; ++i) {
+            paramsBuilder.append(",");
+            paramsBuilder.append(normalize(names[i]));
+        }
+        String params = paramsBuilder.toString();
+
+        return parse(String.format(ApiEndpointUtils.SUBMISSIONS_BY_ID, params));
+    }
+
+    /**
+     * Takes a name and converts it to a submission full name
+     * (e.g. 15bfi1 -> t3_15bfi1).  If name is already a full name, it
+     * is unchanged.
+     *
+     * @param name              Submission ID (possibly without the t3_ prefix)
+     */
+    private String normalize(String name) {
+        if (name.startsWith(Kind.LINK.value())) {
+            return name;
+        }
+
+        return Kind.LINK.value() + "_" + name;
+    }
 }
