@@ -353,7 +353,7 @@ public class Submissions implements ActorDriven {
      *
      * @param names             An array of fullnames (e.g. t3_15bfi0)
      */
-    protected List<Submission> byNames(String... names) {
+    public List<Submission> byNames(String... names) {
         // Don't need to specially format the parameters, as they aren't passed
         // as usual query parameters, and instead just follow the endpoint. For
         // example: reddit.com/by_id/t3_15bfi0,t3_15bfi1
