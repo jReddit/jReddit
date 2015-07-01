@@ -52,6 +52,7 @@ public class SubmissionsRetrievalTest {
     private RestClient restClient;
     private User user;
     private UtilResponse normalResponse;
+    private UtilResponse singleNormalResponse;
     
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -63,6 +64,9 @@ public class SubmissionsRetrievalTest {
         restClient = mock(RestClient.class);
         subject = new Submissions(restClient, user);
         normalResponse = new UtilResponse(null, submissionListings(), 200);
+        singleNormalResponse = new UtilResponse(null,
+                                                singleSubmissionListing(),
+                                                200);
     }
     
     /**
@@ -224,6 +228,71 @@ public class SubmissionsRetrievalTest {
     	exception.expect(IllegalArgumentException.class);
         subject.search("query", QuerySyntax.LUCENE, SearchSort.NEW, TimeSpan.ALL, -1, -577, null, null, false);
     }
+
+    /**
+     * Test getting single submission by name using full names
+     */
+    @Test
+    public void testGetSingleSubmissionByFullName() {
+        // Stub REST client methods
+        String url = "/by_id/t3_redditObjName.json";
+        when(restClient.get(url, COOKIE)).thenReturn(singleNormalResponse);
+
+        // Retrieve the submissions
+        String[] names = { "t3_redditObjName" };
+        List<Submission> result = subject.byNames(names);
+        verify(restClient, times(1)).get(url, COOKIE);
+        assertEquals(1, result.size());
+        assertEquals(result.get(0).getFullName(), "t3_redditObjName");
+    }
+
+    /**
+     * Test getting multiple submissions by name using full names
+     */
+    @Test
+    public void testGetMultipleSubmissionsByFullNames() {
+        // Stub REST client methods
+        String url = "/by_id/t3_redditObjName,t3_anotherRedditObjName.json";
+        when(restClient.get(url, COOKIE)).thenReturn(normalResponse);
+
+        // Retrieve the submissions
+        String[] names = { "t3_redditObjName", "t3_anotherRedditObjName" };
+        List<Submission> result = subject.byNames(names);
+        verify(restClient, times(1)).get(url, COOKIE);
+        verifyNormalResult(result);
+    }
+    /**
+     * Test getting single submission by name using IDs
+     */
+    @Test
+    public void testGetSingleSubmissionById() {
+        // Stub REST client methods
+        String url = "/by_id/t3_redditObjName.json";
+        when(restClient.get(url, COOKIE)).thenReturn(singleNormalResponse);
+
+        // Retrieve the submissions
+        String[] names = { "redditObjName" };
+        List<Submission> result = subject.byNames(names);
+        verify(restClient, times(1)).get(url, COOKIE);
+        assertEquals(1, result.size());
+        assertEquals(result.get(0).getFullName(), "t3_redditObjName");
+    }
+
+    /**
+     * Test getting multiple submissions by name using IDs
+     */
+    @Test
+    public void testGetMultipleSubmissionsByIds() {
+        // Stub REST client methods
+        String url = "/by_id/t3_redditObjName,t3_anotherRedditObjName.json";
+        when(restClient.get(url, COOKIE)).thenReturn(normalResponse);
+
+        // Retrieve the submissions
+        String[] names = { "redditObjName", "anotherRedditObjName" };
+        List<Submission> result = subject.byNames(names);
+        verify(restClient, times(1)).get(url, COOKIE);
+        verifyNormalResult(result);
+    }
     
     /**
      * Verify that the normal result is correct.
@@ -248,4 +317,16 @@ public class SubmissionsRetrievalTest {
         return redditListing(submission1, submission2);
     }
     
+
+    /**
+     * Generate a submission listing.with only one submission
+     *
+     * @return Submission listing
+     */
+    private JSONObject singleSubmissionListing() {
+        JSONObject media = createMediaObject();
+        JSONObject mediaEmbed = createMediaEmbedObject();
+        JSONObject submission1 = createSubmission("t3_redditObjName", false, media, mediaEmbed);
+        return redditListing(submission1);
+    }
 }

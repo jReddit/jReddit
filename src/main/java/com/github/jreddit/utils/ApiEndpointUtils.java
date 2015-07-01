@@ -58,6 +58,8 @@ public class ApiEndpointUtils {
     
     public static final String SUBMISSIONS_GET = "/r/%s/%s.json?%s";
 
+    public static final String SUBMISSIONS_BY_ID = "/by_id/%s.json";
+
     /* Flair specific constants */
 
     public static final String USER_DELETE_SUBREDDIT_FLAIR = "/r/%s/api/deleteflair";
