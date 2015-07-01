@@ -252,6 +252,16 @@ SA.editUserText(comment.getFullName(),"new text");
 List<Comment> commentsFromArticle = comments.commentsFromArticle("subreddit", "articleLink", "commentId", 0, 5, 10, CommentSort.TOP);
 ```
 
+#### GET /by_id
+
+```java
+// Assuming 'subm' is a 'Submission' instance
+List<Submission> submissions = Submissions.byNames("t3_2r86db", "2r86dc");
+// Can also be called with an array
+String[] names = { "t3_2r86db", "2r86dc" };
+List<Submission> submissions2 = Submissions.byNames(names);
+```
+
 #### To be implemented:
 
 * GET /controversial
