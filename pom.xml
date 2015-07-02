@@ -28,6 +28,7 @@
         </license>
     </licenses>
 
+    <!-- Git repository connection -->
     <scm>
         <url>https://github.com/karan/jReddit</url>
         <connection>scm:git:git://github.com/karan/jReddit.git</connection>
@@ -69,20 +70,28 @@
     </contributors>
 
     <properties>
+    
+        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- dependencies versions -->
+        
+        <!-- Versions of dependencies -->
+        <junit.version>4.8.1</junit.version>
+        <org.mockito.version>1.9.5</org.mockito.version>
         <com.googlecode.jsonsimple.version>1.1.1</com.googlecode.jsonsimple.version>
         <org.apache.httpcomponents.httpclient.version>4.3.3</org.apache.httpcomponents.httpclient.version>
+        <org.apache.oltu.oauth2.client.version>1.0.0</org.apache.oltu.oauth2.client.version>
+        <org.eluder.coveralls.version>3.0.1</org.eluder.coveralls.version>
+        <org.slf4j.version>1.7.12</org.slf4j.version>
         <org.apache.commons.io.version>1.3.2</org.apache.commons.io.version>
-        <org.mockito.version>1.9.5</org.mockito.version>
-        <junit.version>4.8.1</junit.version>
+        
+        <!-- Versions of release plug-ins -->
         <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
         <nexus.staging.maven.plugin.version>1.6</nexus.staging.maven.plugin.version>
         <maven.release.plugin.version>2.1</maven.release.plugin.version>
         <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
-        <org.eluder.coveralls.version>3.0.1</org.eluder.coveralls.version>
         <org.codehaus.mojo.cobertura.maven.plugin.version>2.6</org.codehaus.mojo.cobertura.maven.plugin.version>
+
     </properties>
 
     <profiles>
@@ -114,9 +123,8 @@
             </build>
         </profile>
         <profile>
-            <id>doclint-java8-disable</id>
             <activation>
-                <jdk>[1.8,)</jdk>
+                <jdk>[1.7,)</jdk>
             </activation>
             <build>
                 <plugins>
@@ -219,13 +227,10 @@
         </plugins>
     </build>
 
+    <!-- Project functional dependencies -->
     <dependencies>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>${com.googlecode.jsonsimple.version}</version>
-        </dependency>
 
+        <!-- Unit testing framework (test only) -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -233,35 +238,77 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Mocking framework (test only) -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${org.mockito.version}</version>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Commons validator -->
+        <dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.4.1</version>
+			<scope>test</scope>
+		</dependency>
 
+        <!-- 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.1</version>
-            <scope>test</scope>
+            
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${org.apache.commons.io.version}</version>
+        </dependency> -->
+    
+        <!-- JSON parsing -->
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>${com.googlecode.jsonsimple.version}</version>
+        </dependency>
+        
+        <!-- HTTP(s) protocol support -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${org.apache.httpcomponents.httpclient.version}</version>
         </dependency>
 
+        <!-- OAuth2 protocol support -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${org.apache.commons.io.version}</version>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
+            <version>${org.apache.oltu.oauth2.client.version}</version>
         </dependency>
+
+        <!-- Submitting Java coverage reports to Coveralls web service -->
         <dependency>
             <groupId>org.eluder.coveralls</groupId>
             <artifactId>coveralls-maven-plugin</artifactId>
             <version>${org.eluder.coveralls.version}</version>
         </dependency>
+        
+        <!-- Universal logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        
+        <!-- Logging console implementation -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency> 
+        
     </dependencies>
+    
 </project>

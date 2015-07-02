@@ -39,9 +39,9 @@ restClient.setUserAgent("bot/1.0 by name");
 // Connect the user 
 User user = new User(restClient, "username", "password");
 try {
-	user.connect();
+    user.connect();
 } catch (Exception e) {
-	e.printStackTrace();
+    e.printStackTrace();
 }
 ```
 
