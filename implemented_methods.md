@@ -2,57 +2,57 @@
 
 The purpose of this document is to provide listing and short documentation of API methods implemented in jReddit
 
-#### account
+### account
 *None have been implemented.*
 
-#### captcha
+### captcha
 *None have been implemented.*
 
-#### flair
+### flair
 
 ##### POST [/r/subreddit]/api/deleteflair
     DeleteFlairRequest request = new DeleteFlairRequest("username");
     client.post(token, request)
 *NOTE: a parser has not yet been implemented.*
 
-#### reddit gold
+### reddit gold
 *None have been implemented.*
 
-#### links & comments
+### links & comments
 *TODO: fill in.*
 
-#### listings
+### listings
 
-#### private messages
+### private messages
 *None have been implemented.*
 
-#### misc
+### misc
 *None have been implemented.*
 
-#### moderation
+### moderation
 *None have been implemented.*
 
-#### multis
+### multis
 *None have been implemented.*
 
-#### search (fully implemented)
+### search (fully implemented)
 
 
-#### GET [/r/subreddit]/search
+##### GET [/r/subreddit]/search
     SubmissionsSearchRequest request = new SubmissionsSearchRequest("query");
     SubmissionsListingParser parser = new SubmissionsListingParser();
     List<Submission> submissions = parser.parse(client.get(token, request));
 
-#### subreddits
+### subreddits
 
-#### GET /subreddits/search
+##### GET /subreddits/search
     SubredditsSearchRequest request = new SubredditsSearchRequest("query");
     SubredditsListingParser parser = new SubredditsListingParser();
     List<Subreddit> subreddits = parser.parse(client.get(token, request));
 
-#### users
+### users
 *None have been implemented.*
 
-#### wiki
+### wiki
 *None have been implemented.*
 
