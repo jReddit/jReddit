@@ -82,4 +82,7 @@ Send in a pull request, including test, and it will be gladly merged to improve 
 
 2. [Apache HttpComponents](https://hc.apache.org/)
 
-3. [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
+3. [SLF4J](http://www.slf4j.org/)
+
+4. [Apache OLTU](https://oltu.apache.org/)
+
