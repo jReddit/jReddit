@@ -6,11 +6,19 @@ jReddit
 [![Coverage Status](https://coveralls.io/repos/jReddit/jReddit/badge.svg)](https://coveralls.io/r/jReddit/jReddit)
 
 ### What is jReddit?
-jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour. Taken over for further development and maintainence by [Karan Goel](http://www.goel.im).
-### How to use jReddit?
-At the moment, jReddit can be included in your project using:
+jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour. Taken over for further development and maintenance by [Karan Goel](https://github.com/karan), [Andrei Sfat](https://github.com/sfat), and [Simon Kassing](https://github.com/snkas).
 
-#### Maven
+### How to use jReddit?
+*We are currently in the transitional phase between cookie-based authentication and OAuth2. The previous version of jReddit (1.0.3), which uses the former, will no longer be supported by reddit beginning August. The latter is supported by the latest version of jReddit (1.0.4).*
+
+#### Latest version: 1.0.4
+The latest version (1.0.4) can only be included by forking or directly copying source. When the build is stable, we will distribute it via Maven (as done with previous versions).
+
+#### Old version (deprecated): 1.0.3
+
+At the moment, jReddit 1.0.3 can be included in your project using:
+
+##### Maven
 ```
 <dependency>
         <groupId>com.github.jreddit</groupId>
@@ -19,125 +27,62 @@ At the moment, jReddit can be included in your project using:
 </dependency>
 ```
 
-#### Gradle
+##### Gradle
 ```
 dependencies {
     compile group: 'com.github.jreddit', name: 'jreddit', version: '1.0.3'
 }
 ```
 ### What can it do?
-jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, send and receive messages and notifications among other things.
+jReddit supports the creation of clients and bots using the Java language. It communicates using the reddit api, and all its actions are limited by the functionality offered there. It can for example authenticate apps using OAuth2, retrieve subreddits, submissions and comments, and perform various actions such as flairing, hiding and saving.
 
 ### Examples
+Examples can be found in [Examples package](https://github.com/jReddit/jReddit/tree/master/src/main/java/examples). A full example Gradle (Android) project can be found in the [Gradle example folder](https://github.com/jReddit/jReddit/tree/master/examples/Jreddit-sample-project). To give you an impression, here is a code snippet for a simple example:
 
 Connect a user
 ```java
-// Initialize REST Client
-RestClient restClient = new HttpRestClient();
-restClient.setUserAgent("bot/1.0 by name");
+// Information about the app
+String userAgent = "jReddit: Reddit API Wrapper for Java";
+String clientID = "JKJF3592jUIisfjNbZQ";
+String redirectURI = "https://www.example.com/auth";
 
-// Connect the user 
-User user = new User(restClient, "username", "password");
-try {
-    user.connect();
-} catch (Exception e) {
-    e.printStackTrace();
-}
+// Reddit application
+RedditApp redditApp = new RedditInstalledApp(clientID, redirectURI);
+RedditOAuthAgent agent = new RedditOAuthAgent(userAgent, redditApp);    
+RedditClient client = new RedditHttpClient(userAgent, HttpClientBuilder.create().build());
+
+// Create a application-only token (will be valid for 1 hour)
+RedditToken token = agent.tokenAppOnly(false);
+
+// Create parser for request
+SubmissionsListingParser parser = new SubmissionsListingParser();
+
+// Create the request
+SubmissionsOfSubredditRequest request = (SubmissionsOfSubredditRequest) new SubmissionsOfSubredditRequest("programming", SubmissionSort.HOT).setLimit(100);
+
+// Perform and parse request, and store parsed result
+List<Submission> submissions = parser.parse(client.get(token, request));
+
+// Now print out the result (don't care about formatting)
+System.out.println(submissions);
 ```
 
-Retrieve top 100 submissions of /r/programming
-
-```java
-// Handle to Submissions, which offers the basic API submission functionality
-Submissions subms = new Submissions(restClient, user);
-
-// Retrieve submissions of a submission
-List<Submission> submissionsSubreddit = subms.ofSubreddit("programming", SubmissionSort.TOP, -1, 100, null, null, true);
-
-```
-
-Submit a link and self post
-
-```java
-
-// Handle to SubmitActions, which offers the basic API functionality to submit comments and posts
-SubmitActions submitActions = new SubmitActions(restClient, user);
-
-// Submit a link
-submitActions.submitLink(
-        "Oracle V Google judge is a programmer!",
-        "http://www.i-programmer.info/news/193-android/4224-oracle-v-google-judge-is-a-programmer.html",
-        "programming");
-        
-// Submit a self post
-submitActions.submitSelfPost("What's the difference between a duck?",
-        "One of its legs are both the same!", "funny");
-```
-
-Send a message to another user
-
-```java
-import com.github.jreddit.message.Messages;
-import com.github.jreddit.user.User;
-
-/**
- * @author Karan Goel
- */
-public class ComposeTest {
-
-    public static void main(String[] args) {
-        User user = null;
-        String recipientUsername = "other_user";
-        try {
-            user = new User("username", "password"); // Add your username and password
-            user.connect();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
-        new Messages().compose(user, recipientUsername, "this is the title", "the message", "", "");
-    }
-}
-```
-
-# Possibility to configure RestClient
-### Normal instantiation
-
-There are 2 implementation at the moment for ```RestClient```
-
-* ```HttpRestClient```
-* ```PoliteHttpRestClient``` *recommended RestClient since Reddit API has a limitation to make only 1 request every 2 seconds.*
-
-### Through RestClientFactory
-
-Factory and utility class to easily instantiate ```RestClient```.
-Available methods:
-
-* ```newHttpRestClient()```
-* ```newHttpRestClient(HttpClient)```
-* ```newPoliteHttpRestClient()```
-* ```newPoliteHttpRestClient(HttpClient)```
-* ```newProxyHttpClient(hostname, port)```
-* ```newProxyHttpClient(hostname, port, scheme)```
-
-### Other examples
-## Java 
-You can find other examples [here](https://github.com/karan/jReddit/tree/master/src/main/java/examples)
-## Android
-You can find a small example of how to integrate jReddit in an Android application [here](https://github.com/jReddit/jReddit/tree/master/examples/Jreddit-sample-project)
-
+*Note: please see the [reddit OAuth2 information page](https://github.com/reddit/reddit/wiki/OAuth2) for more information on acquiring a client identifier, secret, and redirect URI.*
 
 ### What's next for jReddit?
 The plan is to implement every feature documented [here](http://www.reddit.com/dev/api). To see which methods have been implemented, and which have not, see [this file](https://github.com/karan/jReddit/blob/master/implemented_methods.md).
 
 ### How to contribute?
-Personally, I would suggest reading through the source code to understand the general structure and standards used. Then check the [implemented_methods.md](https://github.com/karan/jReddit/blob/master/implemented_methods.md) file to see which methods have not yet been implemented. Choose the ones you'd like to contribute to. After you write the method (and maybe commit it?), write a test to see if it works fine and as expected. Then make sure other tests are working too and your code does not break anty other method.
+It is recommend to start with forking and reading through the source code, in oder to understand the general structure and standards used. Then check the [implemented_methods.md](https://github.com/karan/jReddit/blob/master/implemented_methods.md) file to see which methods have not yet been implemented. Choose the ones you'd like to contribute to. When you implement a new request, make sure it is fully covered by testing (via JUnit), and that all other tests pass as well. Thorough documentation of your addition is appreciated.
 
-Send in a pull request with the test and I'll be happy to merge! :-)
+Send in a pull request, including test, and it will be gladly merged to improve the library! :-)
 
 ### Dependencies
 1. [JSON-simple](http://code.google.com/p/json-simple/)
 
 2. [Apache HttpComponents](https://hc.apache.org/)
 
-3. [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
+3. [SLF4J](http://www.slf4j.org/)
+
+4. [Apache OLTU](https://oltu.apache.org/)
+
