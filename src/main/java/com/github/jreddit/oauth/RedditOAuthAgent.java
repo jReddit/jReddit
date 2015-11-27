@@ -371,22 +371,9 @@ public class RedditOAuthAgent {
         // https://www.reddit.com/api/v1/revoke_token
         // In POST data: token=TOKEN&token_type_hint=TOKEN_TYPE
         // TOKEN_TYPE: refresh_token or access_token
-        // 
-    	TokenRequestBuilder builder = OAuthClientRequest
-                 .tokenLocation("https://www.reddit.com/api/v1/revoke_token")
-                 .setClientId(redditApp.getClientID())
-                 .setClientSecret(redditApp.getClientSecret())
-                 .setRedirectURI(redditApp.getRedirectURI());
-    	
-    	if (revokeAccessTokenOnly) {
-    		builder = builder.setParameter(PARAM_TOKEN, token.getAccessToken());
-    		builder = builder.setParameter(PARAM_TOKEN_TYPE_HINT, "access_token");
-    	}else {
-    		builder = builder.setParameter(PARAM_TOKEN, token.getRefreshToken());
-    		builder = builder.setParameter(PARAM_TOKEN_TYPE_HINT, "refresh_token");
-    	}
-    	
-    	OAuthClientRequest request = builder.buildBodyMessage();
+        
+    	OAuthClientRequest.TokenRequestBuilder builder = createBuilder(token, revokeAccessTokenOnly);
+		OAuthClientRequest request = builder.buildBodyMessage();
     	
     	addUserAgent(request);
     	
@@ -407,5 +394,19 @@ public class RedditOAuthAgent {
     }
 
  }
+
+	private OAuthClientRequest.TokenRequestBuilder createBuilder(RedditToken token, boolean revokeAccessTokenOnly) {
+		TokenRequestBuilder builder = OAuthClientRequest.tokenLocation("https://www.reddit.com/api/v1/revoke_token")
+				.setClientId(redditApp.getClientID()).setClientSecret(redditApp.getClientSecret())
+				.setRedirectURI(redditApp.getRedirectURI());
+		if (revokeAccessTokenOnly) {
+			builder = builder.setParameter(PARAM_TOKEN, token.getAccessToken());
+			builder = builder.setParameter(PARAM_TOKEN_TYPE_HINT, "access_token");
+		} else {
+			builder = builder.setParameter(PARAM_TOKEN, token.getRefreshToken());
+			builder = builder.setParameter(PARAM_TOKEN_TYPE_HINT, "refresh_token");
+		}
+		return builder;
+	}
     
 }

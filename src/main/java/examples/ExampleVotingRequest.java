@@ -38,7 +38,7 @@ public class ExampleVotingRequest {
         System.out.println(agent.generateCodeFlowURI(scopeBuilder, RedditDuration.TEMPORARY));
         
         // Input the code below:
-        String code = "5vXoPc9Hs9P6HGv0ctbKNTzogGI";
+        String code = "ZdBHUVaM92e0Rx-w_h5zLf0DU4I";
         
         // Ask for token
         RedditToken token = agent.token(code);
