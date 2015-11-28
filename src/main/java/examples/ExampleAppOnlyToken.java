@@ -32,6 +32,9 @@ public class ExampleAppOnlyToken {
         System.out.println("Expiration: " + token.getExpiration());
         System.out.println("Will expire in 61 minutes: " + token.willExpireIn((long) 3660));
         System.out.println("Will expire in 59 minutes: " + token.willExpireIn((long) 3540));
+        
+        // Revoke the token 
+        System.out.println(agent.revoke(token, true)); // Should be true if success
 
     }
     

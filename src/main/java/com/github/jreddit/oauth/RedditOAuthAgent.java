@@ -10,7 +10,6 @@ import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest.TokenRequestBuilder;
-import org.apache.oltu.oauth2.client.response.OAuthClientResponse;
 import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.OAuthProviderType;
@@ -61,6 +60,16 @@ public class RedditOAuthAgent {
     /* Header keys */
     private static final String HEADER_USER_AGENT = "User-Agent";
     private static final String HEADER_AUTHORIZATION = "Authorization";
+    
+    /* URL constants */
+    private static final String URL_REDDIT_REVOKE_TOKEN = "https://www.reddit.com/api/v1/revoke_token";
+    
+    /* Parameter values */
+    private static final String PARAM_ACCESS_TOKEN = "access_token";
+    private static final String PARAM_REFRESH_TOKEN = "refresh_token";
+    
+    /* Response Code */
+    private static final int RESPONSE_CODE_204 = 204;
     
     /** User agent. */
     private final String userAgent;
@@ -367,21 +376,25 @@ public class RedditOAuthAgent {
      */
     public boolean revoke(RedditToken token, boolean revokeAccessTokenOnly) throws RedditOAuthException {
     	try{
-        // TODO: Implement
-        // https://www.reddit.com/api/v1/revoke_token
-        // In POST data: token=TOKEN&token_type_hint=TOKEN_TYPE
-        // TOKEN_TYPE: refresh_token or access_token
+        // Set general values for request
+    	OAuthClientRequest request = OAuthClientRequest.tokenLocation(URL_REDDIT_REVOKE_TOKEN)
+				.setClientId(redditApp.getClientID()).setClientSecret(redditApp.getClientSecret())
+				.setRedirectURI(redditApp.getRedirectURI())
+				.setParameter(PARAM_TOKEN, revokeAccessTokenOnly ? token.getAccessToken() : token.getRefreshToken())
+				.setParameter(PARAM_TOKEN_TYPE_HINT, revokeAccessTokenOnly ? PARAM_ACCESS_TOKEN : PARAM_REFRESH_TOKEN)
+				.buildBodyMessage();
+    	
+        // Add the user agent
+        addUserAgent(request);
         
-    	OAuthClientRequest.TokenRequestBuilder builder = createBuilder(token, revokeAccessTokenOnly);
-		OAuthClientRequest request = builder.buildBodyMessage();
+        // Add basic authentication
+        addBasicAuthentication(request, redditApp);
     	
-    	addUserAgent(request);
-    	
-    	addBasicAuthentication(request, redditApp);
-    	
+        // Submit the request and capture the response.
+        // Reddit either returns a 204 or 401 response.
     	OAuthResourceResponse resp = oAuthClient.resource(request, OAuth.HttpMethod.POST, OAuthResourceResponse.class);
-    	System.out.println("Response code is" + resp.getResponseCode());
-    	if(resp.getResponseCode() == 204){
+    	
+    	if(resp.getResponseCode() == RESPONSE_CODE_204){
     		return true;
     	}else{
     		return false;
@@ -394,19 +407,5 @@ public class RedditOAuthAgent {
     }
 
  }
-
-	private OAuthClientRequest.TokenRequestBuilder createBuilder(RedditToken token, boolean revokeAccessTokenOnly) {
-		TokenRequestBuilder builder = OAuthClientRequest.tokenLocation("https://www.reddit.com/api/v1/revoke_token")
-				.setClientId(redditApp.getClientID()).setClientSecret(redditApp.getClientSecret())
-				.setRedirectURI(redditApp.getRedirectURI());
-		if (revokeAccessTokenOnly) {
-			builder = builder.setParameter(PARAM_TOKEN, token.getAccessToken());
-			builder = builder.setParameter(PARAM_TOKEN_TYPE_HINT, "access_token");
-		} else {
-			builder = builder.setParameter(PARAM_TOKEN, token.getRefreshToken());
-			builder = builder.setParameter(PARAM_TOKEN_TYPE_HINT, "refresh_token");
-		}
-		return builder;
-	}
     
 }
