@@ -69,7 +69,7 @@ public class RedditOAuthAgent {
     private static final String PARAM_REFRESH_TOKEN = "refresh_token";
     
     /* Response Code */
-    private static final int RESPONSE_CODE_204 = 204;
+    public static final int RESPONSE_CODE_204 = 204;
     
     /** User agent. */
     private final String userAgent;

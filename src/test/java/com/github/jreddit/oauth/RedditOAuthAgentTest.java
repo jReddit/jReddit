@@ -13,12 +13,14 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
+import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -39,11 +41,13 @@ public class RedditOAuthAgentTest {
     @Mock private OAuthJSONAccessTokenResponse jsonTokenNonRefreshable;
     @Mock private RedditToken mockRedditToken;
     @Mock private RedditToken mockRedditTokenRefreshable;
+    @Mock private OAuthResourceResponse mockOAuthResourceResponse;
     
     private final String userAgent = "Test User Agent / 2.0";
     private final String clientID = "35_398598298592";
     private final String clientSecret = "dsuf9a8f92";
     private final String redirectURI = "http://www.example.com/";
+
 
     private String accessToken = "djsaf98s9fasjofjkasjdf9";
     private String refreshToken = "89sd89fafjdajiofafsfasf";
@@ -75,6 +79,8 @@ public class RedditOAuthAgentTest {
         
         when(mockRedditToken.isRefreshable()).thenReturn(false);
         when(mockRedditTokenRefreshable.isRefreshable()).thenReturn(true);
+        
+        when(mockOAuthResourceResponse.getResponseCode()).thenReturn(RedditOAuthAgent.RESPONSE_CODE_204);
         
     }
     
@@ -254,7 +260,9 @@ public class RedditOAuthAgentTest {
     
     @Test
     public void testRevoke() throws RedditOAuthException, OAuthSystemException, OAuthProblemException {
-        assertTrue(subject.revoke(null, false));
+    	when(mockOAuthClient.resource(any(OAuthClientRequest.class), any(String.class), Matchers.anyObject())).thenReturn(mockOAuthResourceResponse);
+        assertTrue(subject.revoke(mockRedditToken, true));
+        assertTrue(subject.revoke(mockRedditTokenRefreshable, false));
     }
     
 }
