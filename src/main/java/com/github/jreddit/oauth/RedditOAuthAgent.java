@@ -376,35 +376,35 @@ public class RedditOAuthAgent {
      */
     public boolean revoke(RedditToken token, boolean revokeAccessTokenOnly) throws RedditOAuthException {
     	try{
-        // Set general values for request
-    	OAuthClientRequest request = OAuthClientRequest.tokenLocation(URL_REDDIT_REVOKE_TOKEN)
-				.setClientId(redditApp.getClientID()).setClientSecret(redditApp.getClientSecret())
-				.setRedirectURI(redditApp.getRedirectURI())
-				.setParameter(PARAM_TOKEN, revokeAccessTokenOnly ? token.getAccessToken() : token.getRefreshToken())
-				.setParameter(PARAM_TOKEN_TYPE_HINT, revokeAccessTokenOnly ? PARAM_ACCESS_TOKEN : PARAM_REFRESH_TOKEN)
-				.buildBodyMessage();
-    	
-        // Add the user agent
-        addUserAgent(request);
-        
-        // Add basic authentication
-        addBasicAuthentication(request, redditApp);
-    	
-        // Submit the request and capture the response.
-        // Reddit either returns a 204 or 401 response.
-    	OAuthResourceResponse resp = oAuthClient.resource(request, OAuth.HttpMethod.POST, OAuthResourceResponse.class);
-    	
-    	if(resp.getResponseCode() == RESPONSE_CODE_204){
-    		return true;
-    	}else{
-    		return false;
+    		// Set general values for request
+    		OAuthClientRequest request = OAuthClientRequest.tokenLocation(URL_REDDIT_REVOKE_TOKEN)
+    				.setClientId(redditApp.getClientID()).setClientSecret(redditApp.getClientSecret())
+    				.setRedirectURI(redditApp.getRedirectURI())
+    				.setParameter(PARAM_TOKEN, revokeAccessTokenOnly ? token.getAccessToken() : token.getRefreshToken())
+    				.setParameter(PARAM_TOKEN_TYPE_HINT, revokeAccessTokenOnly ? PARAM_ACCESS_TOKEN : PARAM_REFRESH_TOKEN)
+    				.buildBodyMessage();
+
+    		// Add the user agent
+    		addUserAgent(request);
+
+    		// Add basic authentication
+    		addBasicAuthentication(request, redditApp);
+
+    		// Submit the request and capture the response.
+    		// Reddit either returns a 204 or 401 response.
+    		OAuthResourceResponse resp = oAuthClient.resource(request, OAuth.HttpMethod.POST, OAuthResourceResponse.class);
+
+    		if(resp.getResponseCode() == RESPONSE_CODE_204){
+    			return true;
+    		}else{
+    			return false;
+    		}
+
+    	} catch (OAuthSystemException oase) {
+    		throw new RedditOAuthException(oase);
+    	} catch (OAuthProblemException oape) {
+    		throw new RedditOAuthException(oape);
     	}
-    	
-    } catch (OAuthSystemException oase) {
-        throw new RedditOAuthException(oase);
-    } catch (OAuthProblemException oape) {
-        throw new RedditOAuthException(oape);
-    }
 
  }
     
