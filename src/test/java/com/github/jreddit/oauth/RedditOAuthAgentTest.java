@@ -41,7 +41,8 @@ public class RedditOAuthAgentTest {
     @Mock private OAuthJSONAccessTokenResponse jsonTokenNonRefreshable;
     @Mock private RedditToken mockRedditToken;
     @Mock private RedditToken mockRedditTokenRefreshable;
-    @Mock private OAuthResourceResponse mockOAuthResourceResponse;
+    @Mock private OAuthResourceResponse mockSuccessOAuthResourceResponse;
+    @Mock private OAuthResourceResponse mockFailureOAuthResourceResponse;
     
     private final String userAgent = "Test User Agent / 2.0";
     private final String clientID = "35_398598298592";
@@ -80,7 +81,8 @@ public class RedditOAuthAgentTest {
         when(mockRedditToken.isRefreshable()).thenReturn(false);
         when(mockRedditTokenRefreshable.isRefreshable()).thenReturn(true);
         
-        when(mockOAuthResourceResponse.getResponseCode()).thenReturn(RedditOAuthAgent.RESPONSE_CODE_204);
+        when(mockSuccessOAuthResourceResponse.getResponseCode()).thenReturn(RedditOAuthAgent.RESPONSE_CODE_204);
+        when(mockFailureOAuthResourceResponse.getResponseCode()).thenReturn(RedditOAuthAgent.RESPONSE_CODE_401);
         
     }
     
@@ -259,10 +261,17 @@ public class RedditOAuthAgentTest {
     }
     
     @Test
-    public void testRevoke() throws RedditOAuthException, OAuthSystemException, OAuthProblemException {
-    	when(mockOAuthClient.resource(any(OAuthClientRequest.class), any(String.class), Matchers.anyObject())).thenReturn(mockOAuthResourceResponse);
-        assertTrue(subject.revoke(mockRedditToken, true));
-        assertTrue(subject.revoke(mockRedditTokenRefreshable, false));
+    public void testSucessRevoke() throws RedditOAuthException, OAuthSystemException, OAuthProblemException {
+    	when(mockOAuthClient.resource(any(OAuthClientRequest.class), any(String.class), Matchers.eq(OAuthResourceResponse.class))).thenReturn(mockSuccessOAuthResourceResponse);
+    	assertTrue(subject.revoke(mockRedditToken, true));
+    	assertTrue(subject.revoke(mockRedditTokenRefreshable, false));
+    }
+    
+    @Test
+    public void testFailedRevoke() throws RedditOAuthException, OAuthSystemException, OAuthProblemException {
+    	when(mockOAuthClient.resource(any(OAuthClientRequest.class), any(String.class), Matchers.eq(OAuthResourceResponse.class))).thenReturn(mockFailureOAuthResourceResponse);
+    	assertFalse(subject.revoke(mockRedditToken, true));
+    	assertFalse(subject.revoke(mockRedditTokenRefreshable, false));
     }
     
 }

@@ -70,6 +70,7 @@ public class RedditOAuthAgent {
     
     /* Response Code */
     public static final int RESPONSE_CODE_204 = 204;
+    public static final int RESPONSE_CODE_401 = 401;
     
     /** User agent. */
     private final String userAgent;
@@ -394,12 +395,8 @@ public class RedditOAuthAgent {
     		// Reddit either returns a 204 or 401 response.
     		OAuthResourceResponse resp = oAuthClient.resource(request, OAuth.HttpMethod.POST, OAuthResourceResponse.class);
 
-    		if(resp.getResponseCode() == RESPONSE_CODE_204){
-    			return true;
-    		}else{
-    			return false;
-    		}
-
+    		return resp.getResponseCode() == RESPONSE_CODE_204;
+    		
     	} catch (OAuthSystemException oase) {
     		throw new RedditOAuthException(oase);
     	} catch (OAuthProblemException oape) {
