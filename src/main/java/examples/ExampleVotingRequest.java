@@ -36,7 +36,7 @@ public class ExampleVotingRequest {
         System.out.println(agent.generateCodeFlowURI(scopeBuilder, RedditDuration.TEMPORARY));
         
         // Input the code below:
-        String code = "8SuQftiVhV_ROe4xkHPwXIIlLek";
+        String code = "aP9s6OB9QPSzSzfvO4FYrMy5Bu8";
         
         // Ask for token
         RedditToken token = agent.token(code);
@@ -47,6 +47,9 @@ public class ExampleVotingRequest {
         
         // Perform and parse request, and store parsed result
         System.out.println(client.post(token, request)); // Should be an empty object if success
+        
+        // Revoke the token 
+        System.out.println(agent.revoke(token, true)); // Should be true if success
 
     }
     

@@ -50,6 +50,8 @@ public class ExampleSimpleRequest {
         // Now print out the result (don't care about formatting)
         System.out.println(submissions);
 
+        // Revoke the token 
+        System.out.println(agent.revoke(token, true)); // Should be true if success
     }
     
 }

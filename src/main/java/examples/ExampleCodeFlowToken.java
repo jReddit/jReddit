@@ -24,7 +24,7 @@ public class ExampleCodeFlowToken {
         RedditOAuthAgent agent = new RedditOAuthAgent(userAgent, redditApp);    
         
         // Input the code below:
-        String code = "rVrguWH-NL2EHrEAmP2KgiAS_wU";
+        String code = "Kun3tPhb45VKLSXePFjsp_lxU74";
         
         // Ask for token
         RedditToken token = agent.token(code);
@@ -48,7 +48,13 @@ public class ExampleCodeFlowToken {
             if (agent.refreshToken(token)) {
                 System.out.println("\nRefreshed Access Token: " + token.getAccessToken());
             }
+            
+            // Revoke the token 
+            System.out.println(agent.revoke(token, false)); // Should be true if success
         
+        }else{
+        	// Revoke the token 
+            System.out.println(agent.revoke(token, true)); // Should be true if success
         }
 
     }

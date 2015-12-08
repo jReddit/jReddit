@@ -83,6 +83,9 @@ public class ExampleRetrieveRequests {
         
         // Now print out the result (don't care about formatting)
         System.out.println(submissions);
+        
+        // Revoke the token 
+        System.out.println(agent.revoke(token, true)); // Should be true if success        
 
     }
     
@@ -102,6 +105,9 @@ public class ExampleRetrieveRequests {
         
         // Now print out the result (don't care about formatting)
         System.out.println(submissions);
+        
+        // Revoke the token 
+        System.out.println(agent.revoke(token, true)); // Should be true if success
 
     }
     
@@ -123,6 +129,9 @@ public class ExampleRetrieveRequests {
         
         // Now print out the result (don't care about formatting)
         System.out.println(elements);
+
+        // Revoke the token 
+        System.out.println(agent.revoke(token, true)); // Should be true if success
 
     }
     
@@ -163,6 +172,9 @@ public class ExampleRetrieveRequests {
                 
             }
         }
+        
+        // Revoke the token 
+        System.out.println(agent.revoke(token, true)); // Should be true if success
 
     }
     

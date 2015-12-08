@@ -8,10 +8,11 @@ import com.github.jreddit.oauth.RedditOAuthAgent;
 import com.github.jreddit.oauth.RedditToken;
 import com.github.jreddit.oauth.app.RedditApp;
 import com.github.jreddit.oauth.app.RedditInstalledApp;
+import com.github.jreddit.oauth.exception.RedditOAuthException;
 
 public class ExampleImplicitGrantFlowToken {
 
-    public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException {
+    public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, ParseException, RedditOAuthException {
         
         // Information about the app
         String userAgent = "jReddit: Reddit API Wrapper for Java";
@@ -32,7 +33,7 @@ public class ExampleImplicitGrantFlowToken {
         
         // Ask for token
         RedditToken token = agent.tokenFromInfo(accessToken, tokenType, expiresIn, scope);
-        
+
         // Show some information about the token:
         System.out.println("Access Token: " + token.getAccessToken());
         System.out.println("Token Type: " + token.getTokenType());
@@ -41,6 +42,9 @@ public class ExampleImplicitGrantFlowToken {
         System.out.println("Expiration: " + token.getExpiration());
         System.out.println("Will expire in 61 minutes: " + token.willExpireIn(61 * 60));
         System.out.println("Will expire in 59 minutes: " + token.willExpireIn(59 * 60));
+        
+        // Revoke the token 
+        System.out.println(agent.revoke(token, true)); // Should be true if success
 
     }
     
