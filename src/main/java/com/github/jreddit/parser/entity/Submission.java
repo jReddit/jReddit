@@ -572,7 +572,7 @@ public class Submission extends Thing implements MixedListingElement {
     
     @Override
     public int hashCode() {
-        return this.hashCode() * this.getFullName().hashCode();
+        return super.hashCode() * this.getFullName().hashCode();
     }
 
     @Override
