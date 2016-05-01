@@ -5,9 +5,13 @@ import static com.github.jreddit.parser.util.JsonUtils.safeJsonToDouble;
 import static com.github.jreddit.parser.util.JsonUtils.safeJsonToLong;
 import static com.github.jreddit.parser.util.JsonUtils.safeJsonToString;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.github.jreddit.parser.entity.imaginary.MixedListingElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -69,6 +73,10 @@ public class Submission extends Thing implements MixedListingElement {
     private Boolean clicked;
     private Boolean likes;
 
+    /* All images values */
+    private Image source;
+    private List<Image> resolutions = new ArrayList<>();
+
     /**
      * Create a Submission from a JSONObject
      *
@@ -119,9 +127,38 @@ public class Submission extends Thing implements MixedListingElement {
         setHidden(safeJsonToBoolean(obj.get("hidden")));
         setClicked(safeJsonToBoolean(obj.get("clicked")));
         setLikes(safeJsonToBoolean(obj.get("likes")));
-        
+
+        fillImages(obj);
     }
-    
+
+    private void fillImages(JSONObject data) {
+        JSONObject preview = (JSONObject) data.get("preview");
+        if (preview == null) return;
+
+        Object imagesNode = preview.get("images");
+        if (imagesNode == null) return;
+
+        JSONObject images = (JSONObject) ((JSONArray)imagesNode).get(0);
+
+        this.source = new Image((JSONObject) images.get("source"));
+
+        JSONArray resolutions = (JSONArray) images.get("resolutions");
+
+        if (resolutions == null) return;
+
+        for (Object img : resolutions) {
+            this.resolutions.add(new Image((JSONObject) img));
+        }
+    }
+
+    public Image getSource() {
+        return source;
+    }
+
+    public List<Image> getResolutions() {
+        return resolutions;
+    }
+
     public String getFromKind() {
         return fromKind;
     }
