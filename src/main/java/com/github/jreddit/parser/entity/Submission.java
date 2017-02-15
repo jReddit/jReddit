@@ -130,6 +130,9 @@ public class Submission extends Thing implements MixedListingElement {
         this.fromKind = fromKind;
     }
 
+    /**
+     * @return The reason for removal, if any
+     */
     public String getRemovalReason() {
         return removalReason;
     }
@@ -314,6 +317,9 @@ public class Submission extends Thing implements MixedListingElement {
         return url;
     }
 
+    /**
+     * @return URL to submission
+     */
     public String getPermalink() {
         return permalink;
     }
@@ -322,24 +328,38 @@ public class Submission extends Thing implements MixedListingElement {
         this.permalink = permalink;
     }
 
+    /**
+     * @return comment count
+     */
     public Long getCommentCount() {
         return commentCount;
     }
 
+    /** 
+     * @return upvote count 
+     */
     public Long getUpVotes() {
         return upVotes;
     }
 
+    /**
+     * @return downvote count
+     */
     public Long getDownVotes() {
         return downVotes;
     }
 
-
-
+    /** 
+     * @see #getCreated() "alias for getCreated"
+     *
+     */
     public Double getCreatedUTC() {
         return createdUTC;
     }
 
+    /**
+     * @return submission author
+     */
     public String getAuthor() {
         return author;
     }
