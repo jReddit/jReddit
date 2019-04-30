@@ -2,6 +2,7 @@ package com.github.jreddit.oauth.client;
 
 import com.github.jreddit.oauth.RedditToken;
 import com.github.jreddit.request.RedditGetRequest;
+import com.github.jreddit.request.RedditPatchRequest;
 import com.github.jreddit.request.RedditPostRequest;
 
 public abstract class RedditClient {
@@ -43,5 +44,13 @@ public abstract class RedditClient {
      * @return Response from reddit (raw), if failed <i>null</i>
      */
     public abstract String get(RedditToken rToken, RedditGetRequest request);
+    /**
+     * Perform a PATCH request to Reddit authenticated with the reddit token
+     * @author vinceh121 
+     * @param rToken Reddit token
+     * @param request Reddit PATCH Request
+     * @return Response from reddit (raw), if failed <i>null</i>
+     */
+    public abstract String patch(RedditToken rToken, RedditPatchRequest request);
     
 }
