@@ -22,7 +22,6 @@ import static com.github.jreddit.utils.restclient.JsonUtils.*;
  * @author Andrei Sfat
  * @author Raul Rene Lepsa
  * @author Jonny Krysh
- * @author Danny Tsegai
  */
 public class Submission extends Thing {
 
