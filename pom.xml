@@ -75,7 +75,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <!-- Versions of dependencies -->
-        <junit.version>4.8.1</junit.version>
+        <junit.version>4.13.1</junit.version>
         <org.mockito.version>1.9.5</org.mockito.version>
         <com.googlecode.jsonsimple.version>1.1.1</com.googlecode.jsonsimple.version>
         <org.apache.httpcomponents.httpclient.version>4.3.3</org.apache.httpcomponents.httpclient.version>
