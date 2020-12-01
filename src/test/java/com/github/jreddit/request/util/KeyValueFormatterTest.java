@@ -38,10 +38,11 @@ public class KeyValueFormatterTest {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("a ", "b, ");
         params.put("c", "32626&");
+        String s = KeyValueFormatter.format(params, true);
         Assert.assertTrue(
-                ("a =b%2C+&c=32626%26").equals(KeyValueFormatter.format(params, true))
+                ("a =b%2C+&c=32626%26").equals(s)
                 ||
-                ("c=32626%26&a =b%2C+").equals(KeyValueFormatter.format(params, true))
+                ("c=32626%26&a =b%2C+").equals(s)
                 );
     }
     
@@ -51,11 +52,11 @@ public class KeyValueFormatterTest {
         params.put("a", "b");
         params.put("a", "b");
         params.put("b", "c");
-        
+        String s = KeyValueFormatter.format(params, true);
         Assert.assertTrue(
-                ("a=b&b=c").equals(KeyValueFormatter.format(params, true))
+                ("a=b&b=c").equals(s)
                 ||
-                ("b=c&a=b").equals(KeyValueFormatter.format(params, true))
+                ("b=c&a=b").equals(s)
                 );
     }
     
